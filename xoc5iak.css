@@ -1,0 +1,109 @@
+﻿/*
+ * The Typekit service used to deliver this font or fonts for use on websites
+ * is provided by Adobe and is subject to these Terms of Use
+ * http://www.adobe.com/products/eulas/tou_typekit. For font license
+ * information, see the list below.
+ *
+ * arek-armenian:
+ *   - http://typekit.com/eulas/00000000000000007735e1ee
+ *   - http://typekit.com/eulas/0000000000000000775890b7
+ *   - http://typekit.com/eulas/0000000000000000775890b9
+ *   - http://typekit.com/eulas/0000000000000000775890bb
+ * classic-script-mn:
+ *   - http://typekit.com/eulas/00000000000000007755955c
+ * evalfey-variable:
+ *   - http://typekit.com/eulas/0000000000000000774b9712
+ * leander-script-pro:
+ *   - http://typekit.com/eulas/00000000000000007735d573
+ *   - http://typekit.com/eulas/00000000000000007735d57c
+ * snell-roundhand-lt-std:
+ *   - http://typekit.com/eulas/0000000000000000775aaf10
+ *   - http://typekit.com/eulas/0000000000000000775aaf09
+ * sweet-fancy-script:
+ *   - http://typekit.com/eulas/00000000000000007735c775
+ *   - http://typekit.com/eulas/00000000000000007735c777
+ *
+ * © 2009-2026 Adobe Systems Incorporated. All Rights Reserved.
+ */
+/*{"last_published":"2026-03-23 08:25:18 UTC"}*/
+
+@import url("p.css");
+
+@font-face {
+font-family:"leander-script-pro";
+src:url("af/c8b00c/00000000000000007735d573/31/l/index.html") format("woff2"),url("af/c8b00c/00000000000000007735d573/31/d/index.html") format("woff"),url("af/c8b00c/00000000000000007735d573/31/a/index.html") format("opentype");
+font-display:auto;font-style:normal;font-weight:400;font-stretch:normal;
+}
+
+@font-face {
+font-family:"leander-script-pro";
+src:url("af/7273b4/00000000000000007735d57c/31/l/index.html") format("woff2"),url("af/7273b4/00000000000000007735d57c/31/d/index.html") format("woff"),url("af/7273b4/00000000000000007735d57c/31/a/index.html") format("opentype");
+font-display:auto;font-style:normal;font-weight:700;font-stretch:normal;
+}
+
+@font-face {
+font-family:"arek-armenian";
+src:url("af/8d65c5/00000000000000007735e1ee/31/l/index.html") format("woff2"),url("af/8d65c5/00000000000000007735e1ee/31/d/index.html") format("woff"),url("af/8d65c5/00000000000000007735e1ee/31/a/index.html") format("opentype");
+font-display:auto;font-style:normal;font-weight:400;font-stretch:normal;
+}
+
+@font-face {
+font-family:"arek-armenian";
+src:url("af/e4ac76/0000000000000000775890b7/31/l/index.html") format("woff2"),url("af/e4ac76/0000000000000000775890b7/31/d/index.html") format("woff"),url("af/e4ac76/0000000000000000775890b7/31/a/index.html") format("opentype");
+font-display:auto;font-style:italic;font-weight:400;font-stretch:normal;
+}
+
+@font-face {
+font-family:"arek-armenian";
+src:url("af/83955f/0000000000000000775890b9/31/l/index.html") format("woff2"),url("af/83955f/0000000000000000775890b9/31/d/index.html") format("woff"),url("af/83955f/0000000000000000775890b9/31/a/index.html") format("opentype");
+font-display:auto;font-style:normal;font-weight:700;font-stretch:normal;
+}
+
+@font-face {
+font-family:"arek-armenian";
+src:url("af/190059/0000000000000000775890bb/31/l/index.html") format("woff2"),url("af/190059/0000000000000000775890bb/31/d/index.html") format("woff"),url("af/190059/0000000000000000775890bb/31/a/index.html") format("opentype");
+font-display:auto;font-style:italic;font-weight:700;font-stretch:normal;
+}
+
+@font-face {
+font-family:"sweet-fancy-script";
+src:url("af/9be9af/00000000000000007735c775/31/l/index.html") format("woff2"),url("af/9be9af/00000000000000007735c775/31/d/index.html") format("woff"),url("af/9be9af/00000000000000007735c775/31/a/index.html") format("opentype");
+font-display:auto;font-style:normal;font-weight:300;font-stretch:normal;
+}
+
+@font-face {
+font-family:"sweet-fancy-script";
+src:url("af/34a167/00000000000000007735c777/31/l/index.html") format("woff2"),url("af/34a167/00000000000000007735c777/31/d/index.html") format("woff"),url("af/34a167/00000000000000007735c777/31/a/index.html") format("opentype");
+font-display:auto;font-style:normal;font-weight:500;font-stretch:normal;
+}
+
+@font-face {
+font-family:"evalfey-variable";
+src:url("af/8aadb1/0000000000000000774b9712/31/l/index.html") format("woff2"),url("af/8aadb1/0000000000000000774b9712/31/d/index.html") format("woff"),url("af/8aadb1/0000000000000000774b9712/31/a/index.html") format("opentype");
+font-display:auto;font-style:normal;font-weight:1 900;font-stretch:normal;
+}
+
+@font-face {
+font-family:"classic-script-mn";
+src:url("af/a8c1bc/00000000000000007755955c/31/l/index.html") format("woff2"),url("af/a8c1bc/00000000000000007755955c/31/d/index.html") format("woff"),url("af/a8c1bc/00000000000000007755955c/31/a/index.html") format("opentype");
+font-display:auto;font-style:normal;font-weight:400;font-stretch:normal;
+}
+
+@font-face {
+font-family:"snell-roundhand-lt-std";
+src:url("af/8091cf/0000000000000000775aaf10/31/l/index.html") format("woff2"),url("af/8091cf/0000000000000000775aaf10/31/d/index.html") format("woff"),url("af/8091cf/0000000000000000775aaf10/31/a/index.html") format("opentype");
+font-display:auto;font-style:normal;font-weight:400;font-stretch:normal;
+}
+
+@font-face {
+font-family:"snell-roundhand-lt-std";
+src:url("af/2310b8/0000000000000000775aaf09/31/l/index.html") format("woff2"),url("af/2310b8/0000000000000000775aaf09/31/d/index.html") format("woff"),url("af/2310b8/0000000000000000775aaf09/31/a/index.html") format("opentype");
+font-display:auto;font-style:normal;font-weight:700;font-stretch:normal;
+}
+
+.tk-leander-script-pro { font-family: "leander-script-pro",sans-serif; }
+.tk-arek-armenian { font-family: "arek-armenian",serif; }
+.tk-sweet-fancy-script { font-family: "sweet-fancy-script",sans-serif; }
+.tk-evalfey-variable { font-family: "evalfey-variable",sans-serif; }
+.tk-classic-script-mn { font-family: "classic-script-mn",sans-serif; }
+.tk-snell-roundhand-lt-std { font-family: "snell-roundhand-lt-std",sans-serif; }

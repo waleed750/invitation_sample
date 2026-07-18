@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html class="scroll-smooth" lang="en" style="color-scheme:only light">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<link as="image" href="intro-poster-new.jpg" rel="preload"/>
+<link as="image" href="majestic/string-lights.png" rel="preload"/>
+<link as="image" href="majestic/couple-dancing.png" rel="preload"/>
+<link as="image" href="majestic/ornate-badge.png" rel="preload"/>
+<link as="image" href="majestic/footer-ornament.png" rel="preload"/>
+<link data-precedence="next" href="_next/static/chunks/0-_dypfl2k8h1.css" rel="stylesheet"/>
+<link data-precedence="next" href="_next/static/chunks/0-aohkib4t~lr.css" rel="stylesheet"/>
+<link as="script" fetchpriority="low" href="_next/static/chunks/1596fahqklxh~.js" rel="preload"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="css2/index.html" rel="stylesheet"/>
+<script async="" src="_next/static/chunks/0pqt~8bl3ukh4.js"></script>
+<script async="" src="_next/static/chunks/0h4bq73pogmtb.js"></script>
+<script async="" src="_next/static/chunks/0e-wrhqh4h3r5.js"></script>
+<script async="" src="_next/static/chunks/turbopack-06lpc9l~i.lph.js"></script>
+<script async="" src="_next/static/chunks/01xlw8hd842-c.js"></script>
+<script async="" src="_next/static/chunks/0d9y~ee11bp-a.js"></script>
+<script async="" src="_next/static/chunks/172kbt4o~3.gc.js"></script>
+<link as="style" href="xoc5iak.css" rel="preload"/>
+<meta content="" name="next-size-adjust"/>
+<meta content="only light" name="color-scheme"/>
+<meta content="#F9F6F1" name="theme-color"/>
+<meta content="light" name="supported-color-schemes"/>
+<title>You're invited — Abdelrahman &amp; Nourhan</title>
+<meta content="June 20, 2026" name="description"/>
+<meta content="You're invited — Abdelrahman &amp; Nourhan" property="og:title"/>
+<meta content="June 20, 2026" property="og:description"/>
+<meta content="https://abdelrahman-norhan-invitation.netlify.app" property="og:url"/>
+<meta content="https://wedvite.net/og-envelope-wide.jpg" property="og:image"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="630" property="og:image:height"/>
+<meta content="Abdelrahman &amp; Nourhan — envelope" property="og:image:alt"/>
+<meta content="https://wedvite.net/og-envelope-square.jpg" property="og:image"/>
+<meta content="1200" property="og:image:width"/>
+<meta content="1200" property="og:image:height"/>
+<meta content="Abdelrahman &amp; Nourhan — envelope" property="og:image:alt"/>
+<meta content="website" property="og:type"/>
+<meta content="summary_large_image" name="twitter:card"/>
+<meta content="You're invited — Abdelrahman &amp; Nourhan" name="twitter:title"/>
+<meta content="June 20, 2026" name="twitter:description"/>
+<meta content="https://wedvite.net/og-envelope-wide.jpg" name="twitter:image"/>
+<link href="favicon.ico" rel="icon" sizes="256x256" type="image/x-icon"/>
+<link href="xoc5iak.css" rel="stylesheet"/>
+<script nomodule="" src="_next/static/chunks/03~yq9q893hmn.js"></script>
+<style>
+    html.envelope-is-open .fixed.inset-0.z-50 {
+      opacity: 0 !important;
+      pointer-events: none !important;
+      transition: opacity 1s ease-out !important;
+    }
+
+    html.envelope-is-open .transition-opacity.duration-1000.opacity-0.h-screen {
+      opacity: 1 !important;
+      height: auto !important;
+      overflow: visible !important;
+      pointer-events: auto !important;
+    }
+  </style>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const audio = document.querySelector('audio');
+      const musicButton = document.getElementById('music-toggle');
+      const musicIcon = document.getElementById('music-icon');
+
+      function toggleMusic() {
+        if (audio.paused) {
+          audio.play().catch(err => console.log('Play failed:', err));
+          musicIcon.innerHTML = '<path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle>';
+        } else {
+          audio.pause();
+          musicIcon.innerHTML = '<line x1="1" y1="1" x2="23" y2="23"></line><path d="M9 18V5l12-2v13"></path><circle cx="6" cy="18" r="3"></circle><circle cx="18" cy="16" r="3"></circle>';
+        }
+      }
+
+      if (musicButton) {
+        musicButton.addEventListener('click', (e) => {
+          e.stopPropagation();
+          toggleMusic();
+        });
+      }
+
+      // Use CAPTURE phase to intercept click before React gets it
+      window.addEventListener('click', function (e) {
+        const envelopeOverlay = e.target.closest('.fixed.inset-0.z-50');
+        if (!envelopeOverlay) return;
+
+        // KILL the event so React never sees it and doesn't instantly unmount the video
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+
+        // Prevent multiple clicks
+        if (envelopeOverlay.dataset.clicked) return;
+        envelopeOverlay.dataset.clicked = 'true';
+        envelopeOverlay.style.pointerEvents = 'none';
+
+        const videoElement = envelopeOverlay.querySelector('video');
+        const posterOverlay = envelopeOverlay.querySelector('.absolute.inset-0.transition-opacity');
+
+        // 1. Play music
+        if (audio) {
+          audio.play().catch(err => console.log('Audio play failed:', err));
+        }
+
+        // 2. Hide poster so video shows
+        if (posterOverlay) {
+          posterOverlay.style.transition = 'opacity 0.8s ease-in-out';
+          posterOverlay.style.opacity = '0';
+        }
+
+        const finishOpening = () => {
+          if (document.documentElement.classList.contains('envelope-is-open')) return;
+          document.documentElement.classList.add('envelope-is-open');
+
+          // Show content wrapper
+          const contentWrapper = document.querySelector('.transition-opacity.duration-1000.opacity-0.h-screen');
+          if (contentWrapper) {
+            contentWrapper.style.transition = 'opacity 1.5s ease-out';
+            contentWrapper.style.opacity = '1';
+            contentWrapper.style.pointerEvents = 'auto';
+            contentWrapper.style.height = 'auto';
+            contentWrapper.style.overflow = 'visible';
+          }
+
+          // Reveal on Scroll Logic
+          const observerOptions = {
+            threshold: 0.15,
+            rootMargin: '0px 0px -50px 0px'
+          };
+
+          const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+              if (entry.isIntersecting) {
+                const section = entry.target;
+                section.style.transition = 'opacity 1.8s cubic-bezier(0.21, 0.45, 0.32, 0.9), transform 1.8s cubic-bezier(0.21, 0.45, 0.32, 0.9)';
+                section.style.opacity = '1';
+                section.style.transform = 'translateY(0)';
+                observer.unobserve(section);
+              }
+            });
+          }, observerOptions);
+
+          const revealElements = document.querySelectorAll('section, .transition-all, div[class*="translate-y-"]');
+          revealElements.forEach(el => {
+            if (el.classList.contains('opacity-0') || window.getComputedStyle(el).opacity === '0') {
+              observer.observe(el);
+            }
+          });
+
+          // Show music button
+          if (musicButton) {
+            musicButton.style.transition = 'opacity 0.8s ease-out';
+            musicButton.style.transitionDelay = '1s';
+            setTimeout(() => {
+              musicButton.style.opacity = '1';
+              musicButton.style.pointerEvents = 'auto';
+            }, 1000);
+          }
+        };
+
+        // 3. Play video and wait for it to end
+        if (videoElement) {
+          videoElement.style.opacity = '1';
+          videoElement.play();
+          videoElement.onended = finishOpening;
+          setTimeout(finishOpening, 5000);
+        } else {
+          finishOpening();
+        }
+      }, true); // <--- TRUE for capture phase
+    });
+  </script>
+</head>
+<body class="cormorant_garamond_ec0b03bc-module__6ZvGZG__variable great_vibes_9e66f895-module__Qpu7MW__variable aref_ruqaa_a8b88034-module__1egM2a__variable playfair_display_73853c11-module__6mt_1G__variable inter_dc9473ec-module__UKqKMa__variable eb_garamond_398f019-module__u29k3G__variable pinyon_script_8a07607d-module___61Mza__variable lora_9380c913-module__uyD5Pa__variable antialiased font-serif bg-[var(--background)] text-[var(--foreground)]">
+<div hidden=""><!--$--><!--/$--></div>
+<main class="min-h-screen relative overflow-x-hidden" dir="ltr" style="--background:#FAFAF5;--foreground:#5A6B50;font-family:'span', var(--font-inter), sans-serif"><audio loop="" preload="auto" src="hussin elgasmy.mp3"></audio>
+<div class="fixed inset-0 z-50 flex flex-col items-center justify-center cursor-pointer transition-opacity duration-1000 opacity-100" style="background-color:#FAFAF5">
+<div class="absolute inset-0 transition-opacity duration-500 opacity-100"><img alt="Envelope" class="absolute inset-0 w-full h-full object-cover" src="intro-poster-new.jpg"/>
+<div class="absolute inset-0 flex items-end justify-center pb-16">
+<p class="text-white/70 tracking-[0.2em] uppercase text-xs animate-pulse" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif">Tap to open</p>
+</div>
+</div><video class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500 opacity-0" muted="" playsinline="" preload="auto" src="intro-video-new.mp4"></video>
+</div>
+<div class="transition-opacity duration-1000 opacity-0 h-screen overflow-hidden">
+<div class="fixed inset-0 bg-[var(--background)] -z-10"></div><button aria-label="Toggle Music" class="fixed bottom-6 right-6 z-[100] w-12 h-12 rounded-full bg-white/80 backdrop-blur-sm border border-[var(--foreground)]/10 flex items-center justify-center text-[var(--foreground)] hover:bg-[var(--foreground)] hover:text-white transition-all duration-300 shadow-lg" id="music-toggle"><svg fill="none" height="18" id="music-icon" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" viewbox="0 0 24 24" width="18" xmlns="http://www.w3.org/2000/svg">
+<path d="M9 18V5l12-2v13"></path>
+<circle cx="6" cy="18" r="3"></circle>
+<circle cx="18" cy="16" r="3"></circle>
+</svg></button>
+<section class="relative min-h-screen flex items-start justify-center pt-[42vh] overflow-hidden bg-[var(--background)]">
+<div class="absolute inset-0"><video autoplay="" class="w-full h-full object-cover" loop="" muted="" playsinline="" src="WhatsApp Video 2026-05-04 at 12.02.27 AM.mp4"></video>
+<div class="absolute inset-0 bg-black/10"></div>
+</div>
+<div class="relative z-10 flex flex-col items-center text-center px-6 pt-[70px] transition-all duration-1000 opacity-0 translate-y-5">
+<p class="text-sm md:text-base tracking-[0.3em] uppercase mb-4 text-[var(--foreground)]/80" style="font-family:'Playfair Display', serif">We're Getting Engaged</p>
+<h1 class="text-6xl md:text-8xl mb-3 text-[var(--foreground)]" style="font-family:'classic-script-mn', cursive">Abdelrahman<!-- --> &amp; <!-- -->Nourhan</h1>
+<p class="text-lg md:text-2xl font-bold tracking-[0.15em] uppercase text-[var(--foreground)] mt-2" data-date="2026-06-20" id="wedding-date-display" style="font-family:'Playfair Display', serif">20 JUNE 2026</p>
+</div>
+</section>
+<section class="py-20 md:py-28 bg-[var(--background)] overflow-hidden relative" id="countdown">
+<div class="max-w-4xl mx-auto text-center px-4 relative z-10 transition-all duration-1000 opacity-0 translate-y-5">
+<h2 class="text-4xl md:text-6xl text-[var(--foreground)] mb-3" style="font-family:'classic-script-mn', cursive">Countdown</h2>
+<div class="grid grid-cols-4 gap-2 md:gap-8 max-w-3xl mx-auto">
+<div class="p-2 md:p-6 min-w-0 overflow-hidden">
+<span class="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-[var(--foreground)] tabular-nums" id="days" style="font-family:'Playfair Display', serif">00</span>
+<span class="block mt-1 md:mt-2 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[var(--foreground)]/70" style="font-family:'Playfair Display', serif">Days</span>
+</div>
+<div class="p-2 md:p-6 min-w-0 overflow-hidden">
+<span class="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-[var(--foreground)] tabular-nums" id="hours" style="font-family:'Playfair Display', serif">00</span>
+<span class="block mt-1 md:mt-2 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[var(--foreground)]/70" style="font-family:'Playfair Display', serif">Hours</span>
+</div>
+<div class="p-2 md:p-6 min-w-0 overflow-hidden">
+<span class="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-[var(--foreground)] tabular-nums" id="minutes" style="font-family:'Playfair Display', serif">00</span>
+<span class="block mt-1 md:mt-2 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[var(--foreground)]/70" style="font-family:'Playfair Display', serif">Mins</span>
+</div>
+<div class="p-2 md:p-6 min-w-0 overflow-hidden">
+<span class="block text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-light text-[var(--foreground)] tabular-nums" id="seconds" style="font-family:'Playfair Display', serif">00</span>
+<span class="block mt-1 md:mt-2 text-[10px] sm:text-xs tracking-[0.2em] uppercase text-[var(--foreground)]/70" style="font-family:'Playfair Display', serif">Secs</span>
+</div>
+</div>
+</div>
+</section>
+<script>
+        function updateCountdown() {
+          const dateElem = document.getElementById("wedding-date-display");
+          const dateString = dateElem ? dateElem.getAttribute("data-date") : "2026-06-22";
+          const weddingDate = new Date(dateString + "T00:00:00").getTime();
+          const now = new Date().getTime();
+          const distance = weddingDate - now;
+
+          const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+          const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+          document.getElementById("days").innerText = days > 0 ? days : 0;
+          document.getElementById("hours").innerText = (hours > 0 ? hours : 0).toString().padStart(2, '0');
+          document.getElementById("minutes").innerText = (minutes > 0 ? minutes : 0).toString().padStart(2, '0');
+          document.getElementById("seconds").innerText = (seconds > 0 ? seconds : 0).toString().padStart(2, '0');
+
+          if (distance < 0) {
+            clearInterval(timerInterval);
+            document.getElementById("countdown").innerHTML = "<h2 class='text-4xl text-[var(--foreground)]'>Happily Ever After!</h2>";
+          }
+        }
+        const timerInterval = setInterval(updateCountdown, 1000);
+        updateCountdown();
+      </script>
+<div class="w-full bg-[var(--background)]"><img alt="String lights decoration" class="w-full object-contain" src="majestic/string-lights.png"/></div>
+<section class="py-24 px-8 text-center max-w-2xl mx-auto bg-[var(--background)]">
+<div class="transition-all duration-1000 opacity-0 translate-y-8">
+<h2 class="text-5xl md:text-6xl mb-10 text-[var(--foreground)]" style="font-family:'classic-script-mn', cursive">Welcome!</h2>
+<p class="text-base md:text-lg leading-loose font-light text-[var(--foreground)]/80" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif">In the quiet of a Tuscan
+            vineyard, surrounded by
+            ancient olive trees and rolling hills, we found a love as timeless as the landscape. We would be honoured to
+            have you celebrate with us.</p>
+</div>
+</section>
+<section class="relative bg-[var(--background)] overflow-hidden py-16">
+<div class="flex justify-center mb-8">
+<img alt="Gramophone illustration" class="w-48 md:w-64 object-contain" src="majestic/couple-dancing.png"/>
+</div>
+<div class="relative z-10 px-6">
+<div class="max-w-5xl mx-auto text-center mb-12">
+<h2 class="text-4xl md:text-6xl text-[var(--foreground)] mb-4" style="font-family:'classic-script-mn', cursive">Order of the Day</h2>
+<p class="text-[10px] md:text-xs text-[var(--foreground)]/60 tracking-[0.3em] uppercase" style="font-family:'Playfair Display', serif">What we have planned for you</p>
+</div>
+</div>
+<div class="relative px-6">
+<div class="flex flex-col items-center">
+<div class="text-center py-4">
+<h3 class="text-2xl md:text-3xl text-[var(--foreground)] mb-2 font-light" style="font-family:'Playfair Display', serif">Starts</h3>
+<p class="text-[var(--foreground)]/70 text-sm md:text-base font-light" style="font-family:'Playfair Display', serif">The celebration begins.</p>
+</div>
+<div class="w-px bg-[var(--foreground)]/20 h-12 my-2"></div>
+<div class="text-center py-4">
+<h3 class="text-2xl md:text-3xl text-[var(--foreground)] mb-2 font-light" style="font-family:'Playfair Display', serif">Dinner</h3>
+<p class="text-[var(--foreground)]/70 text-sm md:text-base font-light" style="font-family:'Playfair Display', serif">A special dinner with live music.</p>
+</div>
+<div class="w-px bg-[var(--foreground)]/20 h-12 my-2"></div>
+<div class="text-center py-4">
+<h3 class="text-2xl md:text-3xl text-[var(--foreground)] mb-2 font-light" style="font-family:'Playfair Display', serif">Ends</h3>
+<p class="text-[var(--foreground)]/70 text-sm md:text-base font-light" style="font-family:'Playfair Display', serif">Dancing into the early hours.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-[var(--background)]">
+<div class="max-w-4xl mx-auto py-16 pt-4 pb-0 transition-all duration-1000 opacity-0 translate-y-5">
+<div class="text-center mb-0">
+<h2 class="text-5xl md:text-6xl text-[var(--foreground)] mb-3" style="font-family:'classic-script-mn', cursive">The Details</h2>
+<p class="text-sm text-[var(--foreground)]/85 tracking-widest uppercase" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif">Everything you need to
+              know</p>
+</div>
+</div>
+<div class="flex flex-col items-center px-4">
+<div class="relative w-full max-w-[440px] md:max-w-[540px] aspect-[5/6] flex items-center justify-center"><img alt="" class="absolute inset-0 w-full h-full object-contain pointer-events-none" src="majestic/ornate-badge.png"/>
+<div class="relative z-10 text-center px-10 pt-2">
+<h3 class="text-4xl md:text-5xl text-[var(--foreground)] mb-3" style="font-family:'classic-script-mn', cursive">Location</h3><span class="text-base md:text-lg uppercase tracking-widest text-[var(--foreground)] block mb-3" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif">La Reine venue </span>
+<div class="flex items-center justify-center gap-2 text-[var(--foreground)]/70"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 16 14"></polyline>
+</svg><span class="text-sm font-semibold" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif">From
+                  <!-- -->8 PM<!-- --> to <!-- -->12 AM</span></div>
+</div>
+</div>
+<div class="flex flex-row gap-3 justify-center -mt-2 mb-4"><a class="inline-flex items-center gap-2 bg-[var(--foreground)] text-white px-4 py-2.5 rounded-md text-sm hover:opacity-90 transition-opacity" href="https://maps.app.goo.gl/r8MFkT4GcF5qgZFS7" rel="noopener noreferrer" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif" target="_blank"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0">
+</path>
+<circle cx="12" cy="10" r="3"></circle>
+</svg>Google Maps</a></div>
+</div>
+</section>
+<section class="py-12 px-8 bg-[var(--background)]">
+<div class="max-w-3xl mx-auto">
+<div class="w-full h-64 md:h-80 rounded-lg overflow-hidden border border-[var(--foreground)]/10 shadow-sm">
+<iframe allowfullscreen="" class="grayscale opacity-80 hover:grayscale-0 hover:opacity-100 transition-all duration-500" height="300" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="maps/embed/index.html" style="border:0;" width="400"></iframe>
+</div>
+</div>
+</section>
+<section class="pt-8 pb-0 md:pt-10 md:pb-0 px-6 bg-[var(--background)]" id="rsvp">
+<div class="max-w-xl mx-auto">
+<div class="text-center mb-12 transition-all duration-1000 opacity-0 translate-y-5">
+<h2 class="text-5xl md:text-6xl text-[var(--foreground)] mb-3 text-center" style="font-family:'classic-script-mn', cursive">Leave a Message</h2>
+<p class="text-sm text-[var(--foreground)]/60 tracking-widest uppercase" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif">Share your love,
+              wishes, or a note for the happy
+              couple!</p>
+</div>
+<form class="space-y-6 pb-16" id="rsvp-form">
+<div><label class="text-sm text-[var(--foreground)] font-medium" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif">Guest Name(s)<!-- -->
+                *</label><input class="mt-2 w-full bg-[var(--background)] border border-[var(--foreground)]/20 px-4 py-2.5 rounded-md text-[var(--foreground)] text-sm focus:outline-none focus:border-[var(--foreground)]/50 transition-colors" id="guest-name" maxlength="100" placeholder="Your name" required="" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif" type="text" value=""/></div>
+<div><label class="text-sm text-[var(--foreground)] font-medium" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif">Your
+                Message *</label><textarea class="mt-2 w-full bg-[var(--background)] border border-[var(--foreground)]/20 px-4 py-2.5 rounded-md text-[var(--foreground)] text-sm focus:outline-none focus:border-[var(--foreground)]/50 transition-colors resize-none" id="guest-message" maxlength="1000" placeholder="Write us a few words..." required="" rows="3" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif"></textarea></div>
+<button class="w-full flex items-center justify-center gap-2 bg-[var(--foreground)] text-white py-3 rounded-md text-sm font-medium hover:opacity-90 transition-opacity" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif" type="submit"><svg fill="none" height="16" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" viewbox="0 0 24 24" width="16" xmlns="http://www.w3.org/2000/svg">
+<path d="M14.536 21.686a.5.5 0 0 0 .937-.024l6.5-19a.496.496 0 0 0-.635-.635l-19 6.5a.5.5 0 0 0-.024.937l7.93 3.18a2 2 0 0 1 1.112 1.11z">
+</path>
+<path d="m21.854 2.147-10.94 10.939"></path>
+</svg>Send Message</button>
+</form>
+<script>
+            document.getElementById('rsvp-form').addEventListener('submit', async function (e) {
+              e.preventDefault();
+              const nameInput = document.getElementById('guest-name');
+              const messageInput = document.getElementById('guest-message');
+              const submitBtn = e.target.querySelector('button[type="submit"]');
+              const originalBtnText = submitBtn.innerHTML;
+
+              // Visual feedback
+              submitBtn.innerHTML = "Sending your love... ❤️";
+              submitBtn.disabled = true;
+
+              try {
+                // Call our custom Netlify Function
+                const response = await fetch('/.netlify/functions/save-to-notion', {
+                  method: 'POST',
+                  body: JSON.stringify({
+                    name: nameInput.value,
+                    message: messageInput.value
+                  })
+                });
+
+                if (response.ok) {
+                  // Create a beautiful success overlay
+                  const overlay = document.createElement('div');
+                  overlay.className = 'fixed inset-0 z-[200] flex items-center justify-center bg-black/20 backdrop-blur-sm transition-opacity duration-500 opacity-0';
+                  overlay.innerHTML = `
+                    <div class="bg-white p-8 rounded-2xl shadow-2xl text-center transform scale-90 transition-transform duration-500" style="font-family:'Playfair Display', serif">
+                      <div class="text-4xl mb-4">❤️</div>
+                      <h3 class="text-2xl text-[var(--foreground)] mb-2">Thank You!</h3>
+                      <p class="text-[var(--foreground)]/70">Your lovely message has been received.</p>
+                    </div>
+                  `;
+                  document.body.appendChild(overlay);
+                  
+                  // Animate in
+                  setTimeout(() => {
+                    overlay.classList.remove('opacity-0');
+                    overlay.querySelector('div').classList.remove('scale-90');
+                  }, 10);
+
+                  // Success State cleanup
+                  nameInput.value = "";
+                  messageInput.value = "";
+                  submitBtn.innerHTML = "Shared with Love! 💖";
+                  
+                  // Remove overlay after 3 seconds
+                  setTimeout(() => {
+                    overlay.classList.add('opacity-0');
+                    setTimeout(() => overlay.remove(), 500);
+                    submitBtn.innerHTML = originalBtnText;
+                    submitBtn.disabled = false;
+                  }, 3000);
+                } else {
+                  throw new Error("Failed to save");
+                }
+              } catch (err) {
+                console.error("Full Error Info:", err);
+                alert("Error: " + err.message);
+                submitBtn.innerHTML = originalBtnText;
+                submitBtn.disabled = false;
+              }
+            });
+          </script>
+</div>
+</section>
+<footer class="relative text-center min-h-[500px] flex flex-col justify-start bg-[var(--background)]">
+<div class="flex flex-col items-center pt-12 transition-all duration-1000 opacity-0 translate-y-5">
+<p class="text-3xl text-[var(--foreground)] mt-2 mb-1" style="font-family:'classic-script-mn', cursive">
+            Abdelrahman<!-- --> &amp; <!-- -->Nourhan</p>
+<p class="text-sm text-[var(--foreground)]/80 tracking-wide" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif">20 JUNE 2026</p><img alt="Ornament" class="w-80 md:w-96 mx-auto mt-8" src="majestic/footer-ornament.png"/>
+</div>
+</footer>
+<div class="py-4 text-center border-t border-[var(--foreground)]/10 bg-[var(--background)]">
+<p class="text-xs italic text-[var(--foreground)]/50" style="font-family: var(--font-cormorant-garamond), var(--font-inter), sans-serif">
+          Made with love by<!-- --> <a class="text-[var(--foreground)]/80 hover:text-[var(--foreground)] transition-colors" href="index.htm" rel="noopener noreferrer" target="_blank">ELSHAWAF</a> <span class="not-italic">❤️</span></p>
+</div>
+</div>
+</main><!--$--><!--/$-->
+</body>
+</html>
