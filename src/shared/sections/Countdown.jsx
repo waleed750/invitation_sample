@@ -38,22 +38,34 @@ function TimeBox({ value, label, pad = false }) {
  * Countdown section — live countdown to event date.
  *
  * Props:
- *   date — ISO-8601 datetime string
+ *   date           — ISO-8601 datetime string
+ *   title          — heading override (default "Countdown")
+ *   untilLabel     — subtitle below heading (optional)
+ *   bgImage        — background image overlay (optional)
+ *   overlayImage   — foreground decoration (optional)
+ *   showYears      — show Years box (optional)
+ *   showMonths     — show Months box (optional)
  */
-export default function Countdown({ date }) {
+export default function Countdown({ date, title, untilLabel, bgImage, overlayImage, showYears, showMonths }) {
   const timeLeft = useCountdown(date);
 
   return (
     <section className="countdown-section" id="countdown" aria-labelledby="countdown-title">
-      <div className="section-inner narrow" data-reveal>
-        <h2 id="countdown-title">Countdown</h2>
-        <div className="countdown-grid">
-          <TimeBox value={timeLeft.days} label="Days" />
-          <TimeBox value={timeLeft.hours} label="Hours" pad />
-          <TimeBox value={timeLeft.minutes} label="Mins" pad />
-          <TimeBox value={timeLeft.seconds} label="Secs" pad />
+      {bgImage && <img className="countdown-bg" src={bgImage} alt="" aria-hidden="true" />}
+      <div className="countdown-panel">
+        <div className="section-inner narrow" data-reveal>
+          <h2 id="countdown-title">{title || "Countdown"}</h2>
+          {untilLabel && <p className="countdown-until">{untilLabel}</p>}
+          <div className="countdown-grid">
+            {showMonths && <TimeBox value={timeLeft.days > 30 ? Math.floor(timeLeft.days / 30) : 0} label="Months" />}
+            <TimeBox value={timeLeft.days} label="Days" />
+            <TimeBox value={timeLeft.hours} label="Hours" pad />
+            <TimeBox value={timeLeft.minutes} label="Mins" pad />
+            <TimeBox value={timeLeft.seconds} label="Secs" pad />
+          </div>
         </div>
       </div>
+      {overlayImage && <img className="countdown-overlay" src={overlayImage} alt="" aria-hidden="true" />}
     </section>
   );
 }

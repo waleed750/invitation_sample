@@ -5,3 +5,8 @@ export { default as Schedule } from "./Schedule.jsx";
 export { default as Details } from "./Details.jsx";
 export { default as Map } from "./Map.jsx";
 export { default as MessageForm } from "./MessageForm.jsx";
+export { default as Story } from "./Story.jsx";
+export { default as DressCode } from "./DressCode.jsx";
+export { default as Gifts } from "./Gifts.jsx";
+export { default as Rsvp } from "./Rsvp.jsx";
+export { default as Faq } from "./Faq.jsx";

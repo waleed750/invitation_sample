@@ -123,6 +123,11 @@ export const SECTION_TYPES = Object.freeze({
   imageDivider: true,
   footer: true,
   scratchReveal: true,
+  story: true,
+  dressCode: true,
+  gifts: true,
+  rsvp: true,
+  faq: true,
 });
 
 /**
@@ -241,6 +246,78 @@ export const SECTION_TYPES = Object.freeze({
  */
 
 /**
+ * Story / memory-lane — chaptered narrative with scrolling photo strips.
+ *
+ * @typedef {SectionBase & {
+ *   type: 'story',
+ *   props: {
+ *     title: string,
+ *     chapters: Array<{
+ *       quote?: string,
+ *       prose: string,
+ *       photos?: string[],
+ *     }>,
+ *     birdsFrame1?: string,
+ *     birdsFrame2?: string,
+ *   }
+ * }} StorySection
+ */
+
+/**
+ * Dress code — title, body, optional illustration.
+ *
+ * @typedef {SectionBase & {
+ *   type: 'dressCode',
+ *   props: {
+ *     title: string,
+ *     body: string,
+ *     illustrationUrl?: string,
+ *   }
+ * }} DressCodeSection
+ */
+
+/**
+ * Gifts & wishes — title, body, optional background.
+ *
+ * @typedef {SectionBase & {
+ *   type: 'gifts',
+ *   props: {
+ *     title: string,
+ *     body: string,
+ *     bgUrl?: string,
+ *     buttonLabel?: string,
+ *     buttonUrl?: string,
+ *   }
+ * }} GiftsSection
+ */
+
+/**
+ * RSVP form — attendance, name, guests, email, children.
+ *
+ * @typedef {SectionBase & {
+ *   type: 'rsvp',
+ *   props: {
+ *     title: string,
+ *     subtitle: string,
+ *     bgUrl?: string,
+ *     bottomUrl?: string,
+ *   }
+ * }} RsvpSection
+ */
+
+/**
+ * FAQ accordion — expandable question/answer items.
+ *
+ * @typedef {SectionBase & {
+ *   type: 'faq',
+ *   props: {
+ *     title: string,
+ *     items: Array<{ question: string, answer: string }>,
+ *   }
+ * }} FaqSection
+ */
+
+/**
  * Scratch-to-reveal intro (lace-photo-scratch).
  *
  * @typedef {SectionBase & {
@@ -261,5 +338,6 @@ export const SECTION_TYPES = Object.freeze({
  *
  * @typedef {HeroSection|CountdownSection|WelcomeSection|ScheduleSection|
  *           DetailsSection|MapSection|MessageFormSection|
- *           ImageDividerSection|FooterSection|ScratchRevealSection} Section
+ *           ImageDividerSection|FooterSection|ScratchRevealSection|
+ *           StorySection|DressCodeSection|GiftsSection|RsvpSection|FaqSection} Section
  */

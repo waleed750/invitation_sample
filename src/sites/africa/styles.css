@@ -1,0 +1,602 @@
+/*
+ * Africa Safari Wedding — styles.css
+ *
+ * Fonts: demo used Adobe Typekit (Aphrosine, Arsenal, Cofo Raffine).
+ * We fall back to tasteful system stacks:
+ *   display  → Georgia, "Times New Roman", serif (replaces Aphrosine)
+ *   body     → system-ui, -apple-system, sans-serif (replaces Arsenal)
+ *   script   → "Brush Script MT", cursive (replaces Cofo Raffine)
+ */
+
+/* ── Theme (HSL from CSS vars) ──────────────────────────────────── */
+.africa-shell {
+  --primary: hsl(14, 55%, 42%);
+  --primary-fg: hsl(36, 60%, 96%);
+  --accent: hsl(32, 75%, 58%);
+  --sage-dark: hsl(350, 35%, 25%);
+  --border: hsl(24, 28%, 76%);
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.africa-shell .hero-section,
+.africa-shell .countdown-section,
+.africa-shell .africa-footer {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.africa-content {
+  opacity: 0;
+  transition: opacity 0.8s ease 0.2s;
+}
+.africa-content.is-visible {
+  opacity: 1;
+}
+
+/* ── Music button (shared pattern) ──────────────────────────────── */
+.music-button {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 80;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+.music-button.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Section inner (shared) ──────────────────────────────────────── */
+.section-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+.section-inner.narrow {
+  max-width: 640px;
+}
+
+.section-inner h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 600;
+  color: var(--sage-dark);
+  margin-bottom: 1rem;
+}
+.section-kicker {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--background);
+}
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  mask-image: linear-gradient(black 0%, black 88%, transparent 100%);
+}
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(244, 232, 220, 0) 0%,
+    rgba(232, 198, 176, 0.65) 60%,
+    rgb(227, 191, 171) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+.hero-copy {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 4rem 1.5rem 2rem;
+}
+.hero-copy .eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--sage-dark);
+  opacity: 0.7;
+  margin-bottom: 1.5rem;
+}
+.hero-copy h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 600;
+  color: var(--sage-dark);
+  line-height: 1.1;
+}
+.hero-copy h1 span {
+  font-family: "Brush Script MT", cursive;
+  font-weight: 400;
+  font-size: 0.6em;
+  margin: 0 0.15em;
+  color: var(--primary);
+}
+.hero-copy .date-line {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--sage-dark);
+  opacity: 0.7;
+}
+.hero-cta {
+  margin-top: 3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--sage-dark);
+  opacity: 0.6;
+}
+
+/* ── Welcome ─────────────────────────────────────────────────────── */
+.welcome-section {
+  position: relative;
+  background: var(--background);
+  overflow: hidden;
+}
+.welcome-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.35;
+  pointer-events: none;
+}
+.welcome-section p {
+  white-space: pre-line;
+  line-height: 1.85;
+  text-align: left;
+  color: var(--sage-dark);
+  opacity: 0.85;
+}
+
+/* ── Story ────────────────────────────────────────────────────────── */
+.story-section {
+  background: var(--background);
+  padding: 0 1.5rem;
+}
+.story-birds {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto 1.5rem;
+  aspect-ratio: 1165 / 335;
+}
+.story-birds img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+.story-birds__frame-b {
+  animation: birds-swap 1.6s ease-in-out infinite alternate;
+}
+@keyframes birds-swap {
+  0% { opacity: 0; }
+  50% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+.story-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 3rem;
+}
+.story-chapter {
+  text-align: center;
+}
+.story-chapter__quote {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  font-weight: 500;
+  font-style: italic;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+.story-chapter__prose {
+  white-space: pre-line;
+  line-height: 1.85;
+  text-align: left;
+  color: var(--sage-dark);
+  opacity: 0.85;
+}
+.story-strip {
+  overflow: hidden;
+  padding: 2.5rem 0;
+  margin: 0 -1.5rem;
+}
+.story-strip__track {
+  display: flex;
+  gap: 1rem;
+  width: max-content;
+  animation: scroll-strip 30s linear infinite;
+}
+@keyframes scroll-strip {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.story-strip__item {
+  flex-shrink: 0;
+  width: 12rem;
+  height: 24rem;
+  overflow: hidden;
+  border: none;
+  padding: 0;
+  background: transparent;
+  cursor: zoom-in;
+  box-shadow: 0 4px 14px -8px rgba(60,50,30,0.35);
+}
+.story-strip__item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: saturate(0.96) contrast(0.99);
+}
+
+/* ── Dress Code ──────────────────────────────────────────────────── */
+.dresscode-section {
+  background: var(--background);
+}
+.dresscode-section p {
+  white-space: pre-line;
+  line-height: 1.85;
+  text-align: left;
+  color: var(--sage-dark);
+  opacity: 0.85;
+}
+.dresscode-illustration {
+  display: block;
+  width: 100%;
+  max-width: 40rem;
+  margin: 2.5rem auto 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Gifts ───────────────────────────────────────────────────────── */
+.gifts-section {
+  position: relative;
+  overflow: visible;
+}
+.gifts-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+.gifts-section .section-inner {
+  position: relative;
+  z-index: 1;
+}
+.gifts-section p {
+  white-space: pre-line;
+  line-height: 1.75;
+  color: var(--sage-dark);
+  opacity: 0.8;
+}
+.gifts-cta {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.75rem 2rem;
+  border: 1px solid var(--primary);
+  border-radius: 2rem;
+  color: var(--primary);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.gifts-cta:hover {
+  background: var(--primary);
+  color: var(--primary-fg);
+}
+
+/* ── Schedule ────────────────────────────────────────────────────── */
+.schedule-section {
+  position: relative;
+  overflow: hidden;
+}
+.schedule-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+.schedule-section .section-inner {
+  position: relative;
+  z-index: 1;
+}
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.schedule-item h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--sage-dark);
+}
+.schedule-item p {
+  color: var(--sage-dark);
+  opacity: 0.7;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* ── RSVP ────────────────────────────────────────────────────────── */
+.rsvp-section {
+  position: relative;
+  overflow: hidden;
+}
+.rsvp-decoration {
+  position: absolute;
+  top: -3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 120%;
+  max-width: 600px;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.6;
+  z-index: 0;
+}
+.rsvp-bottom-decoration {
+  display: block;
+  width: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+.rsvp-form {
+  text-align: left;
+}
+.rsvp-form fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+.rsvp-form legend {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.rsvp-radio {
+  display: block;
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
+.rsvp-radio input {
+  margin-right: 0.5rem;
+}
+.rsvp-form label {
+  display: block;
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+.rsvp-form input[type="text"],
+.rsvp-form input[type="email"],
+.rsvp-form select {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  font: inherit;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.5);
+}
+.rsvp-form button[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: var(--primary);
+  color: var(--primary-fg);
+  border: none;
+  border-radius: 2rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.rsvp-form button[type="submit"]:hover {
+  opacity: 0.85;
+}
+.rsvp-form .form-status {
+  margin-top: 1rem;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* ── Countdown ───────────────────────────────────────────────────── */
+.countdown-section {
+  position: relative;
+  overflow: hidden;
+}
+.countdown-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+}
+.countdown-panel {
+  position: relative;
+  z-index: 1;
+  background: linear-gradient(rgb(245, 129, 71) 0%, rgb(247, 115, 59) 60%, rgb(242, 104, 54) 100%);
+  mask-image: linear-gradient(transparent 0%, rgba(0,0,0,0.25) 7%, black 18%, black 82%, rgba(0,0,0,0.25) 93%, transparent 100%);
+}
+.countdown-panel h2 {
+  color: var(--primary-fg);
+  padding-top: 2.5rem;
+}
+.countdown-until {
+  color: rgba(255,255,255,0.8);
+  font-family: "Brush Script MT", cursive;
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  margin-bottom: 1.25rem;
+}
+.countdown-overlay {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  pointer-events: none;
+  user-select: none;
+  margin-top: -4rem;
+}
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+.time-box {
+  text-align: center;
+}
+.time-box strong {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 300;
+  color: #fff;
+  line-height: 1;
+}
+.time-box span {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.8);
+}
+
+/* ── FAQ ─────────────────────────────────────────────────────────── */
+.faq-section {
+  background: var(--background);
+}
+.faq-list {
+  text-align: left;
+}
+.faq-item {
+  border-bottom: 1px solid var(--border);
+}
+.faq-question {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 1rem 0;
+  background: none;
+  border: none;
+  font: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--foreground);
+  cursor: pointer;
+  text-align: left;
+}
+.faq-answer {
+  padding-bottom: 1rem;
+}
+.faq-answer p {
+  line-height: 1.7;
+  color: var(--sage-dark);
+  opacity: 0.8;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.africa-footer {
+  position: relative;
+  overflow: hidden;
+  background: var(--background);
+}
+.africa-footer__frame {
+  width: 100%;
+  display: block;
+  object-fit: cover;
+  object-position: bottom;
+  pointer-events: none;
+  user-select: none;
+}
+.africa-footer__copy {
+  position: absolute;
+  bottom: 2rem;
+  left: 50%;
+  transform: translateX(-50%);
+  text-align: center;
+  z-index: 2;
+}
+.africa-footer__copy strong {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  color: #fff;
+}
+.africa-footer__copy span {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.8);
+}
+.africa-footer__credit {
+  margin-top: 0.5rem;
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.6);
+}
+
+/* ── Reveal-on-scroll animation ──────────────────────────────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}

@@ -50,4 +50,5 @@ export const layoutFamily = freeze({
   MINIMAL_INTERACTIVE: "minimal-interactive",
   MODERN: "modern",
   CLASSIC: "classic",
+  SAFARI_EDITORIAL: "safari-editorial",
 });

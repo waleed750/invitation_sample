@@ -1,202 +1,35 @@
+/*
+ * Lace Photo Scratch — site-specific styles.
+ * Structural intro rules live in src/shared/intros/scratch-reveal-intro.css
+ * (imported by ScratchRevealIntro.jsx).
+ */
+
 .scratch-site {
   min-height: 100svh;
   overflow: hidden;
   color: #3f352c;
   background: #d7c4a7;
   font-family: "arek-armenian", Georgia, serif;
+  --scratch-cover-bg:
+    linear-gradient(rgba(139, 111, 78, 0.2), rgba(139, 111, 78, 0.2)),
+    url("/assets/media/intro-poster-new.jpg") center / cover;
+  --scratch-photo-bg:
+    linear-gradient(to bottom, rgba(255, 248, 238, 0.1), rgba(45, 35, 27, 0.36)),
+    url("/assets/media/intro-poster-new.jpg") center / cover;
 }
 
 .scratch-envelope {
-  position: relative;
-  display: grid;
-  min-height: 100svh;
-  place-items: center;
-  overflow: hidden;
   background:
     radial-gradient(circle at 34% 28%, rgba(255, 255, 255, 0.42), transparent 18%),
     linear-gradient(115deg, rgba(98, 79, 55, 0.2), transparent 36%),
     #d7c4a7;
 }
 
-.lace-cover,
-.scratch-stage {
-  position: absolute;
-  inset: 0;
-}
-
-.lace-cover {
-  z-index: 3;
-  display: grid;
-  place-items: center;
-  width: 100%;
-  height: 100%;
-  padding: 0;
-  border: 0;
-  color: #fffaf1;
-  background:
-    linear-gradient(rgba(139, 111, 78, 0.2), rgba(139, 111, 78, 0.2)),
-    url("/assets/media/intro-poster-new.jpg") center / cover;
-  transition: opacity 900ms ease, transform 1100ms ease, visibility 900ms ease;
-}
-
-.scratch-envelope.is-open .lace-cover {
-  opacity: 0;
-  visibility: hidden;
-  transform: scale(1.04);
-  pointer-events: none;
-}
-
-.lace-cover__texture {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 30%, transparent 0 7px, rgba(255, 255, 255, 0.17) 8px 9px, transparent 10px),
-    radial-gradient(circle at 60% 64%, transparent 0 9px, rgba(255, 255, 255, 0.13) 10px 11px, transparent 12px),
-    repeating-linear-gradient(35deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 18px),
-    repeating-linear-gradient(-35deg, rgba(255, 255, 255, 0.12) 0 1px, transparent 1px 18px);
-  mix-blend-mode: screen;
-}
-
-.wax-seal {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  width: clamp(210px, 26vw, 320px);
-  aspect-ratio: 1;
-  place-items: center;
-  align-content: center;
-  border-radius: 44% 54% 48% 52%;
-  color: rgba(255, 255, 255, 0.92);
-  background:
-    radial-gradient(circle at 35% 28%, rgba(255, 255, 255, 0.84), transparent 27%),
-    radial-gradient(circle, #ede3cf 0 41%, #d8c6a9 43% 59%, #f8f1e4 60% 67%, #c7ac84 72%);
-  box-shadow:
-    inset 0 10px 28px rgba(255, 255, 255, 0.5),
-    inset 0 -18px 28px rgba(124, 89, 54, 0.24),
-    0 24px 80px rgba(66, 49, 31, 0.3);
-  font-family: "classic-script-mn", "leander-script-pro", cursive;
-  font-size: clamp(3rem, 7vw, 5rem);
-  line-height: 0.66;
-  text-shadow: 0 2px 8px rgba(107, 83, 54, 0.22);
-}
-
-.wax-seal span:nth-child(2) {
-  font-size: 0.62em;
-}
-
-.tap-open,
-.scratch-instruction {
-  position: absolute;
-  left: 50%;
-  bottom: 32px;
-  transform: translateX(-50%);
-  font-size: 0.72rem;
-  letter-spacing: 0.35em;
-  text-transform: uppercase;
-}
-
-.tap-open {
-  z-index: 2;
-  color: rgba(255, 255, 255, 0.76);
-  animation: scratchPulse 1800ms ease-in-out infinite;
-}
-
-.scratch-stage {
-  z-index: 1;
-  display: grid;
-  place-items: center;
-  padding: 28px;
-  opacity: 0;
-  transform: translateY(18px);
-  transition: opacity 900ms ease 360ms, transform 900ms ease 360ms;
-}
-
-.scratch-envelope.is-open .scratch-stage {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-.scratch-card {
-  position: relative;
-  width: min(92vw, 430px);
-  aspect-ratio: 0.72;
-  overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.46);
-  border-radius: 8px;
-  background: #f8f0e5;
-  box-shadow: 0 24px 88px rgba(66, 49, 31, 0.24);
-}
-
-.scratch-photo {
-  position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(to bottom, rgba(255, 248, 238, 0.1), rgba(45, 35, 27, 0.36)),
-    url("/assets/media/intro-poster-new.jpg") center / cover;
-  filter: saturate(0.8) sepia(0.18);
-}
-
-.scratch-content {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  align-content: end;
-  justify-items: center;
-  padding: 34px 28px 42px;
-  text-align: center;
-  color: #fffaf2;
-  text-shadow: 0 2px 18px rgba(36, 25, 17, 0.38);
-}
-
-.scratch-content p {
-  margin: 0 0 14px;
-  font-size: 0.78rem;
-  letter-spacing: 0.28em;
-  text-transform: uppercase;
-}
-
-.scratch-content h1 {
-  display: grid;
-  gap: 0;
-  margin: 0 0 16px;
-  font-family: "classic-script-mn", "leander-script-pro", cursive;
-  font-size: clamp(4rem, 16vw, 6.4rem);
-  font-weight: 400;
-  line-height: 0.68;
-}
-
-.scratch-content h1 span {
-  font-size: 0.5em;
-}
-
-.scratch-content strong {
-  font-size: 1.1rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-.scratch-content small {
-  margin-top: 8px;
-  font-size: 0.9rem;
-}
-
-.scratch-canvas {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  width: 100%;
-  height: 100%;
-  touch-action: none;
-  transition: opacity 700ms ease;
-}
-
-.scratch-canvas.is-cleared {
-  opacity: 0;
-  pointer-events: none;
-}
-
-.scratch-reset,
 .scratch-music {
+  position: fixed;
+  right: 22px;
+  bottom: 22px;
+  z-index: 8;
   display: grid;
   width: 44px;
   height: 44px;
@@ -206,20 +39,6 @@
   color: #3f352c;
   background: rgba(255, 252, 244, 0.78);
   backdrop-filter: blur(12px);
-}
-
-.scratch-reset {
-  position: absolute;
-  right: 14px;
-  top: 14px;
-  z-index: 4;
-}
-
-.scratch-music {
-  position: fixed;
-  right: 22px;
-  bottom: 22px;
-  z-index: 8;
   opacity: 0;
   pointer-events: none;
   transition: opacity 400ms ease;
@@ -228,29 +47,4 @@
 .scratch-music.is-visible {
   opacity: 1;
   pointer-events: auto;
-}
-
-.scratch-instruction {
-  color: rgba(63, 53, 44, 0.62);
-}
-
-@keyframes scratchPulse {
-  0%,
-  100% {
-    opacity: 0.48;
-  }
-
-  50% {
-    opacity: 1;
-  }
-}
-
-@media (max-width: 560px) {
-  .scratch-stage {
-    padding: 18px;
-  }
-
-  .scratch-card {
-    width: min(92vw, 360px);
-  }
 }

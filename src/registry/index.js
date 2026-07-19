@@ -1,5 +1,6 @@
 import { siteMeta as videoOpenMeta } from "../sites/video-open-invitation/data.js";
 import { siteMeta as laceScratchMeta } from "../sites/lace-photo-scratch/data.js";
+import { siteMeta as africaMeta } from "../sites/africa/data.js";
 
 /**
  * Central template registry.
@@ -23,6 +24,13 @@ const templates = [
     loadComponent: () =>
       import("../sites/lace-photo-scratch/LacePhotoScratch.jsx").then(
         (m) => m.LacePhotoScratch,
+      ),
+  },
+  {
+    meta: africaMeta,
+    loadComponent: () =>
+      import("../sites/africa/AfricaInvitation.jsx").then(
+        (m) => m.AfricaInvitation,
       ),
   },
 ];

@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { RotateCcw } from "lucide-react";
+import "./scratch-reveal-intro.css";
 
 /**
  * Scratch-to-reveal intro.

@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from "react";
+import "./video-open-intro.css";
 
 /**
  * Tap-to-open poster intro with intro video + fade.
