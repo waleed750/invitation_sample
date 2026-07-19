@@ -16,22 +16,29 @@
 
 ## 🚀 Next phase
 
-**Goal:** _<what we're building next, in 1 sentence>_
+**Goal:** Phase 1 Part 2 — wire registry into main.jsx, recompose both site components from shared intros/sections.
 
 ### Acceptance criteria
-1. _<concrete user-visible outcome>_
-2. _<...>_
+1. Gallery + template routes still work from registry (no hardcoded imports in main.jsx)
+2. Both templates render pixel/behavior-identical to before
+3. npm run build emits separate lazy chunks per template
 
 ### Files to create / edit
 | Type | File | Content |
 |---|---|---|
-| new | `path/to/file.ts` | _what it does_ |
+| edit | `src/main.jsx` | Build routes/gallery from `src/registry/index.js` with Suspense |
+| edit | `src/sites/video-open-invitation/data.js` | Conform to schema.js |
+| edit | `src/sites/video-open-invitation/VideoOpenInvitation.jsx` | Recompose from shared intros/sections |
+| edit | `src/sites/lace-photo-scratch/data.js` | Conform to schema.js |
+| edit | `src/sites/lace-photo-scratch/LacePhotoScratch.jsx` | Recompose from shared intros/sections |
 
 ### Closed decisions
-- _<choice + reasoning>_
+- Enums as frozen objects of string constants in templateTypes.js
+- Schema uses JSDoc @typedef with sections[] as ordered section descriptors
+- Shared intros fully data-driven via props, no hardcoded content
 
 ### Open decisions
-- _<question to ask the user before coding>_
+- (none)
 
 ---
 

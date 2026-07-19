@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-18T16:26:25.313Z
-> Files: 35 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-19
+> Files: 45 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -62,6 +62,28 @@
   - fn `normalizePath` L22-27 (~60 tok)
   - fn `TemplateIndex` L28-151 (~1347 tok)
   - fn `TemplateCard` L152-200 (~435 tok)
+
+## src/shared/intros/
+
+- `VideoOpenIntro.jsx` — Tap-to-open poster + video intro, fully data-driven (~310 tok)
+- `ScratchRevealIntro.jsx` — Scratch canvas + reveal intro, fully data-driven (~640 tok)
+
+## src/shared/sections/
+
+- `Hero.jsx` — Hero section: names, headline, background video (~170 tok)
+- `Countdown.jsx` — Live countdown to event date (~220 tok)
+- `Welcome.jsx` — Heading + body paragraph (~90 tok)
+- `Schedule.jsx` — Ordered schedule items (~170 tok)
+- `Details.jsx` — Venue details, time, map link (~240 tok)
+- `Map.jsx` — Embedded Google Maps iframe (~100 tok)
+- `MessageForm.jsx` — Guestbook/message form (~260 tok)
+- `index.js` — Barrel export for all sections (~80 tok)
+
+## src/registry/
+
+- `templateTypes.js` — Frozen enum objects for eventType, siteType, experienceType, introType, layoutFamily (~260 tok)
+- `schema.js` — JSDoc invitation data schema + Section type definitions (~900 tok)
+- `index.js` — Central templates array with React.lazy per site (~200 tok)
 
 ## src/sites/lace-photo-scratch/
 

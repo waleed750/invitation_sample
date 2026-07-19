@@ -55,17 +55,78 @@ export const invitationData = {
     detailsSubtitle: "Everything you need to know",
   },
   schedule: [
+    { title: "Starts", description: "The celebration begins." },
+    { title: "Dinner", description: "A special dinner with live music." },
+    { title: "Ends", description: "Dancing into the late evening." },
+  ],
+  sections: [
     {
-      title: "Starts",
-      description: "The celebration begins.",
+      type: "hero",
+      props: {
+        headline: "We're Getting Engaged",
+        firstName: "Abdelrahman",
+        secondName: "Nourhan",
+        displayDate: "20 June 2026",
+        heroVideoUrl,
+      },
     },
     {
-      title: "Dinner",
-      description: "A special dinner with live music.",
+      type: "countdown",
+      props: { date: "2026-06-20T20:00:00+03:00" },
     },
     {
-      title: "Ends",
-      description: "Dancing into the late evening.",
+      type: "imageDivider",
+      props: { imageUrl: stringLightsUrl },
+    },
+    {
+      type: "welcome",
+      props: {
+        title: "Welcome!",
+        body: "In the quiet glow of a special evening, surrounded by the people we love, we begin a new chapter. We would be honoured to have you celebrate with us.",
+      },
+    },
+    {
+      type: "schedule",
+      props: {
+        title: "Order of the Day",
+        subtitle: "What we have planned for you",
+        items: [
+          { title: "Starts", description: "The celebration begins." },
+          { title: "Dinner", description: "A special dinner with live music." },
+          { title: "Ends", description: "Dancing into the late evening." },
+        ],
+        coupleDancingUrl,
+      },
+    },
+    {
+      type: "details",
+      props: {
+        title: "The Details",
+        subtitle: "Everything you need to know",
+        venue: "La Reine venue",
+        startTime: "8 PM",
+        endTime: "12 AM",
+        mapUrl: "https://maps.app.goo.gl/r8MFkT4GcF5qgZFS7",
+        ornateBadgeUrl,
+      },
+    },
+    {
+      type: "map",
+      props: {
+        title: "La Reine venue map",
+        src: "/maps/embed/index.html",
+      },
+    },
+    {
+      type: "messageForm",
+      props: {
+        title: "Leave a Message",
+        subtitle: "Share your love, wishes, or a note for the happy couple.",
+      },
+    },
+    {
+      type: "footer",
+      props: { ornamentUrl: footerOrnamentUrl },
     },
   ],
 };

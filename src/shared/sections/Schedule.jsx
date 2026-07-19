@@ -1,0 +1,32 @@
+import React from "react";
+
+/**
+ * Schedule section — heading, kicker, and ordered list of items.
+ *
+ * Props:
+ *   title             — section heading
+ *   subtitle          — kicker text below heading
+ *   items             — array of { title, description }
+ *   coupleDancingUrl  — decorative illustration/photo (optional)
+ */
+export default function Schedule({ title, subtitle, items, coupleDancingUrl }) {
+  return (
+    <section className="schedule-section" aria-labelledby="schedule-title">
+      {coupleDancingUrl && (
+        <img className="dancing-art" src={coupleDancingUrl} alt="" aria-hidden="true" />
+      )}
+      <div className="section-inner" data-reveal>
+        <h2 id="schedule-title">{title}</h2>
+        <p className="section-kicker">{subtitle}</p>
+        <div className="schedule-list">
+          {items.map((item) => (
+            <article className="schedule-item" key={item.title}>
+              <h3>{item.title}</h3>
+              <p>{item.description}</p>
+            </article>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

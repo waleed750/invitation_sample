@@ -10,6 +10,12 @@ export const laceScratchData = {
     introType: "scratch-reveal",
     layoutFamily: "minimal-interactive",
   },
+  theme: {
+    background: "#f6eee0",
+    foreground: "#5a4a3a",
+    muted: "#9a8a78",
+    ivory: "#fffdf8",
+  },
   couple: {
     firstName: "Abdelrahman",
     secondName: "Nourhan",
@@ -24,6 +30,25 @@ export const laceScratchData = {
     musicUrl,
     ornamentUrl: footerOrnamentUrl,
   },
+  copy: {},
+  schedule: [],
+  sections: [
+    {
+      type: "scratchReveal",
+      props: {
+        photoUrl: introPosterUrl,
+        label: "Save the Date",
+        firstName: "Abdelrahman",
+        secondName: "Nourhan",
+        date: "20 June 2026",
+        location: "La Reine venue",
+      },
+    },
+    {
+      type: "footer",
+      props: { ornamentUrl: footerOrnamentUrl },
+    },
+  ],
 };
 
 export const siteMeta = {

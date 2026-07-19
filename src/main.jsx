@@ -1,61 +1,68 @@
-import React, { useMemo, useState } from "react";
+import React, { Suspense, useMemo, useState } from "react";
 import { createRoot } from "react-dom/client";
 import { ArrowRight, CheckCircle2, Layers3, Search, Sparkles } from "lucide-react";
-import { VideoOpenInvitation } from "./sites/video-open-invitation/VideoOpenInvitation";
-import { siteMeta as videoOpenMeta } from "./sites/video-open-invitation/data";
-import { LacePhotoScratch } from "./sites/lace-photo-scratch/LacePhotoScratch";
-import { siteMeta as laceScratchMeta } from "./sites/lace-photo-scratch/data";
+import registry from "./registry/index.js";
 import "./app.css";
 
-const templates = [videoOpenMeta, laceScratchMeta];
+const metaList = registry.map((entry) => entry.meta);
 
-const routes = {
-  "/video-open-invitation/": <VideoOpenInvitation />,
-  "/lace-photo-scratch/": <LacePhotoScratch />,
-};
+const LazyRoutes = Object.fromEntries(
+  registry.map((entry) => [
+    entry.meta.href,
+    React.lazy(() => entry.loadComponent().then((Component) => ({ default: Component }))),
+  ]),
+);
 
 function AppRouter() {
   const path = normalizePath(window.location.pathname);
-  return routes[path] ?? <TemplateIndex />;
+  const Component = LazyRoutes[path];
+
+  if (Component) {
+    return (
+      <Suspense fallback={<div style={{ padding: "2rem", textAlign: "center" }}>Loading…</div>}>
+        <Component />
+      </Suspense>
+    );
+  }
+
+  return <TemplateIndex />;
 }
 
 function normalizePath(pathname) {
-  if (pathname === "/video-open-invitation") return "/video-open-invitation/";
-  if (pathname === "/lace-photo-scratch") return "/lace-photo-scratch/";
-  return pathname;
+  return pathname.endsWith("/") ? pathname : pathname + "/";
 }
 
 function TemplateIndex() {
   const [query, setQuery] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("All");
-  const categories = useMemo(() => ["All", ...new Set(templates.map((template) => template.category))], []);
+  const categories = useMemo(() => ["All", ...new Set(metaList.map((meta) => meta.category))], []);
   const filteredTemplates = useMemo(
     () =>
-      templates.filter((template) => {
+      metaList.filter((meta) => {
         const haystack = [
-          template.title,
-          template.category,
-          template.eventType,
-          template.status,
-          template.summary,
-          template.template.siteType,
-          template.template.experienceType,
-          template.template.introType,
-          template.template.layoutFamily,
-          ...template.tags,
+          meta.title,
+          meta.category,
+          meta.eventType,
+          meta.status,
+          meta.summary,
+          meta.template.siteType,
+          meta.template.experienceType,
+          meta.template.introType,
+          meta.template.layoutFamily,
+          ...meta.tags,
         ]
           .join(" ")
           .toLowerCase();
-        const categoryMatches = selectedCategory === "All" || template.category === selectedCategory;
+        const categoryMatches = selectedCategory === "All" || meta.category === selectedCategory;
         return categoryMatches && haystack.includes(query.trim().toLowerCase());
       }),
     [query, selectedCategory],
   );
   const groupedTemplates = useMemo(
     () =>
-      filteredTemplates.reduce((groups, template) => {
-        groups[template.category] = groups[template.category] ?? [];
-        groups[template.category].push(template);
+      filteredTemplates.reduce((groups, meta) => {
+        groups[meta.category] = groups[meta.category] ?? [];
+        groups[meta.category].push(meta);
         return groups;
       }, {}),
     [filteredTemplates],
@@ -75,12 +82,12 @@ function TemplateIndex() {
           <div className="template-stats" aria-label="Template stats">
             <div>
               <Layers3 size={20} aria-hidden="true" />
-              <strong>{templates.length}</strong>
+              <strong>{metaList.length}</strong>
               <span>Sites</span>
             </div>
             <div>
               <CheckCircle2 size={20} aria-hidden="true" />
-              <strong>{templates.filter((template) => template.status.includes("Finished")).length}</strong>
+              <strong>{metaList.filter((meta) => meta.status.includes("Finished")).length}</strong>
               <span>Finished</span>
             </div>
             <div>
@@ -118,7 +125,7 @@ function TemplateIndex() {
         <section className="template-results" aria-live="polite">
           <div className="template-results__summary">
             <span>
-              Showing {filteredTemplates.length} of {templates.length} testable sites
+              Showing {filteredTemplates.length} of {metaList.length} testable sites
             </span>
             {query ? <button type="button" onClick={() => setQuery("")}>Clear search</button> : null}
           </div>
@@ -131,8 +138,8 @@ function TemplateIndex() {
                   <span>{categoryTemplates.length} site{categoryTemplates.length === 1 ? "" : "s"}</span>
                 </div>
                 <div className="template-index__grid">
-                  {categoryTemplates.map((template) => (
-                    <TemplateCard template={template} key={template.id} />
+                  {categoryTemplates.map((meta) => (
+                    <TemplateCard template={meta} key={meta.id} />
                   ))}
                 </div>
               </section>
