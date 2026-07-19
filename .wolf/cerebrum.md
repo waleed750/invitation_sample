@@ -21,3 +21,7 @@
 ## Decision Log
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
+
+- [2026-07-19] Decision: implementation delegated to opencode CLI (`opencode run --auto`), Claude reviews each phase against TASKS.md gates. Agent def: .claude/agents/opencode-delegate.md.
+- [2026-07-19] Learning: scraped thedigitalyes demos = minified React SPAs but all copy is SSR-baked into index.html (extract via HTML, not JS); hashed asset filenames; Typekit fonts can't be bundled → fallback stacks; ignore _external/ and _screenshot.png.
+- [2026-07-19] Do-not-repeat: section render keys must be `section.id ?? type-index` (plain type collides on repeated sections); intro CSS must live with the intro component, not in a site's lazy CSS chunk.
