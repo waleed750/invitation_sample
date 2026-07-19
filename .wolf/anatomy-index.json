@@ -1,0 +1,495 @@
+{
+  "version": 1,
+  "meta": {
+    "lastScanned": "2026-07-18T16:26:25.313Z",
+    "fileCount": 35,
+    "hits": 0,
+    "misses": 0,
+    "renderedHash": "42ae266ee36a48570ed69cadbf917ac0a1ea152d6dc9b758a59151a537c5750e",
+    "storeUpdatedAt": "2026-07-18T16:26:25.313Z"
+  },
+  "files": {
+    ".claude/commands/reframe.md": {
+      "description": "Mode: migrate [framework]",
+      "tokens": 551,
+      "hash": "17a75695be5d4629",
+      "size": 2221,
+      "mtimeMs": 1784391985298.0344,
+      "updatedAt": "2026-07-18T16:26:25.304Z",
+      "source": "scan"
+    },
+    ".claude/commands/security-audit.md": {
+      "description": "Layer 1 — Dependencies",
+      "tokens": 510,
+      "hash": "e6f7e0b7337c9c86",
+      "size": 2060,
+      "mtimeMs": 1784391985297.8867,
+      "updatedAt": "2026-07-18T16:26:25.304Z",
+      "source": "scan"
+    },
+    ".claude/rules/openwolf.md": {
+      "description": "",
+      "tokens": 328,
+      "hash": "6d735b2c1c54a916",
+      "size": 1323,
+      "mtimeMs": 1784391985291.2686,
+      "updatedAt": "2026-07-18T16:26:25.304Z",
+      "source": "scan"
+    },
+    ".claude/settings.json": {
+      "description": "",
+      "tokens": 514,
+      "hash": "f68759bb50af5ee4",
+      "size": 1799,
+      "mtimeMs": 1784391985290.9727,
+      "updatedAt": "2026-07-18T16:26:25.304Z",
+      "source": "scan"
+    },
+    ".codex/config.toml": {
+      "description": "",
+      "tokens": 7,
+      "hash": "d37497c327812159",
+      "size": 24,
+      "mtimeMs": 1784391985297.2832,
+      "updatedAt": "2026-07-18T16:26:25.305Z",
+      "source": "scan"
+    },
+    ".codex/hooks.json": {
+      "description": "",
+      "tokens": 727,
+      "hash": "3e06994ead62e7ce",
+      "size": 2544,
+      "mtimeMs": 1784391985297.229,
+      "updatedAt": "2026-07-18T16:26:25.305Z",
+      "source": "scan"
+    },
+    ".codex/prompts/reframe.md": {
+      "description": "Mode: migrate [framework]",
+      "tokens": 551,
+      "hash": "17a75695be5d4629",
+      "size": 2221,
+      "mtimeMs": 1784391985298.2354,
+      "updatedAt": "2026-07-18T16:26:25.305Z",
+      "source": "scan"
+    },
+    ".codex/prompts/security-audit.md": {
+      "description": "Layer 1 — Dependencies",
+      "tokens": 510,
+      "hash": "e6f7e0b7337c9c86",
+      "size": 2060,
+      "mtimeMs": 1784391985298.153,
+      "updatedAt": "2026-07-18T16:26:25.305Z",
+      "source": "scan"
+    },
+    ".DS_Store": {
+      "description": "",
+      "tokens": 1640,
+      "hash": "1836ebaf2e690a4a",
+      "size": 6148,
+      "mtimeMs": 1784372064978.9663,
+      "updatedAt": "2026-07-18T16:26:25.305Z",
+      "source": "scan"
+    },
+    ".gitignore": {
+      "description": "Git ignore rules",
+      "tokens": 118,
+      "hash": "9e62089c538a3ab2",
+      "size": 439,
+      "mtimeMs": 1784384893765.6873,
+      "updatedAt": "2026-07-18T16:26:25.305Z",
+      "source": "scan"
+    },
+    ".vercelignore": {
+      "description": "",
+      "tokens": 39,
+      "hash": "f7c495c269f0ff37",
+      "size": 144,
+      "mtimeMs": 1784380776129.0476,
+      "updatedAt": "2026-07-18T16:26:25.305Z",
+      "source": "scan"
+    },
+    "AGENTS.md": {
+      "description": "OpenWolf",
+      "tokens": 68,
+      "hash": "8c90778623bf50ac",
+      "size": 271,
+      "mtimeMs": 1784391985297.464,
+      "updatedAt": "2026-07-18T16:26:25.306Z",
+      "source": "scan"
+    },
+    "CLAUDE.md": {
+      "description": "OpenWolf",
+      "tokens": 57,
+      "hash": "b1ca356fa9d5f3a6",
+      "size": 225,
+      "mtimeMs": 1784391985291.5488,
+      "updatedAt": "2026-07-18T16:26:25.306Z",
+      "source": "scan"
+    },
+    "imports/cloudflare-link/batch-report.json": {
+      "description": "",
+      "tokens": 9076,
+      "hash": "0f51de1f5efbc43a",
+      "size": 31771,
+      "mtimeMs": 1784384874253.4053,
+      "updatedAt": "2026-07-18T16:26:25.306Z",
+      "source": "scan"
+    },
+    "imports/cloudflare-link/current-download-status.json": {
+      "description": "",
+      "tokens": 776,
+      "hash": "544b10c07d600bb7",
+      "size": 2715,
+      "mtimeMs": 1784391852788.3398,
+      "updatedAt": "2026-07-18T16:26:25.307Z",
+      "source": "scan"
+    },
+    "imports/cloudflare-link/demo-manifest.json": {
+      "description": "",
+      "tokens": 2231,
+      "hash": "f5105dcfc0135b93",
+      "size": 7811,
+      "mtimeMs": 1784384884634.1697,
+      "updatedAt": "2026-07-18T16:26:25.307Z",
+      "source": "scan"
+    },
+    "imports/cloudflare-link/digitalyes_all_sites_index.html": {
+      "description": "Directory listing for /digitalyes_all_sites/",
+      "tokens": 110,
+      "hash": "0d1e7c9f6f571c1b",
+      "size": 411,
+      "mtimeMs": 1784384860082.1143,
+      "updatedAt": "2026-07-18T16:26:25.307Z",
+      "source": "scan"
+    },
+    "imports/cloudflare-link/index.html": {
+      "description": "Directory listing for /",
+      "tokens": 116,
+      "hash": "6c0e26cbb8c6abbd",
+      "size": 435,
+      "mtimeMs": 1784384843349.454,
+      "updatedAt": "2026-07-18T16:26:25.307Z",
+      "source": "scan"
+    },
+    "imports/cloudflare-link/reports-index.html": {
+      "description": "Directory listing for /digitalyes_all_sites/reports/",
+      "tokens": 155,
+      "hash": "117e79c8a54d5307",
+      "size": 578,
+      "mtimeMs": 1784384873885.9148,
+      "updatedAt": "2026-07-18T16:26:25.307Z",
+      "source": "scan"
+    },
+    "imports/cloudflare-link/sample_data_index.html": {
+      "description": "Directory listing for /sample_data/",
+      "tokens": 156,
+      "hash": "5d59f13e96fae91c",
+      "size": 585,
+      "mtimeMs": 1784384860170.28,
+      "updatedAt": "2026-07-18T16:26:25.307Z",
+      "source": "scan"
+    },
+    "imports/cloudflare-link/site-zips-index.html": {
+      "description": "Directory listing for /digitalyes_all_sites/site-zips/",
+      "tokens": 543,
+      "hash": "350c7549b195044a",
+      "size": 2035,
+      "mtimeMs": 1784384873776.5593,
+      "updatedAt": "2026-07-18T16:26:25.308Z",
+      "source": "scan"
+    },
+    "index.html": {
+      "description": "You're invited - Abdelrahman & Nourhan",
+      "tokens": 264,
+      "hash": "15e956fc1c7e3fed",
+      "size": 989,
+      "mtimeMs": 1784380724674.6785,
+      "updatedAt": "2026-07-18T16:26:25.308Z",
+      "source": "scan"
+    },
+    "package-lock.json": {
+      "description": "npm lock file",
+      "tokens": 16695,
+      "hash": "7dbc82f0db26b7c4",
+      "size": 58431,
+      "mtimeMs": 1784379730621.9507,
+      "updatedAt": "2026-07-18T16:26:25.308Z",
+      "source": "scan"
+    },
+    "package.json": {
+      "description": "Node.js package manifest",
+      "tokens": 130,
+      "hash": "fd6ea9455e70b226",
+      "size": 455,
+      "mtimeMs": 1784379707231.5398,
+      "updatedAt": "2026-07-18T16:26:25.308Z",
+      "source": "scan"
+    },
+    "public/maps/embed/index.html": {
+      "description": "onEmbedLoad: onApiLoad",
+      "tokens": 768,
+      "hash": "996e91e0ce0bd4ed",
+      "size": 3021,
+      "mtimeMs": 1784379806969.406,
+      "updatedAt": "2026-07-18T16:26:25.309Z",
+      "source": "scan"
+    },
+    "README.md": {
+      "description": "Project documentation",
+      "tokens": 840,
+      "hash": "c8e93f61d8e73dc0",
+      "size": 3358,
+      "mtimeMs": 1784380776129.401,
+      "updatedAt": "2026-07-18T16:26:25.309Z",
+      "source": "scan"
+    },
+    "src/app.css": {
+      "description": "Styles: 57 rules, 2 media queries",
+      "tokens": 2238,
+      "hash": "5189adb82b639e94",
+      "size": 7832,
+      "mtimeMs": 1784380724675.9182,
+      "updatedAt": "2026-07-18T16:26:25.310Z",
+      "source": "scan"
+    },
+    "src/main.jsx": {
+      "description": "templates — uses useState, useMemo",
+      "tokens": 2079,
+      "hash": "520f2cec9abf0f07",
+      "size": 7274,
+      "mtimeMs": 1784380309818.178,
+      "updatedAt": "2026-07-18T16:26:25.311Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "AppRouter",
+          "kind": "fn",
+          "startLine": 17,
+          "endLine": 21,
+          "tokens": 36
+        },
+        {
+          "name": "normalizePath",
+          "kind": "fn",
+          "startLine": 22,
+          "endLine": 27,
+          "tokens": 60
+        },
+        {
+          "name": "TemplateIndex",
+          "kind": "fn",
+          "startLine": 28,
+          "endLine": 151,
+          "tokens": 1347
+        },
+        {
+          "name": "TemplateCard",
+          "kind": "fn",
+          "startLine": 152,
+          "endLine": 200,
+          "tokens": 435
+        }
+      ]
+    },
+    "src/sites/lace-photo-scratch/data.js": {
+      "description": "Exports laceScratchData, siteMeta",
+      "tokens": 342,
+      "hash": "aa86a64867d7119a",
+      "size": 1196,
+      "mtimeMs": 1784380724676.491,
+      "updatedAt": "2026-07-18T16:26:25.311Z",
+      "source": "scan"
+    },
+    "src/sites/lace-photo-scratch/LacePhotoScratch.jsx": {
+      "description": "LacePhotoScratch — renders chart — uses useRef, useState, useEffect",
+      "tokens": 1632,
+      "hash": "faa9231bc8a4c399",
+      "size": 5711,
+      "mtimeMs": 1784380193002.0305,
+      "updatedAt": "2026-07-18T16:26:25.311Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "LacePhotoScratch",
+          "kind": "fn",
+          "startLine": 6,
+          "endLine": 85,
+          "tokens": 671
+        },
+        {
+          "name": "ScratchCanvas",
+          "kind": "fn",
+          "startLine": 86,
+          "endLine": 145,
+          "tokens": 496
+        },
+        {
+          "name": "paintCover",
+          "kind": "fn",
+          "startLine": 146,
+          "endLine": 178,
+          "tokens": 326
+        },
+        {
+          "name": "calculateCleared",
+          "kind": "fn",
+          "startLine": 179,
+          "endLine": 189,
+          "tokens": 88
+        }
+      ]
+    },
+    "src/sites/lace-photo-scratch/styles.css": {
+      "description": "Styles: 32 rules, 1 media queries, 1 animations",
+      "tokens": 1525,
+      "hash": "5457dafc62b3f6ff",
+      "size": 5336,
+      "mtimeMs": 1784380724676.7632,
+      "updatedAt": "2026-07-18T16:26:25.312Z",
+      "source": "scan"
+    },
+    "src/sites/video-open-invitation/data.js": {
+      "description": "Exports invitationData, siteMeta",
+      "tokens": 727,
+      "hash": "10436e95acf9ea7d",
+      "size": 2544,
+      "mtimeMs": 1784380724676.2378,
+      "updatedAt": "2026-07-18T16:26:25.312Z",
+      "source": "scan"
+    },
+    "src/sites/video-open-invitation/styles.css": {
+      "description": "Styles: 82 rules, 1 media queries, 1 animations",
+      "tokens": 3087,
+      "hash": "b96b0f3836d40062",
+      "size": 10802,
+      "mtimeMs": 1784380075694.8193,
+      "updatedAt": "2026-07-18T16:26:25.312Z",
+      "source": "scan"
+    },
+    "src/sites/video-open-invitation/VideoOpenInvitation.jsx": {
+      "description": "useCountdown — renders form, map",
+      "tokens": 2938,
+      "hash": "96075fa330ee65eb",
+      "size": 10281,
+      "mtimeMs": 1784380087957.2173,
+      "updatedAt": "2026-07-18T16:26:25.312Z",
+      "source": "scan",
+      "symbols": [
+        {
+          "name": "useCountdown",
+          "kind": "fn",
+          "startLine": 6,
+          "endLine": 17,
+          "tokens": 102
+        },
+        {
+          "name": "getTimeLeft",
+          "kind": "fn",
+          "startLine": 18,
+          "endLine": 28,
+          "tokens": 89
+        },
+        {
+          "name": "useRevealOnScroll",
+          "kind": "fn",
+          "startLine": 29,
+          "endLine": 50,
+          "tokens": 182
+        },
+        {
+          "name": "VideoOpenInvitation",
+          "kind": "fn",
+          "startLine": 51,
+          "endLine": 139,
+          "tokens": 626
+        },
+        {
+          "name": "PosterVideoIntro",
+          "kind": "fn",
+          "startLine": 140,
+          "endLine": 186,
+          "tokens": 325
+        },
+        {
+          "name": "HeroVideoSection",
+          "kind": "fn",
+          "startLine": 187,
+          "endLine": 204,
+          "tokens": 170
+        },
+        {
+          "name": "CountdownSection",
+          "kind": "fn",
+          "startLine": 205,
+          "endLine": 223,
+          "tokens": 189
+        },
+        {
+          "name": "TimeBox",
+          "kind": "fn",
+          "startLine": 224,
+          "endLine": 234,
+          "tokens": 66
+        },
+        {
+          "name": "ImageDivider",
+          "kind": "fn",
+          "startLine": 235,
+          "endLine": 242,
+          "tokens": 50
+        },
+        {
+          "name": "WelcomeSection",
+          "kind": "fn",
+          "startLine": 243,
+          "endLine": 255,
+          "tokens": 94
+        },
+        {
+          "name": "ScheduleSection",
+          "kind": "fn",
+          "startLine": 256,
+          "endLine": 277,
+          "tokens": 212
+        },
+        {
+          "name": "VenueDetailsSection",
+          "kind": "fn",
+          "startLine": 278,
+          "endLine": 305,
+          "tokens": 272
+        },
+        {
+          "name": "MapSection",
+          "kind": "fn",
+          "startLine": 306,
+          "endLine": 321,
+          "tokens": 110
+        },
+        {
+          "name": "MessageSection",
+          "kind": "fn",
+          "startLine": 322,
+          "endLine": 355,
+          "tokens": 338
+        },
+        {
+          "name": "FooterSection",
+          "kind": "fn",
+          "startLine": 356,
+          "endLine": 363,
+          "tokens": 53
+        }
+      ]
+    },
+    "vercel.json": {
+      "description": "",
+      "tokens": 41,
+      "hash": "63a58b8a852ba9b1",
+      "size": 143,
+      "mtimeMs": 1784379767165.1006,
+      "updatedAt": "2026-07-18T16:26:25.312Z",
+      "source": "scan"
+    }
+  }
+}

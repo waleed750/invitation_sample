@@ -4,6 +4,11 @@ node_modules/
 # Vercel local state
 .vercel/
 
+# Archived scrape/audit material
+.workspace-archive/
+*_archive/
+imports/
+
 # Environment files
 .env
 .env.*

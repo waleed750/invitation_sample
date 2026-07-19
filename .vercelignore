@@ -12,3 +12,5 @@ node_modules/
 .parcel-cache/
 .turbo/
 coverage/
+../*_archive/
+.workspace-archive/
