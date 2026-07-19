@@ -5,7 +5,9 @@ import { RotateCcw } from "lucide-react";
  * Scratch-to-reveal intro.
  *
  * Props (fully data-driven):
- *   photoUrl      — revealed photo behind the scratch surface
+ *   sealWords     — words inside the wax seal (e.g. ["Save","the","date"])
+ *   tapLabel      — text below the seal (e.g. "Tap to open")
+ *   scratchLabel  — instruction after reveal (e.g. "Scratch to reveal")
  *   label         — short label (e.g. "Save the Date")
  *   firstName     — first person's name
  *   secondName    — second person's name
@@ -15,7 +17,9 @@ import { RotateCcw } from "lucide-react";
  *   onOpen        — called when the lace cover is tapped
  */
 export default function ScratchRevealIntro({
-  photoUrl,
+  sealWords = ["Save", "the", "date"],
+  tapLabel = "Tap to open",
+  scratchLabel = "Scratch to reveal",
   label,
   firstName,
   secondName,
@@ -29,11 +33,11 @@ export default function ScratchRevealIntro({
       <button className="lace-cover" type="button" onClick={onOpen} aria-label="Open save the date">
         <span className="lace-cover__texture" />
         <span className="wax-seal">
-          <span>Save</span>
-          <span>the</span>
-          <span>date</span>
+          {sealWords.map((word, i) => (
+            <span key={i}>{word}</span>
+          ))}
         </span>
-        <span className="tap-open">Tap to open</span>
+        <span className="tap-open">{tapLabel}</span>
       </button>
 
       <div className="scratch-stage" aria-hidden={!isOpen}>
@@ -51,7 +55,7 @@ export default function ScratchRevealIntro({
           </div>
           <ScratchCanvas />
         </div>
-        <p className="scratch-instruction">Scratch to reveal</p>
+        <p className="scratch-instruction">{scratchLabel}</p>
       </div>
     </section>
   );

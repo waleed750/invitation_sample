@@ -44,10 +44,6 @@ export const laceScratchData = {
         location: "La Reine venue",
       },
     },
-    {
-      type: "footer",
-      props: { ornamentUrl: footerOrnamentUrl },
-    },
   ],
 };
 

@@ -139,10 +139,10 @@ export function VideoOpenInvitation() {
       </button>
 
       <div className={`invitation-content ${introDone ? "is-visible" : ""}`}>
-        {sections.map((section) => {
+        {sections.map((section, index) => {
           const Component = sectionComponents[section.type];
           if (!Component) return null;
-          return <Component key={section.type} {...section.props} />;
+          return <Component key={section.id ?? `${section.type}-${index}`} {...section.props} />;
         })}
       </div>
     </main>

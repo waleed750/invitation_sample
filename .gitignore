@@ -32,6 +32,9 @@ Thumbs.db
 .parcel-cache/
 .turbo/
 
+# Wolf session hooks
+.wolf/hooks/_session.json
+
 # Build output from future Node/React tooling
 dist/
 build/

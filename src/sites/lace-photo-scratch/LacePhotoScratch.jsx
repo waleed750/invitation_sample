@@ -54,7 +54,6 @@ export function LacePhotoScratch() {
       </button>
 
       <ScratchRevealIntro
-        photoUrl={revealSection.props.photoUrl}
         label={revealSection.props.label}
         firstName={revealSection.props.firstName}
         secondName={revealSection.props.secondName}
