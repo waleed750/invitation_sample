@@ -63,6 +63,10 @@
   - fn `TemplateIndex` L28-151 (~1347 tok)
   - fn `TemplateCard` L152-200 (~435 tok)
 
+## src/shared/
+
+- `InvitationShell.jsx` — Shared invitation shell: useRevealOnScroll, audio/music toggle, body bg, theme CSS vars, intro wiring, sections.map render loop (~500 tok)
+
 ## src/shared/intros/
 
 - `VideoOpenIntro.jsx` — Tap-to-open poster + video intro, fully data-driven (~310 tok)
@@ -99,19 +103,10 @@
 
 - `data.js` — Exports invitationData, siteMeta (~727 tok)
 - `styles.css` — Styles: 82 rules, 1 media queries, 1 animations (~3087 tok)
-- `VideoOpenInvitation.jsx` — useCountdown — renders form, map (~2938 tok)
-  - fn `useCountdown` L6-17 (~102 tok)
-  - fn `getTimeLeft` L18-28 (~89 tok)
-  - fn `useRevealOnScroll` L29-50 (~182 tok)
-  - fn `VideoOpenInvitation` L51-139 (~626 tok)
-  - fn `PosterVideoIntro` L140-186 (~325 tok)
-  - fn `HeroVideoSection` L187-204 (~170 tok)
-  - fn `CountdownSection` L205-223 (~189 tok)
-  - fn `TimeBox` L224-234 (~66 tok)
-  - fn `ImageDivider` L235-242 (~50 tok)
-  - fn `WelcomeSection` L243-255 (~94 tok)
-  - fn `ScheduleSection` L256-277 (~212 tok)
-  - fn `VenueDetailsSection` L278-305 (~272 tok)
-  - fn `MapSection` L306-321 (~110 tok)
-  - fn `MessageSection` L322-355 (~338 tok)
-  - fn `FooterSection` L356-363 (~53 tok)
+- `VideoOpenInvitation.jsx` — Thin wrapper: local section components + InvitationShell render (~100 tok)
+
+## src/sites/africa/
+
+- `data.js` — Exports invitationData, siteMeta (10 sections, safari-editorial) (~800 tok)
+- `styles.css` — Styles: safari-editorial theme, ~600 lines (~2200 tok)
+- `AfricaInvitation.jsx` — Thin wrapper: AfricaFooter + sectionComponents map + InvitationShell render (~80 tok)

@@ -24,6 +24,12 @@
 - 26.6MB media → `public/assets/africa/` (hero-video.mp4 12MB is the size driver)
 - Pipeline learnings: demo copy is SSR-baked in index.html (regex-extractable); hashed asset names; Typekit fonts need fallback stacks; ignore `_external/` + `_screenshot.png` scraper artifacts
 
+### Prep for batch conversion — InvitationShell + media compression
+- `src/shared/InvitationShell.jsx` — shared shell owning useRevealOnScroll, audio/music toggle, body background, theme CSS vars, intro wiring, sections.map loop
+- Both `AfricaInvitation.jsx` and `VideoOpenInvitation.jsx` recomposed to ~40 lines each (local sections + map + one `<InvitationShell>`)
+- Africa media compressed 26.6MB → 13.2MB (50%): hero-video 12MB→1.4MB, intro-video 1.7MB→874KB, background-music 4.4MB→2.9MB, intro-poster 1MB→168KB
+- `TASKS.md` Phase 2 updated with "Demo conversion pipeline" subsection documenting the learned workflow
+
 ---
 
 ## 🚀 Next phase

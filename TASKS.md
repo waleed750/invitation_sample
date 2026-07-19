@@ -52,6 +52,22 @@ Per demo:
 
 **Done when (first demo):** new template appears in the gallery and its full flow works in dev and `npm run preview`.
 
+### Demo conversion pipeline (learned from africa)
+
+Per demo, execute in this order:
+
+1. **Extract copy from `index.html`** — demo content is SSR-baked into the HTML, not in JS bundles. Regex-extract headings, body text, schedule items, FAQ, etc.
+2. **Copy only used assets** to `public/assets/<product>/` with kebab-case names. Ignore `_external/` (scraper resource pages) and `_screenshot.png` (promo screenshots).
+3. **Compress media BEFORE committing:**
+   - Videos: `/opt/homebrew/bin/ffmpeg -i <in> -c:v libx264 -crf 26 -preset slow -c:a aac -b:a 128k -vf "scale='min(1080,iw)':-2" -movflags +faststart <out>` — keep only if meaningfully smaller; verify duration with `ffprobe`.
+   - Audio (> ~160k bitrate): `/opt/homebrew/bin/ffmpeg -i <in> -b:a 128k <out>`.
+   - JPEGs > 500KB: `/opt/homebrew/bin/ffmpeg -i <in> -q:v 4 <out>` — keep only if smaller.
+   - PNGs with transparency: leave alone (ffmpeg JPEG conversion loses alpha).
+4. **Compose from shared primitives:** each site component renders `<InvitationShell>` (from `src/shared/InvitationShell.jsx`) passing `theme`, `media`, `copy`, `sections`, `sectionComponents`, `shellClassName`, `contentClassName`. Local section components (footer, dividers, etc.) stay in the site file and are passed via the `sectionComponents` map.
+5. **New section types:** add as reusable presets in `src/shared/sections/` plus a new enum value in `templateTypes.js` — never one-offs in a site file.
+6. **Typekit fonts:** can't be bundled; use fallback stacks in `styles.css`.
+7. **Register** in `src/registry/index.js` — gallery card appears automatically from `siteMeta`.
+
 ## Phase 3 — Deploy to Vercel
 
 - [ ] Deploy with: framework `Vite`, install `npm install`, build `npm run build`, output `dist`. (`vercel.json` SPA rewrite + `cleanUrls` already present.)
