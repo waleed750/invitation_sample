@@ -1,0 +1,522 @@
+/*
+ * Maldives Beach Wedding — styles.css
+ *
+ * Fonts: demo used Adobe Typekit (unknown names).
+ * We fall back to tasteful system stacks:
+ *   display  → Georgia, "Times New Roman", serif
+ *   body     → system-ui, -apple-system, sans-serif
+ */
+
+/* ── Shell ────────────────────────────────────────────────────────── */
+.md-shell {
+  --primary: #2c4a3e;
+  --primary-fg: #faf6f1;
+  --accent: #8baa98;
+  --border: #d4ccc2;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.md-content {
+  opacity: 0;
+  transition: opacity 0.8s ease 0.2s;
+}
+.md-content.is-visible {
+  opacity: 1;
+}
+
+/* ── Section inner (shared) ──────────────────────────────────────── */
+.section-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+.section-inner.narrow {
+  max-width: 640px;
+}
+.section-inner h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 1rem;
+}
+.section-kicker {
+  color: var(--muted);
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+}
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.md-hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--background);
+}
+.md-hero__bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+.md-hero__bg-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.md-hero__gradient {
+  position: absolute;
+  inset-x: 0;
+  bottom: 0;
+  height: 40%;
+  z-index: 10;
+  pointer-events: none;
+  background: linear-gradient(to bottom, transparent, var(--background));
+}
+.md-hero__copy {
+  position: relative;
+  z-index: 20;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 8rem 1.5rem 2rem;
+}
+.md-hero__monogram {
+  width: 5rem;
+  height: auto;
+  margin-bottom: 1rem;
+  padding-top: 20px;
+  user-select: none;
+}
+.md-hero__copy h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 400;
+  color: var(--primary);
+  line-height: 0.95;
+  margin-bottom: 1.25rem;
+}
+.md-hero__amp {
+  font-style: italic;
+  font-size: 0.8em;
+  margin: 0 0.1em;
+}
+.md-hero__headline {
+  font-size: clamp(0.65rem, 2vw, 0.75rem);
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--primary);
+  max-width: 260px;
+  line-height: 1.5;
+  font-weight: 500;
+}
+.md-hero__in {
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-top: 0.75rem;
+  font-weight: 500;
+}
+.md-hero__location {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  color: var(--primary);
+  margin-top: 0.25rem;
+  line-height: 1.1;
+}
+.md-hero__dates {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.75rem;
+  color: var(--primary);
+}
+.md-hero__date-badge {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.md-hero__date-line {
+  width: 3rem;
+  height: 1px;
+  background: rgba(44, 74, 62, 0.5);
+  margin-bottom: 0.25rem;
+}
+.md-hero__date-badge span {
+  font-size: clamp(0.65rem, 2vw, 0.75rem);
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+.md-hero__date-dash {
+  font-size: 0.75rem;
+  color: rgba(44, 74, 62, 0.4);
+}
+.md-hero__cta {
+  font-size: clamp(0.6rem, 1.8vw, 0.7rem);
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: rgba(44, 74, 62, 0.5);
+  margin-top: 1.5rem;
+}
+.md-hero__lights {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  pointer-events: none;
+  user-select: none;
+  z-index: 15;
+  object-fit: cover;
+}
+.md-hero__palm {
+  position: absolute;
+  bottom: 0;
+  width: 30%;
+  max-width: 180px;
+  pointer-events: none;
+  user-select: none;
+  z-index: 15;
+}
+.md-hero__palm--left {
+  left: 0;
+}
+.md-hero__palm--right {
+  right: 0;
+}
+.md-hero__island {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 40%;
+  max-width: 260px;
+  pointer-events: none;
+  user-select: none;
+  z-index: 15;
+}
+
+/* ── Dress Code ──────────────────────────────────────────────────── */
+.md-dresscode {
+  background: var(--background);
+}
+.md-dresscode__event {
+  margin-bottom: 2rem;
+}
+.md-dresscode__event:last-child {
+  margin-bottom: 0;
+}
+.md-dresscode__event-title {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 0.25rem;
+}
+.md-dresscode__event-date {
+  font-size: 0.8rem;
+  color: var(--muted);
+  margin-bottom: 0.75rem;
+}
+.md-dresscode__colors {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.75rem;
+}
+.md-dresscode__color {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+}
+.md-dresscode__swatch {
+  width: 3.5rem;
+  height: 3.5rem;
+  object-fit: contain;
+  pointer-events: none;
+  user-select: none;
+}
+.md-dresscode__color-name {
+  font-size: 0.7rem;
+  color: var(--primary);
+  letter-spacing: 0.05em;
+}
+
+/* ── Travel ──────────────────────────────────────────────────────── */
+.md-travel {
+  background: var(--background);
+}
+.md-travel__eyebrow {
+  font-size: 0.8rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+}
+.md-travel__body {
+  white-space: pre-line;
+  line-height: 1.85;
+  text-align: left;
+  color: var(--primary);
+  opacity: 0.85;
+  margin-bottom: 0.5rem;
+}
+.md-travel__location {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  font-weight: 600;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+}
+.md-travel__venue-img {
+  display: block;
+  width: 100%;
+  max-width: 40rem;
+  margin: 0 auto;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── RSVP ────────────────────────────────────────────────────────── */
+.md-rsvp {
+  background: var(--background);
+}
+.md-rsvp__form {
+  text-align: left;
+}
+.md-rsvp__form fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+.md-rsvp__form legend {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.md-rsvp__form .rsvp-radio {
+  display: block;
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
+.md-rsvp__form .rsvp-radio input,
+.md-rsvp__form .rsvp-checkbox input {
+  margin-right: 0.5rem;
+}
+.md-rsvp__form .rsvp-checkbox {
+  display: block;
+  padding: 0.4rem 0;
+  cursor: pointer;
+  font-weight: 500;
+}
+.md-rsvp__form label {
+  display: block;
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+.md-rsvp__counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+.md-rsvp__counter button {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: rgba(255,255,255,0.5);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+}
+.md-rsvp__counter button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.md-rsvp__counter span {
+  font-size: 1.1rem;
+  min-width: 1.5rem;
+  text-align: center;
+}
+.md-rsvp__form textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  font: inherit;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.5);
+  resize: vertical;
+}
+.md-rsvp__form button[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: var(--primary);
+  color: var(--primary-fg);
+  border: none;
+  border-radius: 2rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.md-rsvp__form button[type="submit"]:hover {
+  opacity: 0.85;
+}
+.md-rsvp__form .form-status {
+  margin-top: 1rem;
+  color: var(--primary);
+  font-weight: 500;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.md-footer {
+  background: var(--background);
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+.md-footer__monogram {
+  display: block;
+  width: 4rem;
+  height: auto;
+  margin: 0 auto 1rem;
+  pointer-events: none;
+  user-select: none;
+}
+.md-footer__copy strong {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  color: var(--primary);
+}
+.md-footer__copy span {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.md-footer__credit {
+  margin-top: 0.75rem;
+  font-size: 0.7rem;
+  color: var(--muted);
+}
+
+/* ── Music button (shared pattern) ──────────────────────────────── */
+.music-button {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 80;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+.music-button.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Countdown overrides ────────────────────────────────────────── */
+.md-shell .countdown-section {
+  background: var(--background);
+}
+.md-shell .countdown-panel {
+  background: linear-gradient(#5a8a7a 0%, #4a7a6a 60%, #3a6a5a 100%);
+  mask-image: linear-gradient(transparent 0%, rgba(0,0,0,0.25) 7%, black 18%, black 82%, rgba(0,0,0,0.25) 93%, transparent 100%);
+}
+.md-shell .countdown-panel h2 {
+  color: var(--primary-fg);
+}
+.md-shell .countdown-until {
+  color: rgba(255,255,255,0.8);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.25rem, 4vw, 1.75rem);
+  margin-bottom: 1.25rem;
+}
+.md-shell .time-box strong {
+  color: #fff;
+}
+
+/* ── Welcome overrides ──────────────────────────────────────────── */
+.md-shell .welcome-section {
+  background: var(--background);
+}
+.md-shell .welcome-section p {
+  white-space: pre-line;
+  line-height: 1.85;
+  text-align: center;
+  color: var(--primary);
+  opacity: 0.85;
+}
+
+/* ── Schedule overrides ──────────────────────────────────────────── */
+.md-shell .schedule-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--background);
+}
+.md-shell .schedule-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+  user-select: none;
+  opacity: 0.15;
+}
+.md-shell .schedule-section .section-inner {
+  position: relative;
+  z-index: 1;
+}
+.md-shell .schedule-item h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: var(--primary);
+}
+.md-shell .schedule-item p {
+  color: var(--primary);
+  opacity: 0.7;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* ── Reveal-on-scroll animation ──────────────────────────────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}

@@ -3,6 +3,7 @@ import { siteMeta as laceScratchMeta } from "../sites/lace-photo-scratch/data.js
 import { siteMeta as africaMeta } from "../sites/africa/data.js";
 import { siteMeta as bohoMeta } from "../sites/boho/data.js";
 import { siteMeta as aventurerosMeta } from "../sites/aventureros/data.js";
+import { siteMeta as maldivesMeta } from "../sites/maldives/data.js";
 
 /**
  * Central template registry.
@@ -47,6 +48,13 @@ const templates = [
     loadComponent: () =>
       import("../sites/aventureros/AventurerosInvitation.jsx").then(
         (m) => m.AventurerosInvitation,
+      ),
+  },
+  {
+    meta: maldivesMeta,
+    loadComponent: () =>
+      import("../sites/maldives/MaldivesInvitation.jsx").then(
+        (m) => m.MaldivesInvitation,
       ),
   },
 ];
