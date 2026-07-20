@@ -2,6 +2,7 @@ import { siteMeta as videoOpenMeta } from "../sites/video-open-invitation/data.j
 import { siteMeta as laceScratchMeta } from "../sites/lace-photo-scratch/data.js";
 import { siteMeta as africaMeta } from "../sites/africa/data.js";
 import { siteMeta as bohoMeta } from "../sites/boho/data.js";
+import { siteMeta as aventurerosMeta } from "../sites/aventureros/data.js";
 
 /**
  * Central template registry.
@@ -39,6 +40,13 @@ const templates = [
     loadComponent: () =>
       import("../sites/boho/BohoInvitation.jsx").then(
         (m) => m.BohoInvitation,
+      ),
+  },
+  {
+    meta: aventurerosMeta,
+    loadComponent: () =>
+      import("../sites/aventureros/AventurerosInvitation.jsx").then(
+        (m) => m.AventurerosInvitation,
       ),
   },
 ];

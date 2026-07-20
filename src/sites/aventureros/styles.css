@@ -1,0 +1,483 @@
+/*
+ * Aventureros Wedding — styles.css
+ *
+ * Fonts: demo used Adobe Typekit (Cormorant Garamond, Inter, Playfair Display).
+ * We fall back to tasteful system stacks:
+ *   display  → Georgia, "Times New Roman", serif (replaces Cormorant Garamond)
+ *   body     → system-ui, -apple-system, sans-serif (replaces Inter)
+ *   script   → "Brush Script MT", cursive (replaces Playfair Display)
+ */
+
+/* ── Theme ──────────────────────────────────────────────────────── */
+.aventureros-shell {
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--foreground);
+  background: var(--background);
+}
+
+.aventureros-shell .hero-section,
+.aventureros-shell .countdown-section,
+.aventureros-shell .aventureros-footer {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.aventureros-content {
+  opacity: 0;
+  transition: opacity 0.8s ease 0.2s;
+}
+.aventureros-content.is-visible {
+  opacity: 1;
+}
+
+/* ── Music button (shared pattern) ──────────────────────────────── */
+.music-button {
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 80;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+.music-button.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Section inner (shared) ──────────────────────────────────────── */
+.section-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 4rem 1.5rem;
+  text-align: center;
+}
+.section-inner.narrow {
+  max-width: 640px;
+}
+
+.section-inner h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.75rem, 5vw, 2.5rem);
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 1rem;
+}
+.section-kicker {
+  color: var(--muted);
+  margin-bottom: 2rem;
+}
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.hero-section {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--background);
+}
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(250, 249, 246, 0) 0%,
+    rgba(250, 249, 246, 0.3) 50%,
+    rgba(250, 249, 246, 0.85) 100%
+  );
+  z-index: 2;
+  pointer-events: none;
+}
+.hero-copy {
+  position: relative;
+  z-index: 10;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  text-align: center;
+  padding: 4rem 1.5rem 2rem;
+}
+.hero-copy .eyebrow {
+  font-size: 0.75rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0.7;
+  margin-bottom: 1.5rem;
+}
+.hero-copy h1 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2.5rem, 8vw, 4.5rem);
+  font-weight: 300;
+  color: var(--foreground);
+  line-height: 1.1;
+}
+.hero-copy h1 span {
+  font-family: "Brush Script MT", cursive;
+  font-weight: 400;
+  font-size: 0.6em;
+  margin: 0 0.15em;
+}
+.hero-copy .date-line {
+  margin-top: 1rem;
+  font-size: 0.8rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0.7;
+}
+.hero-cta {
+  margin-top: 3rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--foreground);
+  opacity: 0.6;
+}
+
+/* ── Countdown ───────────────────────────────────────────────────── */
+.countdown-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--background);
+}
+.countdown-panel {
+  position: relative;
+  z-index: 1;
+}
+.countdown-panel h2 {
+  padding-top: 1rem;
+}
+.countdown-until {
+  color: var(--muted);
+  font-family: "Brush Script MT", cursive;
+  font-size: clamp(1.5rem, 5vw, 2.25rem);
+  margin-bottom: 1.25rem;
+}
+.countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+.time-box {
+  text-align: center;
+}
+.time-box strong {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(2rem, 6vw, 3rem);
+  font-weight: 300;
+  color: var(--foreground);
+  line-height: 1;
+}
+.time-box span {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── Details ─────────────────────────────────────────────────────── */
+.details-section {
+  background: var(--ivory);
+}
+.details-card {
+  background: rgba(255,255,255,0.6);
+  border-radius: 1rem;
+  padding: 2rem;
+  margin-bottom: 1.5rem;
+}
+.details-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.5rem;
+}
+.details-venue {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.25rem;
+}
+.details-location {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+.details-time {
+  color: var(--foreground);
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+.details-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+.details-map-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.7rem 1.5rem;
+  border: 1px solid var(--foreground);
+  border-radius: 2rem;
+  color: var(--foreground);
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background 0.2s, color 0.2s;
+}
+.details-map-link:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+.details-calendar-btn {
+  padding: 0.7rem 1.5rem;
+  border: 1px solid var(--foreground);
+  border-radius: 2rem;
+  color: var(--foreground);
+  font-weight: 500;
+  font-size: 0.9rem;
+  background: transparent;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.details-calendar-btn:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* ── Schedule ────────────────────────────────────────────────────── */
+.schedule-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--ivory);
+}
+.schedule-section .section-inner {
+  position: relative;
+  z-index: 1;
+}
+.schedule-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+.schedule-item h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+.schedule-item p {
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
+}
+
+/* ── Gifts ───────────────────────────────────────────────────────── */
+.gifts-section {
+  position: relative;
+  overflow: visible;
+  background: var(--ivory);
+}
+.gifts-section .section-inner {
+  position: relative;
+  z-index: 1;
+}
+.gifts-section p {
+  white-space: pre-line;
+  line-height: 1.75;
+  color: var(--foreground);
+  opacity: 0.8;
+}
+.gifts-cta {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 0.75rem 2rem;
+  border: 1px solid var(--foreground);
+  border-radius: 2rem;
+  color: var(--foreground);
+  font-weight: 600;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s;
+}
+.gifts-cta:hover {
+  background: var(--foreground);
+  color: var(--background);
+}
+
+/* ── RSVP ────────────────────────────────────────────────────────── */
+.rsvp-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--ivory);
+}
+.rsvp-section--confirm {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  background: #000;
+}
+.rsvp-confirm-video {
+  width: 100%;
+  max-width: 400px;
+  border-radius: 1rem;
+}
+.rsvp-form {
+  text-align: left;
+}
+.rsvp-form fieldset {
+  border: none;
+  padding: 0;
+  margin: 0 0 1.5rem;
+}
+.rsvp-form legend {
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+.rsvp-radio {
+  display: block;
+  padding: 0.5rem 0;
+  cursor: pointer;
+}
+.rsvp-radio input {
+  margin-right: 0.5rem;
+}
+.rsvp-form label {
+  display: block;
+  text-align: left;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+.rsvp-form input[type="text"],
+.rsvp-form input[type="email"],
+.rsvp-form textarea {
+  display: block;
+  width: 100%;
+  margin-top: 0.4rem;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 0.5rem;
+  font: inherit;
+  font-size: 0.95rem;
+  background: rgba(255,255,255,0.5);
+  resize: vertical;
+}
+.rsvp-counter {
+  display: inline-flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.4rem;
+}
+.rsvp-counter button {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid rgba(0,0,0,0.15);
+  background: rgba(255,255,255,0.5);
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  transition: background 0.15s;
+}
+.rsvp-counter button:hover:not(:disabled) {
+  background: rgba(0,0,0,0.05);
+}
+.rsvp-counter button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+.rsvp-counter span {
+  font-size: 1.1rem;
+  min-width: 1.5rem;
+  text-align: center;
+}
+.rsvp-form button[type="submit"] {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 2rem;
+  background: var(--foreground);
+  color: var(--background);
+  border: none;
+  border-radius: 2rem;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+.rsvp-form button[type="submit"]:hover {
+  opacity: 0.85;
+}
+.rsvp-form .form-status {
+  margin-top: 1rem;
+  color: var(--foreground);
+  font-weight: 500;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.aventureros-footer {
+  background: var(--background);
+  padding: 3rem 1.5rem;
+  text-align: center;
+}
+.aventureros-footer__copy strong {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.25rem;
+  color: var(--foreground);
+}
+.aventureros-footer__copy span {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8rem;
+  color: var(--muted);
+}
+.aventureros-footer__credit {
+  margin-top: 0.75rem;
+  font-size: 0.75rem;
+  color: var(--muted);
+}
+.aventureros-footer__credit a {
+  color: var(--foreground);
+  text-decoration: none;
+}
+
+/* ── Reveal-on-scroll animation ──────────────────────────────────── */
+[data-reveal] {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+[data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
