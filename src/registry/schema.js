@@ -128,6 +128,9 @@ export const SECTION_TYPES = Object.freeze({
   gifts: true,
   rsvp: true,
   faq: true,
+  weddingWeekend: true,
+  travelInfo: true,
+  bohoFooter: true,
 });
 
 /**
@@ -334,10 +337,71 @@ export const SECTION_TYPES = Object.freeze({
  */
 
 /**
+ * Wedding weekend — two-day celebration schedule.
+ *
+ * @typedef {SectionBase & {
+ *   type: 'weddingWeekend',
+ *   props: {
+ *     eyebrow: string,
+ *     title: string,
+ *     body: string,
+ *     tileFrameUrl?: string,
+ *     leafDividerUrl?: string,
+ *     palmSunsetUrl?: string,
+ *     events: Array<{ dateLabel: string, title: string }>,
+ *   }
+ * }} WeddingWeekendSection
+ */
+
+/**
+ * Travel information — airport cards for destination weddings.
+ *
+ * @typedef {SectionBase & {
+ *   type: 'travelInfo',
+ *   props: {
+ *     eyebrow: string,
+ *     title: string,
+ *     body: string,
+ *     shellDividerUrl?: string,
+ *     flowerDividerUrl?: string,
+ *     palmDividerUrl?: string,
+ *     palmStampUrl?: string,
+ *     airports: Array<{
+ *       code: string,
+ *       name: string,
+ *       location: string,
+ *       frameUrl?: string,
+ *       illustrationUrl?: string,
+ *       illustrations?: string[],
+ *     }>,
+ *   }
+ * }} TravelInfoSection
+ */
+
+/**
+ * Boho decorative footer — frame, monogram, starfish, credit.
+ *
+ * @typedef {SectionBase & {
+ *   type: 'bohoFooter',
+ *   props: {
+ *     names: string,
+ *     month: string,
+ *     year: string,
+ *     frameUrl?: string,
+ *     monogramUrl?: string,
+ *     starfishUrl?: string,
+ *     creditLine?: string,
+ *     creditName?: string,
+ *   }
+ * }} BohoFooterSection
+ */
+
+/**
  * Union of all section descriptors.
  *
  * @typedef {HeroSection|CountdownSection|WelcomeSection|ScheduleSection|
  *           DetailsSection|MapSection|MessageFormSection|
  *           ImageDividerSection|FooterSection|ScratchRevealSection|
- *           StorySection|DressCodeSection|GiftsSection|RsvpSection|FaqSection} Section
+ *           StorySection|DressCodeSection|GiftsSection|RsvpSection|FaqSection|
+ *           WeddingWeekendSection|TravelInfoSection|BohoFooterSection} Section
  */
