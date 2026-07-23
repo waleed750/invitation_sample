@@ -59,6 +59,12 @@
 - Change is CSS-only in `src/sites/excellence/styles.css`; shared `Countdown.jsx` and other sites were not touched
 - Verified `npm run build` succeeds; live dev/preview browser checks remain blocked in this sandbox by `listen EPERM`
 
+### Elegante demo converted (2026-07-23)
+- Implemented `TASKS-elegante.md` from local capture folder only: `src/sites/elegante/` with Andrea & Pedro content, video-open intro, ambient hero video overlay, countdown, welcome/gallery, venue, alternating day programme, dress code, pre-wedding events, location/transport, accommodation, gifts, RSVP, and Credit footer
+- Added shared `Gallery.jsx` and `ImageDivider.jsx`; extended shared `Schedule`, `Details`, `DressCode`, `HotelList`, `Gifts`, `Rsvp`, `Welcome`, and `InvitationShell` with backward-compatible optional props
+- Copied used local assets to `public/assets/elegante/` with stable kebab-case names; compressed intro poster and both videos with ffmpeg; omitted background music because the manifest listed an MP3 URL but no local response body was saved
+- Verified `npm run build` succeeds and emits a separate `EleganteInvitation` lazy chunk; live browser/overflow checks could not run because Vite dev server still fails to bind in this sandbox with `listen EPERM`
+
 ---
 
 ## 🚀 Next phase

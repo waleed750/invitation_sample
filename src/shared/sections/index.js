@@ -12,3 +12,5 @@ export { default as Rsvp } from "./Rsvp.jsx";
 export { default as Faq } from "./Faq.jsx";
 export { default as Credit } from "./Credit.jsx";
 export { default as HotelList } from "./HotelList.jsx";
+export { default as Gallery } from "./Gallery.jsx";
+export { default as ImageDivider } from "./ImageDivider.jsx";

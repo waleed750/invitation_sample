@@ -83,6 +83,8 @@
 - `MessageForm.jsx` — Guestbook/message form (~260 tok)
 - `Credit.jsx` — Reusable credit footer with portfolio link (~120 tok)
 - `HotelList.jsx` — Recommended hotel cards with image, price, note, booking status (~180 tok)
+- `Gallery.jsx` — Responsive image grid for invitation photo galleries (~120 tok)
+- `ImageDivider.jsx` — Centered decorative divider image with optional horizontal rule (~60 tok)
 - `index.js` — Barrel export for all sections (~90 tok)
 
 ## src/registry/
@@ -118,3 +120,9 @@
 - `data.js` — Exports invitationData, siteMeta (10 sections, luxury-floral) (~750 tok)
 - `styles.css` — Styles: luxury-floral theme, ~500 lines (~1800 tok)
 - `ExcellenceInvitation.jsx` — Thin wrapper: sectionComponents map + InvitationShell render (~70 tok)
+
+## src/sites/elegante/
+
+- `data.js` — Exports invitationData, siteMeta for Andrea & Pedro Elegante wedding route (~1000 tok)
+- `styles.css` — Gold/tan Elegante theme, gallery, venue, alternating timeline, hotel/gifts/RSVP styling (~2600 tok)
+- `EleganteInvitation.jsx` — Thin wrapper plus local Location & Transportation section (~220 tok)

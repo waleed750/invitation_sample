@@ -15,6 +15,9 @@ import { Send } from "lucide-react";
  *   guestCountMode — "select" or "stepper" (default "select")
  *   nameFieldLabel — label for guest name (default "Full name *")
  *   childrenMode — "checkbox" or "radios" (default "checkbox")
+ *   showDietaryField — render dietary requirements input (optional)
+ *   dietaryFieldLabel — label for dietary input (optional)
+ *   dietaryPlaceholder — placeholder for dietary input (optional)
  *   submitLabel — submit button label (default "Send RSVP")
  */
 export default function Rsvp({
@@ -28,6 +31,9 @@ export default function Rsvp({
   nameFieldLabel = "Full name *",
   childrenMode = "checkbox",
   childrenLabel = "Will any children be attending?",
+  showDietaryField,
+  dietaryFieldLabel = "Dietary requirements",
+  dietaryPlaceholder = "e.g. vegetarian, allergies, etc.",
   submitLabel = "Send RSVP",
 }) {
   const [status, setStatus] = useState("");
@@ -149,6 +155,13 @@ export default function Rsvp({
             Email address
             <input name="email" type="email" maxLength="120" placeholder="you@example.com" required />
           </label>
+
+          {showDietaryField && (
+            <label>
+              {dietaryFieldLabel}
+              <input name="dietaryRequirements" type="text" maxLength="180" placeholder={dietaryPlaceholder} />
+            </label>
+          )}
 
           {childrenMode === "radios" ? (
             <fieldset>

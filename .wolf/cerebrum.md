@@ -26,6 +26,7 @@
 - [2026-07-23] Timed hero overlays need hero-video playback synchronized to post-intro content visibility. In InvitationShell, site content is mounted but opacity-hidden while VideoOpenIntro plays, so a normal `autoPlay` hero video can finish behind the intro before the guest sees it. `Hero.jsx` now disables autoplay and restarts playback from 0 only when the parent content wrapper gets `.is-visible`, but only for callers that pass `overlayFadeOutAt`.
 - [2026-07-23] Shared section removals for a single demo should only unwire that demo's `data.js`/section map and any demo metadata; keep reusable shared components, schema entries, exports, and public assets unless the task explicitly asks for deletion. Applied to Excellence `hotelList` removal.
 - [2026-07-23] The current Codex sandbox may block local Vite server binding with `listen EPERM` even after a successful production build; do not treat this as an app build failure. Record the limitation and ask the user to run live viewport checks locally if browser verification is required.
+- [2026-07-23] Premium Elegante local capture lists `wedding-background-music-yxy0nS2O.mp3` in `network/manifest.json`, but `local_path` is null because the body was not saved. For local-only conversions, omit `musicUrl` when the actual media file is missing; `InvitationShell` now hides the music button when no music URL is provided.
 
 ## Decision Log
 

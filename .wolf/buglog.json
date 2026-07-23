@@ -82,8 +82,8 @@
       "fix": "No application code fix was needed. Verified `npm run build` instead and recorded the limitation so the user can run `npm run dev` locally for visual viewport checks outside the sandbox.",
       "tags": ["environment", "vite", "dev-server", "verification", "sandbox"],
       "related_bugs": [],
-      "occurrences": 3,
-      "last_seen": "2026-07-23T13:28:40+03:00"
+      "occurrences": 4,
+      "last_seen": "2026-07-23T21:06:00+03:00"
     },
     {
       "id": "bug-008",

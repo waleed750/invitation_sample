@@ -133,6 +133,8 @@ export const SECTION_TYPES = Object.freeze({
   bohoFooter: true,
   credit: true,
   hotelList: true,
+  gallery: true,
+  locationTransport: true,
 });
 
 /**

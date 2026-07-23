@@ -54,6 +54,7 @@ export default function InvitationShell({
   const [introDone, setIntroDone] = useState(false);
   const [musicPlaying, setMusicPlaying] = useState(false);
   const finishIntro = useCallback(() => setIntroDone(true), []);
+  const hasMusic = Boolean(media.musicUrl);
 
   useRevealOnScroll(introDone);
 
@@ -103,7 +104,7 @@ export default function InvitationShell({
         "--ivory": theme.ivory,
       }}
     >
-      <audio ref={audioRef} loop preload="auto" src={media.musicUrl} />
+      {hasMusic && <audio ref={audioRef} loop preload="auto" src={media.musicUrl} />}
 
       <IntroComponent
         posterUrl={media.introPosterUrl}
@@ -115,14 +116,16 @@ export default function InvitationShell({
         onFinished={finishIntro}
       />
 
-      <button
-        className={`music-button ${introDone ? "is-visible" : ""}`}
-        type="button"
-        aria-label={musicPlaying ? "Pause music" : "Play music"}
-        onClick={toggleMusic}
-      >
-        {musicPlaying ? <Music2 size={19} /> : <Music size={19} />}
-      </button>
+      {hasMusic && (
+        <button
+          className={`music-button ${introDone ? "is-visible" : ""}`}
+          type="button"
+          aria-label={musicPlaying ? "Pause music" : "Play music"}
+          onClick={toggleMusic}
+        >
+          {musicPlaying ? <Music2 size={19} /> : <Music size={19} />}
+        </button>
+      )}
 
       <div className={`${contentClassName} ${introDone ? "is-visible" : ""}`}>
         {sections.map((section, index) => {

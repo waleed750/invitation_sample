@@ -1,0 +1,491 @@
+@import url("https://use.typekit.net/xoc5iak.css");
+
+.citystars-shell {
+  --primary: #92723a;
+  --primary-fg: #f9f6f1;
+  --accent: #c5a56d;
+  --gold: #c5a56d;
+  --gold-soft: #ac8b53;
+  --sage-dark: #835d2f;
+  --sage-light: #92723a;
+  --cream: #f0ebd6;
+  --champagne: #e8e3c9;
+  --border: #d9d0bf;
+  --font-body: "arek-armenian", Georgia, serif;
+  --font-display: "sweet-fancy-script", "Brush Script MT", cursive;
+  --font-script: "sweet-fancy-script", "Brush Script MT", cursive;
+  color: var(--foreground);
+  background: var(--background);
+  font-family: var(--font-body);
+}
+
+.citystars-content {
+  opacity: 0;
+  transition: opacity 0.8s ease 0.2s;
+}
+.citystars-content.is-visible {
+  opacity: 1;
+}
+
+.citystars-shell .section-inner {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 4.75rem 1.5rem;
+  text-align: center;
+}
+.citystars-shell .section-inner.narrow {
+  max-width: 660px;
+}
+.citystars-shell h2 {
+  color: var(--sage-dark);
+  font-family: var(--font-display);
+  font-size: clamp(3.1rem, 11vw, 5.8rem);
+  font-weight: 400;
+  line-height: 0.95;
+  margin: 0 0 1rem;
+}
+.citystars-shell .section-kicker {
+  color: var(--gold-soft);
+  font-size: 0.8rem;
+  letter-spacing: 0.18em;
+  line-height: 1.6;
+  margin: 0 0 2.25rem;
+  text-transform: uppercase;
+  white-space: pre-line;
+}
+
+.citystars-shell [data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.citystars-shell [data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.citystars-shell .hero-section {
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: #f5f3ef;
+}
+.citystars-shell .hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.citystars-shell .hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: rgba(0, 0, 0, 0.28);
+}
+.citystars-shell .hero-copy {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 5rem 1.5rem 2rem;
+  text-align: center;
+  color: #fff;
+  text-shadow: 0 2px 18px rgba(58, 38, 18, 0.32);
+}
+.citystars-shell .hero-copy .eyebrow {
+  margin: 0 0 1.25rem;
+  font-size: 0.74rem;
+  font-weight: 700;
+  letter-spacing: 0.38em;
+  text-transform: uppercase;
+}
+.citystars-shell .hero-copy h1 {
+  display: grid;
+  gap: 0.05em;
+  margin: 0;
+  color: #fff;
+  font-family: var(--font-script);
+  font-size: clamp(4.5rem, 19vw, 8.5rem);
+  font-weight: 400;
+  line-height: 0.86;
+}
+.citystars-shell .hero-copy h1 span {
+  display: block;
+  font-family: var(--font-script);
+}
+.citystars-shell .hero-copy .hero-amp {
+  font-size: 0.5em;
+  font-style: italic;
+}
+.citystars-shell .hero-copy .date-line {
+  margin-top: auto;
+  padding-bottom: 4.5rem;
+  color: #fff;
+  font-size: clamp(1.35rem, 5vw, 2.35rem);
+  letter-spacing: 0.12em;
+}
+.citystars-shell .hero-scroll-cue {
+  position: absolute;
+  left: 50%;
+  bottom: 1.35rem;
+  z-index: 4;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  transform: translateX(-50%);
+  color: #fff;
+  font-size: 0.68rem;
+  font-weight: 700;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  text-shadow: 0 1px 12px rgba(58, 38, 18, 0.42);
+}
+
+.citystars-shell .countdown-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--cream);
+}
+.citystars-shell .countdown-panel {
+  position: relative;
+}
+.citystars-shell .countdown-grid {
+  display: flex;
+  justify-content: center;
+}
+.citystars-shell .time-box {
+  position: relative;
+  min-width: 5.6rem;
+  padding: 0 1rem;
+  text-align: center;
+}
+.citystars-shell .time-box:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  top: 0.4rem;
+  right: 0;
+  width: 1px;
+  height: 2.6rem;
+  background: rgba(131, 93, 47, 0.24);
+}
+.citystars-shell .time-box strong {
+  display: block;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-size: clamp(2.9rem, 12vw, 4.7rem);
+  font-style: italic;
+  font-weight: 400;
+  line-height: 0.9;
+}
+.citystars-shell .time-box span {
+  display: block;
+  margin-top: 0.75rem;
+  color: var(--sage-dark);
+  font-size: 0.62rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+.citystars-shell .countdown-until {
+  margin: 0 0 2.4rem;
+  color: rgba(131, 93, 47, 0.62);
+  font-size: 0.76rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.citystars-shell .welcome-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--ivory);
+}
+.citystars-shell .welcome-section p {
+  margin: 0 auto;
+  max-width: 42rem;
+  color: rgba(131, 93, 47, 0.88);
+  font-size: 1.05rem;
+  font-style: italic;
+  line-height: 1.8;
+  text-align: center;
+}
+
+.citystars-shell .image-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1.5rem;
+  padding: 3.75rem 1.5rem;
+  background: var(--ivory);
+}
+.citystars-shell .image-divider span {
+  width: min(6rem, 24vw);
+  height: 1px;
+  background: rgba(131, 93, 47, 0.2);
+}
+.citystars-shell .image-divider img {
+  width: min(10rem, 42vw);
+  max-height: 10rem;
+  object-fit: contain;
+  opacity: 0.85;
+}
+.citystars-shell .image-divider:not(:has(img)) {
+  padding: 2.5rem 1.5rem;
+}
+
+.citystars-shell .details-section {
+  background: var(--gold);
+}
+.citystars-shell .details-section h2,
+.citystars-shell .details-section .section-kicker {
+  color: var(--ivory);
+}
+.citystars-shell .badge-frame {
+  display: grid;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(197, 165, 109, 0.25);
+  border-radius: 8px;
+  background: #fff;
+  box-shadow: 0 18px 38px rgba(58, 38, 18, 0.13);
+  text-align: center;
+}
+.citystars-shell .badge-frame h3 {
+  display: none;
+}
+.citystars-shell .details-image {
+  width: min(100%, 31rem);
+  max-height: 22rem;
+  object-fit: contain;
+  margin: 0 auto;
+}
+.citystars-shell .venue-name {
+  color: var(--sage-dark);
+  font-family: var(--font-display);
+  font-size: clamp(2.2rem, 9vw, 3.8rem);
+  line-height: 1;
+  text-align: center;
+}
+.citystars-shell .time-line,
+.citystars-shell .details-address p {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  color: rgba(131, 93, 47, 0.76);
+  line-height: 1.7;
+  text-align: center;
+}
+.citystars-shell .details-address {
+  margin-top: 1rem;
+}
+.citystars-shell .map-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  margin-top: 1.5rem;
+  border-bottom: 1px solid rgba(131, 93, 47, 0.26);
+  color: var(--sage-dark);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.citystars-shell .schedule-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--cream);
+}
+.citystars-shell .schedule-section .section-inner {
+  position: relative;
+  z-index: 1;
+}
+.citystars-shell .schedule-timeline {
+  position: relative;
+  display: grid;
+  gap: 0;
+  max-width: 40rem;
+  margin: 2rem auto 0;
+  padding: 0;
+  list-style: none;
+}
+.citystars-shell .schedule-timeline::before {
+  content: "";
+  position: absolute;
+  top: 0.55rem;
+  bottom: 0.55rem;
+  left: 50%;
+  width: 1px;
+  background: rgba(131, 93, 47, 0.4);
+  transform: translateX(-50%);
+}
+.citystars-shell .schedule-stop {
+  position: relative;
+  display: grid;
+  width: 50%;
+  min-height: 3.3rem;
+  padding: 0.4rem 1.75rem 0.4rem 0;
+  text-align: right;
+}
+.citystars-shell .schedule-stop:nth-child(odd) {
+  margin-left: 50%;
+  padding: 0.4rem 0 0.4rem 1.75rem;
+  text-align: left;
+}
+.citystars-shell .schedule-stop::before {
+  content: "";
+  position: absolute;
+  top: 1rem;
+  right: -0.35rem;
+  width: 0.7rem;
+  height: 1px;
+  background: rgba(131, 93, 47, 0.42);
+}
+.citystars-shell .schedule-stop:nth-child(odd)::before {
+  right: auto;
+  left: -0.35rem;
+}
+.citystars-shell .schedule-stop strong {
+  color: var(--sage-dark);
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+}
+.citystars-shell .schedule-stop span {
+  color: rgba(131, 93, 47, 0.76);
+  font-size: 0.76rem;
+  letter-spacing: 0.12em;
+  line-height: 1.55;
+  text-transform: uppercase;
+}
+
+.citystars-shell .dresscode-section {
+  position: relative;
+  overflow: hidden;
+  min-height: 30rem;
+  background: var(--sage-dark);
+}
+.citystars-shell .dresscode-illustration {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(3px);
+  opacity: 0.42;
+}
+.citystars-shell .dresscode-section .section-inner {
+  position: relative;
+  z-index: 1;
+  margin-block: 3rem;
+  border: 1px solid rgba(217, 208, 191, 0.62);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 20px 45px rgba(58, 38, 18, 0.18);
+}
+.citystars-shell .dresscode-group-list {
+  display: grid;
+  gap: 1.4rem;
+}
+.citystars-shell .dresscode-group + .dresscode-group {
+  padding-top: 1.4rem;
+  border-top: 1px solid rgba(131, 93, 47, 0.24);
+}
+.citystars-shell .dresscode-group h3 {
+  margin: 0 0 0.35rem;
+  color: var(--sage-dark);
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 8vw, 3.2rem);
+  font-weight: 400;
+}
+.citystars-shell .dresscode-group p {
+  margin: 0;
+  color: rgba(131, 93, 47, 0.72);
+  font-style: italic;
+  text-align: center;
+}
+
+.citystars-shell .gifts-section {
+  position: relative;
+  overflow: hidden;
+  background: var(--sage-dark);
+}
+.citystars-shell .gifts-section .section-inner {
+  position: relative;
+  z-index: 1;
+}
+.citystars-shell .gifts-section h2,
+.citystars-shell .gifts-section .section-inner > p {
+  color: var(--ivory);
+}
+.citystars-shell .gifts-section .section-inner > p {
+  margin: 0 auto 1.4rem;
+  max-width: 36rem;
+  line-height: 1.75;
+}
+
+.citystars-shell .credit-section {
+  background: var(--ivory);
+  color: var(--sage-dark);
+}
+.citystars-shell .credit-closing {
+  margin-bottom: 2rem;
+}
+.citystars-shell .credit-couple {
+  margin: 0;
+  color: var(--sage-dark);
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 11vw, 4.7rem);
+  line-height: 1;
+}
+.citystars-shell .credit-date,
+.citystars-shell .credit-line {
+  color: rgba(131, 93, 47, 0.74);
+}
+.citystars-shell .credit-link {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+@media (min-width: 760px) {
+  .citystars-shell .bank-account-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 520px) {
+  .citystars-shell .section-inner {
+    padding: 3.75rem 1rem;
+  }
+
+  .citystars-shell .time-box {
+    min-width: 0;
+    padding: 0 0.65rem;
+  }
+
+  .citystars-shell .schedule-stop,
+  .citystars-shell .schedule-stop:nth-child(odd) {
+    width: 100%;
+    margin-left: 0;
+    padding: 0.45rem 0 0.45rem 1.5rem;
+    text-align: left;
+  }
+
+  .citystars-shell .schedule-timeline::before {
+    left: 0.15rem;
+  }
+
+  .citystars-shell .schedule-stop::before,
+  .citystars-shell .schedule-stop:nth-child(odd)::before {
+    left: 0.15rem;
+    right: auto;
+    width: 0.8rem;
+  }
+}

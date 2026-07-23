@@ -5,6 +5,8 @@ import { siteMeta as bohoMeta } from "../sites/boho/data.js";
 import { siteMeta as aventurerosMeta } from "../sites/aventureros/data.js";
 import { siteMeta as maldivesMeta } from "../sites/maldives/data.js";
 import { siteMeta as excellenceMeta } from "../sites/excellence/data.js";
+import { siteMeta as eleganteMeta } from "../sites/elegante/data.js";
+import { siteMeta as citystarsMeta } from "../sites/citystars/data.js";
 
 /**
  * Central template registry.
@@ -63,6 +65,20 @@ const templates = [
     loadComponent: () =>
       import("../sites/excellence/ExcellenceInvitation.jsx").then(
         (m) => m.ExcellenceInvitation,
+      ),
+  },
+  {
+    meta: eleganteMeta,
+    loadComponent: () =>
+      import("../sites/elegante/EleganteInvitation.jsx").then(
+        (m) => m.EleganteInvitation,
+      ),
+  },
+  {
+    meta: citystarsMeta,
+    loadComponent: () =>
+      import("../sites/citystars/CitystarsInvitation.jsx").then(
+        (m) => m.CitystarsInvitation,
       ),
   },
 ];

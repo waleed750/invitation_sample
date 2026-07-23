@@ -8,8 +8,9 @@ import React from "react";
  *   body           — description text
  *   illustrationUrl — decorative illustration (optional)
  *   cards          — illustrated dress-code cards (optional)
+ *   groups         — flat attire groups [{ heading, body }] (optional)
  */
-export default function DressCode({ title, body, illustrationUrl, cards }) {
+export default function DressCode({ title, body, illustrationUrl, cards, groups }) {
   return (
     <section className="dresscode-section" aria-labelledby="dresscode-title">
       <div className="section-inner narrow" data-reveal>
@@ -22,6 +23,15 @@ export default function DressCode({ title, body, illustrationUrl, cards }) {
                 {card.heading && <h3>{card.heading}</h3>}
                 {card.date && <p className="dresscode-date">{card.date}</p>}
                 {card.attire && <p className="dresscode-attire">{card.attire}</p>}
+              </article>
+            ))}
+          </div>
+        ) : groups?.length ? (
+          <div className="dresscode-group-list">
+            {groups.map((group) => (
+              <article className="dresscode-group" key={group.heading}>
+                <h3>{group.heading}</h3>
+                <p>{group.body}</p>
               </article>
             ))}
           </div>
