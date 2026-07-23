@@ -43,15 +43,31 @@ function TimeBox({ value, label, pad = false }) {
  *   untilLabel     — subtitle below heading (optional)
  *   bgImage        — background image overlay (optional)
  *   overlayImage   — foreground decoration (optional)
+ *   columnLeftUrl  — left decorative column image (optional)
+ *   columnRightUrl — right decorative column image (optional)
  *   showYears      — show Years box (optional)
  *   showMonths     — show Months box (optional)
+ *   showSeconds    — show Seconds box (default true)
  */
-export default function Countdown({ date, title, untilLabel, bgImage, overlayImage, showYears, showMonths }) {
+export default function Countdown({
+  date,
+  title,
+  untilLabel,
+  bgImage,
+  overlayImage,
+  columnLeftUrl,
+  columnRightUrl,
+  showYears,
+  showMonths,
+  showSeconds = true,
+}) {
   const timeLeft = useCountdown(date);
 
   return (
     <section className="countdown-section" id="countdown" aria-labelledby="countdown-title">
       {bgImage && <img className="countdown-bg" src={bgImage} alt="" aria-hidden="true" />}
+      {columnLeftUrl && <img className="countdown-column-left" src={columnLeftUrl} alt="" aria-hidden="true" />}
+      {columnRightUrl && <img className="countdown-column-right" src={columnRightUrl} alt="" aria-hidden="true" />}
       <div className="countdown-panel">
         <div className="section-inner narrow" data-reveal>
           <h2 id="countdown-title">{title || "Countdown"}</h2>
@@ -60,8 +76,8 @@ export default function Countdown({ date, title, untilLabel, bgImage, overlayIma
             {showMonths && <TimeBox value={timeLeft.days > 30 ? Math.floor(timeLeft.days / 30) : 0} label="Months" />}
             <TimeBox value={timeLeft.days} label="Days" />
             <TimeBox value={timeLeft.hours} label="Hours" pad />
-            <TimeBox value={timeLeft.minutes} label="Mins" pad />
-            <TimeBox value={timeLeft.seconds} label="Secs" pad />
+            <TimeBox value={timeLeft.minutes} label="Minutes" pad />
+            {showSeconds && <TimeBox value={timeLeft.seconds} label="Seconds" pad />}
           </div>
         </div>
       </div>

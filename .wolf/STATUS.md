@@ -2,7 +2,7 @@
 
 > Single source of truth for resuming work. Read this FIRST when starting a session.
 > Update this file at the end of every work phase so the next `/clear` resumes in 1 read.
-> Last updated: 2026-07-19
+> Last updated: 2026-07-23
 
 ---
 
@@ -29,6 +29,35 @@
 - Both `AfricaInvitation.jsx` and `VideoOpenInvitation.jsx` recomposed to ~40 lines each (local sections + map + one `<InvitationShell>`)
 - Africa media compressed 26.6MB → 13.2MB (50%): hero-video 12MB→1.4MB, intro-video 1.7MB→874KB, background-music 4.4MB→2.9MB, intro-poster 1MB→168KB
 - `TASKS.md` Phase 2 updated with "Demo conversion pipeline" subsection documenting the learned workflow
+
+### Excellence demo converted (2026-07-23)
+- `src/sites/excellence/` — data.js (10 sections, luxury-floral layoutFamily), ExcellenceInvitation.jsx, styles.css
+- New shared section: Credit.jsx (reusable footer with portfolio link)
+- 21 images compressed to `public/assets/excellence/` (intro-poster.jpg 1.0MB→117KB)
+- Scraped live from tdy-excellence-template.thedigitalyes.com (local zip was broken)
+- Content: Diana & Richard wedding, Peninsula Hotel Istanbul, wedding weekend itinerary
+
+### Excellence fidelity fixes (2026-07-23)
+- Implemented `TASKS-excellence-fixes.md`: real sage palette, Typekit `mrs-eaves`/`parfumerie-script` stacks, hero scroll cue, 3-box countdown, event-card celebrations, dress-code cards, hotel recommendations, RSVP field/copy shape, and monogram/couple/date credit stack
+- New shared section: `src/shared/sections/HotelList.jsx`; shared `Hero`, `Countdown`, `Welcome`, `DressCode`, `Rsvp`, and `Credit` gained backward-compatible optional props
+- Verified `npm run build`; Brave checks on `/excellence/` show no overflow at 390px or 1280px, no duplicate hero copy, non-looping hero video, Typekit 200 responses, and all new content present
+- Shared-route smoke check: `/africa/`, `/boho/`, `/maldives/`, `/aventureros/` load without console/page errors; `/boho/` has unrelated existing 390px overflow (scrollWidth 402) from boho-local decorative images
+
+### Excellence round 2 fixes (2026-07-23)
+- Implemented `TASKS-excellence-fixes-2.md`: swapped React/data copy to Mohamad & Salma / 20 August 2026, restored timed white hero overlay, added richer `Schedule` timeline stops, and changed hotel names to script font
+- `Hero.jsx` gained optional `overlayFadeOutAt`; when present it defers/restarts hero video playback after the intro content wrapper becomes visible, then fades the overlay at the configured video timestamp
+- `Schedule.jsx` gained optional `items[].stops` timeline rendering with fallback to the old flat schedule shape
+- Verified `npm run build`; Brave checks show hero overlay opacity 1 at hero video t≈1.1s and 0 at t≈6.1s, excellence overflow 0px at 390px and 1280px, two schedule timelines/eight stops, script hotel names, and no visible leftover Diana/Richard/23 July text outside the baked hero-video pixels
+
+### Excellence additions/removals (2026-07-23)
+- Implemented `TASKS-excellence-additions.md`: shared `Countdown` now accepts optional `columnLeftUrl`/`columnRightUrl`; Excellence wires `column-left.png` and `column-right.png` with scoped layered CSS
+- Implemented pending `TASKS-excellence-removals.md` Task 1: removed Excellence `hotelList` section data, `HotelList` import/map entry, and hotel references from gallery metadata while preserving the reusable shared component/assets/schema
+- Verified `npm run build` succeeds; live browser/overflow checks could not run because Vite dev server fails to bind in this sandbox with `listen EPERM` on both `127.0.0.1:5173` and `0.0.0.0:5173`
+
+### Excellence countdown restyle (2026-07-23)
+- Implemented `TASKS-excellence-countdown-style.md`: Excellence countdown panel is now ivory/cream with sage title/subtitle/labels, large italic serif numerals, vertical dividers between stats, and no dark gradient/vignette mask
+- Change is CSS-only in `src/sites/excellence/styles.css`; shared `Countdown.jsx` and other sites were not touched
+- Verified `npm run build` succeeds; live dev/preview browser checks remain blocked in this sandbox by `listen EPERM`
 
 ---
 

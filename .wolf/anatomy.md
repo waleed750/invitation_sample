@@ -1,7 +1,7 @@
 # anatomy.md
 
 > Auto-maintained by OpenWolf. Last scanned: 2026-07-19
-> Files: 45 tracked | Anatomy hits: 0 | Misses: 0
+> Files: 46 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -81,7 +81,9 @@
 - `Details.jsx` — Venue details, time, map link (~240 tok)
 - `Map.jsx` — Embedded Google Maps iframe (~100 tok)
 - `MessageForm.jsx` — Guestbook/message form (~260 tok)
-- `index.js` — Barrel export for all sections (~80 tok)
+- `Credit.jsx` — Reusable credit footer with portfolio link (~120 tok)
+- `HotelList.jsx` — Recommended hotel cards with image, price, note, booking status (~180 tok)
+- `index.js` — Barrel export for all sections (~90 tok)
 
 ## src/registry/
 
@@ -110,3 +112,9 @@
 - `data.js` — Exports invitationData, siteMeta (10 sections, safari-editorial) (~800 tok)
 - `styles.css` — Styles: safari-editorial theme, ~600 lines (~2200 tok)
 - `AfricaInvitation.jsx` — Thin wrapper: AfricaFooter + sectionComponents map + InvitationShell render (~80 tok)
+
+## src/sites/excellence/
+
+- `data.js` — Exports invitationData, siteMeta (10 sections, luxury-floral) (~750 tok)
+- `styles.css` — Styles: luxury-floral theme, ~500 lines (~1800 tok)
+- `ExcellenceInvitation.jsx` — Thin wrapper: sectionComponents map + InvitationShell render (~70 tok)

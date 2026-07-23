@@ -1,4 +1,20 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(unzip -l imports/cloudflare-link/site-zips/tdy-excellence-template.thedigitalyes.com.zip)",
+      "Bash(kill -0 40496)",
+      "Bash(curl -s http://localhost:5173/excellence/)",
+      "Bash(npx playwright *)",
+      "Bash(ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 public/assets/excellence/hero-video-C3EkV1og.mp4)",
+      "Bash(ffprobe -v error -show_entries format=duration,size -of default=noprint_wrappers=1 public/assets/excellence/intro-video-new-CeLMqoNn.mp4)",
+      "Bash(ffprobe -v error -show_entries format=duration,size:stream=bit_rate -of default=noprint_wrappers=1 public/assets/excellence/wedding-background-music-yxy0nS2O.mp3)",
+      "Bash(/opt/homebrew/bin/ffmpeg -y -i hero-video-C3EkV1og.mp4 -c:v libx264 -crf 26 -preset slow -c:a aac -b:a 128k -vf \"scale='min\\(1080,iw\\)':-2\" -movflags +faststart hero-video.mp4)",
+      "Bash(/opt/homebrew/bin/ffmpeg -y -i intro-video-new-CeLMqoNn.mp4 -c:v libx264 -crf 26 -preset slow -c:a aac -b:a 128k -vf \"scale='min\\(1080,iw\\)':-2\" -movflags +faststart intro-video.mp4)",
+      "Bash(/opt/homebrew/bin/ffmpeg -y -i wedding-background-music-yxy0nS2O.mp3 -b:a 128k background-music.mp3)",
+      "Bash(npm init *)",
+      "Bash(npm install *)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {

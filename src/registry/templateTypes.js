@@ -52,4 +52,5 @@ export const layoutFamily = freeze({
   CLASSIC: "classic",
   SAFARI_EDITORIAL: "safari-editorial",
   BOHO: "boho",
+  LUXURY_FLORAL: "luxury-floral",
 });

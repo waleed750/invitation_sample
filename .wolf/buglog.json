@@ -1,4 +1,101 @@
 {
   "version": 1,
-  "bugs": []
+  "bugs": [
+    {
+      "id": "bug-001",
+      "timestamp": "2026-07-23T01:15:00+00:00",
+      "error_message": "excellence demo intro had no video/music playback despite media files existing in public/assets/excellence/",
+      "file": "src/sites/excellence/data.js",
+      "root_cause": "opencode-delegate scraped and saved hero-video, intro-video, and background-music files with hashed filenames but never wired media.introVideoUrl, media.musicUrl, or hero section's heroVideoUrl props in data.js — InvitationShell/Hero silently render without video/audio when those props are undefined (no error thrown).",
+      "fix": "Renamed to clean kebab-case, compressed with ffmpeg (hero-video 22.9MB->3.1MB, intro-video 5.8MB->1.9MB, background-music 5.5MB->2.2MB @128k) per TASKS.md pipeline rules, then added introVideoUrl/musicUrl to media{} and heroVideoUrl/heroPosterUrl to the hero section props in data.js. Verified with Playwright: audio.paused === false after tap, 2 <video> elements found.",
+      "tags": ["media-wiring", "silent-failure", "opencode-delegate", "video", "audio", "excellence"],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-23T01:15:00+00:00"
+    },
+    {
+      "id": "bug-004",
+      "timestamp": "2026-07-23T02:30:00+00:00",
+      "error_message": "hero showed garbled overlapping text: bold sans headline/names/date rendered on top of a video that already has its own baked-in script-font 'Diana & Richard', date, and venue text; video also looped, restarting the animated card reveal every 10s",
+      "file": "src/shared/sections/Hero.jsx, src/sites/excellence/data.js",
+      "root_cause": "hero-video.mp4 (scraped from the source site) is a self-contained one-shot animated invitation card with its own baked-in typography — not an ambient loop backdrop. opencode-delegate treated it like a generic hero background: passed headline/firstName/secondName/displayDate/ctaLabel for Hero's text overlay (duplicating the video's own text) and Hero.jsx hardcoded `loop` on the <video> unconditionally (causing the one-shot reveal to visibly restart every ~10s instead of settling on its final frame).",
+      "fix": "Added `heroVideoLoop` (default true, preserves existing sites) and `showOverlayCopy` (default true) props to shared Hero.jsx; made eyebrow/h1/date-line conditionally rendered. excellence's hero section now passes only heroVideoUrl/heroPosterUrl with heroVideoLoop:false and showOverlayCopy:false. Verified via Playwright: video.ended===true and currentTime frozen at 10.04s after playing once (not looping), zero .hero-copy elements rendered, screenshot matches the source design with no duplicate text.",
+      "tags": ["duplicate-content", "video-loop", "hero", "opencode-delegate", "excellence", "ux"],
+      "related_bugs": ["bug-001", "bug-003"],
+      "occurrences": 1,
+      "last_seen": "2026-07-23T02:30:00+00:00"
+    },
+    {
+      "id": "bug-003",
+      "timestamp": "2026-07-23T02:00:00+00:00",
+      "error_message": "excellence demo not responsive on mobile — page had 524px of horizontal overflow (390px viewport, 914px content)",
+      "file": "src/sites/excellence/styles.css",
+      "root_cause": "src/shared/sections/Details.jsx renders <img src={ornateBadgeUrl}> with NO className, so it has zero CSS constraint anywhere unless the consuming site's styles.css explicitly styles it. video-open-invitation/styles.css has `.badge-frame`/`.badge-frame img` rules (ornate frame background sized via aspect-ratio), but that CSS lives only in that one site's local stylesheet, not shared. opencode-delegate copied the Details section usage into excellence's data.js/styles.css but never added equivalent .badge-frame CSS, so monogram.png (a solid ~890px-wide glyph, not a hollow decorative frame) rendered at native size and blew out the whole page width on every viewport.",
+      "fix": "Added .badge-frame CSS to src/sites/excellence/styles.css. Did NOT copy video-open-invitation's exact approach (absolutely-positioned full-bleed frame behind text) because excellence's monogram.png is a solid glyph, not a hollow ornate frame -- overlaying body text on it is illegible at any size. Instead redesigned as a small (88px) decorative accent stacked above the text via flex column. Verified 0px overflow at 390px and 1280px viewports via Playwright, and confirmed visually legible in screenshots.",
+      "tags": ["responsive", "overflow", "mobile", "shared-component-gap", "details-section", "opencode-delegate", "excellence"],
+      "related_bugs": ["bug-001", "bug-002"],
+      "occurrences": 1,
+      "last_seen": "2026-07-23T02:00:00+00:00"
+    },
+    {
+      "id": "bug-002",
+      "timestamp": "2026-07-23T01:15:00+00:00",
+      "error_message": "map section iframe would not load — fabricated Google Maps embed pb= parameter",
+      "file": "src/sites/excellence/data.js",
+      "root_cause": "opencode-delegate could not obtain the real Google Maps Embed API pb= string (requires either the live site's actual iframe src or an API key) and fabricated a plausible-looking but fake one (fake coordinates, fake place id, fake base64 segment) instead of flagging it as unknown.",
+      "fix": "Replaced with the no-API-key embed pattern https://www.google.com/maps?q=<address>&output=embed, which resolves to a real interactive map. Verified visually via Playwright screenshot showing 'The Peninsula Istanbul' pin correctly placed.",
+      "tags": ["fabricated-data", "map", "google-maps", "opencode-delegate", "excellence"],
+      "related_bugs": ["bug-001"],
+      "occurrences": 1,
+      "last_seen": "2026-07-23T01:15:00+00:00"
+    },
+    {
+      "id": "bug-005",
+      "timestamp": "2026-07-23T02:25:10+03:00",
+      "error_message": "TASKS-excellence-fixes.md reported multiple excellence fidelity mismatches: charcoal/grey palette instead of sage, wrong Where to Stay content, flat celebration/dress-code paragraphs, missing scroll cue, countdown seconds/abbreviated labels, RSVP fields/copy mismatched, and footer missing monogram/couple/date stack",
+      "file": "src/sites/excellence/data.js, src/sites/excellence/styles.css, src/shared/sections/Hero.jsx, src/shared/sections/Countdown.jsx, src/shared/sections/Welcome.jsx, src/shared/sections/DressCode.jsx, src/shared/sections/Rsvp.jsx, src/shared/sections/Credit.jsx, src/shared/sections/HotelList.jsx",
+      "root_cause": "Initial excellence conversion captured the rough section order but flattened several source-site structures into generic shared sections and used placeholder theme/font values rather than the real production CSS and DOM capture.",
+      "fix": "Updated excellence theme/colors and Typekit font stacks; added reusable HotelList; extended shared Hero, Countdown, Welcome, DressCode, Rsvp, and Credit with backward-compatible optional props; rewired excellence data to the real hotel cards, event cards, dress-code cards, RSVP options, and closing stack. Verified npm run build succeeds and Brave checks show 0px overflow on excellence at 390px/1280px, 3 countdown boxes, no hero overlay copy, non-looping hero video, hotel/RSVP/credit content present, and Typekit 200 responses.",
+      "tags": ["excellence", "fidelity", "shared-sections", "responsive", "rsvp", "hotel-list", "typekit"],
+      "related_bugs": ["bug-003", "bug-004"],
+      "occurrences": 1,
+      "last_seen": "2026-07-23T02:25:10+03:00"
+    },
+    {
+      "id": "bug-006",
+      "timestamp": "2026-07-23T03:48:28+03:00",
+      "error_message": "TASKS-excellence-fixes-2.md required a timed hero overlay visible for the first ~4s of the hero video, but the hero video was autoplaying behind the intro and reached its final frame before the invitation content became visible",
+      "file": "src/shared/sections/Hero.jsx, src/sites/excellence/data.js, src/sites/excellence/styles.css",
+      "root_cause": "InvitationShell mounts section content immediately and hides it with opacity until VideoOpenIntro finishes. The Hero video used browser autoplay, so its playback clock was not synchronized with the post-intro visible experience.",
+      "fix": "Added optional `overlayFadeOutAt` support to Hero. When provided, Hero disables video autoplay, pauses/resets the video on mount, observes the parent content wrapper for `.is-visible`, starts playback from 0 then fades `.hero-copy` once video currentTime reaches the configured threshold. Excellence now uses Mohamad/Salma overlay copy with overlayFadeOutAt: 4.",
+      "tags": ["hero", "timing", "video", "intro", "overlay", "excellence"],
+      "related_bugs": ["bug-004", "bug-005"],
+      "occurrences": 1,
+      "last_seen": "2026-07-23T03:48:28+03:00"
+    },
+    {
+      "id": "bug-007",
+      "timestamp": "2026-07-23T12:33:44+03:00",
+      "error_message": "Vite dev server could not start for live viewport verification: listen EPERM on 127.0.0.1:5173 and 0.0.0.0:5173",
+      "file": "environment / npm run dev",
+      "root_cause": "The current managed Codex sandbox denied local TCP listen calls for Vite, so browser-based `/excellence/` overflow and visual checks could not be executed in-session even though the production build succeeded.",
+      "fix": "No application code fix was needed. Verified `npm run build` instead and recorded the limitation so the user can run `npm run dev` locally for visual viewport checks outside the sandbox.",
+      "tags": ["environment", "vite", "dev-server", "verification", "sandbox"],
+      "related_bugs": [],
+      "occurrences": 3,
+      "last_seen": "2026-07-23T13:28:40+03:00"
+    },
+    {
+      "id": "bug-008",
+      "timestamp": "2026-07-23T13:28:40+03:00",
+      "error_message": "TASKS-excellence-hero-fade.md reported the lower hero video looked washed out/faded to white around the venue and scroll cue area",
+      "file": "src/sites/excellence/styles.css",
+      "root_cause": "Excellence's local `.hero-video` used a bottom `mask-image` fade and `.hero-scrim` applied a broad cream gradient from transparent to opaque across the lower half of the hero, obscuring the baked-in video card pixels.",
+      "fix": "Removed the `.hero-video` mask, made `.hero-scrim` inert with `background: none`, and added a focused text shadow to `.hero-scroll-cue` for legibility without washing out the video.",
+      "tags": ["excellence", "hero", "css", "video", "scrim", "visual-fidelity"],
+      "related_bugs": ["bug-004", "bug-006"],
+      "occurrences": 1,
+      "last_seen": "2026-07-23T13:28:40+03:00"
+    }
+  ]
 }

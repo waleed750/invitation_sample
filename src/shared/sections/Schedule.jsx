@@ -6,7 +6,8 @@ import React from "react";
  * Props:
  *   title             — section heading
  *   subtitle          — kicker text below heading
- *   items             — array of { title, description }
+ *   items             — array of { title, description } or
+ *                       { title, subtitle, stops: [{ time, text }] }
  *   coupleDancingUrl  — decorative illustration/photo (optional)
  *   bgUrl             — background image (optional)
  */
@@ -24,7 +25,19 @@ export default function Schedule({ title, subtitle, items, coupleDancingUrl, bgU
           {items.map((item) => (
             <article className="schedule-item" key={item.title}>
               <h3>{item.title}</h3>
-              <p>{item.time || item.description}</p>
+              {item.subtitle && <p className="schedule-item-subtitle">{item.subtitle}</p>}
+              {item.stops?.length ? (
+                <ol className="schedule-timeline">
+                  {item.stops.map((stop, index) => (
+                    <li className="schedule-stop" key={`${stop.time || "stop"}-${stop.text}-${index}`}>
+                      {stop.time && <strong>{stop.time}</strong>}
+                      <span>{stop.text}</span>
+                    </li>
+                  ))}
+                </ol>
+              ) : (
+                <p>{item.time || item.description}</p>
+              )}
             </article>
           ))}
         </div>

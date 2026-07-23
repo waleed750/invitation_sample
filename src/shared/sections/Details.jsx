@@ -20,7 +20,7 @@ export default function Details({ title, subtitle, venue, startTime, endTime, ma
         <h2 id="details-title">{title}</h2>
         <p className="section-kicker">{subtitle}</p>
         <div className="badge-frame">
-          {ornateBadgeUrl && <img src={ornateBadgeUrl} alt="" aria-hidden="true" />}
+          {ornateBadgeUrl && <img className="badge-image" src={ornateBadgeUrl} alt="" aria-hidden="true" />}
           <div>
             <h3>Location</h3>
             <p className="venue-name">{venue}</p>

@@ -131,6 +131,8 @@ export const SECTION_TYPES = Object.freeze({
   weddingWeekend: true,
   travelInfo: true,
   bohoFooter: true,
+  credit: true,
+  hotelList: true,
 });
 
 /**
@@ -200,6 +202,25 @@ export const SECTION_TYPES = Object.freeze({
  *     ornateBadgeUrl?: string,
  *   }
  * }} DetailsSection
+ */
+
+/**
+ * Hotel list section — recommended accommodations.
+ *
+ * @typedef {SectionBase & {
+ *   type: 'hotelList',
+ *   props: {
+ *     title: string,
+ *     subtitle?: string,
+ *     hotels: Array<{
+ *       name: string,
+ *       imageUrl?: string,
+ *       pricePerNight?: string,
+ *       priceNote?: string,
+ *       bookingNote?: string,
+ *     }>,
+ *   }
+ * }} HotelListSection
  */
 
 /**
