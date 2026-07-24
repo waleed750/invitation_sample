@@ -18,7 +18,7 @@ export const invitationData = {
     ivory: "#f9f6f1",
   },
   couple: {
-    firstName: "Ahmad",
+    firstName: "Mohamad",
     secondName: "Salma",
     headline: "We're getting married",
   },
@@ -44,7 +44,7 @@ export const invitationData = {
       type: "hero",
       props: {
         headline: "We're getting married",
-        firstName: "Ahmad",
+        firstName: "Mohamad",
         secondName: "Salma",
         displayDate: "20 August 2026",
         heroVideoUrl: asset("hero-video.mp4"),
@@ -159,7 +159,7 @@ export const invitationData = {
         name: "Waleed Ashraf",
         portfolioUrl: "https://waleed-ashraf.vercel.app/",
         portfolioLabel: "Portfolio",
-        coupleNames: "Ahmad & Salma",
+        coupleNames: "Mohamad & Salma",
         eventDate: "20 August 2026",
       },
     },
