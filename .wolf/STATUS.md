@@ -2,7 +2,7 @@
 
 > Single source of truth for resuming work. Read this FIRST when starting a session.
 > Update this file at the end of every work phase so the next `/clear` resumes in 1 read.
-> Last updated: 2026-07-23
+> Last updated: 2026-09-24
 
 ---
 
@@ -65,23 +65,47 @@
 - Copied used local assets to `public/assets/elegante/` with stable kebab-case names; compressed intro poster and both videos with ffmpeg; omitted background music because the manifest listed an MP3 URL but no local response body was saved
 - Verified `npm run build` succeeds and emits a separate `EleganteInvitation` lazy chunk; live browser/overflow checks could not run because Vite dev server still fails to bind in this sandbox with `listen EPERM`
 
+### Platform plan written (2026-09-24)
+- `PLATFORM_PLAN.md` — full SaaS launch plan: template inventory (9 live, 13 in pipeline), legal blocker (thedigitalyes-derived templates not sellable), Next.js+Supabase stack, WhatsApp/email/Google OTP auth, Paymob+MoR pricing tiers, customer + admin dashboards, DDoS/rate limits, AI Theme Spec agent + Remotion reels, roadmap. Plan only — no code.
+
+### Batch conversion — 7 templates: floral, finca, sweetlove, dolcevita, daynight, bridgerton, bloom (2026-09-24)
+- Converted 7 templates this batch: **floral**, **finca**, **sweetlove** (product id `dulce-amor`), **dolcevita** (product id `dolce-vita`), **daynight**, **bridgerton**, **bloom** — closes the "Remaining complete demos" Next-phase item that previously listed boho, aventureros, maldives, bloom, bridgerton, daynight, dolcevita, sweetlove/dulce-amor, finca (boho/aventureros/maldives were already done earlier; the 7 above were the remaining unconverted ones from that list).
+- Each template: `src/sites/<name>/` with `data.js` + `*Invitation.jsx` + `styles.css`, composed from `src/shared/InvitationShell.jsx` + shared sections/intros (reused `Hero`, `Countdown`, `Welcome`, `Schedule`, `Details`, `Map`, `MessageForm`, `Story`, `DressCode`, `Gifts`, `Rsvp`, `Faq`, `HotelList`, `Credit`, `Gallery`, `ImageDivider` as needed per demo).
+- Registered in `src/registry/index.js` with `React.lazy` per site; added 7 new `layoutFamily` enums in `src/registry/templateTypes.js`: `FLORAL_ROMANTIC`, `FINCA_RUSTIC`, `SWEETLOVE_ROMANTIC`, `DOLCE_VITA_LAKE`, `DAYNIGHT_DUAL`, `BRIDGERTON_REGENCY`, `BLOOM_GARDEN`.
+- Template catalog is now **16 templates total** (2 seed + africa + boho + aventureros + maldives + excellence + elegante + citystars + the 7 new).
+- Final `npm run build` passes with all lazy chunks emitted (one per template) — verified build success and file/media wiring.
+- **Open caveats (explicit):**
+  - (a) None of the 7 have been visually verified in a real browser — this sandbox's Vite dev server has a known `EPERM` binding issue (`listen EPERM` on `127.0.0.1:5173` and `0.0.0.0:5173`) that blocked Playwright/live viewport checks; only build success and file/media wiring were verified.
+  - (b) Bloom's intro video is an `ffmpeg` concat of 2 separate source clips into one — `ffprobe` duration matches the sum of the originals, but the join point has not been visually watched for a seam/glitch and should be spot-checked before shipping.
+
 ---
 
-## 🚀 Next phase
+## 🚀 Next phase — Proxima fase / Next quest
 
-**Goal:** Phase 2 continued — batch-convert the remaining 9 complete demos, then Phase 3 deploy to Vercel.
+> **Status: NOT started.** The 6 templates below have NOT been converted yet — no implementation work has begun on this phase.
 
-### Acceptance criteria
-1. Each converted demo: gallery card + working route, data conforms to schema, composed from shared presets
-2. Repo media growth controlled (consider ffmpeg CRF re-encode of hero videos before batch — else ~250MB growth)
+**Goal:** Convert the 6 remaining templates whose zips are flagged `partial/broken` in `imports/cloudflare-link/current-download-status.json`. These **must be live-rescraped** from their `thedigitalyes.com` demo URLs (same rescue approach previously used successfully for `excellence` / `tdy-excellence-template`), **NOT** unzipped from `imports/cloudflare-link/site-zips/` — the downloaded zips for these 6 are broken/partial (2–19 MB vs ~30–59 MB for complete ones).
 
-### Open decisions
-- Compress videos before batch-converting? (recommended)
-- Extract shared `InvitationShell` (useRevealOnScroll + audio/music toggle + intro wiring is now duplicated in AfricaInvitation.jsx and VideoOpenInvitation.jsx) before adding 9 more copies
-- Visual check of `/africa/` in a browser before batch (fidelity verified structurally only)
+### Remaining 6 templates (partial/broken — need LIVE RE-SCRAPE)
 
-### Remaining complete demos (imports/cloudflare-link/site-zips/)
-boho, aventureros, maldives (beach), bloom, bridgerton, daynight, dolcevita, sweetlove (dulce-amor), finca — skip partial/missing ones
+| Product id (current-download-status.json) | Live target URL (`batch-report.json` `target_url`) |
+|---|---|
+| `majestic` | `https://majestic-template.thedigitalyes.com/?embed=1` (`majestic-template.thedigitalyes.com`) |
+| `mediterranean` (`mediterranean-edition`) | `https://mediterranean-template.thedigitalyes.com/?embed=1` (`mediterranean-template.thedigitalyes.com`) |
+| `minimal` (`minimalist`) | `https://minimalist-demo.thedigitalyes.com/?embed=1` (`minimalist-demo.thedigitalyes.com`) |
+| `minimal-fun` | `https://minimal-fun-demo.thedigitalyes.com/?embed=1` (`minimal-fun-demo.thedigitalyes.com`) |
+| `nautical` | `https://nautical-template.thedigitalyes.com/?embed=1` (`nautical-template.thedigitalyes.com`) |
+| `rosas` | `https://rosas-template.thedigitalyes.com/?embed=1` (`rosas-template.thedigitalyes.com`) |
+
+Source of truth for the "partial/broken" flag: `imports/cloudflare-link/current-download-status.json` (`counts.partial/broken: 7` total — 1 is `maison-doree`/`tdy-excellence-template` already rescued as `excellence`; the 6 above are the remaining). Source for `target_url`: `imports/cloudflare-link/batch-report.json` `sites[].target_url` per site.
+
+### Context
+- User previously confirmed wanting all 13 templates (including these 6) to work, but the live-rescrape implementation work itself has **not begun** — do not unzip the broken zips; re-scrape each `target_url` live and then run the normal conversion pipeline.
+- Also note `PLATFORM_PLAN.md` §14 open decisions (brand/domain, market, who designs original templates) remain pending — batch-converting thedigitalyes demos is still flagged there as not useful for a sellable product without original designs, but this Next phase tracks the conversion work the user explicitly requested.
+
+### Acceptance criteria (when started)
+1. Each of the 6: gallery card + working route, `data.js` conforms to `src/registry/schema.js`, composed from `InvitationShell` + shared presets
+2. Media via `public/assets/<name>/` with ffmpeg compression; `npm run build` emits a lazy chunk per template; no `EPERM`-blocked visual check left un-noted
 
 ---
 
