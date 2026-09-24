@@ -1,0 +1,730 @@
+/*
+ * Floral Romance — styles.css
+ * Source: floral-demo.thedigitalyes.com  (Carla & Miguel Ángel, 03 Oct 2026)
+ * Palette: dusty rose primary #b46471 on ivory #fcfcfc, foreground #503035
+ * Fonts: demo used Pinyon Script + Cormorant Garamond + EB Garamond (Google Fonts).
+ * Fallback stacks: script -> Georgia cursive, display -> Georgia serif.
+ */
+
+/* ── Decor wrapper & side florals ────────────────────────────────── */
+.fl-decor-wrapper {
+  position: relative;
+  overflow: hidden;
+  background: var(--background);
+}
+.fl-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  overflow: hidden;
+}
+.fl-deco {
+  position: absolute;
+  width: auto;
+  height: 280px;
+  object-fit: contain;
+  object-position: right center;
+  opacity: 0.45;
+  user-select: none;
+  max-width: 55%;
+}
+.fl-deco--r1 { right: 0; top: 2%; height: 280px; opacity: 0.5; }
+.fl-deco--r2 { right: 0; top: 18%; height: 340px; opacity: 0.4; }
+.fl-deco--r3 { right: 0; top: 38%; height: 260px; opacity: 0.45; }
+.fl-deco--r4 { right: 0; top: 55%; height: 320px; opacity: 0.35; }
+.fl-deco--r5 { right: 0; top: 75%; height: 280px; opacity: 0.5; }
+.fl-deco--r6 { right: 0; top: 90%; height: 340px; opacity: 0.4; }
+.fl-deco--l1 { left: 0; top: 8%; height: 320px; opacity: 0.45; transform: scaleX(-1); object-position: left center; }
+.fl-deco--l2 { left: 0; top: 28%; height: 270px; opacity: 0.5; transform: scaleX(-1); object-position: left center; }
+.fl-deco--l3 { left: 0; top: 45%; height: 340px; opacity: 0.4; transform: scaleX(-1); object-position: left center; }
+.fl-deco--l4 { left: 0; top: 65%; height: 300px; opacity: 0.45; transform: scaleX(-1); object-position: left center; }
+.fl-deco--l5 { left: 0; top: 82%; height: 260px; opacity: 0.5; transform: scaleX(-1); object-position: left center; }
+
+@media (min-width: 768px) {
+  .fl-deco--r1 { height: 450px; }
+  .fl-deco--r2 { height: 550px; }
+  .fl-deco--r3 { height: 420px; }
+  .fl-deco--r4 { height: 500px; }
+  .fl-deco--r5 { height: 450px; }
+  .fl-deco--r6 { height: 550px; }
+  .fl-deco--l1 { height: 480px; }
+  .fl-deco--l2 { height: 420px; }
+  .fl-deco--l3 { height: 520px; }
+  .fl-deco--l4 { height: 460px; }
+  .fl-deco--l5 { height: 400px; }
+}
+
+/* ── Shell ───────────────────────────────────────────────────────── */
+.fl-shell {
+  --primary: #b46471;
+  --primary-fg: #fcfcfc;
+  --accent: #e5dcdd;
+  --border: #e5dcdd;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--foreground);
+  background: var(--background);
+  position: relative;
+  z-index: 2;
+}
+.fl-content {
+  opacity: 0;
+  transition: opacity 0.8s ease 0.2s;
+  position: relative;
+  z-index: 2;
+}
+.fl-content.is-visible {
+  opacity: 1;
+}
+.fl-script {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+}
+
+/* ── Section inner (shared) ─────────────────────────────────────── */
+.fl-shell .section-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3.5rem 1.5rem;
+  text-align: center;
+  position: relative;
+  z-index: 2;
+}
+.fl-shell .section-inner.narrow {
+  max-width: 640px;
+}
+.fl-shell .section-inner h2 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.75rem, 6vw, 2.75rem);
+  font-weight: 600;
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+.fl-shell .section-inner h2.fl-script {
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2.25rem, 7vw, 3.5rem);
+}
+.fl-shell .section-kicker {
+  color: var(--muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  margin-bottom: 0.75rem;
+}
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.fl-hero {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: var(--background);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fl-hero__video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+}
+.fl-hero__overlay {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1.5rem 4rem;
+  text-align: center;
+}
+.fl-hero__copy {
+  max-width: 22rem;
+  margin: 0 auto;
+}
+.fl-hero__eyebrow {
+  font-size: clamp(1.6rem, 5vw, 2rem);
+  color: #5a3d42;
+  margin-bottom: 1rem;
+  text-shadow: 0.5px 0.5px 0 rgba(60,40,30,0.15);
+}
+.fl-hero__names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.15rem;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: #3f2a2e;
+  line-height: 1.15;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+.fl-hero__amp {
+  font-size: 0.85em;
+  letter-spacing: 0.1em;
+  color: #5a3d42;
+  font-style: italic;
+}
+.fl-hero__subtitle {
+  font-size: clamp(1.1rem, 4vw, 1.4rem);
+  color: #6b4a50;
+  margin-bottom: 1.25rem;
+}
+.fl-hero__date-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  color: #5a3d42;
+  margin-bottom: 0.35rem;
+}
+.fl-hero__date-part {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.75rem, 2.5vw, 0.85rem);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.fl-hero__date-day {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.1rem, 4vw, 1.5rem);
+  font-weight: 600;
+}
+.fl-hero__date-sep {
+  color: #b0a0a3;
+  font-size: 0.85rem;
+}
+.fl-hero__year {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(0.9rem, 3vw, 1.05rem);
+  letter-spacing: 0.25em;
+  color: #6b4a50;
+}
+.fl-hero__cue {
+  position: absolute;
+  bottom: 1.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(80,48,53,0.5);
+  text-decoration: none;
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: color 0.2s;
+}
+.fl-hero__cue:hover {
+  color: var(--primary);
+}
+.fl-hero__cue svg {
+  animation: fl-bounce 1.8s ease-in-out infinite;
+}
+@keyframes fl-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(4px); }
+}
+
+/* ── Countdown ───────────────────────────────────────────────────── */
+.fl-shell .countdown-section {
+  background: var(--background);
+  position: relative;
+  z-index: 2;
+}
+.fl-shell .countdown-kicker {
+  font-size: 0.62rem;
+  letter-spacing: 0.4em;
+  text-transform: uppercase;
+  color: var(--primary);
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+.fl-shell .countdown-section h2 {
+  font-style: italic;
+  font-weight: 400;
+}
+.fl-shell .countdown-panel {
+  background: transparent;
+}
+.fl-shell .countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.5rem;
+  max-width: 32rem;
+  margin: 1.5rem auto 0;
+}
+@media (min-width: 768px) {
+  .fl-shell .countdown-grid {
+    gap: 1.5rem;
+  }
+}
+.fl-shell .time-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.fl-shell .time-box strong {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 0.75rem 0.5rem;
+  width: 100%;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.5rem, 5vw, 2.5rem);
+  font-weight: 400;
+  color: var(--foreground);
+  box-shadow: 0 2px 8px rgba(180,130,140,0.08);
+  line-height: 1;
+}
+@media (min-width: 768px) {
+  .fl-shell .time-box strong {
+    padding: 1rem 0.75rem;
+    font-size: clamp(2rem, 4vw, 3rem);
+  }
+}
+.fl-shell .time-box span {
+  margin-top: 0.5rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ── Venue ───────────────────────────────────────────────────────── */
+.fl-venue {
+  background: #fdf8f6;
+  position: relative;
+  z-index: 2;
+}
+.fl-venue__kicker {
+  font-size: 0.6rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.35rem;
+}
+.fl-venue__title {
+  margin-bottom: 0.25rem;
+}
+.fl-venue__subtitle {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+}
+.fl-venue__card {
+  background: rgba(255,255,255,0.95);
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  padding: 1.75rem 1.25rem;
+  box-shadow: 0 8px 32px rgba(180,130,140,0.12);
+  text-align: center;
+}
+@media (min-width: 640px) {
+  .fl-venue__card {
+    padding: 2rem 2rem;
+  }
+}
+.fl-venue__icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: #f0e6e7;
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+}
+.fl-venue__venue-name {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.15rem, 4vw, 1.5rem);
+  color: var(--foreground);
+  margin-bottom: 0.5rem;
+}
+.fl-venue__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+  margin-bottom: 1rem;
+}
+.fl-venue__map {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  height: 300px;
+  margin-bottom: 1rem;
+}
+.fl-venue__map iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.fl-venue__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: stretch;
+}
+@media (min-width: 480px) {
+  .fl-venue__actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+.fl-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s, border-color 0.2s;
+}
+.fl-btn--outline {
+  border: 1px solid rgba(180,100,113,0.4);
+  background: #fff;
+  color: var(--foreground);
+}
+.fl-btn--outline:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
+/* ── Divider ─────────────────────────────────────────────────────── */
+.fl-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  background: #fdf8f6;
+  position: relative;
+  z-index: 2;
+}
+.fl-divider__line {
+  height: 1px;
+  width: 4rem;
+  background: rgba(180,100,113,0.3);
+}
+@media (min-width: 768px) {
+  .fl-divider__line {
+    width: 6rem;
+  }
+}
+.fl-divider__heart {
+  color: rgba(180,100,113,0.5);
+  font-size: 1.1rem;
+  font-family: Georgia, serif;
+  font-style: italic;
+}
+
+/* ── Schedule ────────────────────────────────────────────────────── */
+.fl-schedule {
+  background: #fdf8f6;
+  position: relative;
+  z-index: 2;
+}
+.fl-schedule__subtitle {
+  color: var(--muted);
+  font-size: 0.95rem;
+  margin-bottom: 2rem;
+}
+.fl-schedule__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1.25rem;
+}
+@media (min-width: 768px) {
+  .fl-schedule__grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+  }
+}
+.fl-schedule__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.6rem;
+}
+.fl-schedule__icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid var(--border);
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  box-shadow: 0 2px 8px rgba(180,130,140,0.08);
+}
+@media (min-width: 768px) {
+  .fl-schedule__icon {
+    width: 3.5rem;
+    height: 3.5rem;
+  }
+}
+.fl-schedule__item h3 {
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--foreground);
+}
+
+/* ── Gifts ───────────────────────────────────────────────────────── */
+.fl-gifts {
+  background: #fdf8f6;
+  position: relative;
+  z-index: 2;
+}
+.fl-gifts__body {
+  white-space: pre-line;
+  line-height: 1.7;
+  color: var(--muted);
+  max-width: 32rem;
+  margin: 0 auto 1.5rem;
+  font-size: 0.95rem;
+}
+.fl-gifts__accordion {
+  max-width: 32rem;
+  margin: 0 auto;
+  border: 1px solid var(--border);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(180,130,140,0.08);
+}
+.fl-gifts__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: none;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.05rem;
+  color: var(--foreground);
+  cursor: pointer;
+  text-align: left;
+}
+.fl-gifts__trigger svg {
+  transition: transform 0.2s;
+  color: var(--muted);
+}
+.fl-gifts__trigger svg.is-open {
+  transform: rotate(180deg);
+}
+.fl-gifts__trigger:hover {
+  background: rgba(180,100,113,0.04);
+}
+.fl-gifts__panel {
+  padding: 0 1.25rem 1.25rem;
+  text-align: left;
+  border-top: 1px solid var(--border);
+  padding-top: 0.75rem;
+}
+.fl-gifts__iban-label {
+  font-size: 0.7rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.25rem;
+}
+.fl-gifts__iban {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: var(--foreground);
+  word-break: break-all;
+}
+
+/* ── RSVP overrides ─────────────────────────────────────────────── */
+.fl-shell .rsvp-section {
+  background: #fdf8f6;
+  position: relative;
+  z-index: 2;
+}
+.fl-shell .rsvp-section .section-inner {
+  text-align: center;
+}
+.fl-shell .rsvp-section h2 {
+  font-style: italic;
+  font-weight: 400;
+}
+.fl-shell .rsvp-form {
+  text-align: left;
+  background: rgba(255,255,255,0.9);
+  border: 1px solid var(--border);
+  border-radius: 0.35rem;
+  padding: 1.75rem 1.25rem;
+  box-shadow: 0 2px 8px rgba(180,130,140,0.08);
+  backdrop-filter: blur(4px);
+}
+@media (min-width: 640px) {
+  .fl-shell .rsvp-form {
+    padding: 2rem;
+  }
+}
+.fl-shell .rsvp-form label {
+  font-size: 0.9rem;
+}
+.fl-shell .rsvp-form input[type="text"],
+.fl-shell .rsvp-form input[type="email"],
+.fl-shell .rsvp-form input[type="number"],
+.fl-shell .rsvp-form textarea,
+.fl-shell .rsvp-form select {
+  border-color: var(--border);
+  background: #fff;
+}
+.fl-shell .rsvp-form input:focus,
+.fl-shell .rsvp-form textarea:focus,
+.fl-shell .rsvp-form select:focus {
+  border-color: var(--primary);
+  outline: none;
+}
+.fl-shell .guest-stepper {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-top: 0.35rem;
+}
+.fl-shell .guest-stepper button {
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.35rem;
+  border: 1px solid var(--border);
+  background: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 1rem;
+}
+.fl-shell .guest-stepper input {
+  width: 2.5rem;
+  text-align: center;
+  border: none;
+  font-family: Georgia, serif;
+  font-size: 1.2rem;
+}
+.fl-shell .rsvp-form button[type="submit"] {
+  width: 100%;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 0.35rem;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  transition: opacity 0.2s;
+}
+.fl-shell .rsvp-form button[type="submit"]:hover {
+  opacity: 0.9;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.fl-footer {
+  background: var(--primary);
+  color: #fff;
+  text-align: center;
+  padding: 3rem 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+.fl-footer__names {
+  font-size: clamp(1.75rem, 6vw, 2.75rem);
+  color: #fff;
+  margin-bottom: 0.35rem;
+}
+.fl-footer__date {
+  font-size: 0.85rem;
+  letter-spacing: 0.05em;
+  color: rgba(255,255,255,0.85);
+}
+.fl-footer__love {
+  font-size: 0.75rem;
+  color: rgba(255,255,255,0.6);
+  margin-top: 1.5rem;
+}
+.fl-footer__credit {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.5);
+  margin-top: 0.75rem;
+}
+.fl-footer__credit a {
+  color: rgba(255,255,255,0.7);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.fl-footer__credit a:hover {
+  color: #fff;
+}
+
+/* ── Music button ────────────────────────────────────────────────── */
+.fl-shell .music-button {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 80;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.25);
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+.fl-shell .music-button.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Reveal ──────────────────────────────────────────────────────── */
+.fl-shell [data-reveal] {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fl-shell [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Safety: prevent horizontal overflow ─────────────────────────── */
+.fl-shell, .fl-decor-wrapper, .fl-content {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+.fl-deco {
+  max-width: 55vw;
+}
+img {
+  max-width: 100%;
+}

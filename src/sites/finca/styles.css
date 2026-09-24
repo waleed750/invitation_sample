@@ -1,0 +1,826 @@
+/*
+ * Finca Biniagual — styles.css
+ * Source: finca-demo.thedigitalyes.com (Mar & Jaume, 08 May 2027)
+ * Palette: sage-dark #3a4634, ivory #f1ebdf, sage #87926c, gold #edb32a
+ * Fonts: Great Vibes script, Cormorant Garamond display, Lora body — fallback Georgia/serif.
+ */
+
+/* ── Shell ───────────────────────────────────────────────────────── */
+.fi-shell {
+  --primary: #3a4634;
+  --primary-fg: #f1ebdf;
+  --accent: #87926c;
+  --border: rgba(58,70,52,0.18);
+  --gold: #edb32a;
+  --gold-soft: #e8c97a;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  color: var(--foreground);
+  background: var(--background);
+  position: relative;
+}
+
+.fi-content {
+  opacity: 0;
+  transition: opacity 0.8s ease 0.2s;
+  position: relative;
+}
+.fi-content.is-visible {
+  opacity: 1;
+}
+.fi-script {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+}
+.section-inner {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 3rem 1.5rem;
+  text-align: center;
+  position: relative;
+}
+.section-inner.narrow {
+  max-width: 640px;
+}
+
+/* ── Hero ────────────────────────────────────────────────────────── */
+.fi-hero {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: #f1ebdf;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.fi-hero__media {
+  position: absolute;
+  inset: 0;
+}
+.fi-hero__video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+}
+.fi-hero__scrim {
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+}
+.fi-hero__copy {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  padding: 2rem 1.5rem;
+  max-width: 32rem;
+}
+.fi-hero__eyebrow {
+  font-family: Georgia, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.45em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.8);
+  margin-bottom: 1rem;
+}
+.fi-hero__names {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.25rem;
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: clamp(2.75rem, 10vw, 5rem);
+  color: #fff;
+  line-height: 1;
+  font-weight: 400;
+  text-shadow: 0 2px 16px rgba(0,0,0,0.25);
+}
+.fi-hero__amp {
+  font-family: Georgia, serif;
+  font-size: 0.5em;
+  color: #edb32a;
+  font-style: italic;
+  margin: 0.15rem 0;
+}
+.fi-hero__divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  margin: 1.25rem 0;
+}
+.fi-hero__line {
+  height: 1px;
+  width: 3rem;
+  background: rgba(255,255,255,0.45);
+}
+.fi-hero__diamond {
+  color: #edb32a;
+  font-size: 0.9rem;
+}
+.fi-hero__date {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-size: 1.05rem;
+  color: rgba(255,255,255,0.92);
+  letter-spacing: 0.05em;
+}
+.fi-hero__cue {
+  position: absolute;
+  bottom: 1.75rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: none;
+  color: rgba(255,255,255,0.9);
+  font-size: 0.6rem;
+  letter-spacing: 0.28em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.fi-hero__cue svg {
+  animation: fi-bounce 1.6s ease-in-out infinite;
+}
+@keyframes fi-bounce {
+  0%,100% { transform: translateY(0); }
+  50% { transform: translateY(6px); }
+}
+
+/* ── Countdown overrides ─────────────────────────────────────────── */
+.fi-shell .countdown-section {
+  background: #4a5a42;
+  color: #fff;
+  text-align: center;
+}
+.fi-shell .countdown-panel {
+  background: transparent;
+}
+.fi-shell .countdown-section h2 {
+  font-family: Georgia, serif;
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(2rem, 7vw, 3rem);
+  color: #fff;
+}
+.fi-shell .countdown-until,
+.fi-shell .countdown-kicker {
+  color: rgba(255,255,255,0.7);
+  letter-spacing: 0.12em;
+  font-size: 0.9rem;
+}
+.fi-shell .countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.75rem;
+  max-width: 36rem;
+  margin: 1.5rem auto 0;
+}
+.fi-shell .time-box strong {
+  display: block;
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  backdrop-filter: blur(6px);
+  border-radius: 0.5rem;
+  padding: 0.9rem 0.5rem;
+  font-family: Georgia, serif;
+  font-size: clamp(1.6rem, 5vw, 2.5rem);
+  font-weight: 300;
+  color: #fff;
+  line-height: 1;
+}
+.fi-shell .time-box span {
+  margin-top: 0.5rem;
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.7);
+}
+
+/* ── Venue ───────────────────────────────────────────────────────── */
+.fi-venue {
+  background: #f1ebdf;
+}
+.fi-venue__champagne {
+  width: 16rem;
+  max-width: 70%;
+  margin: 0 auto 1.25rem;
+  display: block;
+}
+.fi-venue h2 {
+  font-size: clamp(2rem, 7vw, 3rem);
+  font-weight: 400;
+  color: var(--foreground);
+}
+.fi-venue__subtitle {
+  color: rgba(58,70,52,0.6);
+  font-size: 0.9rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 1.5rem;
+}
+.fi-venue__card {
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(58,70,52,0.2);
+  border-radius: 0.75rem;
+  padding: 1.75rem 1.25rem;
+  box-shadow: 0 8px 32px rgba(58,70,52,0.08);
+}
+.fi-venue__icon {
+  width: 3.5rem;
+  height: 3.5rem;
+  margin: 0 auto 1rem;
+  border-radius: 50%;
+  background: rgba(135,146,108,0.18);
+  display: grid;
+  place-items: center;
+  color: #3a4634;
+}
+.fi-venue__venue-name {
+  font-family: Georgia, serif;
+  font-size: 1.25rem;
+  color: var(--foreground);
+}
+.fi-venue__time {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  color: rgba(58,70,52,0.6);
+  font-size: 0.85rem;
+  margin: 0.35rem 0 1rem;
+}
+.fi-venue__photo {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(58,70,52,0.2);
+  margin-bottom: 1rem;
+}
+.fi-venue__photo img {
+  width: 100%;
+  height: 16rem;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s;
+}
+.fi-venue__photo:hover img {
+  transform: scale(1.03);
+}
+.fi-venue__map {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  border: 1px solid rgba(58,70,52,0.2);
+  height: 200px;
+  margin-bottom: 1rem;
+}
+.fi-venue__map iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+  filter: sepia(0.12);
+}
+.fi-venue__actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+@media (min-width: 480px) {
+  .fi-venue__actions {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+.fi-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  padding: 0.6rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.fi-btn--outline {
+  border: 1px solid rgba(58,70,52,0.3);
+  background: #fff;
+  color: var(--foreground);
+}
+.fi-btn--outline:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+.fi-btn--sm {
+  padding: 0.45rem 0.85rem;
+  font-size: 0.8rem;
+}
+
+/* ── Divider ─────────────────────────────────────────────────────── */
+.fi-divider, .fi-divider__diamond {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  padding: 0.75rem 1rem;
+  background: #f1ebdf;
+}
+.fi-divider__line {
+  height: 1px;
+  width: 4rem;
+  background: rgba(58,70,52,0.35);
+}
+.fi-divider__diamond {
+  color: rgba(58,70,52,0.45);
+  background: transparent;
+  padding: 0;
+  font-size: 0.85rem;
+}
+
+/* ── Schedule ────────────────────────────────────────────────────── */
+.fi-schedule {
+  background: #f1ebdf;
+}
+.fi-schedule__illustration {
+  width: 100%;
+  max-width: 32rem;
+  margin: 0 auto 1.5rem;
+  display: block;
+}
+.fi-schedule h2 {
+  font-size: clamp(2rem, 7vw, 3rem);
+}
+.fi-schedule__subtitle {
+  color: rgba(58,70,52,0.6);
+  margin-bottom: 1.5rem;
+}
+.fi-schedule__desktop {
+  display: none;
+  position: relative;
+  margin-top: 1rem;
+}
+.fi-schedule__line {
+  position: absolute;
+  top: 2.1rem;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: rgba(135,146,108,0.35);
+}
+.fi-schedule__grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 0.5rem;
+  position: relative;
+}
+.fi-schedule__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+.fi-schedule__time-badge {
+  background: #3a4634;
+  color: #f1ebdf;
+  padding: 0.25rem 0.6rem;
+  border-radius: 999px;
+  font-size: 0.7rem;
+  font-weight: 600;
+}
+.fi-schedule__icon {
+  width: 3rem;
+  height: 3rem;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid rgba(135,146,108,0.35);
+  display: grid;
+  place-items: center;
+  color: #3a4634;
+  box-shadow: 0 2px 8px rgba(58,70,52,0.08);
+}
+.fi-schedule__item h3 {
+  font-family: Georgia, serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--foreground);
+  line-height: 1.2;
+}
+.fi-schedule__item p {
+  font-size: 0.7rem;
+  color: rgba(58,70,52,0.55);
+  line-height: 1.4;
+}
+@media (min-width: 768px) {
+  .fi-schedule__desktop { display: block; }
+  .fi-schedule__mobile { display: none; }
+}
+.fi-schedule__mobile {
+  position: relative;
+  text-align: left;
+}
+.fi-schedule__vline {
+  position: absolute;
+  left: 1.35rem;
+  top: 0;
+  bottom: 0;
+  width: 1px;
+  background: rgba(135,146,108,0.35);
+}
+.fi-schedule__vlist {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+}
+.fi-schedule__vitem {
+  display: flex;
+  gap: 0.9rem;
+  align-items: flex-start;
+}
+.fi-schedule__vicon {
+  width: 2.7rem;
+  height: 2.7rem;
+  border-radius: 50%;
+  background: #fff;
+  border: 2px solid rgba(135,146,108,0.35);
+  display: grid;
+  place-items: center;
+  color: #3a4634;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 1;
+}
+.fi-schedule__vcopy {
+  flex: 1;
+  padding-top: 0.25rem;
+}
+.fi-schedule__vhead {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+}
+.fi-schedule__vtime {
+  background: #3a4634;
+  color: #f1ebdf;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-size: 0.65rem;
+  font-weight: 600;
+}
+.fi-schedule__vcopy h3 {
+  font-family: Georgia, serif;
+  font-size: 1rem;
+  color: var(--foreground);
+}
+.fi-schedule__vcopy p {
+  font-size: 0.85rem;
+  color: rgba(58,70,52,0.6);
+}
+
+/* ── Hotels ──────────────────────────────────────────────────────── */
+.fi-hotels {
+  background: #f1ebdf;
+  text-align: center;
+}
+.fi-hotels__icon {
+  color: #3a4634;
+  margin: 0 auto 0.75rem;
+  display: block;
+}
+.fi-hotels h2 {
+  font-size: clamp(2rem, 7vw, 3rem);
+}
+.fi-hotels__subtitle {
+  color: rgba(58,70,52,0.6);
+  margin-bottom: 1.5rem;
+}
+.fi-hotels__grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .fi-hotels__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+.fi-hotel-card {
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(58,70,52,0.2);
+  border-radius: 0.75rem;
+  padding: 1.5rem 1.25rem;
+  box-shadow: 0 8px 24px rgba(58,70,52,0.06);
+}
+.fi-hotel-card h3 {
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--foreground);
+  margin-bottom: 0.35rem;
+}
+.fi-hotel__desc {
+  font-size: 0.85rem;
+  color: rgba(58,70,52,0.6);
+  margin-bottom: 1rem;
+}
+
+/* ── Gifts ───────────────────────────────────────────────────────── */
+.fi-gifts {
+  background: #f1ebdf;
+  position: relative;
+}
+.fi-gifts__confetti {
+  position: absolute;
+  top: 0.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  pointer-events: none;
+  z-index: 5;
+}
+.fi-gifts__confetti img {
+  width: 320px;
+  height: 320px;
+  object-fit: contain;
+}
+.fi-gifts__body {
+  white-space: pre-line;
+  line-height: 1.7;
+  color: rgba(58,70,52,0.75);
+  max-width: 30rem;
+  margin: 0 auto 1.5rem;
+}
+.fi-gifts__card {
+  max-width: 30rem;
+  margin: 0 auto;
+  border: 1px solid rgba(58,70,52,0.2);
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background: #fff;
+}
+.fi-gifts__trigger {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: none;
+  font-family: Georgia, serif;
+  font-size: 1.05rem;
+  color: var(--foreground);
+  cursor: pointer;
+}
+.fi-gifts__trigger svg {
+  transition: transform 0.25s;
+  color: rgba(58,70,52,0.5);
+}
+.fi-gifts__trigger svg.is-open {
+  transform: rotate(180deg);
+}
+.fi-gifts__panel {
+  padding: 1rem 1.25rem 1.25rem;
+  border-top: 1px solid rgba(58,70,52,0.12);
+  text-align: left;
+}
+.fi-gifts__note {
+  font-size: 0.85rem;
+  color: rgba(58,70,52,0.7);
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+}
+.fi-gifts__iban {
+  text-align: center;
+  margin-top: 0.75rem;
+}
+.fi-gifts__iban-label {
+  font-size: 0.65rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: rgba(58,70,52,0.5);
+}
+.fi-gifts__iban-value {
+  font-family: monospace;
+  font-size: 0.85rem;
+  color: var(--foreground);
+  margin-top: 0.25rem;
+}
+.fi-gifts__show-iban {
+  background: none;
+  border: none;
+  color: rgba(58,70,52,0.6);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.fi-gifts__show-iban:hover {
+  color: var(--foreground);
+}
+
+/* ── RSVP ────────────────────────────────────────────────────────── */
+.fi-rsvp {
+  background: #f1ebdf;
+}
+.fi-rsvp__rings {
+  width: 12rem;
+  margin: 0 auto 1rem;
+  display: block;
+}
+.fi-rsvp h2 {
+  font-size: clamp(2rem, 7vw, 3rem);
+}
+.fi-rsvp__subtitle {
+  color: rgba(58,70,52,0.6);
+  margin-bottom: 1.5rem;
+}
+.fi-rsvp__form {
+  text-align: left;
+  background: rgba(255,255,255,0.85);
+  border: 1px solid rgba(58,70,52,0.2);
+  border-radius: 0.75rem;
+  padding: 1.5rem 1.25rem;
+  box-shadow: 0 8px 24px rgba(58,70,52,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+@media (min-width: 640px) {
+  .fi-rsvp__form {
+    padding: 2rem;
+  }
+}
+.fi-rsvp__form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: #3a4634;
+}
+.fi-rsvp__form input[type="text"],
+.fi-rsvp__form input[type="email"],
+.fi-rsvp__form input[type="number"],
+.fi-rsvp__form textarea {
+  border: 1px solid rgba(58,70,52,0.2);
+  border-radius: 0.4rem;
+  padding: 0.55rem 0.75rem;
+  font-size: 0.9rem;
+  background: #f1ebdf;
+  color: #3a4634;
+}
+.fi-rsvp__form input:focus,
+.fi-rsvp__form textarea:focus {
+  outline: none;
+  border-color: #3a4634;
+}
+.fi-rsvp__form fieldset {
+  border: none;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.fi-rsvp__form legend {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #3a4634;
+  margin-bottom: 0.25rem;
+}
+.fi-radio, .fi-checkbox {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 0.5rem;
+  font-weight: 400 !important;
+  cursor: pointer;
+}
+.fi-rsvp__companions,
+.fi-rsvp__allergies {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.fi-rsvp__label {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #3a4634;
+}
+.fi-rsvp__help {
+  font-size: 0.8rem;
+  color: rgba(58,70,52,0.6);
+}
+.fi-rsvp__allergy-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.5rem;
+}
+.fi-rsvp__submit {
+  width: 100%;
+  background: #3a4634;
+  color: #fff;
+  border: none;
+  border-radius: 0.5rem;
+  padding: 0.75rem 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.fi-rsvp__submit:hover {
+  opacity: 0.92;
+}
+.form-status {
+  font-size: 0.85rem;
+  color: #3a4634;
+  text-align: center;
+  background: rgba(135,146,108,0.12);
+  padding: 0.6rem;
+  border-radius: 0.4rem;
+}
+
+/* ── Footer ──────────────────────────────────────────────────────── */
+.fi-footer {
+  background: #3a4634;
+  color: #fff;
+  text-align: center;
+  padding: 3rem 1.5rem;
+}
+.fi-footer__heart {
+  margin: 0 auto 0.75rem;
+  color: rgba(255,255,255,0.6);
+  display: block;
+}
+.fi-footer__names {
+  font-size: clamp(1.75rem, 6vw, 2.5rem);
+  color: #fff;
+  margin-bottom: 0.25rem;
+}
+.fi-footer__date {
+  font-size: 0.85rem;
+  color: rgba(255,255,255,0.75);
+}
+.fi-footer__credit {
+  font-size: 0.7rem;
+  color: rgba(255,255,255,0.45);
+  margin-top: 1.25rem;
+}
+.fi-footer__credit a {
+  color: rgba(255,255,255,0.65);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.fi-footer__credit a:hover {
+  color: #fff;
+}
+
+/* ── Music button ────────────────────────────────────────────────── */
+.fi-shell .music-button {
+  position: fixed;
+  bottom: 1.25rem;
+  right: 1.25rem;
+  z-index: 80;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(0,0,0,0.35);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  backdrop-filter: blur(8px);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.4s, transform 0.4s;
+}
+.fi-shell .music-button.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Reveal ──────────────────────────────────────────────────────── */
+.fi-shell [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+}
+.fi-shell [data-reveal].is-visible {
+  opacity: 1;
+  transform: none;
+}
+
+/* ── Safety: prevent horizontal overflow ─────────────────────────── */
+.fi-shell, .fi-content {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+img {
+  max-width: 100%;
+}

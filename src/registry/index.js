@@ -7,6 +7,13 @@ import { siteMeta as maldivesMeta } from "../sites/maldives/data.js";
 import { siteMeta as excellenceMeta } from "../sites/excellence/data.js";
 import { siteMeta as eleganteMeta } from "../sites/elegante/data.js";
 import { siteMeta as citystarsMeta } from "../sites/citystars/data.js";
+import { siteMeta as floralMeta } from "../sites/floral/data.js";
+import { siteMeta as fincaMeta } from "../sites/finca/data.js";
+import { siteMeta as sweetloveMeta } from "../sites/sweetlove/data.js";
+import { siteMeta as dolcevitaMeta } from "../sites/dolcevita/data.js";
+import { siteMeta as daynightMeta } from "../sites/daynight/data.js";
+import { siteMeta as bridgertonMeta } from "../sites/bridgerton/data.js";
+import { siteMeta as bloomMeta } from "../sites/bloom/data.js";
 
 /**
  * Central template registry.
@@ -79,6 +86,55 @@ const templates = [
     loadComponent: () =>
       import("../sites/citystars/CitystarsInvitation.jsx").then(
         (m) => m.CitystarsInvitation,
+      ),
+  },
+  {
+    meta: floralMeta,
+    loadComponent: () =>
+      import("../sites/floral/FloralInvitation.jsx").then(
+        (m) => m.FloralInvitation,
+      ),
+  },
+  {
+    meta: fincaMeta,
+    loadComponent: () =>
+      import("../sites/finca/FincaInvitation.jsx").then(
+        (m) => m.FincaInvitation,
+      ),
+  },
+  {
+    meta: sweetloveMeta,
+    loadComponent: () =>
+      import("../sites/sweetlove/SweetloveInvitation.jsx").then(
+        (m) => m.SweetloveInvitation,
+      ),
+  },
+  {
+    meta: dolcevitaMeta,
+    loadComponent: () =>
+      import("../sites/dolcevita/DolceVitaInvitation.jsx").then(
+        (m) => m.DolceVitaInvitation,
+      ),
+  },
+  {
+    meta: daynightMeta,
+    loadComponent: () =>
+      import("../sites/daynight/DayNightInvitation.jsx").then(
+        (m) => m.DayNightInvitation,
+      ),
+  },
+  {
+    meta: bridgertonMeta,
+    loadComponent: () =>
+      import("../sites/bridgerton/BridgertonInvitation.jsx").then(
+        (m) => m.BridgertonInvitation,
+      ),
+  },
+  {
+    meta: bloomMeta,
+    loadComponent: () =>
+      import("../sites/bloom/BloomInvitation.jsx").then(
+        (m) => m.BloomInvitation,
       ),
   },
 ];

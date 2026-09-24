@@ -48,6 +48,7 @@ function TimeBox({ value, label, pad = false }) {
  *   showYears      — show Years box (optional)
  *   showMonths     — show Months box (optional)
  *   showSeconds    — show Seconds box (default true)
+ *   kicker         — small eyebrow above title (optional)
  */
 export default function Countdown({
   date,
@@ -60,6 +61,7 @@ export default function Countdown({
   showYears,
   showMonths,
   showSeconds = true,
+  kicker,
 }) {
   const timeLeft = useCountdown(date);
 
@@ -70,6 +72,7 @@ export default function Countdown({
       {columnRightUrl && <img className="countdown-column-right" src={columnRightUrl} alt="" aria-hidden="true" />}
       <div className="countdown-panel">
         <div className="section-inner narrow" data-reveal>
+          {kicker && <p className="countdown-kicker">{kicker}</p>}
           <h2 id="countdown-title">{title || "Countdown"}</h2>
           {untilLabel && <p className="countdown-until">{untilLabel}</p>}
           <div className="countdown-grid">

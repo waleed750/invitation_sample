@@ -53,4 +53,11 @@ export const layoutFamily = freeze({
   SAFARI_EDITORIAL: "safari-editorial",
   BOHO: "boho",
   LUXURY_FLORAL: "luxury-floral",
+  FLORAL_ROMANTIC: "floral-romantic",
+  FINCA_RUSTIC: "finca-rustic",
+  SWEETLOVE_ROMANTIC: "sweetlove-romantic",
+  DOLCE_VITA_LAKE: "dolce-vita-lake",
+  DAYNIGHT_DUAL: "daynight-dual",
+  BRIDGERTON_REGENCY: "bridgerton-regency",
+  BLOOM_GARDEN: "bloom-garden",
 });
