@@ -13,7 +13,9 @@
 | 🚨 Blocker | 7 of the 9 were rebuilt from **scraped thedigitalyes.com demos**. They **cannot be sold** as they are (see §2) |
 | Stack | Next.js (App Router) on Vercel + Supabase (Postgres, Auth, Storage, RLS) + Cloudflare R2 for media |
 | Sign-in | Passwordless first: **WhatsApp OTP**, **email OTP code**, **Google**. Optional password. Account is created at checkout |
-| Payments | **Paymob** (Egyptian cards, wallets, Fawry, Meeza) for local buyers + a Merchant of Record (Paddle / Lemon Squeezy) for international buyers |
+| Payments | **Egypt-only for launch** — Fawry (see §15.3 for why, not Paymob) |
+| Media-buyer affiliate tracking | Unique `?ref=code` link **and** a promo code at checkout, both tied to the same buyer record so sales can be matched and paid out weekly/monthly (§15.4) |
+| Hosting cost | **~$15–40/month** all-in on a VPS, or **~$0–20/month** on managed hosting (free tier covers early traffic) — see §15.1–15.2 for the trade-off |
 | Pricing | 3 tiers + add-ons, one-time payment per event (§4). Test prices with real couples before launch |
 | DDoS | Vercel Firewall + Attack Challenge + bot protection, Cloudflare Turnstile on forms, media on a CDN |
 | Rate limits | Upstash Redis limits per phone, IP and invitation on OTP, RSVP, AI and uploads. Queues + backoff for our own calls to WhatsApp and LLM APIs |
@@ -407,6 +409,71 @@ AI generation is only as good as the contract it writes to. Once the Theme Spec 
 
 ---
 
+## 15. Backend, hosting cost, and affiliate tracking (added 2026-09-24)
+
+### 15.1 There is no backend yet
+
+Today's app is a static Vite + React site: no database, no accounts, no real RSVP storage — see §1.3. The dashboard, payments, and affiliate tracking below all need the Next.js + Supabase backend from §6 to exist first. This section prices what that backend needs to run on and adds the affiliate-link mechanism on top of it.
+
+### 15.2 Where to run it: managed vs. a VPS
+
+| | Managed (Vercel + Supabase, as in §6) | Self-run VPS (e.g. Hetzner, DigitalOcean) |
+|---|---|---|
+| Monthly cost at launch | **$0–20/mo** — both have free tiers that comfortably cover a few hundred invitations/month | **~$5–15/mo** for the VPS itself, but you set up and patch everything |
+| What you get | Deploys, SSL, CDN, backups, DB, autoscaling — all handled | A blank Ubuntu box. You install Docker/Nginx/Postgres/SSL certs, monitor uptime, patch security updates, and rebuild your own CI |
+| Media (R2) | ~$0.015/GB/month storage, no egress fee — a few dollars a month at this scale | Store on the same VPS disk, or still use R2/S3 separately (recommended regardless) |
+| Scaling a spike (e.g. a viral wedding) | Automatic | You resize the VPS manually or it falls over |
+| Time cost | Near zero — this is the point of "managed" | Real ongoing sysadmin time, which has its own cost even if the VPS itself is cheap |
+
+**Recommendation: start managed.** A VPS isn't actually cheaper once you count the time to keep it patched, backed up, and monitored — and Vercel/Supabase's free tiers cover a real launch. Move to a VPS later only if a specific cost or compliance reason forces it (there usually isn't one at this scale).
+
+**If you still want VPS pricing** (e.g. as a personal preference, or for a component you do want to self-host): a Hetzner **CX23** (2 vCPU / 4GB RAM / 40GB NVMe) runs about **€5.49–10.49/month** (~$6–11), which is enough for this app plus a Postgres database at launch scale. A step up (CPX-class, more RAM/CPU) runs roughly **€20–30/month** (~$22–33) — worth it once you have real traffic. [Hetzner Cloud Pricing 2026](https://vpsfor.dev/posts/hetzner-cx22-pricing-2026/), [Hetzner plans overview](https://northflank.com/blog/hetzner-cloud-server-price-increases).
+
+### 15.3 Domain + subdomains
+
+- A `.com` domain costs **~$12–20/year** at most registrars (Namecheap, Cloudflare Registrar, GoDaddy) — this is the only real recurring cost here. [Domain pricing 2026](https://www.hostinger.com/tutorials/domain-name-cost/).
+- **Subdomains are free.** `weddingname.yourdomain.com` is just a DNS record under the one domain you already own — no extra registration or cost per customer, however many you create.
+
+### 15.4 All-in monthly estimate at launch
+
+| Item | Cost |
+|---|---|
+| Vercel (Hobby free tier, or Pro at $20/mo once you need a team seat / more bandwidth) | $0–20 |
+| Supabase (free tier, or Pro at $25/mo once you outgrow it) | $0–25 |
+| Cloudflare R2 media storage | ~$1–5 |
+| Domain (`.com`, amortized monthly) | ~$1–2 |
+| Fawry integration | No monthly fee — per-transaction only (§15.5) |
+| **Total** | **roughly $2–50/month depending on tier**, realistically **under $20/month** for the first few months of real traffic |
+
+This is materially cheaper than most people assume — the free tiers of Vercel/Supabase are generous enough that a self-hosted VPS mainly buys you *control*, not savings, at this scale.
+
+### 15.5 Payments: Egypt only, and not Paymob
+
+You've said: Egypt-only for now, and Paymob is out. For any custom/cheaper deal a customer negotiates directly, that's handled manually outside the automated checkout — no gateway integration needed for those.
+
+**Fawry** is the recommended default for the automated checkout flow:
+- Reaches **~97% of Egyptian households** through 300,000+ physical payment points, plus card/wallet/Meeza support online — the widest reach of any Egyptian option. [Payment gateways in Egypt 2026](https://nowpayments.io/blog/payment-gateway-egypt).
+- Fees are typically **lower** than Paymob/Kashier's published 2.75% + 3 EGP — Fawry's fees run roughly **1.5–2.5%** depending on method and volume (quoted per merchant, so get their current rate directly).
+- Needs a business/tax registration to onboard, same as any Egyptian gateway — this isn't unique to Paymob.
+
+If Fawry's onboarding terms don't work out, **Kashier** is a close second (same 2.75% + 3 EGP structure as Paymob, but a different company/relationship if that's the actual concern) and **Geidea** is the option if you ever want in-person/POS payment at an event too.
+
+### 15.6 Media-buyer affiliate link + payout tracking
+
+You want: a link (and/or a code) each media buyer can promote, so every sale through them is attributed and you can pay them out weekly/monthly. This needs the backend from §6 — here's the concrete design:
+
+**How it works:**
+1. Each affiliate gets a row in an `affiliates` table: name, a unique `ref_code` (e.g. `ahmed01`), payout details (bank/InstaPay/Vodafone Cash — whatever you settle with them), and a running balance.
+2. **Link tracking:** `yoursite.com/?ref=ahmed01` — the `ref` param is captured in a cookie on landing and carried through the whole checkout, so even if the visitor browses for a while before buying, the sale still credits the right affiliate.
+3. **Code tracking:** at checkout, an optional "Have a code?" field. Entering `AHMED01` credits the same affiliate record — this covers the case where someone shares the code verbally or in an ad caption rather than a clickable link.
+4. Every completed `order` row stores which affiliate (if any) it came from, by cookie-ref or by code, whichever applied.
+5. **Payout report:** a simple admin view — filter orders by affiliate + date range, see total sales and the commission owed (a flat % you set per affiliate, or per campaign). You review it and pay them manually (bank transfer, InstaPay, etc.) weekly or monthly, exactly as you described. No automated payout integration is needed for this — that's the right amount of automation for a manual, negotiated payout process.
+6. **Anti-fraud basics:** one affiliate shouldn't be able to buy through their own link and refund it for a payout — flag self-referrals (same phone/email as the affiliate) in the report for you to review, don't auto-block (a media buyer legitimately testing their own link is normal).
+
+This is a small addition on top of the `orders`/`invitations` tables already planned in §6.4 — one new `affiliates` table and one nullable `affiliate_id` column on `orders`. Straightforward to build once the backend exists; no separate infrastructure needed.
+
+---
+
 ## 14. Open decisions for you
 
 1. **Brand name + domain.** Needed for Meta verification and payments.
@@ -414,3 +481,6 @@ AI generation is only as good as the contract it writes to. Once the Theme Spec 
 3. **Who designs the original templates:** an in-house designer, a freelancer, or AI-assisted with a designer's final pass?
 4. **Scope of the "done for you" service:** it is profitable but doesn't scale. Should it be a premium add-on?
 5. **Keep or retire** the 2 own prototypes (Video Open, Lace Scratch) as launch templates after an asset license check?
+6. **VPS vs. managed hosting** (§15.2) — recommendation is managed to start; confirm or override.
+7. **Fawry vs. Kashier vs. Geidea** (§15.3) — recommendation is Fawry for reach + lower fees; confirm once you get their actual merchant quote.
+8. **Affiliate commission structure** — a flat % per sale, tiered by volume, or negotiated per media buyer individually?
