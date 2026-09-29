@@ -11,15 +11,15 @@
 |---|---|
 | Templates today | **9 live** in `src/sites/`, plus **13 more** in the import pipeline |
 | 🚨 Blocker | 7 of the 9 were rebuilt from **scraped thedigitalyes.com demos**. They **cannot be sold** as they are (see §2) |
-| Stack | Next.js (App Router) on Vercel + Supabase (Postgres, Auth, Storage, RLS) + Cloudflare R2 for media |
-| Backend | **Next.js itself** (Route Handlers + Server Actions, TypeScript) — one codebase for frontend and backend, no separate API server (§6.5) |
+| Stack | **Web:** Next.js (App Router) on Vercel · **API:** NestJS (TypeScript) in a container · Supabase (Postgres, Auth, Storage, RLS) + Cloudflare R2 for media |
+| Backend | **NestJS** — a separate API service (owner decision, 2026-09-29). Next.js is only the website (SSR, ISR, OG images, dashboards' UI). One monorepo: `apps/web`, `apps/api`, `packages/shared` (§6.5) |
 | Sign-in | Passwordless first: **WhatsApp OTP**, **email OTP code**, **Google**. Optional password. Account is created at checkout |
 | Payments | **Egypt-only for launch** — Fawry (see §15.5 for why, not Paymob). Negotiated deals entered as manual orders by an admin (§16.5) |
 | Media-buyer affiliate tracking | Unique `?ref=code` link **and** a promo code at checkout, both tied to the same buyer record so sales can be matched and paid out weekly/monthly (§15.6, admin tool in §16.5) |
-| Hosting cost | **~$15–40/month** all-in on a VPS, or **~$0–20/month** on managed hosting (free tier covers early traffic) — see §15.2–15.4 for the trade-off |
+| Hosting cost | **~$10–30/month** managed (Vercel web + NestJS API container + Supabase + Redis), or **~$15–40/month** all-in on a VPS — see §15.2–15.4 |
 | Break-even | ~**2–3 Classic sales a month** covers running costs; net ≈ EGP 990–1,190 per Classic sale (§16.1) |
 | Pricing | 3 tiers + add-ons, one-time payment per event (§4). Test prices with real couples before launch |
-| DDoS | Vercel Firewall + Attack Challenge + bot protection, Cloudflare Turnstile on forms, media on a CDN |
+| DDoS | Web: Vercel Firewall + Attack Challenge. API: behind Cloudflare (proxied) + NestJS throttling. Cloudflare Turnstile on forms, media on a CDN |
 | Rate limits | Upstash Redis limits per phone, IP and invitation on OTP, RSVP, AI and uploads. Queues + backoff for our own calls to WhatsApp and LLM APIs |
 | Dashboards | Customer dashboard (editor, guests, share, edits left, days online, points) + admin dashboard (accounts, sales, **add new demos**, **affiliate links + payouts**, customers, manual orders, abuse) (§7, §16.5–16.6) |
 | Customer access | **Account by phone (WhatsApp OTP) or email** is the default; a **private edit link** for one invitation is the fallback, and can be claimed into an account later (§16.2) |
@@ -168,8 +168,8 @@ Rules:
 | Layer | Choice |
 |---|---|
 | Web app | Next.js 15+ (App Router), React 19, TypeScript |
-| Backend / API | **Next.js** Route Handlers (`app/api/**/route.ts`) + Server Actions, running on Vercel (Node.js runtime). No separate backend service (§6.5) |
-| Hosting | Vercel (app) |
+| Backend / API | **NestJS** 10+ (TypeScript, REST + OpenAPI), Docker container on Fly.io / Railway / Render (or a Hetzner VPS). Separate from the web app (§6.5) |
+| Hosting | Vercel (web app) + a container host for the API (§6.5, §15) |
 | DB / Auth / Storage | Supabase (Postgres + Row-Level Security + Auth). Pick the EU region for proximity to MENA |
 | Media | Cloudflare R2 + a CDN subdomain (`media.ourdomain.com`), with no egress fees for heavy video |
 | Media processing | ffmpeg worker (transcode uploads to H.264/AV1 at a sensible CRF, generate posters, compress images to WebP/AVIF) |
@@ -179,7 +179,7 @@ Rules:
 | WhatsApp | Meta WhatsApp Cloud API |
 | Rate limiting | Upstash Redis (`@upstash/ratelimit`) |
 | Bot protection | Cloudflare Turnstile + Vercel bot protection |
-| Jobs / queues | Inngest or Trigger.dev (webhooks, media transcoding, AI jobs, reminder messages) |
+| Jobs / queues | BullMQ on Redis, run by a NestJS worker process (webhooks follow-up, media transcoding, AI jobs, reminder messages, daily expiry cron) |
 | Analytics | PostHog (product funnels) + our own admin metrics from the DB |
 | Errors / uptime | Sentry + Better Stack (or UptimeRobot) |
 | i18n / RTL | `next-intl`, with Arabic as a first-class language (RTL layouts, Arabic fonts such as Cairo, Tajawal or Amiri) |
@@ -212,21 +212,40 @@ coupons, refunds, audit_log, ai_jobs
 
 ---
 
-### 6.5 Backend: Next.js
+### 6.5 Backend: NestJS
 
-The backend is the same Next.js app, not a separate server. That keeps one repo, one deploy, and one set of shared types and Zod schemas.
+**Decision (owner, 2026-09-29): the backend is NestJS**, a separate API service. Next.js stays as the website only. This replaces the earlier "Next.js is the backend" plan.
 
-| Concern | How it runs in Next.js |
+**Monorepo layout** (npm workspaces, Turborepo optional):
+
+```
+platform/
+  apps/web            Next.js 15: public site, invitations (SSR/ISR), OG images, dashboard UI
+  apps/api            NestJS: REST API + webhooks + job worker entry point
+  packages/shared     Zod schemas, tier/points/entitlement pure functions, types, i18n key types
+  supabase/           migrations + SQL tests (already written)
+```
+
+`packages/shared` is what keeps two deployables honest: the same Zod schemas and `TIERS` / `computeOnlineUntil` / `pointsForOrder` code validate on the web form, in the API, and in the AI agent. Today's `platform/src/lib/schemas/` moves there.
+
+| Concern | How it runs in NestJS |
 |---|---|
-| Public API (RSVP, guest messages, OTP request/verify, uploads) | Route Handlers under `app/api/**/route.ts`, rate-limited with Upstash and protected with Turnstile |
-| Dashboard mutations (edit invitation, publish, guest list, settings) | Server Actions, validated with the shared Zod schemas, then written to Supabase |
-| Data access | Supabase server client (`@supabase/ssr`) using the user's session, so RLS applies. The service-role key is used only in server code for admin and webhooks |
-| Auth | Supabase Auth session cookies, checked in `middleware.ts` for `/app` and `/admin` (admin role only) |
-| Payment + WhatsApp webhooks | Route Handlers that verify the signature, record the event idempotently, and hand the work to the job queue |
-| Long work (video transcoding, AI generation, reminder messages) | Not run inside a request. Queued to Inngest / Trigger.dev, called from Route Handlers |
-| Runtime | Node.js runtime by default (Supabase, payment SDKs, crypto). Edge only for lightweight redirects in middleware |
+| API shape | REST under `/v1`, OpenAPI generated by `@nestjs/swagger`. The web app uses a typed client generated from it |
+| Modules | `auth`, `profiles`, `templates`, `invitations`, `entitlements`, `orders` + `payments` (Fawry), `affiliates`, `points`, `rsvps`, `messages`, `media`, `admin`, `webhooks`, `health` |
+| Validation | `nestjs-zod` with the shared Zod schemas on every body, query and param |
+| Auth | Supabase Auth issues the session. A NestJS `AuthGuard` verifies the Supabase JWT (JWKS). `RolesGuard` protects `/v1/admin/*` (role from `profiles`). Private edit links (§16.2) use a separate guard that hashes the token and scopes it to one invitation |
+| Data access | Owner requests use a Supabase client built with the user's JWT, so RLS still applies. The service-role key exists only inside the API (admin tools, webhooks, jobs) and is never sent to the browser |
+| Money and limits | The API calls the SQL functions already written (`fulfill_paid_order`, `refund_order`, `publish_invitation`). `assertCanPublish` is `EntitlementsService`. The web app never writes these tables directly |
+| Public endpoints | RSVP, guest messages, OTP request/verify, affiliate click tracking. Each has `@nestjs/throttler` limits (Redis-backed), a Turnstile guard, and Zod validation |
+| Webhooks | Fawry and WhatsApp controllers with the raw body kept. A signature (HMAC) guard, then an idempotent insert of the event, then a queued job. Duplicate deliveries do nothing |
+| Jobs | BullMQ queues with concurrency caps, exponential backoff + jitter and retries. A worker process (same codebase, different entry file) runs media transcoding (ffmpeg), reminders, AI jobs and the daily expiry job (a repeatable job, so it runs once even with several API instances) |
+| Web ↔ API | The browser and Next.js server call `api.ourdomain.com`. CORS allows only our web origins. On publish, the API calls a signed Next.js revalidation endpoint so the cached invitation page updates (§6.3) |
+| Security defaults | `helmet`, body-size limits, strict CORS, request IDs in logs, `/v1/health` for uptime checks |
+| Hosting | Docker image on Fly.io / Railway / Render (or a Hetzner VPS). Run at least 2 instances in production once there is real traffic. Redis for queues and rate limits |
 
-If one job ever outgrows serverless (for example a long ffmpeg job), only that worker moves to its own service. The API stays in Next.js.
+**What the next step costs, so it is a known trade-off:** two deployables instead of one (CORS, two sets of environment variables, an API host to run and monitor), roughly **+1–2 weeks** on the MVP schedule, and about **$5–10/month** extra hosting (§15.4). In return, the API can be reused by a mobile app or partners later, has clearer module boundaries for admin and payments, and long-running jobs live in a real worker.
+
+**Still in Next.js (small):** the invitation pages, dynamic OG images, the revalidation endpoint, and locale routing. Nothing that holds money or permission rules.
 
 ## 7. Dashboards and UI/UX
 
@@ -287,7 +306,9 @@ Also: the **templates / demos manager** (add new demos with a license gate), the
 | App | Upstash rate limits (§8.2), request body size limits, Zod validation on every input |
 | Cost protection | Vercel spend limits / alerts, Supabase usage alerts, WhatsApp/SMS daily spend cap |
 
-> We decided **not** to put Cloudflare's orange-cloud proxy in front of Vercel. Vercel recommends against it, and it interferes with its own edge caching, certificates and firewall. This point came from the opencode debate and we accepted it. Use Cloudflare for DNS (grey cloud) and R2/media only.
+> We decided **not** to put Cloudflare's orange-cloud proxy in front of Vercel. Vercel recommends against it, and it interferes with its own edge caching, certificates and firewall. This point came from the opencode debate and we accepted it. For the **web app**, use Cloudflare for DNS (grey cloud) and R2/media only.
+>
+> The **NestJS API is different**: it is not on Vercel, so `api.ourdomain.com` **should** be proxied through Cloudflare (orange cloud) for DDoS protection, WAF and rate rules, and the API host should accept traffic only from Cloudflare's IP ranges.
 
 ### 8.2 Rate limits we apply (starting values; tune from the data)
 
@@ -312,7 +333,7 @@ Also: the **templates / demos manager** (add new demos with a license gate), the
 
 ### 8.4 Other must-haves before publishing
 
-- Secrets only in Vercel/Supabase env vars. Nothing secret in client bundles. Rotate keys.
+- Secrets only in Vercel / Supabase / API-host env vars. Nothing secret in client bundles. Rotate keys.
 - RLS enabled on **every** table, with tests that an anonymous user can't read drafts or RSVPs.
 - Security headers: CSP, HSTS, X-Frame-Options (allow embedding only on our demo pages), Referrer-Policy.
 - RSVP phone numbers are personal data: owner-only access, deletion on request, auto-purge N months after the event (Egypt Personal Data Protection Law No. 151/2020 + GDPR for EU guests).
@@ -325,6 +346,7 @@ Also: the **templates / demos manager** (add new demos with a license gate), the
 ## 9. Launch readiness checklist
 
 - [ ] 5–6 **original** templates with a licensed asset register (§2)
+- [ ] Monorepo split + NestJS API skeleton (auth guard, health, OpenAPI, throttling, Redis)
 - [ ] Next.js migration of the engine, sections, intros and registry
 - [ ] Zod schema + editor + live preview
 - [ ] Auth (WhatsApp OTP, email OTP, Google) + Meta Business verification done
@@ -374,7 +396,7 @@ Brief ("Upscale Nile sunset wedding, Arabic-first, gold & terracotta")
   → Admin approval queue in /admin → publish to catalog
 ```
 
-- **Runs as a worker** (Inngest / Trigger.dev job, or a small Node service on Fly/Railway). Never inside a user request.
+- **Runs as a worker** (a BullMQ job in the NestJS worker process). Never inside a user request.
 - **Model-agnostic interface.** Claude works well here: e.g. `claude-sonnet-5` for generation and `claude-opus-5-5` for critique. OpenAI/others can be swapped in behind the same interface.
 - The agent can also be exposed as tools/MCP (e.g. `create_theme`, `render_preview`, `list_sections`), so you can drive it from Claude, ChatGPT or any agent client.
 - A human approves every template before it goes live (quality + IP safety).
@@ -399,7 +421,7 @@ AI generation is only as good as the contract it writes to. Once the Theme Spec 
 | Phase | Weeks | Deliverables |
 |---|---|---|
 | **0 — Foundations** | 1 | Brand name/domain, Meta Business verification started, Fawry merchant application, company/tax check, legal pages drafted, customer interviews on pricing |
-| **1 — Engine port** | 2–3 | Next.js app, shared sections/intros ported, Zod schemas (InvitationData + Theme Spec + variants), Arabic/RTL, R2 media pipeline |
+| **1 — Engine port** | 2–3 | Monorepo split (`apps/web`, `apps/api`, `packages/shared`), NestJS API skeleton (auth guard, health, OpenAPI, throttling), Next.js app, shared sections/intros ported, Zod schemas (InvitationData + Theme Spec + variants), Arabic/RTL, R2 media pipeline |
 | **2 — Original templates** | 2–3 (parallel) | 5–6 original designs on the Theme Spec, licensed assets, demo pages |
 | **3 — Commerce + dashboards** | 3 | Auth (WhatsApp/email/Google), checkout (Fawry), editor + live preview, RSVP/guests/messages, share + OG, admin dashboard, entitlements (edit limit + online period), admin templates manager, affiliates manager, points (build order in §16.9) |
 | **4 — Hardening + launch** | 1–2 | Rate limits, Turnstile, firewall rules, Sentry, backups, load test, security audit, soft launch to 20 couples |
@@ -412,6 +434,8 @@ AI generation is only as good as the contract it writes to. Once the Theme Spec 
 | Service | Early-stage expectation |
 |---|---|
 | Vercel Pro | ~$20 / member / month |
+| NestJS API host (Fly.io / Railway / Render, 1–2 small instances) | ~$5–15 / month |
+| Redis (queues + rate limits; Upstash fixed plan or host add-on) | ~$0–10 / month |
 | Supabase Pro | ~$25 / month |
 | Cloudflare R2 | Low (storage-based, no egress fees) |
 | Upstash Redis, Resend, Sentry, PostHog | Free tiers are enough at first |
@@ -440,7 +464,7 @@ AI generation is only as good as the contract it writes to. Once the Theme Spec 
 
 ### 15.1 There is no backend yet
 
-Today's app is a static Vite + React site: no database, no accounts, no real RSVP storage — see §1.3. The dashboard, payments, and affiliate tracking below all need the backend to exist first. **That backend is Next.js** (Route Handlers + Server Actions on Vercel, with Supabase for DB/Auth/Storage, see §6.5), not a separate API server. This section prices what that backend needs to run on and adds the affiliate-link mechanism on top of it.
+Today's app is a static Vite + React site: no database, no accounts, no real RSVP storage — see §1.3. The dashboard, payments, and affiliate tracking below all need the backend to exist first. **That backend is NestJS** (a separate API service, with Supabase for DB/Auth/Storage and Next.js as the website, see §6.5). This section prices what it needs to run on and adds the affiliate-link mechanism on top of it.
 
 ### 15.2 Where to run it: managed vs. a VPS
 
@@ -452,7 +476,7 @@ Today's app is a static Vite + React site: no database, no accounts, no real RSV
 | Scaling a spike (e.g. a viral wedding) | Automatic | You resize the VPS manually or it falls over |
 | Time cost | Near zero — this is the point of "managed" | Real ongoing sysadmin time, which has its own cost even if the VPS itself is cheap |
 
-**Recommendation: start managed.** A VPS isn't actually cheaper once you count the time to keep it patched, backed up, and monitored — and Vercel/Supabase's free tiers cover a real launch. Move to a VPS later only if a specific cost or compliance reason forces it (there usually isn't one at this scale).
+**Recommendation: start managed** (Vercel for the web app, a managed container host such as Fly.io or Railway for the NestJS API, Supabase for the database). A VPS isn't actually cheaper once you count the time to keep it patched, backed up, and monitored — and the free tiers cover a real launch. Move to a VPS later only if a specific cost or compliance reason forces it (there usually isn't one at this scale).
 
 **If you still want VPS pricing** (e.g. as a personal preference, or for a component you do want to self-host): a Hetzner **CX23** (2 vCPU / 4GB RAM / 40GB NVMe) runs about **€5.49–10.49/month** (~$6–11), which is enough for this app plus a Postgres database at launch scale. A step up (CPX-class, more RAM/CPU) runs roughly **€20–30/month** (~$22–33) — worth it once you have real traffic. [Hetzner Cloud Pricing 2026](https://vpsfor.dev/posts/hetzner-cx22-pricing-2026/), [Hetzner plans overview](https://northflank.com/blog/hetzner-cloud-server-price-increases).
 
@@ -467,12 +491,14 @@ Today's app is a static Vite + React site: no database, no accounts, no real RSV
 |---|---|
 | Vercel (Hobby free tier, or Pro at $20/mo once you need a team seat / more bandwidth) | $0–20 |
 | Supabase (free tier, or Pro at $25/mo once you outgrow it) | $0–25 |
+| NestJS API container (Fly.io / Railway / Render) | ~$5–15 |
+| Redis for queues and rate limits | ~$0–10 |
 | Cloudflare R2 media storage | ~$1–5 |
 | Domain (`.com`, amortized monthly) | ~$1–2 |
 | Fawry integration | No monthly fee — per-transaction only (§15.5) |
-| **Total** | **roughly $2–50/month depending on tier**, realistically **under $20/month** for the first few months of real traffic |
+| **Total** | **roughly $8–75/month depending on tier**, realistically **~$10–30/month** for the first few months of real traffic (the NestJS API adds about $5–15 over the earlier all-Next.js estimate) |
 
-This is materially cheaper than most people assume — the free tiers of Vercel/Supabase are generous enough that a self-hosted VPS mainly buys you *control*, not savings, at this scale.
+This is materially cheaper than most people assume — the free tiers of Vercel/Supabase are generous enough that a self-hosted VPS mainly buys you *control*, not savings, at this scale. One Hetzner VPS (~$6–11/month) could also run the NestJS API + Redis together if you later want the cheapest setup.
 
 ### 15.5 Payments: Egypt only, and not Paymob
 
@@ -560,7 +586,7 @@ Fixed running cost is ~$20–50/month (§15.4), roughly EGP 1,000–2,500 at abo
 
 ### 16.3 What a purchase includes: an edit limit and an online period
 
-Every paid order creates an **entitlement** on its invitation. **The limits are enforced on the server** (inside the Server Actions that publish, §6.5), not only in the UI. The meters in the dashboard are just a display.
+Every paid order creates an **entitlement** on its invitation. **The limits are enforced on the server** (inside the NestJS `EntitlementsService` and the `publish_invitation` SQL function, §6.5), not only in the UI. The meters in the dashboard are just a display.
 
 Proposed limits (validate them in customer interviews):
 
@@ -591,7 +617,7 @@ draft ─► published (online_until is set)
 - Near the end → "Keep it online 3 more months: EGP 199"
 
 **Engineering notes:**
-- A daily scheduled job (Inngest cron) sends reminders and moves invitations to ended/archived.
+- A daily scheduled job (a BullMQ repeatable job in the NestJS worker) sends reminders and moves invitations to ended/archived.
 - The public route also checks `online_until` on every render/revalidation, so it never depends only on the job running. Any state change triggers ISR revalidation.
 - Admins can add edits or extend dates for support cases, and every such change is written to `audit_log`.
 
@@ -712,7 +738,7 @@ template_assets          id, template_id, r2_key, kind, size, source, license, l
 ```
 
 **Where the rules live:**
-- One server function, `assertCanPublish(invitationId)`, checks edits left, the online period and ownership. Every publish Server Action calls it.
+- One server function, `assertCanPublish(invitationId)`, checks edits left, the online period and ownership. Every publish endpoint in the NestJS API calls it (as `EntitlementsService.assertCanPublish`).
 - One function, `fulfillPaidOrder(orderId)`, runs once per verified payment webhook, in a single transaction and idempotently. It:
   - creates or extends the entitlement
   - writes the points ledger rows
@@ -769,3 +795,5 @@ These add to §9.
 10. **Points value and levels** (§16.4): proposed 1 point per EGP 10, 100 points = EGP 50, Silver at 2 orders and Gold at 4. Confirm or change.
 11. **Allow link-only customers?** (§16.2): recommendation is yes, as a fallback, with no points until the customer claims the invitation into an account.
 12. **Upsell prices** (§16.3): proposed EGP 99 for 10 more edits and EGP 199 for 3 more months online.
+13. **Where the NestJS API runs** (§6.5): recommendation is a managed container host (Fly.io or Railway) for the first months; a Hetzner VPS is the cheaper alternative if you accept the sysadmin work. Confirm or override.
+14. **Timing of the monorepo split** (§6.5): recommendation is to do it right now, before more code is written, so the Zod contracts and pure functions move to `packages/shared` once.

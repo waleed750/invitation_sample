@@ -89,7 +89,8 @@
 1. ✅ `p1-scaffold` — Next.js 15 app in `platform/`: next-intl `ar` (default)/`en`, RTL via CSS logical props, fonts (Cairo / Cormorant / Inter), bilingual landing placeholder, `formatMoney`/`formatDate`/`<Bidi>`, `check:i18n` script, `/api/health`, vitest. (Codex; committed; gates green)
 2. 🚀 `p1-schemas` — Zod contracts in `platform/src/lib/schemas/`: `InvitationData` + all section types, localized `{ar,en}` text, Theme Spec, tier entitlements (`computeOnlineUntil`/`canPublish`), points/levels/discount-cap pure functions, round-trip test against the real `src/sites/*/data.js`. (Codex)
 3. ⏳ Port shared sections + intros + `InvitationShell` into `platform/` as TSX components, RTL-safe (logical CSS), driven by the Zod types; one original demo route `/[locale]/templates/[slug]`.
-4. ⏳ Supabase migrations (profiles, orders, invitations, entitlements, points_ledger, affiliates, templates + RLS + tests) — plan §6.4 + §16.8.
+3b. ⏳ **Monorepo split + NestJS API skeleton** (owner decision 2026-09-29: backend = NestJS, see PLATFORM_PLAN.md §6.5): move `platform/` → `apps/web`, add `apps/api` (auth guard, health, OpenAPI, throttler, Redis), move Zod schemas + pure functions to `packages/shared`.
+4. ✅ (committed 2416fc0) Supabase migrations (profiles, orders, invitations, entitlements, points_ledger, affiliates, templates + RLS + tests) — plan §6.4 + §16.8.
 5. ⏳ Phase 3 items in the order of PLATFORM_PLAN.md §16.9 (accounts/OTP → Fawry + `fulfillPaidOrder` → entitlements/dashboard meters → admin customers/manual orders → admin templates manager → affiliates → points).
 
 **Blocked on the owner (don't stall coding):** brand name/domain, Meta Business verification, Fawry merchant account, company/tax registration, original template designs (PLATFORM_PLAN.md §2, §14).
