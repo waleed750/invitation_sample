@@ -1,6 +1,6 @@
 # Invitation platform — Phase 1
 
-npm-workspaces monorepo. `apps/web` is the standalone Next.js 15 App Router website (React 19, strict TypeScript, plain CSS — no dependency on the Vite lab). `packages/shared` is framework-free TypeScript (Zod contracts) used by web and the future NestJS API. `supabase/` holds SQL migrations + tests. The NestJS app (`apps/api`) does not exist yet.
+npm-workspaces monorepo. `apps/web` is the standalone Next.js 15 App Router website (React 19, strict TypeScript, plain CSS — no dependency on the Vite lab). `apps/api` is the NestJS 11 REST API (`/v1`, Supabase Auth guard, entitlements slice, OpenAPI). `packages/shared` is framework-free TypeScript (Zod contracts + pure functions) used by web and api. `supabase/` holds SQL migrations + tests.
 
 ## Layout
 
@@ -9,7 +9,8 @@ platform/
   package.json            root workspace (private, workspaces: apps/* + packages/*, delegating scripts)
   tsconfig.base.json      shared strict compiler options
   apps/web/               the Next.js website (@platform/web)
-  packages/shared/        framework-free Zod contracts (@platform/shared, source-only, no build step)
+  apps/api/               the NestJS API (@platform/api, REST under /v1, Dockerfile included)
+  packages/shared/        framework-free Zod contracts + pure functions (@platform/shared, tsup-built CJS for the api)
   supabase/               SQL migrations + tests (unchanged)
   docs/                   notes (ARABIC_ENGINE_REVIEW.md)
 ```
@@ -34,7 +35,7 @@ npm run lint
 npm run build
 ```
 
-`npm test` / `npm run typecheck` run in every workspace; the rest delegate to `@platform/web`. To target one workspace directly: `npm run <script> --workspace @platform/web` (or `@platform/shared` for `test` / `typecheck`).
+`npm test` / `npm run typecheck` run in every workspace; `lint` runs in web + api; the rest delegate to `@platform/web`. To target one workspace directly: `npm run <script> --workspace @platform/web` (or `@platform/api` / `@platform/shared` for `test` / `typecheck`).
 
 ## Languages and strings
 
@@ -47,6 +48,38 @@ Add the same nested key with a non-empty string to **both** `apps/web/messages/a
 Use CSS logical properties for spacing, positioning and sizes. Arabic uses Cairo; English uses Cormorant Garamond for headings and Inter for body text. Use `Bidi` for phone numbers, emails and codes. Money uses whole EGP and Western digits; dates use UTC, Western digits, Arabic month names or British English month names.
 
 Pricing reflects plan §4. Legal links point to an explicitly labeled placeholder; this scaffold has no legal policies, template editor or checkout. `/api/health` returns `{ "ok": true }`.
+
+## API (`apps/api`)
+
+NestJS 11 (CommonJS, strict TS, Express), all REST under the `/v1` prefix. Skeleton with one real vertical slice — no payments, OTP, queues or admin endpoints yet.
+
+```sh
+cp apps/api/.env.example apps/api/.env   # placeholders only — fill in real values, never commit
+npm run dev:api                            # watch mode on :3001 (PORT in .env)
+npm run build:api                          # builds @platform/shared first, then the api to apps/api/dist
+node apps/api/dist/main.js                 # run the build (NODE_ENV=production in Docker)
+```
+
+Docker (build context must be `platform/`): `docker build -f apps/api/Dockerfile -t platform-api .` — multi-stage, non-root user, `CMD ["node","apps/api/dist/main.js"]`.
+
+| Env var | Purpose |
+|---|---|
+| `PORT` | listen port (default 3001) |
+| `NODE_ENV` | `development` \| `production` \| `test` (stack traces hidden in production) |
+| `WEB_ORIGINS` | comma-separated browser origins for strict CORS (no wildcards) |
+| `SUPABASE_URL` / `SUPABASE_ANON_KEY` | project URL + anon key (user-scoped client, RLS applies) |
+| `SUPABASE_SERVICE_ROLE_KEY` | secret, server only — never returned or logged |
+| `SUPABASE_JWT_SECRET` | optional; when set, JWTs verify locally (HS256), else via the project's JWKS |
+| `THROTTLE_TTL_MS` / `THROTTLE_LIMIT` | global limit per IP (in-memory store; a `RateLimitStorage` seam exists for a future Redis backend — Redis is not added) |
+| `SWAGGER_ENABLED` | `true` serves OpenAPI at unprefixed `/docs` (+ `/docs-json`); otherwise 404 |
+
+The process refuses to boot when a variable is missing or invalid (`validateEnv` prints every offender).
+
+Routes: `GET /v1/health` (public, unthrottled liveness: `{ ok, version, uptimeSeconds }`), `GET /v1/me` (caller's `profiles` row), `GET /v1/invitations/:id/entitlement` (`:id` is a Zod-validated UUID; RLS decides access, 404 when invisible; meters computed with `remainingEdits`/`daysOnlineLeft`/`canPublish` from `@platform/shared`). Everything is auth-guarded unless `@Public()`; `@Roles('admin')` reads `profiles.role` through the caller's own client (cached per request). Failures all return `{ error: { code, message, requestId } }`; `x-request-id` is echoed and logged (tokens, keys, bodies never are).
+
+## CJS/ESM note (`packages/shared`)
+
+The web app (ESM, Next.js) consumes `@platform/shared` as TypeScript source (`import`/`types` conditions + `transpilePackages`), while the api (CommonJS Nest build) cannot. So `packages/shared` ships both: `npm run build --workspace @platform/shared` (tsup) emits `dist/index.cjs` + `dist/index.js` + `dist/index.d.ts`, and the `exports` map points `require` at the CJS build while `import`/`types` keep pointing at `src/index.ts`. Tests in both workspaces consume the source directly (api jest maps `@platform/shared` to the source), so no build is needed before `npm test` — but `npm run build:api` always builds shared first. `dist/` is gitignored.
 
 ## Engine
 

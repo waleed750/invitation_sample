@@ -8,9 +8,11 @@
   ],
   "scripts": {
     "dev:web": "npm run dev --workspace @platform/web",
+    "dev:api": "npm run dev --workspace @platform/api",
     "build": "npm run build --workspace @platform/web",
+    "build:api": "npm run build --workspace @platform/shared && npm run build --workspace @platform/api",
     "test": "npm test --workspaces --if-present",
-    "lint": "npm run lint --workspace @platform/web",
+    "lint": "npm run lint --workspace @platform/web && npm run lint --workspace @platform/api",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "check:i18n": "npm run check:i18n --workspace @platform/web"
   }
