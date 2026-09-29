@@ -259,6 +259,470 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-09-29T20:45:00+03:00"
+    },
+    {
+      "id": "bug-014",
+      "timestamp": "2026-09-29T17:37:49.210Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/web/src/app/[locale]/demo/video-open/page.tsx",
+      "root_cause": "Had '@/lib/schemas/localized'",
+      "fix": "Changed to '@platform/shared'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:37:49.210Z"
+    },
+    {
+      "id": "bug-015",
+      "timestamp": "2026-09-29T17:37:49.214Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/web/src/data/demo/video-open.ts",
+      "root_cause": "Had '../../lib/schemas/invitation'",
+      "fix": "Changed to '@platform/shared'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:37:49.214Z"
+    },
+    {
+      "id": "bug-016",
+      "timestamp": "2026-09-29T17:37:49.217Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/web/src/engine/registry.tsx",
+      "root_cause": "Had \"@/lib/schemas/invitation\"",
+      "fix": "Changed to \"@platform/shared\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:37:49.217Z"
+    },
+    {
+      "id": "bug-017",
+      "timestamp": "2026-09-29T17:37:49.220Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/web/src/engine/section-key.ts",
+      "root_cause": "Had '@/lib/schemas/invitation'",
+      "fix": "Changed to '@platform/shared'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:37:49.220Z"
+    },
+    {
+      "id": "bug-018",
+      "timestamp": "2026-09-29T17:37:49.223Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/web/src/engine/types.ts",
+      "root_cause": "Had '@/lib/schemas/invitation'",
+      "fix": "Changed to '@platform/shared'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:37:49.223Z"
+    },
+    {
+      "id": "bug-019",
+      "timestamp": "2026-09-29T17:37:49.226Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/web/src/engine/intros/VideoOpenIntro.tsx",
+      "root_cause": "Had '@/lib/schemas/invitation'",
+      "fix": "Changed to '@platform/shared'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:37:49.226Z"
+    },
+    {
+      "id": "bug-020",
+      "timestamp": "2026-09-29T17:37:49.229Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/web/src/engine/InvitationShell.tsx",
+      "root_cause": "Had '@/lib/schemas/invitation'",
+      "fix": "Changed to '@platform/shared'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:37:49.229Z"
+    },
+    {
+      "id": "bug-021",
+      "timestamp": "2026-09-29T17:37:49.232Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/web/src/engine/InvitationLocaleContext.tsx",
+      "root_cause": "Had '@/lib/schemas/localized'",
+      "fix": "Changed to '@platform/shared'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "tsx"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:37:49.232Z"
+    },
+    {
+      "id": "bug-022",
+      "timestamp": "2026-09-29T17:37:49.234Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/web/src/engine/__tests__/engine.test.ts",
+      "root_cause": "Had '../../lib/schemas/invitation'",
+      "fix": "Changed to '@platform/shared'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:37:49.234Z"
+    },
+    {
+      "id": "bug-023",
+      "timestamp": "2026-09-29T17:37:53.452Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/packages/shared/src/__tests__/contracts.test.ts",
+      "root_cause": "Had '../../../../../src/sites/video-open-invitation/da",
+      "fix": "Changed to '../../../../../../src/sites/video-open-invitation",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-09-29T17:38:41.858Z"
+    },
+    {
+      "id": "bug-024",
+      "timestamp": "2026-09-29T17:39:22.715Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/web/package.json",
+      "root_cause": "Had \"invitation-platform\"",
+      "fix": "Changed to \"@platform/web\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "json"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:39:22.715Z"
+    },
+    {
+      "id": "bug-025",
+      "timestamp": "2026-09-29T17:57:01.011Z",
+      "error_message": "Missing error handling in getMe",
+      "file": "platform/apps/api/src/me/me.service.ts",
+      "root_cause": "Code path had no error handling",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:57:01.011Z"
+    },
+    {
+      "id": "bug-026",
+      "timestamp": "2026-09-29T17:57:01.016Z",
+      "error_message": "Missing error handling in getEntitlement",
+      "file": "platform/apps/api/src/entitlements/entitlements.service.ts",
+      "root_cause": "Code path had no error handling",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:57:01.016Z"
+    },
+    {
+      "id": "bug-027",
+      "timestamp": "2026-09-29T17:57:01.020Z",
+      "error_message": "Missing error handling in loadRole",
+      "file": "platform/apps/api/src/auth/roles.guard.ts",
+      "root_cause": "Code path had no error handling",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T17:57:01.020Z"
+    },
+    {
+      "id": "bug-028",
+      "timestamp": "2026-09-29T18:00:01.119Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/api/src/test-helpers.ts",
+      "root_cause": "Had `AppModule`",
+      "fix": "Changed to `bootApp`",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T18:00:01.119Z"
+    },
+    {
+      "id": "bug-029",
+      "timestamp": "2026-09-29T18:00:40.683Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/api/src/app.e2e.spec.ts",
+      "root_cause": "Had 'supertest'",
+      "fix": "Changed to './test-helpers'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T18:00:40.683Z"
+    },
+    {
+      "id": "bug-030",
+      "timestamp": "2026-09-29T18:01:35.428Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/api/package.json",
+      "root_cause": "Had \"^6.1.0\"",
+      "fix": "Changed to \"^5.9.6\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "json"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T18:01:35.428Z"
+    },
+    {
+      "id": "bug-031",
+      "timestamp": "2026-09-29T18:04:56.370Z",
+      "error_message": "Missing guard clause",
+      "file": "platform/apps/api/src/jest.setup.ts",
+      "root_cause": "No early return for: typeof target === 'string'",
+      "fix": "Added guard clause: if (typeof target === 'string')",
+      "tags": [
+        "auto-detected",
+        "guard-clause",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T18:04:56.370Z"
+    },
+    {
+      "id": "bug-032",
+      "timestamp": "2026-09-29T18:19:35.477Z",
+      "error_message": "Null/undefined access in http-exception.filter.ts",
+      "file": "platform/apps/api/src/common/http-exception.filter.ts",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T18:19:35.477Z"
+    },
+    {
+      "id": "bug-033",
+      "timestamp": "2026-09-29T19:25:37.238Z",
+      "error_message": "Null/undefined access in auth.guard.ts",
+      "file": "platform/apps/api/src/auth/auth.guard.ts",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "ts"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T19:25:37.238Z"
+    },
+    {
+      "id": "bug-034",
+      "timestamp": "2026-09-29T19:26:50.608Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/README.md",
+      "root_cause": "Had `packages/shared`",
+      "fix": "Changed to `apps/api`",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "md"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T19:26:50.608Z"
+    },
+    {
+      "id": "bug-035",
+      "timestamp": "2026-09-29T19:30:05.728Z",
+      "error_message": "Incorrect value in code",
+      "file": "platform/apps/api/package.json",
+      "root_cause": "Had \"nest build\"",
+      "fix": "Changed to \"rm -rf dist tsconfig.build.tsbuildinfo && nest bu",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "json"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T19:30:05.728Z"
+    },
+    {
+      "id": "bug-036",
+      "timestamp": "2026-09-29T19:30:53.165Z",
+      "error_message": "Incorrect value in code",
+      "file": "../../../../tmp/sign-test-jwt.cjs",
+      "root_cause": "Had '/Users/waleedashraf/work/abdelrahman_norhan_invit",
+      "fix": "Changed to '/Users/waleedashraf/work/abdelrahman_norhan_invit",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "cjs"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-29T19:30:53.165Z"
+    },
+    {
+      "id": "bug-037",
+      "timestamp": "2026-09-30T09:00:00+03:00",
+      "error_message": "NestJS (CJS) + jose: ESM-only jose@6 cannot be loaded by CJS Nest build or CJS Jest",
+      "file": "platform/apps/api/package.json",
+      "root_cause": "jose v6 is ESM-only; API compiles to CommonJS.",
+      "fix": "Pinned jose ^5.9.6 (dual CJS/ESM, same jwtVerify/SignJWT/createRemoteJWKSet API); verified require('jose') works.",
+      "tags": [
+        "nestjs",
+        "jose",
+        "esm",
+        "cjs"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-30T09:00:00+03:00"
+    },
+    {
+      "id": "bug-038",
+      "timestamp": "2026-09-30T09:00:00+03:00",
+      "error_message": "tsup DTS Build error (TS5074) when building @platform/shared",
+      "file": "platform/packages/shared/tsconfig.json",
+      "root_cause": "tsup's DTS worker cannot run with incremental:true inherited from tsconfig.base.json.",
+      "fix": "Override incremental:false in the shared package tsconfig.",
+      "tags": [
+        "tsup",
+        "dts",
+        "tsconfig"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-30T09:00:00+03:00"
+    },
+    {
+      "id": "bug-039",
+      "timestamp": "2026-09-30T09:00:00+03:00",
+      "error_message": "All API Jest suites failed: app undefined in afterAll; ConfigModule validated env at import",
+      "file": "platform/apps/api/src/jest.setup.ts",
+      "root_cause": "@nestjs/config validates eagerly at import, before specs set env vars.",
+      "fix": "Jest setupFiles seeds test env before imports; e2e per-boot env applied via AppConfigService override.",
+      "tags": [
+        "nestjs",
+        "jest",
+        "config"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-30T09:00:00+03:00"
+    },
+    {
+      "id": "bug-040",
+      "timestamp": "2026-09-30T09:00:00+03:00",
+      "error_message": "GET /v1/me returns 503 only after 7.05s when Supabase is unreachable (live boot of dist/main.js)",
+      "file": "platform/apps/api/src/supabase/supabase.service.ts",
+      "root_cause": "supabase-js/postgrest-js retries failed reads 3x with 1s+2s+4s backoff (retry defaults true); no timeout set. Muse worked around it in tests only.",
+      "fix": "Follow-up delegated: retry:false on both clients + SUPABASE_TIMEOUT_MS fetch timeout + real hanging-server test.",
+      "tags": [
+        "supabase",
+        "retry",
+        "timeout",
+        "production"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-30T09:00:00+03:00"
+    },
+    {
+      "id": "bug-041",
+      "timestamp": "2026-09-30T09:00:00+03:00",
+      "error_message": ".env.example files silently excluded from git",
+      "file": "platform/apps/api/.env.example",
+      "root_cause": "Root .gitignore has blanket .env* rule that also matches .env.example templates.",
+      "fix": "Added both apps/api and apps/web .env.example with git add -f (placeholders only).",
+      "tags": [
+        "gitignore",
+        "env"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-30T09:00:00+03:00"
+    },
+    {
+      "id": "bug-042",
+      "timestamp": "2026-09-30T09:00:00+03:00",
+      "error_message": "Round-trip test path: brief said fix relative path for 'new depth' but depth was unchanged",
+      "file": "platform/packages/shared/src/__tests__/contracts.test.ts",
+      "root_cause": "My brief was wrong: platform/packages/shared/src/__tests__ is the same depth as platform/src/lib/schemas/__tests__ (5 levels). Muse first changed to 6 levels, ls proved it wrong, reverted.",
+      "fix": "Kept ../../../../../src/sites/... (5 levels).",
+      "tags": [
+        "path",
+        "brief-error"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-09-30T09:00:00+03:00"
     }
   ]
 }

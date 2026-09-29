@@ -49,3 +49,5 @@
 - 2026-09-29 (Decision): Platform access model = account (phone via WhatsApp OTP, or email) preferred; private per-invitation edit link as fallback, claimable into an account. Purchases grant limited published edits + an online period; accounts track points + purchase count. Platform must be fully Arabic (default) + English. Backend = NestJS (separate API service, owner decision 2026-09-29; supersedes the earlier 'Next.js is the backend' entry). Next.js is the website only. Monorepo: apps/web, apps/api, packages/shared. See PLATFORM_PLAN.md §6.5, §16.
 
 - 2026-09-29 (Correction): User asked "will it be nest.js", I said no and recommended Next.js-only; user then said "the backend should be nest.js". Backend choice is the owner's; state the trade-off once, then follow the decision and update the plan.
+
+- 2026-09-29 (Preference): User: "stop using claude" -> no Claude models as implementer workers. Use opencode/muse-spark-1.3-contributor-free (free, has network) and Codex (no network; usage limit) only. Claude just orchestrates (briefs, gates, review, commit). No model-vs-model debates.

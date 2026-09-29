@@ -165,3 +165,602 @@
 | 20:31 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 7 reads | ~40974 tok |
 | 20:35 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 11 reads | ~40974 tok |
 | 20:45 | Engine port committed 72e8a8a (verified in headless Chrome ar+en); plan switched to NestJS backend 1cf168e; monorepo restructure dispatched to Codex | platform/**, PLATFORM_PLAN.md | committed | ~30k |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 11 reads | ~40974 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 12 reads | ~41075 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 12 reads | ~41075 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:36 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 17 reads | ~42965 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 26 reads | ~44923 tok |
+| 20:37 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 26 reads | ~44923 tok |
+| 20:37 | Edited platform/apps/web/src/app/[locale]/demo/video-open/page.tsx | — | ~13 |
+| 20:37 | Edited platform/apps/web/src/data/demo/video-open.ts | — | ~22 |
+| 20:37 | Edited platform/apps/web/src/engine/registry.tsx | — | ~17 |
+| 20:37 | Edited platform/apps/web/src/engine/section-key.ts | — | ~14 |
+| 20:37 | Edited platform/apps/web/src/engine/types.ts | — | ~17 |
+| 20:37 | Edited platform/apps/web/src/engine/intros/VideoOpenIntro.tsx | — | ~15 |
+| 20:37 | Edited platform/apps/web/src/engine/InvitationShell.tsx | — | ~29 |
+| 20:37 | Edited platform/apps/web/src/engine/InvitationLocaleContext.tsx | — | ~23 |
+| 20:37 | Edited platform/apps/web/src/engine/__tests__/engine.test.ts | — | ~16 |
+| 20:37 | Edited platform/packages/shared/src/__tests__/contracts.test.ts | — | ~75 |
+| 20:37 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:37 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:38 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:38 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:38 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:38 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:38 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:38 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:38 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:38 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:38 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:38 | Session end: 25 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45458 tok |
+| 20:38 | Edited platform/packages/shared/src/__tests__/contracts.test.ts | — | ~73 |
+| 20:38 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45531 tok |
+| 20:38 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45531 tok |
+| 20:38 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45531 tok |
+| 20:38 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45531 tok |
+| 20:38 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 27 reads | ~45531 tok |
+| 20:38 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 30 reads | ~46104 tok |
+| 20:39 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 30 reads | ~46104 tok |
+| 20:39 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 30 reads | ~46104 tok |
+| 20:39 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 30 reads | ~46104 tok |
+| 20:39 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 30 reads | ~46104 tok |
+| 20:39 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 30 reads | ~46104 tok |
+| 20:39 | Session end: 26 writes across 15 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 30 reads | ~46104 tok |
+| 20:39 | Edited platform/apps/web/package.json | — | ~8 |
+| 20:39 | Edited platform/apps/web/package.json | — | ~86 |
+| 20:39 | Session end: 28 writes across 16 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 32 reads | ~46608 tok |
+| 20:39 | Session end: 28 writes across 16 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 32 reads | ~46608 tok |
+| 20:39 | Edited platform/packages/shared/package.json | — | ~114 |
+| 20:39 | Edited platform/packages/shared/tsconfig.json | — | ~42 |
+| 20:39 | Edited platform/packages/shared/vitest.config.ts | — | ~37 |
+| 20:39 | Edited platform/tsconfig.base.json | — | ~110 |
+| 20:39 | Edited platform/package.json | — | ~142 |
+| 20:39 | Edited platform/apps/web/next.config.ts | — | ~21 |
+| 20:39 | Edited platform/apps/web/tsconfig.json | — | ~102 |
+| 20:39 | Session end: 35 writes across 20 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 32 reads | ~47176 tok |
+| 20:39 | Session end: 35 writes across 20 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 32 reads | ~47176 tok |
+| 20:39 | Session end: 35 writes across 20 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 32 reads | ~47176 tok |
+| 20:39 | Session end: 35 writes across 20 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 32 reads | ~47176 tok |
+| 20:39 | Session end: 35 writes across 20 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~48958 tok |
+| 20:39 | Session end: 35 writes across 20 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~48958 tok |
+| 20:39 | Session end: 35 writes across 20 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~48958 tok |
+| 20:39 | Edited platform/.gitignore | — | ~18 |
+| 20:39 | Edited platform/README.md | — | ~1407 |
+| 20:39 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:39 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:40 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~50484 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~63117 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~63117 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 33 reads | ~63117 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 37 reads | ~53608 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 37 reads | ~53608 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:42 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:43 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 38 reads | ~55210 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 39 reads | ~55471 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 39 reads | ~55471 tok |
+| 20:44 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 39 reads | ~55471 tok |
+| 20:45 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 39 reads | ~55471 tok |
+| 20:45 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 39 reads | ~55471 tok |
+| 20:45 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 39 reads | ~55471 tok |
+| 20:45 | Session end: 37 writes across 21 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 39 reads | ~55471 tok |
+| 20:45 | Edited platform/packages/shared/package.json | — | ~68 |
+| 20:45 | Edited platform/packages/shared/package.json | — | ~29 |
+| 20:45 | Edited platform/packages/shared/tsup.config.ts | — | ~173 |
+| 20:46 | Edited platform/packages/shared/tsconfig.json | — | ~24 |
+| 20:46 | Session end: 41 writes across 22 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~55376 tok |
+| 20:46 | Session end: 41 writes across 22 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~55376 tok |
+| 20:46 | Edited platform/apps/api/package.json | — | ~382 |
+| 20:46 | Session end: 42 writes across 22 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~55758 tok |
+| 20:46 | Session end: 42 writes across 22 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~55758 tok |
+| 20:46 | Session end: 42 writes across 22 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~55758 tok |
+| 20:46 | Session end: 42 writes across 22 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~55758 tok |
+| 20:46 | Edited platform/apps/api/tsconfig.json | — | ~174 |
+| 20:46 | Edited platform/apps/api/tsconfig.build.json | — | ~27 |
+| 20:46 | Edited platform/apps/api/nest-cli.json | — | ~62 |
+| 20:46 | Edited platform/apps/api/jest.config.js | — | ~226 |
+| 20:46 | Edited platform/apps/api/eslint.config.mjs | — | ~312 |
+| 20:46 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:46 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:46 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:46 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:47 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Session end: 47 writes across 26 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~56581 tok |
+| 20:48 | Edited platform/apps/api/src/config/app-config.module.ts | — | ~151 |
+| 20:48 | Edited platform/apps/api/src/config/env.schema.ts | — | ~654 |
+| 20:48 | Edited platform/apps/api/src/config/app-config.service.ts | — | ~464 |
+| 20:48 | Session end: 50 writes across 29 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~57850 tok |
+| 20:48 | Session end: 50 writes across 29 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~57850 tok |
+| 20:48 | Session end: 50 writes across 29 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~57850 tok |
+| 20:48 | Edited platform/apps/api/src/common/type-guards.ts | — | ~66 |
+| 20:48 | Edited platform/apps/api/src/common/request-context.ts | — | ~171 |
+| 20:48 | Edited platform/apps/api/src/common/app-logger.ts | — | ~414 |
+| 20:48 | Edited platform/apps/api/src/common/request-id.middleware.ts | — | ~438 |
+| 20:48 | Session end: 54 writes across 33 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~58939 tok |
+| 20:48 | Session end: 54 writes across 33 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~58939 tok |
+| 20:48 | Session end: 54 writes across 33 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~58939 tok |
+| 20:48 | Edited platform/apps/api/src/common/http-exception.filter.ts | — | ~997 |
+| 20:49 | Session end: 55 writes across 34 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~59936 tok |
+| 20:49 | Session end: 55 writes across 34 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~59936 tok |
+| 20:49 | Session end: 55 writes across 34 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~59936 tok |
+| 20:49 | Session end: 55 writes across 34 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~59936 tok |
+| 20:49 | Session end: 55 writes across 34 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~59936 tok |
+| 20:49 | Session end: 55 writes across 34 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~59936 tok |
+| 20:49 | Edited platform/apps/api/src/common/http-exception.filter.ts | — | ~972 |
+| 20:49 | Edited platform/apps/api/src/common/decorators.ts | — | ~446 |
+| 20:49 | Edited platform/apps/api/src/common/clock.ts | — | ~125 |
+| 20:49 | Session end: 58 writes across 36 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~61479 tok |
+| 20:49 | Session end: 58 writes across 36 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~61479 tok |
+| 20:49 | Edited platform/apps/api/src/supabase/supabase.module.ts | — | ~88 |
+| 20:49 | Edited platform/apps/api/src/auth/auth.module.ts | — | ~94 |
+| 20:49 | Edited platform/apps/api/src/supabase/supabase.service.ts | — | ~341 |
+| 20:49 | Edited platform/apps/api/src/auth/auth.guard.ts | — | ~847 |
+| 20:49 | Edited platform/apps/api/src/auth/roles.guard.ts | — | ~590 |
+| 20:49 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:49 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:49 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:49 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:49 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:49 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:49 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:49 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:50 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:51 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:52 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Session end: 63 writes across 41 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~63439 tok |
+| 20:53 | Edited platform/apps/api/src/rate-limit/rate-limit.module.ts | — | ~362 |
+| 20:53 | Edited platform/apps/api/src/rate-limit/rate-limit-storage.ts | — | ~236 |
+| 20:53 | Edited platform/apps/api/src/health/health.controller.ts | — | ~258 |
+| 20:53 | Edited platform/apps/api/src/health/health.module.ts | — | ~48 |
+| 20:53 | Session end: 67 writes across 45 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~64343 tok |
+| 20:53 | Session end: 67 writes across 45 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~64343 tok |
+| 20:53 | Session end: 67 writes across 45 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~64343 tok |
+| 20:53 | Session end: 67 writes across 45 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~64343 tok |
+| 20:54 | Session end: 67 writes across 45 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~64343 tok |
+| 20:54 | Session end: 67 writes across 45 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~64343 tok |
+| 20:54 | Edited platform/apps/api/src/me/me.controller.ts | — | ~110 |
+| 20:54 | Edited platform/apps/api/src/me/me.module.ts | — | ~78 |
+| 20:54 | Edited platform/apps/api/src/me/me.service.ts | — | ~635 |
+| 20:54 | Session end: 70 writes across 48 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~65166 tok |
+| 20:54 | Session end: 70 writes across 48 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~65166 tok |
+| 20:54 | Session end: 70 writes across 48 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~65166 tok |
+| 20:54 | Session end: 70 writes across 48 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~65166 tok |
+| 20:54 | Session end: 70 writes across 48 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~65166 tok |
+| 20:54 | Edited platform/apps/api/src/entitlements/entitlements.controller.ts | — | ~169 |
+| 20:54 | Edited platform/apps/api/src/entitlements/entitlements.service.ts | — | ~1263 |
+| 20:54 | Edited platform/apps/api/src/entitlements/entitlements.module.ts | — | ~127 |
+| 20:54 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:54 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:54 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:54 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:54 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:54 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:54 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:54 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:54 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:55 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:55 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:55 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:55 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:55 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:55 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:55 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:55 | Session end: 73 writes across 51 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~66725 tok |
+| 20:55 | Edited platform/apps/api/src/app.module.ts | — | ~465 |
+| 20:55 | Edited platform/apps/api/src/auth/index.ts | — | ~77 |
+| 20:55 | Session end: 75 writes across 53 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~67267 tok |
+| 20:55 | Session end: 75 writes across 53 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~67267 tok |
+| 20:55 | Edited platform/apps/api/src/main.ts | — | ~587 |
+| 20:55 | Edited platform/apps/api/src/auth/index.ts | — | ~36 |
+| 20:55 | Session end: 77 writes across 54 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~67890 tok |
+| 20:55 | Session end: 77 writes across 54 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~67890 tok |
+| 20:55 | Edited platform/apps/api/Dockerfile | — | ~322 |
+| 20:55 | Edited platform/.dockerignore | — | ~42 |
+| 20:55 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:55 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Session end: 79 writes across 56 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68278 tok |
+| 20:56 | Edited platform/apps/api/src/setup-app.ts | — | ~409 |
+| 20:56 | Session end: 80 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68687 tok |
+| 20:56 | Session end: 80 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68687 tok |
+| 20:56 | Session end: 80 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~68687 tok |
+| 20:56 | Edited platform/apps/api/src/main.ts | — | ~335 |
+| 20:56 | Session end: 81 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69022 tok |
+| 20:56 | Session end: 81 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69022 tok |
+| 20:57 | Edited platform/apps/api/src/me/me.service.ts | — | ~337 |
+| 20:57 | Edited platform/apps/api/src/entitlements/entitlements.service.ts | — | ~310 |
+| 20:57 | Edited platform/apps/api/src/auth/roles.guard.ts | — | ~190 |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Edited platform/apps/api/src/test-helpers.ts | — | ~880 |
+| 20:57 | Edited platform/apps/api/src/config/env.schema.spec.ts | — | ~663 |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:57 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:58 | Session end: 84 writes across 57 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~69859 tok |
+| 20:58 | Edited platform/apps/api/src/config/env.schema.spec.ts | — | ~36 |
+| 20:58 | Edited platform/apps/api/src/common/http-exception.filter.spec.ts | — | ~1441 |
+| 20:58 | Session end: 86 writes across 59 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~71336 tok |
+| 20:58 | Session end: 86 writes across 59 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~71336 tok |
+| 20:58 | Edited platform/apps/api/src/common/http-exception.filter.spec.ts | — | ~1096 |
+| 20:58 | Session end: 87 writes across 59 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~72432 tok |
+| 20:58 | Session end: 87 writes across 59 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~72432 tok |
+| 20:58 | Edited platform/apps/api/src/entitlements/entitlements.service.spec.ts | — | ~1478 |
+| 20:58 | Session end: 88 writes across 60 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~73910 tok |
+| 20:58 | Session end: 88 writes across 60 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~73910 tok |
+| 20:58 | Edited platform/apps/api/src/entitlements/entitlements.service.spec.ts | — | ~1391 |
+| 20:58 | Session end: 89 writes across 60 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~75301 tok |
+| 20:58 | Session end: 89 writes across 60 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~75301 tok |
+| 20:58 | Session end: 89 writes across 60 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~75301 tok |
+| 20:58 | Session end: 89 writes across 60 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~75301 tok |
+| 20:58 | Session end: 89 writes across 60 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~75301 tok |
+| 20:58 | Session end: 89 writes across 60 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~75301 tok |
+| 20:58 | Edited platform/apps/api/src/test-helpers.ts | — | ~56 |
+| 20:58 | Edited platform/apps/api/src/test-helpers.ts | — | ~57 |
+| 20:58 | Session end: 91 writes across 61 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~75414 tok |
+| 20:58 | Session end: 91 writes across 61 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~75414 tok |
+| 20:59 | Edited platform/apps/api/src/me/me.controller.spec.ts | — | ~716 |
+| 20:59 | Session end: 92 writes across 62 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~76130 tok |
+| 20:59 | Session end: 92 writes across 62 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~76130 tok |
+| 20:59 | Edited platform/apps/api/src/entitlements/entitlements.controller.spec.ts | — | ~569 |
+| 20:59 | Edited platform/apps/api/src/me/me.controller.spec.ts | — | ~487 |
+| 20:59 | Session end: 94 writes across 63 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~77186 tok |
+| 20:59 | Session end: 94 writes across 63 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~77186 tok |
+| 20:59 | Session end: 94 writes across 63 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~77186 tok |
+| 20:59 | Session end: 94 writes across 63 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~77186 tok |
+| 20:59 | Session end: 94 writes across 63 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~77186 tok |
+| 20:59 | Session end: 94 writes across 63 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~77186 tok |
+| 20:59 | Edited platform/apps/api/src/auth/auth.e2e.spec.ts | — | ~955 |
+| 20:59 | Edited platform/apps/api/src/auth/roles.e2e.spec.ts | — | ~735 |
+| 20:59 | Session end: 96 writes across 65 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~78876 tok |
+| 20:59 | Session end: 96 writes across 65 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~78876 tok |
+| 20:59 | Edited platform/apps/api/src/rate-limit/throttle.e2e.spec.ts | — | ~726 |
+| 20:59 | Edited platform/apps/api/src/app.e2e.spec.ts | — | ~712 |
+| 20:59 | Session end: 98 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~80314 tok |
+| 20:59 | Session end: 98 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~80314 tok |
+| 20:59 | Session end: 98 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~80314 tok |
+| 20:59 | Session end: 98 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~80314 tok |
+| 21:00 | Edited platform/apps/api/src/auth/auth.guard.ts | — | ~20 |
+| 21:00 | Edited platform/apps/api/src/test-helpers.ts | — | ~36 |
+| 21:00 | Edited platform/apps/api/src/auth/auth.guard.ts | — | ~93 |
+| 21:00 | Session end: 101 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~80463 tok |
+| 21:00 | Session end: 101 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~80463 tok |
+| 21:00 | Session end: 101 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 40 reads | ~80463 tok |
+| 21:00 | Session end: 101 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~80617 tok |
+| 21:00 | Session end: 101 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~80735 tok |
+| 21:00 | Session end: 101 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~80735 tok |
+| 21:00 | Edited platform/apps/api/src/test-helpers.ts | — | ~99 |
+| 21:00 | Session end: 102 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~80834 tok |
+| 21:00 | Session end: 102 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~80834 tok |
+| 21:00 | Edited platform/apps/api/src/auth/auth.e2e.spec.ts | — | ~70 |
+| 21:00 | Edited platform/apps/api/src/auth/roles.e2e.spec.ts | — | ~28 |
+| 21:00 | Edited platform/apps/api/src/app.e2e.spec.ts | — | ~36 |
+| 21:00 | Edited platform/apps/api/src/auth/roles.e2e.spec.ts | — | ~15 |
+| 21:00 | Session end: 106 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~80983 tok |
+| 21:00 | Session end: 106 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~80983 tok |
+| 21:00 | Session end: 106 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~80983 tok |
+| 21:00 | Session end: 106 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~80983 tok |
+| 21:00 | Edited platform/apps/api/src/rate-limit/throttle.e2e.spec.ts | — | ~628 |
+| 21:00 | Edited platform/apps/api/src/app.e2e.spec.ts | — | ~8 |
+| 21:00 | Session end: 108 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81619 tok |
+| 21:01 | Session end: 108 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81619 tok |
+| 21:01 | Session end: 108 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81619 tok |
+| 21:01 | Session end: 108 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81619 tok |
+| 21:01 | Session end: 108 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81619 tok |
+| 21:01 | Session end: 108 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81619 tok |
+| 21:01 | Session end: 108 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81619 tok |
+| 21:01 | Session end: 108 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81619 tok |
+| 21:01 | Session end: 108 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81619 tok |
+| 21:01 | Session end: 108 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81619 tok |
+| 21:01 | Edited platform/apps/api/package.json | — | ~6 |
+| 21:01 | Session end: 109 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81625 tok |
+| 21:01 | Session end: 109 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81625 tok |
+| 21:01 | Session end: 109 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81625 tok |
+| 21:01 | Session end: 109 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81625 tok |
+| 21:02 | Session end: 109 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81625 tok |
+| 21:02 | Session end: 109 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81625 tok |
+| 21:02 | Session end: 109 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81625 tok |
+| 21:02 | Session end: 109 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81625 tok |
+| 21:02 | Session end: 109 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81625 tok |
+| 21:02 | Session end: 109 writes across 67 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81625 tok |
+| 21:02 | Edited platform/apps/api/src/jest.setup.ts | — | ~78 |
+| 21:02 | Edited platform/apps/api/src/testing/env.ts | — | ~275 |
+| 21:02 | Session end: 111 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81978 tok |
+| 21:02 | Session end: 111 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 41 reads | ~81978 tok |
+| 21:02 | Edited platform/apps/api/src/test-helpers.ts | — | ~693 |
+| 21:02 | Session end: 112 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~82968 tok |
+| 21:02 | Edited platform/apps/api/jest.config.js | — | ~91 |
+| 21:02 | Session end: 113 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83059 tok |
+| 21:02 | Edited platform/apps/api/jest.config.js | — | ~26 |
+| 21:02 | Edited platform/apps/api/tsconfig.json | — | ~39 |
+| 21:02 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:02 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:02 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:02 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:03 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:03 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:03 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:03 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:03 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:03 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:03 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:03 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:03 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:03 | Session end: 115 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83124 tok |
+| 21:03 | Edited platform/apps/api/src/jest.setup.ts | — | ~266 |
+| 21:03 | Edited platform/apps/api/src/entitlements/entitlements.service.spec.ts | — | ~102 |
+| 21:03 | Edited platform/apps/api/src/me/me.controller.spec.ts | — | ~120 |
+| 21:03 | Edited platform/apps/api/src/entitlements/entitlements.controller.spec.ts | — | ~144 |
+| 21:03 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83756 tok |
+| 21:03 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83756 tok |
+| 21:03 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83756 tok |
+| 21:03 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 42 reads | ~83756 tok |
+| 21:04 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 43 reads | ~83756 tok |
+| 21:04 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 43 reads | ~83756 tok |
+| 21:04 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 43 reads | ~83756 tok |
+| 21:04 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 43 reads | ~83756 tok |
+| 21:04 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 43 reads | ~83756 tok |
+| 21:04 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83756 tok |
+| 21:04 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83756 tok |
+| 21:04 | Session end: 119 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83756 tok |
+| 21:04 | Edited platform/apps/api/src/jest.setup.ts | — | ~221 |
+| 21:04 | Session end: 120 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83977 tok |
+| 21:05 | Session end: 120 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83977 tok |
+| 21:05 | Session end: 120 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83977 tok |
+| 21:05 | Session end: 120 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83977 tok |
+| 21:05 | Session end: 120 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83977 tok |
+| 21:05 | Session end: 120 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83977 tok |
+| 21:05 | Session end: 120 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83977 tok |
+| 21:05 | Session end: 120 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83977 tok |
+| 21:05 | Session end: 120 writes across 69 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~83977 tok |
+| 21:05 | Edited platform/apps/api/src/scratch-debug.spec.ts | — | ~314 |
+| 21:06 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:06 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:06 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:06 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:06 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:06 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:06 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:06 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:06 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:07 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:08 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:08 | Session end: 121 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84291 tok |
+| 21:08 | Edited platform/packages/shared/tsconfig.json | — | ~99 |
+| 21:08 | Session end: 122 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84390 tok |
+| 21:08 | Session end: 122 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84390 tok |
+| 21:08 | Session end: 122 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84390 tok |
+| 21:08 | Session end: 122 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84390 tok |
+| 21:08 | Session end: 122 writes across 70 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 44 reads | ~84390 tok |
+| 21:08 | Edited platform/apps/api/tsconfig.json | — | ~26 |
+| 21:13 | Edited platform/apps/api/src/test-helpers.ts | — | ~157 |
+| 21:13 | Edited platform/apps/api/src/health/health.controller.ts | — | ~100 |
+| 21:13 | Edited platform/apps/api/src/test-helpers.ts | — | ~337 |
+| 21:14 | Edited platform/apps/api/src/auth/auth.e2e.spec.ts | — | ~76 |
+| 21:14 | Edited platform/apps/api/src/rate-limit/throttle.e2e.spec.ts | — | ~52 |
+| 21:14 | Edited platform/apps/api/src/app.e2e.spec.ts | — | ~33 |
+| 21:14 | Edited platform/apps/api/src/auth/auth.e2e.spec.ts | — | ~80 |
+| 21:19 | Edited platform/apps/api/src/rate-limit/rate-limit-storage.ts | — | ~105 |
+| 21:19 | Edited platform/apps/api/eslint.config.mjs | — | ~305 |
+| 21:19 | Edited platform/apps/api/src/config/app-config.service.ts | — | ~117 |
+| 21:19 | Edited platform/apps/api/src/config/env.schema.ts | — | ~64 |
+| 21:19 | Edited platform/apps/api/src/supabase/supabase.service.ts | — | ~356 |
+| 21:19 | Edited platform/apps/api/src/auth/auth.guard.ts | — | ~149 |
+| 21:19 | Edited platform/apps/api/src/auth/auth.guard.ts | — | ~516 |
+| 21:19 | Edited platform/apps/api/src/common/http-exception.filter.ts | — | ~185 |
+| 21:19 | Edited platform/apps/api/src/common/http-exception.filter.ts | — | ~185 |
+| 21:19 | Edited platform/apps/api/src/entitlements/entitlements.service.ts | — | ~449 |
+| 21:19 | Edited platform/apps/api/src/me/me.service.ts | — | ~471 |
+| 21:19 | Edited platform/apps/api/src/auth/roles.guard.ts | — | ~102 |
+| 21:19 | Edited platform/apps/api/src/auth/roles.guard.ts | — | ~116 |
+| 21:19 | Edited platform/apps/api/src/auth/roles.guard.ts | — | ~230 |
+| 22:09 | Edited platform/apps/api/src/jest.setup.ts | — | ~208 |
+| 22:09 | Edited platform/apps/api/src/test-helpers.ts | — | ~35 |
+| 22:09 | Edited platform/apps/api/src/auth/roles.e2e.spec.ts | — | ~12 |
+| 22:09 | Edited platform/apps/api/src/app.e2e.spec.ts | — | ~19 |
+| 22:09 | Edited platform/apps/api/src/entitlements/entitlements.controller.spec.ts | — | ~42 |
+| 22:09 | Edited platform/apps/api/src/entitlements/entitlements.controller.spec.ts | — | ~128 |
+| 22:09 | Edited platform/apps/api/src/entitlements/entitlements.controller.spec.ts | — | ~106 |
+| 22:25 | Edited platform/apps/api/src/config/env.schema.ts | — | ~52 |
+| 22:25 | Edited platform/apps/api/src/auth/auth.guard.ts | — | ~79 |
+| 22:25 | Edited platform/apps/api/eslint.config.mjs | — | ~47 |
+| 22:26 | Edited platform/apps/api/eslint.config.mjs | — | ~418 |
+| 22:26 | Edited platform/package.json | — | ~162 |
+| 22:26 | Edited platform/README.md | — | ~106 |
+| 22:26 | Edited platform/README.md | — | ~153 |
+| 22:26 | Edited platform/README.md | — | ~94 |
+| 22:27 | Edited platform/README.md | — | ~836 |
+| 22:30 | Edited platform/apps/api/package.json | — | ~29 |
+| 22:30 | Edited ../../../../tmp/sign-test-jwt.cjs | — | ~186 |
+| 22:30 | Edited ../../../../tmp/sign-test-jwt.cjs | — | ~35 |
+| 09:05 | NestJS API skeleton committed 7fe28fe (Muse built, orchestrator verified live); found production 7s retry hang, delegated fix; push held (repo is PUBLIC) | platform/apps/api, .wolf | verified | ~40k |

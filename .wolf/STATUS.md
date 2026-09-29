@@ -2,7 +2,7 @@
 
 > Single source of truth for resuming work. Read this FIRST when starting a session.
 > Update this file at the end of every work phase so the next `/clear` resumes in 1 read.
-> Last updated: 2026-09-29
+> Last updated: 2026-09-30
 
 ---
 
@@ -89,7 +89,7 @@
 1. ✅ `p1-scaffold` — Next.js 15 app in `platform/`: next-intl `ar` (default)/`en`, RTL via CSS logical props, fonts (Cairo / Cormorant / Inter), bilingual landing placeholder, `formatMoney`/`formatDate`/`<Bidi>`, `check:i18n` script, `/api/health`, vitest. (Codex; committed; gates green)
 2. 🚀 `p1-schemas` — Zod contracts in `platform/src/lib/schemas/`: `InvitationData` + all section types, localized `{ar,en}` text, Theme Spec, tier entitlements (`computeOnlineUntil`/`canPublish`), points/levels/discount-cap pure functions, round-trip test against the real `src/sites/*/data.js`. (Codex)
 3. ⏳ Port shared sections + intros + `InvitationShell` into `platform/` as TSX components, RTL-safe (logical CSS), driven by the Zod types; one original demo route `/[locale]/templates/[slug]`.
-3b. ⏳ **Monorepo split + NestJS API skeleton** (owner decision 2026-09-29: backend = NestJS, see PLATFORM_PLAN.md §6.5): move `platform/` → `apps/web`, add `apps/api` (auth guard, health, OpenAPI, throttler, Redis), move Zod schemas + pure functions to `packages/shared`.
+3b. ✅ **Monorepo split (5f413a0) + NestJS API skeleton (7fe28fe)** — apps/web + apps/api + packages/shared; API has auth guard, roles, throttling, /v1/health, /v1/me, /v1/invitations/:id/entitlement; 47 api + 20 web + 125 shared tests; live boot verified. 🔄 Follow-up running (Muse): Supabase retry:false + SUPABASE_TIMEOUT_MS (production hang of ~7s found), exclude test files from dist. (original plan text:) (owner decision 2026-09-29: backend = NestJS, see PLATFORM_PLAN.md §6.5): move `platform/` → `apps/web`, add `apps/api` (auth guard, health, OpenAPI, throttler, Redis), move Zod schemas + pure functions to `packages/shared`.
 4. ✅ (committed 2416fc0) Supabase migrations (profiles, orders, invitations, entitlements, points_ledger, affiliates, templates + RLS + tests) — plan §6.4 + §16.8.
 5. ⏳ Phase 3 items in the order of PLATFORM_PLAN.md §16.9 (accounts/OTP → Fawry + `fulfillPaidOrder` → entitlements/dashboard meters → admin customers/manual orders → admin templates manager → affiliates → points).
 
@@ -158,3 +158,7 @@ npm run preview  # preview built output
 - `.wolf/cerebrum.md` — User Preferences + Do-Not-Repeat + Decision Log
 - `.wolf/anatomy.md` — token-efficient file index
 - `.wolf/buglog.json` — known bugs + fixes
+
+
+## ⚠️ Push decision pending (2026-09-30)
+Origin repo `waleed750/invitation_sample` is **PUBLIC**; 11 local commits are unpushed. Scraped thedigitalyes templates are ALREADY public on origin/main (PLATFORM_PLAN §2 says they must not be sold/published). A push would newly publish `platform/` code, the expanded PLATFORM_PLAN.md (pricing, margins, affiliate strategy) and `.wolf/` notes. Waiting for the owner to confirm (or make the repo private / move platform work to a private repo) before pushing.
