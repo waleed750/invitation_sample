@@ -2,7 +2,7 @@
 
 > Single source of truth for resuming work. Read this FIRST when starting a session.
 > Update this file at the end of every work phase so the next `/clear` resumes in 1 read.
-> Last updated: 2026-09-24
+> Last updated: 2026-09-29
 
 ---
 
@@ -80,9 +80,25 @@
 
 ---
 
-## 🚀 Next phase — Proxima fase / Next quest
+## 🚀 Current quest — Platform build, Phase 1 (started 2026-09-29)
 
-> **Status: NOT started.** The 6 templates below have NOT been converted yet — no implementation work has begun on this phase.
+> Plan: `PLATFORM_PLAN.md` (§6.5 backend = Next.js, §16 accounts/limits/points/admin/AR-EN). New app lives in `platform/` (the Vite lab in `src/` stays untouched until the engine is ported).
+> Workflow: Claude writes briefs + reviews; **opencode (`opencode/claude-sonnet-4-5` or `opencode/claude-haiku-4-5`) and Codex implement**. User-allowed models only: Haiku 4.5 / Sonnet 4.5 via opencode, or Codex. **No model-vs-model debates.** Briefs live in the session scratchpad (`briefs/p1-*.txt`); re-create from this list if lost.
+
+**Task queue (sequential; review + commit after each):**
+1. 🔄 `p1-scaffold` — Next.js 15 app in `platform/`: next-intl `ar` (default)/`en`, RTL via CSS logical props, fonts (Cairo / Cormorant / Inter), bilingual landing placeholder, `formatMoney`/`formatDate`/`<Bidi>`, `check:i18n` script, `/api/health`, vitest. (opencode, running)
+2. ⏳ `p1-schemas` — Zod contracts in `platform/src/lib/schemas/`: `InvitationData` + all section types, localized `{ar,en}` text, Theme Spec, tier entitlements (`computeOnlineUntil`/`canPublish`), points/levels/discount-cap pure functions, round-trip test against the real `src/sites/*/data.js`. (Codex)
+3. ⏳ Port shared sections + intros + `InvitationShell` into `platform/` as TSX components, RTL-safe (logical CSS), driven by the Zod types; one original demo route `/[locale]/templates/[slug]`.
+4. ⏳ Supabase migrations (profiles, orders, invitations, entitlements, points_ledger, affiliates, templates + RLS + tests) — plan §6.4 + §16.8.
+5. ⏳ Phase 3 items in the order of PLATFORM_PLAN.md §16.9 (accounts/OTP → Fawry + `fulfillPaidOrder` → entitlements/dashboard meters → admin customers/manual orders → admin templates manager → affiliates → points).
+
+**Blocked on the owner (don't stall coding):** brand name/domain, Meta Business verification, Fawry merchant account, company/tax registration, original template designs (PLATFORM_PLAN.md §2, §14).
+
+---
+
+## ⏸ Deferred — 6-template live re-scrape (was the next quest before the platform build)
+
+> **Status: NOT started.** The 6 templates below have NOT been converted yet — no implementation work has begun on this phase. Low priority: thedigitalyes-derived templates cannot be sold (PLATFORM_PLAN.md §2).
 
 **Goal:** Convert the 6 remaining templates whose zips are flagged `partial/broken` in `imports/cloudflare-link/current-download-status.json`. These **must be live-rescraped** from their `thedigitalyes.com` demo URLs (same rescue approach previously used successfully for `excellence` / `tdy-excellence-template`), **NOT** unzipped from `imports/cloudflare-link/site-zips/` — the downloaded zips for these 6 are broken/partial (2–19 MB vs ~30–59 MB for complete ones).
 

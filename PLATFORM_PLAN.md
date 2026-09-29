@@ -1,7 +1,7 @@
 # Invitation Platform — Launch Plan
 
 > Turning this invitation template lab into a paid product: customers pick a template, pay, edit their details in a dashboard, and share a link where guests can RSVP.
-> Status: **plan only, no code written yet.** Date: 2026-09-24.
+> Status: **plan only, no code written yet.** Date: 2026-09-24 · updated 2026-09-29 (accounts, limits, loyalty, admin tools, AR/EN: §16).
 
 ---
 
@@ -12,14 +12,20 @@
 | Templates today | **9 live** in `src/sites/`, plus **13 more** in the import pipeline |
 | 🚨 Blocker | 7 of the 9 were rebuilt from **scraped thedigitalyes.com demos**. They **cannot be sold** as they are (see §2) |
 | Stack | Next.js (App Router) on Vercel + Supabase (Postgres, Auth, Storage, RLS) + Cloudflare R2 for media |
+| Backend | **Next.js itself** (Route Handlers + Server Actions, TypeScript) — one codebase for frontend and backend, no separate API server (§6.5) |
 | Sign-in | Passwordless first: **WhatsApp OTP**, **email OTP code**, **Google**. Optional password. Account is created at checkout |
-| Payments | **Egypt-only for launch** — Fawry (see §15.3 for why, not Paymob) |
-| Media-buyer affiliate tracking | Unique `?ref=code` link **and** a promo code at checkout, both tied to the same buyer record so sales can be matched and paid out weekly/monthly (§15.4) |
-| Hosting cost | **~$15–40/month** all-in on a VPS, or **~$0–20/month** on managed hosting (free tier covers early traffic) — see §15.1–15.2 for the trade-off |
+| Payments | **Egypt-only for launch** — Fawry (see §15.5 for why, not Paymob). Negotiated deals entered as manual orders by an admin (§16.5) |
+| Media-buyer affiliate tracking | Unique `?ref=code` link **and** a promo code at checkout, both tied to the same buyer record so sales can be matched and paid out weekly/monthly (§15.6, admin tool in §16.5) |
+| Hosting cost | **~$15–40/month** all-in on a VPS, or **~$0–20/month** on managed hosting (free tier covers early traffic) — see §15.2–15.4 for the trade-off |
+| Break-even | ~**2–3 Classic sales a month** covers running costs; net ≈ EGP 990–1,190 per Classic sale (§16.1) |
 | Pricing | 3 tiers + add-ons, one-time payment per event (§4). Test prices with real couples before launch |
 | DDoS | Vercel Firewall + Attack Challenge + bot protection, Cloudflare Turnstile on forms, media on a CDN |
 | Rate limits | Upstash Redis limits per phone, IP and invitation on OTP, RSVP, AI and uploads. Queues + backoff for our own calls to WhatsApp and LLM APIs |
-| Dashboards | Customer dashboard (editor, guests, share) + admin dashboard (accounts, sales, templates, abuse) |
+| Dashboards | Customer dashboard (editor, guests, share, edits left, days online, points) + admin dashboard (accounts, sales, **add new demos**, **affiliate links + payouts**, customers, manual orders, abuse) (§7, §16.5–16.6) |
+| Customer access | **Account by phone (WhatsApp OTP) or email** is the default; a **private edit link** for one invitation is the fallback, and can be claimed into an account later (§16.2) |
+| Purchase limits | Each order gives a **number of published edits** and an **online period** (never ending before the event date). Extra edits and extensions are paid upsells (§16.3) |
+| Loyalty | Accounts earn **points** (1 per EGP 10) and track **purchase count**, with Member / Silver / Gold levels (§16.4) |
+| Languages | **Arabic (default) + English** everywhere: `/ar` and `/en` URLs, full RTL, bilingual invitations, messages, receipts and legal pages (§16.7) |
 | AI | A **Theme Spec** JSON contract lets a server-side AI agent generate new designs and render reels (Remotion). The contract is built in Phase 1; the agent comes in Phase 4 |
 | Time to MVP | ~8–10 weeks for 1–2 developers, after original designs are ready |
 
@@ -162,12 +168,13 @@ Rules:
 | Layer | Choice |
 |---|---|
 | Web app | Next.js 15+ (App Router), React 19, TypeScript |
+| Backend / API | **Next.js** Route Handlers (`app/api/**/route.ts`) + Server Actions, running on Vercel (Node.js runtime). No separate backend service (§6.5) |
 | Hosting | Vercel (app) |
 | DB / Auth / Storage | Supabase (Postgres + Row-Level Security + Auth). Pick the EU region for proximity to MENA |
 | Media | Cloudflare R2 + a CDN subdomain (`media.ourdomain.com`), with no egress fees for heavy video |
 | Media processing | ffmpeg worker (transcode uploads to H.264/AV1 at a sensible CRF, generate posters, compress images to WebP/AVIF) |
 | Validation | Zod schemas generated from today's JSDoc schema, shared by the editor, API and AI agent |
-| Payments | Paymob (EGP) + Paddle / Lemon Squeezy (international; Stripe can't pay out to an Egyptian entity) |
+| Payments | Fawry (EGP, Egypt-only launch, §15.5); Kashier as the fallback. International (Paddle / Lemon Squeezy as Merchant of Record) only if we expand beyond Egypt. Negotiated deals = manual orders (§16.5) |
 | Email | Resend or Postmark |
 | WhatsApp | Meta WhatsApp Cloud API |
 | Rate limiting | Upstash Redis (`@upstash/ratelimit`) |
@@ -205,6 +212,22 @@ coupons, refunds, audit_log, ai_jobs
 
 ---
 
+### 6.5 Backend: Next.js
+
+The backend is the same Next.js app, not a separate server. That keeps one repo, one deploy, and one set of shared types and Zod schemas.
+
+| Concern | How it runs in Next.js |
+|---|---|
+| Public API (RSVP, guest messages, OTP request/verify, uploads) | Route Handlers under `app/api/**/route.ts`, rate-limited with Upstash and protected with Turnstile |
+| Dashboard mutations (edit invitation, publish, guest list, settings) | Server Actions, validated with the shared Zod schemas, then written to Supabase |
+| Data access | Supabase server client (`@supabase/ssr`) using the user's session, so RLS applies. The service-role key is used only in server code for admin and webhooks |
+| Auth | Supabase Auth session cookies, checked in `middleware.ts` for `/app` and `/admin` (admin role only) |
+| Payment + WhatsApp webhooks | Route Handlers that verify the signature, record the event idempotently, and hand the work to the job queue |
+| Long work (video transcoding, AI generation, reminder messages) | Not run inside a request. Queued to Inngest / Trigger.dev, called from Route Handlers |
+| Runtime | Node.js runtime by default (Supabase, payment SDKs, crypto). Edge only for lightweight redirects in middleware |
+
+If one job ever outgrows serverless (for example a long ffmpeg job), only that worker moves to its own service. The API stays in Next.js.
+
 ## 7. Dashboards and UI/UX
 
 ### 7.1 Design principles
@@ -232,6 +255,8 @@ coupons, refunds, audit_log, ai_jobs
 | **Billing** | Orders, invoices, upgrade tier, extend hosting |
 | **Settings** | Linked WhatsApp/email/Google, language, delete account (data protection) |
 
+Also: edits-left and days-online meters, Extend / Buy edits, points, level and purchase history. See **§16.6**.
+
 ### 7.4 Admin dashboard (`/admin`, admin role only)
 
 | Widget | Metric |
@@ -245,6 +270,8 @@ coupons, refunds, audit_log, ai_jobs
 | **Tools** | Look up a user by phone/email, impersonate for support (logged in `audit_log`), refund, extend expiry, manage the catalog and AI-generated templates awaiting approval |
 
 Numbers come from Postgres views (exact counts). PostHog provides the funnel and behavior data.
+
+Also: the **templates / demos manager** (add new demos with a license gate), the **affiliates manager** (links, codes, QR, payouts) and **customers & orders** tools (manual orders, private edit links, points). See **§16.5**.
 
 ---
 
@@ -274,7 +301,7 @@ Numbers come from Postgres views (exact counts). PostHog provides the funnel and
 | Editor save (autosave) | Debounced on the client + 60 per user per min |
 | AI generation | Per-tier quota (e.g. 3 reels per Premium order) + 5 jobs per user per hour |
 | Public invitation GET | Cached at the edge, so it needs no limit. The WAF handles floods |
-| Payment webhooks | No rate limit. Verify the **HMAC signature** + **idempotency key** instead (Paymob and Fawry can resend) |
+| Payment webhooks | No rate limit. Verify the **HMAC signature** + **idempotency key** instead (Fawry can resend) |
 
 ### 8.3 Avoiding being rate-limited *ourselves* (by third parties)
 
@@ -301,7 +328,7 @@ Numbers come from Postgres views (exact counts). PostHog provides the funnel and
 - [ ] Next.js migration of the engine, sections, intros and registry
 - [ ] Zod schema + editor + live preview
 - [ ] Auth (WhatsApp OTP, email OTP, Google) + Meta Business verification done
-- [ ] Paymob live + MoR live + webhooks idempotent + refund flow
+- [ ] Fawry live + webhooks idempotent + refund flow (full money checklist in §16.10)
 - [ ] RSVP / messages backend + guest-list export
 - [ ] Dynamic OG images tested on WhatsApp, iMessage and Facebook
 - [ ] Arabic RTL tested on all templates at 390px (no horizontal overflow; see cerebrum)
@@ -371,10 +398,10 @@ AI generation is only as good as the contract it writes to. Once the Theme Spec 
 
 | Phase | Weeks | Deliverables |
 |---|---|---|
-| **0 — Foundations** | 1 | Brand name/domain, Meta Business verification started, Paymob merchant application, company/tax check, legal pages drafted, customer interviews on pricing |
+| **0 — Foundations** | 1 | Brand name/domain, Meta Business verification started, Fawry merchant application, company/tax check, legal pages drafted, customer interviews on pricing |
 | **1 — Engine port** | 2–3 | Next.js app, shared sections/intros ported, Zod schemas (InvitationData + Theme Spec + variants), Arabic/RTL, R2 media pipeline |
 | **2 — Original templates** | 2–3 (parallel) | 5–6 original designs on the Theme Spec, licensed assets, demo pages |
-| **3 — Commerce + dashboards** | 3 | Auth (WhatsApp/email/Google), checkout (Paymob + MoR), editor + live preview, RSVP/guests/messages, share + OG, admin dashboard |
+| **3 — Commerce + dashboards** | 3 | Auth (WhatsApp/email/Google), checkout (Fawry), editor + live preview, RSVP/guests/messages, share + OG, admin dashboard, entitlements (edit limit + online period), admin templates manager, affiliates manager, points (build order in §16.9) |
 | **4 — Hardening + launch** | 1–2 | Rate limits, Turnstile, firewall rules, Sentry, backups, load test, security audit, soft launch to 20 couples |
 | **5 — AI studio** | 3–4 (post-launch) | Design-generation agent + admin approval queue, Remotion reels, storyboard export, reel add-on |
 
@@ -389,7 +416,7 @@ AI generation is only as good as the contract it writes to. Once the Theme Spec 
 | Cloudflare R2 | Low (storage-based, no egress fees) |
 | Upstash Redis, Resend, Sentry, PostHog | Free tiers are enough at first |
 | WhatsApp auth messages | Per message, so budget per signup and cap daily spend |
-| Paymob / MoR | Percentage per transaction (MoR costs more but handles international tax) |
+| Fawry | Percentage per transaction (~1.5–2.5%, quoted per merchant, §15.5) |
 | AI (Phase 5) | Per job, so price reels above the generation cost |
 
 ---
@@ -413,7 +440,7 @@ AI generation is only as good as the contract it writes to. Once the Theme Spec 
 
 ### 15.1 There is no backend yet
 
-Today's app is a static Vite + React site: no database, no accounts, no real RSVP storage — see §1.3. The dashboard, payments, and affiliate tracking below all need the Next.js + Supabase backend from §6 to exist first. This section prices what that backend needs to run on and adds the affiliate-link mechanism on top of it.
+Today's app is a static Vite + React site: no database, no accounts, no real RSVP storage — see §1.3. The dashboard, payments, and affiliate tracking below all need the backend to exist first. **That backend is Next.js** (Route Handlers + Server Actions on Vercel, with Supabase for DB/Auth/Storage, see §6.5), not a separate API server. This section prices what that backend needs to run on and adds the affiliate-link mechanism on top of it.
 
 ### 15.2 Where to run it: managed vs. a VPS
 
@@ -474,6 +501,260 @@ This is a small addition on top of the `orders`/`invitations` tables already pla
 
 ---
 
+## 16. Accounts, limits, loyalty, admin tools and bilingual launch (added 2026-09-29)
+
+This section is written from two angles: as the **owner** (what makes money, what it costs, what to watch) and as the **engineer** (what to build, and where the rules are enforced). It builds on §3–§7 and §15 and doesn't replace them.
+
+### 16.1 How the business makes money
+
+**Revenue streams, most important first:**
+1. **One-time invitation purchase** (tiers in §4).
+2. **Upsells inside the dashboard:** extra edits pack, online-period extension, custom subdomain, AR + EN bilingual, reel (§10). These cost us almost nothing to deliver, so they're nearly pure margin. Each one should be a single tap.
+3. **Repeat purchases.** The same family buys a save-the-date, then an engagement, a wedding, a baby announcement or a birthday. Points and levels (§16.4) reward this.
+4. **Done-for-you setup** by our team: high margin per order, but it doesn't scale, so it's a premium add-on.
+
+**Unit economics per Classic sale** (estimates: confirm the real Fawry rate and each affiliate's commission):
+
+| Line | EGP |
+|---|---|
+| Price | 1,299 |
+| Fawry fee (~2.5%) | −33 |
+| Affiliate commission, if the sale was referred (e.g. 15%) | −195 |
+| WhatsApp OTP + notification messages | −5 to −15 |
+| Points given back (~5%, spent on a later order) | −65 |
+| Hosting + media per invitation | ~−5 |
+| **Net per referred sale** | **~EGP 990** |
+| **Net per direct sale** | **~EGP 1,190** |
+
+Fixed running cost is ~$20–50/month (§15.4), roughly EGP 1,000–2,500 at about EGP 50 per USD (check the current rate). That means **break-even is about 2–3 Classic sales a month**. Everything after that is profit, minus our own time.
+
+**Rules that protect the margin:**
+- Discounts don't stack without limit. Points + affiliate discount code + coupon together are capped at **30% off** an order.
+- Affiliate commission is paid only after the refund window closes (7 days, §4), so refunded orders never get paid out.
+- The "invitation ended" page (§16.3) and a small "Made with ‹brand›" line on every live invitation are free advertising to every guest.
+
+**KPIs to review every week** (admin dashboard, §7.4):
+- Demo → draft conversion
+- Draft → paid conversion
+- Average order value, including upsells
+- Repeat-purchase rate
+- Revenue vs. commission per affiliate
+- Refund rate
+- Cost per signup (OTP spend)
+
+### 16.2 Customer access: an account first, a private link as the fallback
+
+| Mode | When | How it works |
+|---|---|---|
+| **Account** (default, recommended) | Every normal checkout | **Phone number** verified by WhatsApp OTP is the main identifier. **Email** verified by email OTP is the alternative, and Google is optional (§5). The account holds all invitations, orders, receipts, points and level |
+| **Private edit link** | The customer refuses to make an account, or we set up a done-for-you / manual order (§15.5) | A secret link `/{locale}/edit/{token}` that gives access to **one invitation only**. We send it on WhatsApp or email. Same editor, same limits |
+
+**Private link rules:**
+- The token is 32+ random bytes, **stored hashed**, and scoped to one invitation. The owner or an admin can revoke it and issue a new one if it leaks.
+- The link cannot change the contact phone/email, request refunds, or see other orders.
+- **No points and no purchase history on link-only access.** The editor shows a banner: "Save this invitation to your account to keep it safe and earn points". The customer verifies a phone or email, and the invitation and its order move into the account (a "claim"). This is the incentive to create an account.
+
+**Identity details:**
+- Phone numbers are stored in E.164 format (`+20…`). Egyptian local formats are normalized (`01x…` → `+201x…`) so the same person never ends up with two accounts.
+- Phone and email can both be linked to one profile (§5).
+
+### 16.3 What a purchase includes: an edit limit and an online period
+
+Every paid order creates an **entitlement** on its invitation. **The limits are enforced on the server** (inside the Server Actions that publish, §6.5), not only in the UI. The meters in the dashboard are just a display.
+
+Proposed limits (validate them in customer interviews):
+
+| | Save the Date | Classic | Premium |
+|---|---|---|---|
+| **Published edits** (each "Publish changes") | 5 | 15 | 40 |
+| Draft saves and previews | Unlimited | Unlimited | Unlimited |
+| **Online period** from first publish | 3 months | 6 months | 12 months |
+| Never goes offline before | event date + 7 days | event date + 14 days | event date + 30 days |
+| Template switches after purchase | 1 | 2 | Unlimited (same tier) |
+
+**What counts as one edit:** one "Publish changes" that updates the live page. Drafts and previews are free, so customers can experiment without worrying, and small fixes naturally get batched into one publish. The dashboard shows "7 of 15 edits left". Every publish stores a snapshot, so we can also offer "undo last publish".
+
+**Timeline of an invitation:**
+
+```
+draft ─► published (online_until is set)
+      ─► 7 days before the end: WhatsApp + email reminder (AR/EN) with an "Extend" button
+      ─► ended: the public link shows a bilingual "This invitation has ended" page
+               (couple names + "Create your own" call to action).
+               The owner can still sign in, export the guest list and extend.
+      ─► 30 days after ending: guests' phone numbers are purged (privacy, §8.4), and the invitation is archived.
+               Extending restores it at the same link.
+```
+
+**Upsells at the limits** (suggested prices, to validate):
+- Out of edits → "Add 10 edits: EGP 99"
+- Near the end → "Keep it online 3 more months: EGP 199"
+
+**Engineering notes:**
+- A daily scheduled job (Inngest cron) sends reminders and moves invitations to ended/archived.
+- The public route also checks `online_until` on every render/revalidation, so it never depends only on the job running. Any state change triggers ISR revalidation.
+- Admins can add edits or extend dates for support cases, and every such change is written to `audit_log`.
+
+### 16.4 Loyalty: points and purchase count
+
+Every account shows its **purchase count**, **level** and **points balance**.
+
+| Rule | Proposal |
+|---|---|
+| **Earn** | 1 point per EGP 10 actually paid (after discounts) |
+| **Bonus points** | First purchase +50. Testimonial/review +50. A friend you referred buys +100 (customer-to-customer referral, separate from media-buyer affiliates) |
+| **Redeem** | 100 points = EGP 50 off a future order (≈5% back). Points can pay for at most 30% of an order, and they can't be cashed out |
+| **Expiry** | 12 months after they were earned, which keeps the outstanding liability bounded |
+| **Levels** (by number of paid orders) | 1 = Member · 2–3 = **Silver** (+10% points) · 4+ = **Gold** (+25% points and a free 1-month extension on every order) |
+| **Refunds** | Refunding an order reverses the points it earned. If they were already spent, the balance goes negative and is netted against future points |
+| **Timing** | Points are granted only when the order is `paid` (after the verified payment webhook), never when checkout starts |
+
+**Engineering notes:**
+- Points are stored as an **append-only ledger** (`points_ledger`). The balance is the sum of the ledger, so there's always a history, and we never keep only a mutable counter.
+- `purchases_count` is derived from paid orders (a view) and cached on the profile for display.
+
+### 16.5 Admin dashboard: the new tools
+
+These add to the admin dashboard in §7.4. All admin actions are written to `audit_log`.
+
+**1. Templates / demos manager (`/admin/templates`), for adding new demos without a developer**
+- **Create a template:**
+  - name in Arabic + English, slug, category, event type
+  - tiers it's sold in, optional price override
+  - sort order and a "featured" flag
+- **Design:** upload a Theme Spec JSON (validated with Zod on upload, with errors shown clearly), or pick a base layout + section variants in a form (§10.1).
+- **Assets:** upload to R2 with automatic processing (video → H.264 + poster frame, images → WebP/AVIF). Each asset shows its size against the performance budget.
+- **Sample data in Arabic and English,** so the public demo page works in both languages.
+- **Preview** at 390px and 1280px, in AR and EN, before publishing.
+- **License gate:** every asset needs a source and a license entry. **The Publish button stays disabled until they're all filled in.** This enforces §2 in the tool itself.
+- **Status:** draft → live → retired. A retired template leaves the gallery but keeps working for customers who already bought it.
+- **Stats per template:** demo views, drafts, sales and conversion, which tells us which designs to make more of.
+
+**2. Affiliates manager (`/admin/affiliates`), for media-buyer links** (extends §15.6)
+- **Create an affiliate:**
+  - name, phone, payout method (bank / InstaPay / Vodafone Cash)
+  - commission % (a default, overridable per affiliate)
+  - optional discount for customers who use their code
+- **Generated automatically:**
+  - a ref code
+  - share links in both languages (`/ar/?ref=ahmed01`, `/en/?ref=ahmed01`)
+  - links to specific templates (`/ar/templates/nile?ref=ahmed01`)
+  - a downloadable **QR code** for printed material
+- **Attribution rule:** a code typed at checkout wins. Otherwise, the last `ref` link clicked within **30 days** gets the sale (stored in a cookie and on the anonymous draft).
+- **Stats per affiliate and date range:** clicks, drafts, paid orders, revenue, refunds, commission owed, and flagged self-referrals.
+- **Payouts:** "Mark as paid" with the amount, method, reference and date. It creates a payout record and reduces the balance owed. Export to CSV.
+- *Later:* a read-only affiliate page on a private link, so media buyers can see their own numbers without asking us.
+
+**3. Customers and orders (`/admin/customers`)**
+- Search by phone, email, name or invitation slug.
+- **Per customer:**
+  - orders and purchase count
+  - level and points balance/history
+  - each invitation with its edits left and end date
+- **Actions:**
+  - add edits or extend an invitation
+  - grant or deduct points, with a required reason
+  - issue or revoke a private edit link
+  - refund an order
+  - **create a manual order** for the negotiated deals in §15.5 (provider `manual`, amount typed by the admin). It creates the entitlement and sends either an account invite or a private edit link.
+
+### 16.6 Customer dashboard: the new parts
+
+These add to the customer dashboard in §7.3.
+- **Each invitation card:**
+  - "edits left" meter
+  - "days online left" counter
+  - event countdown
+  - **Extend** and **Buy edits** buttons
+- **My account:**
+  - purchase count and level badge
+  - points balance and history, including points expiring soon
+  - a referral link to share with friends
+- **Orders and receipts:** every order with a downloadable receipt / e-invoice in Arabic or English.
+- **Language switch** (العربية / English) always visible in the header, and saved on the profile.
+
+### 16.7 Arabic and English, everywhere
+
+Arabic is the default for Egypt, and the English version is complete, not partial. The same rules apply to the public site, the invitations, both dashboards and every message we send.
+
+| Area | Rule |
+|---|---|
+| **URLs** | Locale prefix `/ar/…` and `/en/…` with `next-intl`. A first visit picks the locale from the saved preference → the browser's `Accept-Language` → Arabic. `hreflang` tags for SEO |
+| **Layout** | `<html lang dir>` set per locale. CSS uses logical properties (`margin-inline-start`, `padding-inline`, `inset-inline-end`), so one stylesheet serves both RTL and LTR. Arrows and chevrons flip, while logos, photos and videos don't |
+| **Fonts** | Arabic: Cairo or Tajawal for the UI, Amiri (or similar) for display. English: the brand serif + sans. All from Google Fonts or properly licensed (§2) |
+| **Numbers and dates** | Western digits (0–9) in both languages for phone numbers, prices and codes (common in Egypt and avoids mixed-digit bugs). Arabic month names in the Arabic UI. Dates are formatted with `Intl.DateTimeFormat` |
+| **Money** | `EGP 1,299` in English, `1,299 ج.م` in Arabic |
+| **Mixed text** | Phone numbers, codes, emails and URLs are wrapped in `<bdi>` / `dir="ltr"` so they don't come out reversed inside Arabic sentences |
+| **Invitation content** | Every text field in `InvitationData` can hold `{ ar, en }`. The customer chooses Arabic only, English only, or both (the bilingual add-on shows a language toggle on the invitation) |
+| **Messages** | OTP texts, WhatsApp templates, emails, reminders and receipts exist in both languages and are sent in the recipient's saved language. Meta must approve each WhatsApp template separately per language |
+| **Legal pages** | Terms, Privacy and Refund policy in both languages. For Egyptian customers the Arabic version likely governs (confirm with a lawyer) |
+| **Admin** | Admin UI in English with an Arabic toggle. Template and affiliate names are stored in both languages |
+| **QA** | Every screen checked at 390px in both directions, with no horizontal overflow. A CI check fails the build if any translation key is missing in either language |
+
+### 16.8 Data model additions (extends §6.4)
+
+```
+profiles                 + preferred_locale, level, purchases_count (cached), points_balance (cached)
+orders                   + kind(new|extension|edits|addon), provider(fawry|manual),
+                           affiliate_id, attribution(link|code), discount_total, points_redeemed, points_earned
+invitation_entitlements  invitation_id, order_id, edits_allowed, edits_used, template_switches_left,
+                         online_until, min_online_until
+invitation_publishes     id, invitation_id, published_by, published_at, snapshot(jsonb)   -- edit count + undo
+invitation_access_links  id, invitation_id, token_hash, created_by, created_at, revoked_at, last_used_at
+points_ledger            id, user_id, order_id, delta, reason(purchase|bonus|redeem|refund|admin|expire),
+                         expires_at, created_at
+affiliates               id, name, phone, ref_code(unique), commission_pct, customer_discount_pct,
+                         payout_method, active
+affiliate_clicks         affiliate_id, day, landing_path, count                         -- aggregated
+affiliate_payouts        id, affiliate_id, amount, method, reference, period_start, period_end, paid_at
+templates                + name_ar, name_en, sample_data_ar, sample_data_en, sort_order, featured, license_complete
+template_assets          id, template_id, r2_key, kind, size, source, license, license_url
+```
+
+**Where the rules live:**
+- One server function, `assertCanPublish(invitationId)`, checks edits left, the online period and ownership. Every publish Server Action calls it.
+- One function, `fulfillPaidOrder(orderId)`, runs once per verified payment webhook, in a single transaction and idempotently. It:
+  - creates or extends the entitlement
+  - writes the points ledger rows
+  - credits the affiliate
+  - updates `purchases_count`
+
+### 16.9 Build order inside Phase 3 (§11)
+
+1. Accounts (phone + email OTP) + orders + Fawry checkout and webhook → `fulfillPaidOrder`.
+2. Entitlements: edit limit + online period + publish snapshots + the "ended" page.
+3. Customer dashboard meters + Extend / Buy edits checkout.
+4. Admin customers/orders tools + manual orders + private edit links + claim into an account.
+5. Admin templates manager with the license gate.
+6. Affiliates manager + attribution + payouts.
+7. Points ledger + levels. This can ship a week after launch, because points can be awarded retroactively from existing paid orders.
+
+### 16.10 "Ready to take money" checklist
+
+These add to §9.
+
+- [ ] Fawry merchant account live; a real payment and a real refund tested in production (card and Fawry reference code)
+- [ ] Payment webhook → order paid → entitlement → points → affiliate credit tested end to end, including a duplicate webhook
+- [ ] Edit limit and online period can't be bypassed by calling the API directly
+- [ ] Expiry reminders and the "invitation ended" page work in Arabic and English
+- [ ] An admin can add a new demo end to end, and the license gate blocks an incomplete one
+- [ ] An admin can create an affiliate; their link and code both attribute a test sale; a payout can be marked paid
+- [ ] Manual order → private edit link → claim into an account works
+- [ ] Receipts / e-invoices in AR and EN; company and tax registration done
+- [ ] Landing, pricing, FAQ and legal pages live in AR and EN
+- [ ] WhatsApp Business number and a support routine (who replies, and how fast) in place
+
+### 16.11 Go-to-market: the first 90 days (owner view)
+
+- **Soft launch:** 20 couples at a discount, in exchange for a testimonial and permission to show their invitation as a public example.
+- **Media-buyer affiliates:** start with 3–5 on **commission only** (no fixed fee), so we pay only for real sales.
+- **Wedding industry partners:** give planners, photographers, makeup artists and venues their own affiliate codes. They meet couples at exactly the right moment.
+- **Content:** one reel per template on Instagram/TikTok, with Arabic captions first (§10.3).
+- **Built-in loop:** every guest who opens an invitation sees the "Made with ‹brand›" line and, after the event, the "Create your own" page. Every wedding markets the next one.
+- **Review at day 30 / 60 / 90:** conversion, average order value, cost per affiliate sale and refund rate. Then adjust prices and limits (§16.3) from real data, not guesses.
+
+---
+
 ## 14. Open decisions for you
 
 1. **Brand name + domain.** Needed for Meta verification and payments.
@@ -482,5 +763,9 @@ This is a small addition on top of the `orders`/`invitations` tables already pla
 4. **Scope of the "done for you" service:** it is profitable but doesn't scale. Should it be a premium add-on?
 5. **Keep or retire** the 2 own prototypes (Video Open, Lace Scratch) as launch templates after an asset license check?
 6. **VPS vs. managed hosting** (§15.2) — recommendation is managed to start; confirm or override.
-7. **Fawry vs. Kashier vs. Geidea** (§15.3) — recommendation is Fawry for reach + lower fees; confirm once you get their actual merchant quote.
+7. **Fawry vs. Kashier vs. Geidea** (§15.5) — recommendation is Fawry for reach + lower fees; confirm once you get their actual merchant quote.
 8. **Affiliate commission structure** — a flat % per sale, tiered by volume, or negotiated per media buyer individually?
+9. **Edit limits and online periods per tier** (§16.3): proposed 5 / 15 / 40 published edits and 3 / 6 / 12 months online. Confirm or change.
+10. **Points value and levels** (§16.4): proposed 1 point per EGP 10, 100 points = EGP 50, Silver at 2 orders and Gold at 4. Confirm or change.
+11. **Allow link-only customers?** (§16.2): recommendation is yes, as a fallback, with no points until the customer claims the invitation into an account.
+12. **Upsell prices** (§16.3): proposed EGP 99 for 10 more edits and EGP 199 for 3 more months online.

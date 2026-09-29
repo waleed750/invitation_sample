@@ -1,0 +1,101 @@
+{
+  "metadata": {
+    "title": "Invitely | Invitations for your next chapter",
+    "description": "Beautiful digital wedding and engagement invitations. Make it yours, preview every detail and share on WhatsApp."
+  },
+  "language": {
+    "label": "Choose language",
+    "ar": "AR",
+    "en": "English"
+  },
+  "landing": {
+    "brand": "Invitely",
+    "skip": "Skip to content",
+    "hero": {
+      "eyebrow": "A little invitation. A beautiful beginning.",
+      "title": "Your story deserves a beautiful invitation.",
+      "description": "Bring your favourite people together with a digital invitation that feels like you. Thoughtfully made for weddings, engagements and everything worth celebrating.",
+      "action": "Explore the plans",
+      "note": "Made for your phone. Ready to share with everyone you love."
+    },
+    "how": {
+      "eyebrow": "From your heart to their phones",
+      "title": "Three steps to your big day",
+      "pick": {
+        "number": "01",
+        "title": "Pick a template",
+        "description": "Find a design that feels right for your celebration."
+      },
+      "personalize": {
+        "number": "02",
+        "title": "Make it yours",
+        "description": "Enter your details and preview your invitation before sharing."
+      },
+      "share": {
+        "number": "03",
+        "title": "Pay and share",
+        "description": "Complete your payment, then send your invitation on WhatsApp."
+      }
+    },
+    "pricing": {
+      "eyebrow": "One celebration, one simple price",
+      "title": "A plan for every beginning",
+      "description": "Choose the invitation that fits your day. Prices are in Egyptian pounds.",
+      "once": "One-time payment per event",
+      "save": {
+        "name": "Save the Date",
+        "audience": "A simple announcement",
+        "features": {
+          "one": "One single-screen template",
+          "two": "Countdown to your day",
+          "three": "Add-to-calendar button",
+          "four": "3 months online"
+        }
+      },
+      "classic": {
+        "name": "Classic",
+        "audience": "For most couples",
+        "features": {
+          "one": "Full invitation with all sections",
+          "two": "RSVP for up to 300 guests",
+          "three": "Guest-list export",
+          "four": "6 months online"
+        }
+      },
+      "premium": {
+        "name": "Premium",
+        "audience": "For big weddings",
+        "features": {
+          "one": "Everything in Classic, with 12 months online",
+          "two": "Video intro and music upload",
+          "three": "Unlimited RSVP and guest messages",
+          "four": "Priority WhatsApp support"
+        }
+      }
+    },
+    "faq": {
+      "eyebrow": "A few things you might wonder",
+      "title": "Your questions, answered",
+      "languages": {
+        "question": "Can I browse in Arabic or English?",
+        "answer": "Yes. Switch languages in the header at any time. We will remember your choice for your next visit."
+      },
+      "sharing": {
+        "question": "How will I share my invitation?",
+        "answer": "Once your invitation is published, you can send its link to your guests on WhatsApp."
+      },
+      "subscription": {
+        "question": "Is this a monthly subscription?",
+        "answer": "No. Each plan is a one-time payment for one event, with the online period shown above."
+      }
+    },
+    "footer": {
+      "note": "For the moments that bring us together.",
+      "label": "Legal information",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "refund": "Refund policy",
+      "placeholder": "Terms, privacy and refund policies are coming soon. These links are placeholders."
+    }
+  }
+}

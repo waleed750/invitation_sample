@@ -45,3 +45,5 @@
 - [2026-07-19] Do-not-repeat: section render keys must be `section.id ?? type-index` (plain type collides on repeated sections); intro CSS must live with the intro component, not in a site's lazy CSS chunk.
 - [2026-07-23] Decision: Credit footer promoted to shared component (type 'credit' in schema) by explicit standing user instruction — will be reused across all current and future demos.
 - [2026-07-23] Decision: excellence's new wedding date is treated as 20 August 2026; the Welcome Cruise was shifted to the prior day, 19 August 2026, to preserve the existing two-day weekend structure while updating the wedding date.
+
+- 2026-09-29 (Decision): Platform access model = account (phone via WhatsApp OTP, or email) preferred; private per-invitation edit link as fallback, claimable into an account. Purchases grant limited published edits + an online period; accounts track points + purchase count. Platform must be fully Arabic (default) + English. Backend = Next.js itself. See PLATFORM_PLAN.md §6.5, §16.
