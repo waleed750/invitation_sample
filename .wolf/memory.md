@@ -71,3 +71,33 @@
 | 13:51 | Bridgerton template verified independently (build + lazy chunk confirmed) | src/sites/bridgerton/, public/assets/bridgerton/ | build passes | ~300 |
 | 14:00 | Bloom demo converted — unzipped bloom-template.zip (Martina & Javier, 27 Sep 2026 Hotel du Cap-Eden-Roc 17:30-01:30, welcome party Restaurant César 26 Sep, 19-gallery marquee, 2 hotels + shuttle/valet, black-tie, programme 4 steps), 52 assets (intro 2-videos hevc 5.48s 2.5M + h264 7.04s 19M → crf26 932K+3.1M concat 12.54s 4.0M, music 5.2→2.1M 320→128k, hero-bg 2.5M→333K + ceremony-oval 2.0M→117K + rsvp-portrait 1.3M→62K JPG q4, intro-poster 918→93K q4, 26 RGBA PNGs left, galleries <500K left), hero static image + SVG arch overlay (ambient, no loop needed), local BloomHero/Welcome/Ceremony/Dress/Programme/StoryGallery/Weekend/Hotels/Transport/Rsvp/Footer + shared Countdown, maps q&output=embed no pb=, responsive safe | src/sites/bloom/*, public/assets/bloom/*, src/registry/index.js, src/registry/templateTypes.js | build passes, BloomInvitation-DOdZ4Ol7.css+BloomInvitation-6acB5jT5.js own lazy chunk, all 57 media URLs wired, durations verified; dev server binds ok (no EPERM) | ~4500 |
 | 14:01 | ALL 7 templates verified in final combined build (floral, finca, sweetlove, dolcevita, daynight, bridgerton, bloom) | src/sites/*, public/assets/* | build passes, 16 total templates | ~500 |
+
+## Session: 2026-09-27 11:53
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-09-29 19:32
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 19:34 | Made Next.js explicit as backend in plan (TL;DR row, stack row, new §6.5, §15.1) | PLATFORM_PLAN.md | done | ~2k |
+| 19:47 | Added §16 (business model, account vs private link, edit limits + online period, points/levels, admin demos/affiliates/customers tools, AR/EN rules, data model, money checklist, GTM); fixed Paymob/section refs; TL;DR rows | PLATFORM_PLAN.md | done | ~12k |
+| 20:18 | Edited platform/supabase/migrations/0001_core.sql | — | ~4551 |
+| 20:18 | Session end: 1 writes across 1 files (0001_core.sql) | 2 reads | ~6125 tok |
+| 20:18 | Edited platform/supabase/migrations/0002_functions.sql | — | ~5435 |
+| 20:19 | Edited platform/supabase/migrations/0003_rls.sql | — | ~4296 |
+| 20:20 | Edited platform/supabase/tests/rls_and_fulfillment.sql | — | ~3811 |
+| 20:21 | Edited platform/supabase/README.md | — | ~1763 |
+| 20:23 | Edited platform/supabase/migrations/0003_rls.sql | — | ~167 |
+| 20:23 | Edited platform/supabase/migrations/0003_rls.sql | — | ~106 |
+| 20:23 | Edited platform/supabase/migrations/0003_rls.sql | — | ~52 |
+| 20:23 | Edited platform/supabase/migrations/0003_rls.sql | — | ~71 |
+| 20:23 | Edited platform/supabase/tests/rls_and_fulfillment.sql | — | ~55 |
+| 20:24 | Edited platform/supabase/migrations/0003_rls.sql | — | ~140 |
+| 20:24 | Edited platform/supabase/migrations/0003_rls.sql | — | ~144 |
+| 20:24 | Edited platform/supabase/tests/rls_and_fulfillment.sql | — | ~57 |
+| 20:26 | Edited platform/supabase/tests/rls_and_fulfillment.sql | — | ~62 |
+| 20:26 | Edited platform/supabase/tests/rls_and_fulfillment.sql | — | ~84 |
+| 20:27 | Session end: 15 writes across 5 files (0001_core.sql, 0002_functions.sql, 0003_rls.sql, rls_and_fulfillment.sql, README.md) | 7 reads | ~40974 tok |
+| 20:30 | Platform build: scaffold (a11e5f8), Zod schemas (1907932), Supabase migrations verified on PGlite (2416fc0); engine port running in Codex; opencode Zen 402 -> use muse-spark-1.3-contributor-free/Codex | platform/**, .wolf/STATUS.md, PLATFORM_PLAN.md | 3 commits, gates green | ~60k |
