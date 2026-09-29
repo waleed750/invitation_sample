@@ -1,0 +1,538 @@
+
+.invitation-shell * {
+  box-sizing: border-box;
+}
+
+.invitation-shell button,
+.invitation-shell input,
+.invitation-shell textarea {
+  font: inherit;
+}
+
+.invitation-shell button {
+  cursor: pointer;
+}
+
+.invitation-shell {
+  min-block-size: 100vh;
+  overflow-x: hidden;
+  background: var(--background);
+  color: var(--foreground);
+}
+
+.invitation-shell .invitation-content {
+  min-block-size: 100vh;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 1400ms ease;
+}
+
+.invitation-shell .invitation-content.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.invitation-shell .music-button {
+  position: fixed;
+  inset-inline-end: 24px;
+  inset-block-end: 24px;
+  z-index: 40;
+  display: grid;
+  inline-size: 48px;
+  block-size: 48px;
+  place-items: center;
+  border: 1px solid color-mix(in srgb, var(--foreground) 18%, transparent);
+  border-radius: 999px;
+  color: var(--foreground);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 12px 32px rgba(46, 55, 41, 0.15);
+  opacity: 0;
+  pointer-events: none;
+  backdrop-filter: blur(10px);
+  transition: opacity 500ms ease, transform 250ms ease, background 250ms ease, color 250ms ease;
+}
+
+.invitation-shell .music-button.is-visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.invitation-shell .music-button:hover {
+  color: white;
+  background: var(--foreground);
+  transform: translateY(-2px);
+}
+
+.invitation-shell .hero-section {
+  position: relative;
+  display: grid;
+  min-block-size: 100svh;
+  place-items: start center;
+  padding-block: 42svh 80px;
+  padding-inline: 24px 24px;
+  overflow: hidden;
+  background: var(--background);
+}
+
+.invitation-shell .hero-video,
+.invitation-shell .hero-scrim {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+}
+
+.invitation-shell .hero-video {
+  object-fit: cover;
+}
+
+.invitation-shell .hero-scrim {
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0.1), rgba(250, 250, 245, 0.16));
+}
+
+.invitation-shell .hero-copy {
+  position: relative;
+  z-index: 1;
+  max-inline-size: 980px;
+  padding-block-start: 70px;
+  text-align: center;
+}
+
+.invitation-shell .eyebrow,
+.invitation-shell .date-line,
+.invitation-shell .section-kicker {
+  font-family: var(--font-display);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.invitation-shell .eyebrow {
+  margin-block: 0 16px;
+  margin-inline: 0 0;
+  font-size: clamp(0.86rem, 1.6vw, 1rem);
+  color: color-mix(in srgb, var(--foreground) 82%, transparent);
+}
+
+.invitation-shell h1,
+.invitation-shell h2,
+.invitation-shell h3,
+.invitation-shell p {
+  overflow-wrap: anywhere;
+}
+
+.invitation-shell h1,
+.invitation-shell h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.invitation-shell h1 {
+  font-size: clamp(4rem, 12vw, 8rem);
+  line-height: 0.92;
+}
+
+.invitation-shell h1 span {
+  font-size: 0.7em;
+}
+
+.invitation-shell .date-line {
+  margin-block: 18px 0;
+  margin-inline: 0 0;
+  font-size: clamp(1rem, 3vw, 1.45rem);
+  font-weight: 700;
+}
+
+.invitation-shell section {
+  background: var(--background);
+}
+
+.invitation-shell .section-inner {
+  inline-size: min(100% - 40px, 960px);
+  margin-block: 0 0;
+  margin-inline: auto auto;
+  text-align: center;
+}
+
+.invitation-shell .section-inner.narrow {
+  inline-size: min(100% - 40px, 680px);
+}
+
+.invitation-shell .countdown-section,
+.invitation-shell .welcome-section,
+.invitation-shell .schedule-section,
+.invitation-shell .details-section,
+.invitation-shell .message-section {
+  padding-block: 88px 88px;
+  padding-inline: 0 0;
+}
+
+.invitation-shell .section-inner h2 {
+  margin-block-end: 18px;
+  font-size: clamp(3.1rem, 8vw, 5.8rem);
+  line-height: 1;
+}
+
+.invitation-shell .section-kicker {
+  margin-block: 0 42px;
+  margin-inline: 0 0;
+  font-size: 0.75rem;
+  color: color-mix(in srgb, var(--foreground) 64%, transparent);
+}
+
+.invitation-shell .countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(8px, 4vw, 44px);
+  margin-block-start: 34px;
+}
+
+.invitation-shell .time-box {
+  min-inline-size: 0;
+}
+
+.invitation-shell .time-box strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 11vw, 5.3rem);
+  font-weight: 400;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.invitation-shell .time-box span {
+  display: block;
+  margin-block-start: 10px;
+  font-size: clamp(0.58rem, 2vw, 0.78rem);
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: color-mix(in srgb, var(--foreground) 70%, transparent);
+}
+
+.invitation-shell .image-divider {
+  inline-size: 100%;
+  overflow: hidden;
+  background: var(--background);
+}
+
+.invitation-shell .image-divider img {
+  display: block;
+  inline-size: 100%;
+  min-block-size: 92px;
+  object-fit: cover;
+}
+
+.invitation-shell .welcome-section p {
+  margin: 0;
+  font-size: clamp(1.02rem, 2.4vw, 1.2rem);
+  font-weight: 300;
+  line-height: 2;
+  color: color-mix(in srgb, var(--foreground) 82%, transparent);
+}
+
+.invitation-shell .schedule-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.invitation-shell .dancing-art {
+  display: block;
+  inline-size: min(260px, 54vw);
+  margin-block: 0 28px;
+  margin-inline: auto auto;
+}
+
+.invitation-shell .schedule-list {
+  display: grid;
+  justify-items: center;
+}
+
+.invitation-shell .schedule-item {
+  position: relative;
+  inline-size: min(100%, 460px);
+  padding-block: 18px 18px;
+  padding-inline: 0 0;
+}
+
+.invitation-shell .schedule-item:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  inset-inline-start: 50%;
+  inset-block-end: -34px;
+  inline-size: 1px;
+  block-size: 48px;
+  background: color-mix(in srgb, var(--foreground) 22%, transparent);
+}
+
+.invitation-shell .schedule-item + .schedule-item {
+  margin-block-start: 38px;
+}
+
+.invitation-shell .schedule-item h3 {
+  margin-block: 0 10px;
+  margin-inline: 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.7rem, 5vw, 2.5rem);
+  font-weight: 400;
+}
+
+.invitation-shell .schedule-item p {
+  margin: 0;
+  color: color-mix(in srgb, var(--foreground) 72%, transparent);
+}
+
+.invitation-shell .badge-frame {
+  position: relative;
+  display: grid;
+  inline-size: min(100%, 540px);
+  aspect-ratio: 5 / 6;
+  margin-block: 0 10px;
+  margin-inline: auto auto;
+  place-items: center;
+  padding: 64px;
+}
+
+.invitation-shell .badge-frame img {
+  position: absolute;
+  inset: 0;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: contain;
+  pointer-events: none;
+}
+
+.invitation-shell .badge-frame > div {
+  position: relative;
+  z-index: 1;
+}
+
+.invitation-shell .badge-frame h3 {
+  margin-block: 0 12px;
+  margin-inline: 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.7rem, 8vw, 4.6rem);
+  font-weight: 400;
+}
+
+.invitation-shell .venue-name {
+  margin-block: 0 14px;
+  margin-inline: 0 0;
+  font-size: clamp(1rem, 3vw, 1.24rem);
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+}
+
+.invitation-shell .time-line,
+.invitation-shell .map-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.invitation-shell .time-line {
+  margin: 0;
+  color: color-mix(in srgb, var(--foreground) 76%, transparent);
+}
+
+.invitation-shell .map-link {
+  min-block-size: 44px;
+  padding-block: 11px 11px;
+  padding-inline: 18px 18px;
+  border-radius: 8px;
+  color: white;
+  background: var(--foreground);
+  text-decoration: none;
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.invitation-shell .map-link:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.invitation-shell .map-section {
+  padding-block: 20px 72px;
+  padding-inline: 20px 20px;
+}
+
+.invitation-shell .map-frame {
+  inline-size: min(100%, 760px);
+  block-size: clamp(260px, 44vw, 360px);
+  margin-block: 0 0;
+  margin-inline: auto auto;
+  overflow: hidden;
+  border: 1px solid color-mix(in srgb, var(--foreground) 12%, transparent);
+  border-radius: 8px;
+  box-shadow: 0 16px 50px rgba(48, 55, 43, 0.12);
+}
+
+.invitation-shell .map-frame iframe {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  border: 0;
+  filter: grayscale(1);
+  opacity: 0.84;
+  transition: filter 400ms ease, opacity 400ms ease;
+}
+
+.invitation-shell .map-frame:hover iframe {
+  filter: grayscale(0);
+  opacity: 1;
+}
+
+.invitation-shell .message-form {
+  display: grid;
+  gap: 18px;
+  margin-block-start: 36px;
+  padding-block-end: 28px;
+  text-align: start;
+}
+
+.invitation-shell .message-form label {
+  display: grid;
+  gap: 8px;
+  color: var(--foreground);
+}
+
+.invitation-shell .message-form input,
+.invitation-shell .message-form textarea {
+  inline-size: 100%;
+  border: 1px solid color-mix(in srgb, var(--foreground) 22%, transparent);
+  border-radius: 8px;
+  padding-block: 13px 13px;
+  padding-inline: 14px 14px;
+  color: var(--foreground);
+  background: var(--background);
+  resize: vertical;
+  outline: none;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.invitation-shell .message-form input:focus,
+.invitation-shell .message-form textarea:focus {
+  border-color: color-mix(in srgb, var(--foreground) 56%, transparent);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--foreground) 10%, transparent);
+}
+
+.invitation-shell .message-form button {
+  display: inline-flex;
+  min-block-size: 48px;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 0;
+  border-radius: 8px;
+  color: white;
+  background: var(--foreground);
+  transition: opacity 220ms ease, transform 220ms ease;
+}
+
+.invitation-shell .message-form button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+.invitation-shell .form-status {
+  margin: 0;
+  text-align: center;
+  color: color-mix(in srgb, var(--foreground) 76%, transparent);
+}
+
+.invitation-shell .footer-section {
+  display: grid;
+  min-block-size: 180px;
+  place-items: end center;
+  padding-block-start: 24px;
+  background: var(--background);
+}
+
+.invitation-shell .footer-section img {
+  display: block;
+  inline-size: min(100%, 720px);
+}
+
+.invitation-shell [data-reveal] {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 1200ms cubic-bezier(0.21, 0.45, 0.32, 0.9),
+    transform 1200ms cubic-bezier(0.21, 0.45, 0.32, 0.9);
+}
+
+.invitation-shell [data-reveal].is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+@media (max-width: 640px) {
+  .invitation-shell .music-button {
+    inset-inline-end: 16px;
+    inset-block-end: 16px;
+  }
+
+  .invitation-shell .hero-section {
+    padding-block-start: 40svh;
+  }
+
+  .invitation-shell .hero-copy {
+    padding-block-start: 52px;
+  }
+
+  .invitation-shell .countdown-section,
+  .invitation-shell .welcome-section,
+  .invitation-shell .schedule-section,
+  .invitation-shell .details-section,
+  .invitation-shell .message-section {
+    padding-block: 68px 68px;
+    padding-inline: 0 0;
+  }
+
+  .invitation-shell .section-inner,
+  .invitation-shell .section-inner.narrow {
+    inline-size: min(100% - 32px, 680px);
+  }
+
+  .invitation-shell .badge-frame {
+    padding-block: 48px 48px;
+    padding-inline: 34px 34px;
+  }
+}
+
+/* Shared fallbacks for sections without styles in this reference template. */
+.invitation-shell {
+  font-family: var(--font-body);
+  & :is(h1, h2, h3) { color: inherit; max-inline-size: none; }
+  & img { max-inline-size: 100%; }
+  & :is(.story-section, .dresscode-section, .gifts-section, .rsvp-section, .faq-section, .hotel-list-section, .gallery-section, .credit-section) { position: relative; padding-block: 4rem; }
+  & :is(.rsvp-form, .faq-list, .hotel-list, .bank-account-list) { display: grid; gap: 1rem; }
+  & :is(.rsvp-form, .faq-question, .faq-answer) { text-align: start; }
+  & .rsvp-form label { display: block; }
+  & :is(input, textarea, select) { font: inherit; max-inline-size: 100%; }
+  & .rsvp-form :is(input[type="text"], input[type="email"], select) { display: block; inline-size: 100%; padding: .75rem; }
+  & .rsvp-form button { padding: .75rem; }
+  & .faq-question { display: flex; justify-content: space-between; align-items: center; inline-size: 100%; gap: 1rem; }
+  & :is(.gallery-grid, .dresscode-card-list, .event-card-list) { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1.5rem; }
+  & .gallery-image { inline-size: 100%; block-size: auto; }
+  & .story-strip { overflow-x: auto; }
+  & .story-strip__track { display: flex; inline-size: max-content; }
+  & .story-strip__item { inline-size: min(70vw, 20rem); padding: 0; border: 0; }
+  & .hero-copy.is-faded { opacity: 0; transition: opacity 1s; }
+  & .schedule-timeline { padding-inline-start: 1.5rem; text-align: start; }
+  & .schedule-stop { padding-block: 1rem; }
+  & .schedule-stop strong { margin-inline-end: 1rem; }
+  & .countdown-section { position: relative; }
+  & .countdown-panel { position: relative; z-index: 1; }
+  & .countdown-bg { position: absolute; inset: 0; inline-size: 100%; block-size: 100%; object-fit: cover; }
+  & :is(.countdown-column-left, .countdown-column-right) { position: absolute; inset-block: 0; block-size: 100%; max-inline-size: 20%; object-fit: contain; }
+  & .countdown-column-left { inset-inline-start: 0; }
+  & .countdown-column-right { inset-inline-end: 0; }
+  & .countdown-grid { grid-template-columns: repeat(auto-fit, minmax(3.5rem, 1fr)); }
+}
+[dir="rtl"] .invitation-shell .lucide-chevron-down,
+[dir="rtl"] .invitation-shell .lucide-chevron-up,
+.invitation-shell[dir="rtl"] .lucide-chevron-down,
+.invitation-shell[dir="rtl"] .lucide-chevron-up { transform: scaleX(-1); }
+.invitation-shell[lang="ar"] :is(h1, h2, h3) { font-family: var(--font-cairo), sans-serif; line-height: 1.6; }
+.invitation-shell[lang="ar"] :is(.eyebrow, .date-line, .section-kicker, .tap-label, .time-box span) { letter-spacing: normal; }

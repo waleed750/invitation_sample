@@ -11,6 +11,7 @@
     "check:i18n": "node scripts/check-i18n.mjs"
   },
   "dependencies": {
+    "lucide-react": "^0.468.0",
     "next": "^15.5.9",
     "next-intl": "^4.7.0",
     "react": "^19.1.0",

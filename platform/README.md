@@ -34,3 +34,13 @@ Add the same nested key with a non-empty string to **both** `messages/ar.json` a
 Use CSS logical properties for spacing, positioning and sizes. Arabic uses Cairo; English uses Cormorant Garamond for headings and Inter for body text. Use `Bidi` for phone numbers, emails and codes. Money uses whole EGP and Western digits; dates use UTC, Western digits, Arabic month names or British English month names.
 
 Pricing reflects plan §4. Legal links point to an explicitly labeled placeholder; this scaffold has no legal policies, template editor or checkout. `/api/health` returns `{ "ok": true }`.
+
+## Engine
+
+`src/engine/InvitationShell.tsx` owns intro → content, reveal-on-scroll, theme variables and music. `registry.tsx` maps section types to components; `section-key.ts` uses `id ?? type-index`. To add a section, add its discriminant and Zod props in `src/lib/schemas/invitation.ts`, infer props with `SectionProps<'type'>`, implement it under `engine/sections/`, and add the narrowing registry wrapper. Schema types are the source of truth, including optional legacy section features.
+
+`InvitationLocaleContext` carries the shell's locale. Render data through `useInvitationText` (which calls `resolveText`); default interface copy lives in the matching `engine` namespaces of `messages/ar.json` and `messages/en.json`. Data copy takes precedence. Phone numbers, emails and bank/promo codes use `Bidi`. Styling lives in `engine/styles/`: logical properties, direction-aware centering, and RTL chevron overrides; never mirror photos, logos or videos. Reference theme CSS is scoped to `.invitation-shell`. The demo uses the platform fonts because only the eight requested media assets are bundled.
+
+The statically generated `/ar/demo/video-open` and `/en/demo/video-open` pages validate `src/data/demo/video-open.ts` with `parseInvitationData`, include localized OG text and are `noindex`. The original local map capture is replaced by a Google embed using the coordinates in that capture. This external map has not been visually verified. Both forms still simulate submissions in component state only; no storage or network submission is implemented. The legacy success wording is retained, but no message/RSVP survives a reload.
+
+Countdown renders a stable dash placeholder until mount. No media plays before a guest opens the invitation; hero playback starts after the intro ends. Video failure or a 5.2-second timeout releases the intro. Scratch uses pointer capture and reveals at 42% cleared; its completion releases the sections below. Pure engine tests are in `engine/__tests__/`. Arabic copy for native review is collected in `ARABIC_ENGINE_REVIEW.md`.
