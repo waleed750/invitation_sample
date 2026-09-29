@@ -1,4 +1,4 @@
-import {parseInvitationData, type InvitationData} from '../../lib/schemas/invitation';
+import {parseInvitationData, type InvitationData} from '@platform/shared';
 
 const coupleDancingUrl = "/assets/demo/video-open/couple-dancing.png";
 const footerOrnamentUrl = "/assets/demo/video-open/footer-ornament.png";

@@ -3,8 +3,8 @@
 import {useCallback, useEffect, useRef, useState, type CSSProperties} from 'react';
 import {Music, Music2} from 'lucide-react';
 import {useTranslations} from 'next-intl';
-import type {InvitationData} from '@/lib/schemas/invitation';
-import type {Locale} from '@/lib/schemas/localized';
+import type {InvitationData} from '@platform/shared';
+import type {Locale} from '@platform/shared';
 import {InvitationLocaleContext} from './InvitationLocaleContext';
 import {InvitationPlaybackContext} from './InvitationPlaybackContext';
 import {sectionComponents} from './registry';

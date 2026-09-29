@@ -2,7 +2,7 @@
 'use client';
 import {useEffect, useRef} from 'react';
 import {useTranslations} from 'next-intl';
-import type {Media, Copy} from '@/lib/schemas/invitation';
+import type {Media, Copy} from '@platform/shared';
 import {useInvitationText} from '../InvitationLocaleContext';
 import '../styles/video-open-intro.css';
 

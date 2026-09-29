@@ -2,7 +2,7 @@ import {describe, expect, it} from 'vitest';
 import {sectionKey} from '../section-key';
 import {getTimeLeft} from '../countdown';
 import {videoOpenData, getVideoOpenData} from '../../data/demo/video-open';
-import {parseInvitationData} from '../../lib/schemas/invitation';
+import {parseInvitationData} from '@platform/shared';
 
 describe('section keys', () => {
   it('prefers an explicit id, including a deliberately empty id at the helper boundary', () => {

@@ -1,7 +1,7 @@
 "use client";
 
 import type {ComponentType} from "react";
-import type {Section, SectionType} from "@/lib/schemas/invitation";
+import type {Section, SectionType} from "@platform/shared";
 import Hero from "./sections/Hero";
 import Countdown from "./sections/Countdown";
 import Welcome from "./sections/Welcome";

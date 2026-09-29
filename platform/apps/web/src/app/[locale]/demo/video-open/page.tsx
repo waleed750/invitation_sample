@@ -3,7 +3,7 @@ import {hasLocale} from 'next-intl';
 import {setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
-import {resolveText} from '@/lib/schemas/localized';
+import {resolveText} from '@platform/shared';
 import {getVideoOpenData} from '@/data/demo/video-open';
 import InvitationShell from '@/engine/InvitationShell';
 import '@/engine/styles/video-open.css';

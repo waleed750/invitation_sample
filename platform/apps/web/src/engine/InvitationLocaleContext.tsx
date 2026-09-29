@@ -1,7 +1,7 @@
 'use client';
 
 import {createContext, useContext} from 'react';
-import {resolveText, type Locale, type LocalizedText} from '@/lib/schemas/localized';
+import {resolveText, type Locale, type LocalizedText} from '@platform/shared';
 
 export const InvitationLocaleContext = createContext<Locale>('ar');
 export function useInvitationText() {
