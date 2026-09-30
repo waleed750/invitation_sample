@@ -830,3 +830,5 @@
 |------|--------|---------|---------|--------|
 | 01:13 | Edited platform/apps/api/src/supabase/supabase-timeout.spec.ts | — | ~28 |
 | 01:13 | Edited platform/apps/api/src/supabase/supabase-timeout.spec.ts | — | ~33 |
+| 01:15 | Session end: 2 writes across 1 files (supabase-timeout.spec.ts) | 1 reads | ~1137 tok |
+| 01:15 | Finished Supabase retry/timeout fix via Muse (resumed ses_f11bd71b...), verified live 7.05s->0.017s, committed 28db65a; found agy (Antigravity CLI 1.2.14) installed; lesson: delegate-relay temp dirs + scratchpad briefs get wiped overnight, get session id from 'opencode session list' and re-write briefs; check relay output before claiming a run started | platform/apps/api, .wolf | verified, committed, push held | ~25k |
