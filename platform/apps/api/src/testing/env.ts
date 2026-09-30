@@ -11,6 +11,7 @@ export const BASE_ENV: Record<string, string> = {
   SUPABASE_ANON_KEY: 'test-anon-key',
   SUPABASE_SERVICE_ROLE_KEY: 'test-service-role-key',
   SUPABASE_JWT_SECRET: TEST_JWT_SECRET,
+  SUPABASE_TIMEOUT_MS: '5000',
   THROTTLE_TTL_MS: '60000',
   THROTTLE_LIMIT: '100',
   SWAGGER_ENABLED: 'false'

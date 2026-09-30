@@ -49,6 +49,10 @@ export class AppConfigService {
     return this.required('SUPABASE_JWT_SECRET');
   }
 
+  get supabaseTimeoutMs(): number {
+    return this.required('SUPABASE_TIMEOUT_MS');
+  }
+
   get throttleTtlMs(): number {
     return this.required('THROTTLE_TTL_MS');
   }

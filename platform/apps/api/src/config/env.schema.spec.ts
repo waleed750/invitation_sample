@@ -28,6 +28,12 @@ describe('validateEnv', () => {
     expect(env.SUPABASE_JWT_SECRET).toBe(TEST_JWT_SECRET);
   });
 
+  it('defaults SUPABASE_TIMEOUT_MS to 5000 and rejects values under 100', () => {
+    expect(validateEnv(validEnv()).SUPABASE_TIMEOUT_MS).toBe(5000);
+    expect(validateEnv({...validEnv(), SUPABASE_TIMEOUT_MS: '100'}).SUPABASE_TIMEOUT_MS).toBe(100);
+    expect(() => validateEnv({...validEnv(), SUPABASE_TIMEOUT_MS: '50'})).toThrow(/SUPABASE_TIMEOUT_MS/);
+  });
+
   it('treats a blank SUPABASE_JWT_SECRET as unset (JWKS mode)', () => {
     const env = validateEnv({...validEnv(), SUPABASE_JWT_SECRET: '   '});
     expect(env.SUPABASE_JWT_SECRET).toBeUndefined();

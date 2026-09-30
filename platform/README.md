@@ -70,6 +70,7 @@ Docker (build context must be `platform/`): `docker build -f apps/api/Dockerfile
 | `SUPABASE_URL` / `SUPABASE_ANON_KEY` | project URL + anon key (user-scoped client, RLS applies) |
 | `SUPABASE_SERVICE_ROLE_KEY` | secret, server only — never returned or logged |
 | `SUPABASE_JWT_SECRET` | optional; when set, JWTs verify locally (HS256), else via the project's JWKS |
+| `SUPABASE_TIMEOUT_MS` | hard cap in ms on any Supabase HTTP call (default 5000, min 100); PostgREST retries are off, so an outage degrades to a fast 503 instead of hanging requests |
 | `THROTTLE_TTL_MS` / `THROTTLE_LIMIT` | global limit per IP (in-memory store; a `RateLimitStorage` seam exists for a future Redis backend — Redis is not added) |
 | `SWAGGER_ENABLED` | `true` serves OpenAPI at unprefixed `/docs` (+ `/docs-json`); otherwise 404 |
 

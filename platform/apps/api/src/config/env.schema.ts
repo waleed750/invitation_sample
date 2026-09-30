@@ -24,6 +24,9 @@ const envSchema = z.object({
   SUPABASE_URL: z.url('SUPABASE_URL must be a valid URL'),
   SUPABASE_ANON_KEY: z.string().min(1, 'SUPABASE_ANON_KEY must not be empty'),
   SUPABASE_SERVICE_ROLE_KEY: z.string().min(1, 'SUPABASE_SERVICE_ROLE_KEY must not be empty'),
+  // Hard cap on any single Supabase HTTP call. Without it an outage hangs
+  // every authenticated request (postgrest retries + no timeout).
+  SUPABASE_TIMEOUT_MS: z.coerce.number().int().min(100, 'SUPABASE_TIMEOUT_MS must be at least 100').default(5000),
   // Optional: blank/whitespace counts as unset. When set, Supabase JWTs are
   // verified locally (HS256); otherwise the project's JWKS endpoint is used.
   SUPABASE_JWT_SECRET: z
