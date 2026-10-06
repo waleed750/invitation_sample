@@ -16,7 +16,10 @@
       "title": "Your story deserves a beautiful invitation.",
       "description": "Bring your favourite people together with a digital invitation that feels like you. Thoughtfully made for weddings, engagements and everything worth celebrating.",
       "action": "Explore the plans",
-      "note": "Made for your phone. Ready to share with everyone you love."
+      "note": "Made for your phone. Ready to share with everyone you love.",
+      "promise": "Your names in a beautiful design in 60 seconds — pay only when you publish",
+      "ctaTry": "Try it with your names",
+      "ctaDemo": "Live demo"
     },
     "how": {
       "eyebrow": "From your heart to their phones",
@@ -71,6 +74,19 @@
           "three": "Unlimited RSVP and guest messages",
           "four": "Priority WhatsApp support"
         }
+      },
+      "addonsRow": "Add-ons",
+      "addonsText": "Need more later? Add 10 edits for 99 EGP or extend by 3 months for 199 EGP.",
+      "choose": "Choose {tier}",
+      "compare": {
+        "publishedEdits": "Published edits",
+        "monthsOnline": "Months online",
+        "rsvpLimit": "RSVP limit",
+        "videoIntro": "Video intro",
+        "musicUpload": "Music upload",
+        "guestMessages": "Guest messages",
+        "prioritySupport": "Priority support",
+        "unlimited": "Unlimited"
       }
     },
     "faq": {
@@ -87,6 +103,18 @@
       "subscription": {
         "question": "Is this a monthly subscription?",
         "answer": "No. Each plan is a one-time payment for one event, with the online period shown above."
+      },
+      "refund": {
+        "question": "Is there a refund window?",
+        "answer": "You can request a refund within 14 days of payment if your invitation is not published."
+      },
+      "edits": {
+        "question": "How many edits are allowed?",
+        "answer": "It depends on the tier you choose. Premium offers up to 40 edits."
+      },
+      "after": {
+        "question": "What happens after the event?",
+        "answer": "Your invitation remains online for a grace period depending on the tier, then is automatically removed."
       }
     },
     "footer": {
@@ -96,6 +124,30 @@
       "privacy": "Privacy",
       "refund": "Refund policy",
       "placeholder": "Terms, privacy and refund policies are coming soon. These links are placeholders."
+    },
+    "nav": {
+      "templates": "Templates",
+      "pricing": "Pricing",
+      "faq": "FAQ",
+      "dashboard": "Dashboard"
+    },
+    "why": {
+      "title": "Why Invitely?",
+      "features": {
+        "flat": "Flat price, no subscriptions",
+        "preview": "See before you pay",
+        "rsvp": "RSVP via WhatsApp",
+        "noAccounts": "No guest accounts needed"
+      }
+    },
+    "payments": {
+      "title": "Payment Methods",
+      "soon": "Coming soon",
+      "methods": {
+        "card": "Card",
+        "wallet": "Wallet",
+        "fawry": "Fawry"
+      }
     }
   },
   "checkout": {
@@ -104,7 +156,11 @@
     "eyebrow": "Your invitation starts here",
     "title": "Make it yours, then make it official.",
     "description": "Add your details, verify your phone and choose the plan for your celebration.",
-    "steps": {"details": "Your details", "phone": "Verify phone", "plan": "Plan & pay"},
+    "steps": {
+      "details": "Your details",
+      "phone": "Verify phone",
+      "plan": "Plan & pay"
+    },
     "details": {
       "first": "First partner's name",
       "second": "Second partner's name",
@@ -113,20 +169,45 @@
       "firstPlaceholder": "First name",
       "secondPlaceholder": "Second name"
     },
-    "otp": {"phone": "Mobile number", "send": "Send code", "code": "6-digit code", "verify": "Verify number", "verified": "Phone verified"},
+    "otp": {
+      "phone": "Mobile number",
+      "send": "Send code",
+      "code": "6-digit code",
+      "verify": "Verify number",
+      "verified": "Phone verified"
+    },
     "plan": {
       "choose": "Choose a plan",
       "tiers": {
-        "save-the-date": {"name": "Save the Date", "feature": "{edits} edits · {months} months online"},
-        "classic": {"name": "Classic", "feature": "{edits} edits · {months} months online"},
-        "premium": {"name": "Premium", "feature": "{edits} edits · {months} months online"}
+        "save-the-date": {
+          "name": "Save the Date",
+          "feature": "{edits} edits · {months} months online"
+        },
+        "classic": {
+          "name": "Classic",
+          "feature": "{edits} edits · {months} months online"
+        },
+        "premium": {
+          "name": "Premium",
+          "feature": "{edits} edits · {months} months online"
+        }
       },
       "addons": "Need more later? Add 10 edits for EGP 99 or extend by 3 months for EGP 199.",
       "coupon": "Coupon code",
       "method": "Payment method",
-      "methods": {"card": "Card", "wallet": "Mobile wallet", "fawry": "Fawry cash"}
+      "methods": {
+        "card": "Card",
+        "wallet": "Mobile wallet",
+        "fawry": "Fawry cash"
+      }
     },
-    "summary": {"eyebrow": "One-time payment", "title": "Order summary", "subtotal": "Subtotal", "discount": "Discount", "total": "Total"},
+    "summary": {
+      "eyebrow": "One-time payment",
+      "title": "Order summary",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "total": "Total"
+    },
     "pay": {
       "button": "Continue to payment",
       "processing": "Please wait…",
@@ -144,9 +225,19 @@
     },
     "result": {
       "eyebrow": "Payment result",
-      "paid": {"title": "Payment complete", "description": "Your draft invitation is ready for you."},
-      "pending": {"title": "Waiting for payment", "description": "Your order is saved and still pending.", "instructions": "Take this reference to a Fawry outlet. This demo does not create a real payable reference."},
-      "failed": {"title": "Payment failed", "description": "No money was charged. You can return to the demo gateway and try again."},
+      "paid": {
+        "title": "Payment complete",
+        "description": "Your draft invitation is ready for you."
+      },
+      "pending": {
+        "title": "Waiting for payment",
+        "description": "Your order is saved and still pending.",
+        "instructions": "Take this reference to a Fawry outlet. This demo does not create a real payable reference."
+      },
+      "failed": {
+        "title": "Payment failed",
+        "description": "No money was charged. You can return to the demo gateway and try again."
+      },
       "order": "Order",
       "amount": "Amount",
       "created": "Created",
@@ -223,5 +314,15 @@
     "scratchReveal": "Scratch to reveal",
     "scratchSurface": "Scratch surface",
     "resetScratch": "Reset scratch card"
+  },
+  "templates": {
+    "title": "Invitely Templates",
+    "description": "Choose the design that suits you from our carefully crafted templates.",
+    "card": {
+      "from": "From",
+      "demo": "Live demo",
+      "use": "Use this design",
+      "tier": "{tier}"
+    }
   }
 }

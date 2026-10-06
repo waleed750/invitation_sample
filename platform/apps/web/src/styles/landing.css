@@ -1,0 +1,224 @@
+.mockup-wrapper {
+  margin-block-start: 3rem;
+  display: flex;
+  justify-content: center;
+}
+
+.phone-mockup {
+  position: relative;
+  inline-size: 280px;
+  block-size: 560px;
+  border-radius: 40px;
+  background-color: #1a1625; /* dark indigo from mashrabiya */
+  border: 8px solid var(--text);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* pure-CSS pattern for phone mockup */
+.phone-mockup::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(#d4af37 1px, transparent 1px);
+  background-size: 20px 20px;
+  opacity: 0.1;
+  pointer-events: none;
+}
+
+.phone-mockup-names {
+  font-family: var(--font-display);
+  font-size: 2.2rem;
+  color: #d4af37; /* saffron */
+  text-align: center;
+  z-index: 1;
+  line-height: 1.4;
+  padding-inline: 1.5rem;
+}
+
+.phone-mockup-names p {
+  color: #d4af37; /* saffron */
+}
+
+.hero-ctas {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-block-start: 0.5rem;
+}
+
+.button-outline {
+  padding-block: .75rem;
+  padding-inline: 1.6rem;
+  background: transparent;
+  color: var(--green);
+  border: 2px solid var(--green);
+  border-radius: 3rem;
+  text-decoration: none;
+  font-weight: 600;
+}
+.button-outline:hover {
+  background: var(--green);
+  color: var(--cream);
+}
+
+.main-nav {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+.main-nav a {
+  text-decoration: none;
+  font-weight: 500;
+}
+.main-nav a:hover {
+  color: var(--gold);
+}
+
+.table-wrapper {
+  overflow-x: auto;
+  margin-block-start: 3rem;
+  -webkit-overflow-scrolling: touch;
+}
+
+.comparison-table {
+  min-inline-size: 600px;
+  inline-size: 100%;
+  border-collapse: collapse;
+  text-align: start;
+}
+
+.comparison-table th, .comparison-table td {
+  padding-block: 1rem;
+  padding-inline: 1rem;
+  border-block-end: 1px solid var(--border);
+}
+
+.comparison-table th {
+  font-weight: 600;
+  color: var(--green);
+}
+
+.comparison-table .feature-name {
+  font-weight: 500;
+}
+
+.template-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 1rem;
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.template-card h3 {
+  margin-block-end: 0.25rem;
+}
+
+.template-tagline {
+  color: var(--muted);
+  font-size: 0.95rem;
+  flex-grow: 1;
+}
+
+.template-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-block-start: 1px solid var(--border);
+  padding-block-start: 1rem;
+  margin-block-start: auto;
+}
+
+.template-tier-badge {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  background: var(--cream);
+  border: 1px solid var(--gold);
+  color: var(--gold);
+  padding-inline: 0.5rem;
+  padding-block: 0.25rem;
+  border-radius: 1rem;
+  font-weight: 600;
+}
+
+.template-price {
+  font-weight: 600;
+  color: var(--green);
+}
+
+.template-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  margin-block-start: 0.5rem;
+}
+
+.template-actions a {
+  justify-content: center;
+  text-align: center;
+}
+
+.strip {
+  padding-block: 3.5rem;
+  background: var(--surface);
+  border-block-start: 1px solid var(--border);
+}
+
+.strip.why {
+  background: var(--green);
+  color: var(--cream);
+  border-block-start: none;
+}
+.strip.why h2 {
+  color: var(--gold);
+}
+.strip.why p {
+  color: var(--cream);
+  opacity: 0.9;
+}
+
+.payments-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  margin-block-start: 1.5rem;
+}
+
+.payment-method {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.payment-method .soon {
+  font-size: 0.75rem;
+  color: var(--gold);
+  font-weight: 600;
+}
+
+.hero-content {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+@media (min-width: 48rem) {
+  .hero-content {
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+  }
+  .mockup-wrapper {
+    margin-block-start: 0;
+  }
+}
+.main-nav a { min-block-size: 44px; display: inline-flex; align-items: center; }
