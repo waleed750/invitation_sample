@@ -21,6 +21,7 @@ describe('fulfillMockOrder', () => {
     const result = fulfillMockOrder(stateWith(pending()), 'order_1', now);
     expect(result.orders[0]).toMatchObject({status: 'paid', paidAt: now.toISOString()});
     expect(result.invitations[0]).toMatchObject({status: 'draft', editsAllowed: 15, editsUsed: 0});
+    expect(result.invitations[0]?.shareSlug).toMatch(/^invite-[a-z0-9]{6}$/);
     expect(result.invitations[0]?.onlineUntil).toBeUndefined();
     expect(result.points).toMatchObject({purchaseCount: 1, ledger: [{delta: 129, reason: 'purchase'}]});
   });
@@ -40,6 +41,7 @@ describe('fulfillMockOrder', () => {
       id: 'inv_old', orderId: 'old', templateSlug: 'mashrabiya', tier: 'classic' as const,
       couple: {first: 'A', second: 'B'}, eventDate: now.toISOString(), status: 'draft' as const,
       editsAllowed: 15, editsUsed: 0,
+      shareSlug: 'a-b',
     };
     const editsState = stateWith(pending({kind: 'edits', amountEgp: 99}));
     editsState.invitations = [invitation];
@@ -50,4 +52,3 @@ describe('fulfillMockOrder', () => {
     expect(fulfillMockOrder(extensionState, 'order_1', now).invitations[0]?.entitlementNotes?.[0]).toContain('+3 months');
   });
 });
-

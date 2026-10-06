@@ -7,8 +7,9 @@ import {CheckoutForm} from '@/commerce/CheckoutForm';
 import {quote} from '@/commerce/pricing';
 import {routing} from '@/i18n/routing';
 import {getTemplate} from '@/templates/registry';
+import type {OrderKind} from '@/commerce/types';
 
-type Props = {params: Promise<{locale: string; slug: string}>; searchParams: Promise<{tier?: string | string[]}>};
+type Props = {params: Promise<{locale: string; slug: string}>; searchParams: Promise<{tier?: string | string[]; kind?: string | string[]}>};
 
 export default async function CheckoutPage({params, searchParams}: Props) {
   const {locale, slug} = await params;
@@ -16,12 +17,15 @@ export default async function CheckoutPage({params, searchParams}: Props) {
   setRequestLocale(locale);
   const template = getTemplate(slug);
   if (!template || !isPubliclyListed(template.entry)) notFound();
-  const requestedTier = (await searchParams).tier;
+  const query = await searchParams;
+  const requestedTier = query.tier;
   const tierValue = Array.isArray(requestedTier) ? requestedTier[0] : requestedTier;
   const initialTier: Tier = TIER_ORDER.includes(tierValue as Tier) ? tierValue as Tier : template.entry.tier;
+  const requestedKind = Array.isArray(query.kind) ? query.kind[0] : query.kind;
+  const kind: OrderKind = requestedKind === 'edits' || requestedKind === 'extension' ? requestedKind : 'new';
   const quotes = Object.fromEntries(TIER_ORDER.map((tier) => [tier, {
-    standard: quote({templateSlug: slug, tier, kind: 'new', balance: 0}),
-    welcome: quote({templateSlug: slug, tier, kind: 'new', couponCode: 'WELCOME10', balance: 0}),
+    standard: quote({templateSlug: slug, tier, kind, balance: 0}),
+    welcome: quote({templateSlug: slug, tier, kind, couponCode: 'WELCOME10', balance: 0}),
   }])) as Record<Tier, {standard: ReturnType<typeof quote>; welcome: ReturnType<typeof quote>}>;
   const t = await getTranslations('checkout');
 
@@ -30,8 +34,7 @@ export default async function CheckoutPage({params, searchParams}: Props) {
     <header className="commerce-header container"><a className="brand" href={`/${locale}`}>{t('brand')}</a><span>{t('secure')}</span></header>
     <main className="commerce-main container">
       <div className="checkout-heading"><p className="eyebrow">{t('eyebrow')}</p><h1>{t('title')}</h1><p>{t('description')}</p></div>
-      <CheckoutForm locale={locale} templateSlug={slug} initialTier={initialTier} quotes={quotes} />
+      <CheckoutForm locale={locale} templateSlug={slug} initialTier={initialTier} kind={kind} quotes={quotes} />
     </main>
   </>;
 }
-

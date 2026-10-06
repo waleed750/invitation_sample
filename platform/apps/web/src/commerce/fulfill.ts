@@ -1,5 +1,6 @@
 import {levelForPurchases, pointsForOrder, TIERS} from '@platform/shared';
 import type {CommerceState, Invitation} from './types';
+import {createShareSlug} from './share';
 
 const YEAR_MS = 365 * 24 * 60 * 60 * 1000;
 
@@ -37,6 +38,7 @@ export function fulfillMockOrder(state: CommerceState, orderId: string, now: Dat
       status: 'draft',
       editsAllowed: TIERS[order.tier].editsAllowed,
       editsUsed: 0,
+      shareSlug: createShareSlug(details.couple),
     };
     next.invitations.unshift(invitation);
   } else {
@@ -70,4 +72,3 @@ export function fulfillMockOrder(state: CommerceState, orderId: string, now: Dat
   if (next.checkoutDetails) delete next.checkoutDetails[order.id];
   return next;
 }
-

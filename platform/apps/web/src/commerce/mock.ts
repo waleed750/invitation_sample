@@ -1,9 +1,11 @@
 import {cookies} from 'next/headers';
-import {canPublish, computeOnlineUntil, levelForPurchases, TIER_ORDER} from '@platform/shared';
+import {levelForPurchases, TIER_ORDER} from '@platform/shared';
 import {fulfillMockOrder, emptyCommerceState, pointsBalance} from './fulfill';
 import {normalizeEgyptPhone} from './phone';
 import {quote} from './pricing';
-import type {CommerceClient, CommerceState, Invitation, Order, StartCheckoutInput} from './types';
+import {legacyShareSlug} from './share';
+import {publishInvitationRecord} from './publish';
+import type {CommerceClient, CommerceState, Invitation, Order, PublishInvitationResult, StartCheckoutInput} from './types';
 
 const COOKIE_NAME = 'inv_demo';
 const MAX_ITEMS = 20;
@@ -15,6 +17,10 @@ function decodeState(value?: string): CommerceState {
     if (!Array.isArray(parsed.orders) || !Array.isArray(parsed.invitations) || !Array.isArray(parsed.points?.ledger)) {
       return emptyCommerceState();
     }
+    parsed.invitations = parsed.invitations.map((invitation) => ({
+      ...invitation,
+      shareSlug: invitation.shareSlug || legacyShareSlug(invitation.id),
+    }));
     return parsed;
   } catch {
     return emptyCommerceState();
@@ -54,6 +60,16 @@ function makeId(prefix: string): string {
 }
 
 export class MockCommerceClient implements CommerceClient {
+  async getSession() {
+    return (await readState()).session ?? null;
+  }
+
+  async signOut(): Promise<void> {
+    const state = await readState();
+    delete state.session;
+    await writeState(state);
+  }
+
   async sendOtp(phone: string): Promise<{ok: true}> {
     if (!normalizeEgyptPhone(phone)) throw new RangeError('invalid_phone');
     return {ok: true};
@@ -122,6 +138,14 @@ export class MockCommerceClient implements CommerceClient {
     return (await readState()).invitations;
   }
 
+  async getInvitation(id: string): Promise<Invitation | null> {
+    return (await readState()).invitations.find((invitation) => invitation.id === id) ?? null;
+  }
+
+  async publishInvitation(id: string): Promise<PublishInvitationResult> {
+    return publishInvitation(id, new Date());
+  }
+
   async listOrders(): Promise<Order[]> {
     return (await readState()).orders;
   }
@@ -140,29 +164,12 @@ export class MockCommerceClient implements CommerceClient {
 export async function publishInvitation(
   id: string,
   now: Date,
-): Promise<{ok: true; invitation: Invitation} | {ok: false; reason: 'no_edits_left' | 'expired'}> {
+): Promise<PublishInvitationResult> {
   const state = await readState();
-  const invitation = state.invitations.find((item) => item.id === id);
-  if (!invitation) return {ok: false, reason: 'expired'};
-
-  const firstPublishedAt = invitation.firstPublishedAt ?? now.toISOString();
-  const onlineUntil = invitation.onlineUntil ?? computeOnlineUntil({
-    tier: invitation.tier,
-    firstPublishedAt: now,
-    eventDate: new Date(invitation.eventDate),
-  }).toISOString();
-  const gate = canPublish({
-    editsAllowed: invitation.editsAllowed,
-    editsUsed: invitation.editsUsed,
-    onlineUntil: new Date(onlineUntil),
-    now,
-  });
-  if (!gate.ok) return gate;
-
-  invitation.status = 'published';
-  invitation.firstPublishedAt = firstPublishedAt;
-  invitation.onlineUntil = onlineUntil;
-  invitation.editsUsed += 1;
+  const index = state.invitations.findIndex((item) => item.id === id);
+  const result = publishInvitationRecord(state.invitations[index], now);
+  if (!result.ok) return result;
+  state.invitations[index] = result.invitation;
   await writeState(state);
-  return {ok: true, invitation};
+  return result;
 }

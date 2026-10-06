@@ -255,6 +255,122 @@
       "generic": "Something went wrong. Check your details and try again."
     }
   },
+  "dashboard": {
+    "brand": "Invitely",
+    "nav": {
+      "label": "Dashboard navigation",
+      "home": "Home",
+      "orders": "Orders",
+      "points": "Points",
+      "account": "Account"
+    },
+    "home": {
+      "eyebrow": "Your celebration, in one place",
+      "greeting": "Welcome back",
+      "signedIn": "Signed in securely as {phone}",
+      "pointsBalance": "{points} points",
+      "collectionEyebrow": "Your collection",
+      "title": "My invitations",
+      "browse": "Browse templates",
+      "emptyTitle": "Your first invitation is waiting",
+      "emptyDescription": "Choose a design, add your details and we will keep everything ready for you here.",
+      "emptyAction": "Explore templates",
+      "eventCountdown": "{days, plural, =0 {The celebration is today} one {# day to the celebration} other {# days to the celebration}}",
+      "edits": "Edits left",
+      "editsValue": "{left} of {allowed} left",
+      "daysOnline": "Days online",
+      "daysValue": "{days, plural, one {# day left} other {# days left}}",
+      "startsOnPublish": "Starts when you publish",
+      "open": "Open",
+      "buyEdits": "Buy more edits",
+      "extend": "Extend"
+    },
+    "invitation": {
+      "eyebrow": "Invitation workspace",
+      "description": "Publish changes and share your invitation when it is ready.",
+      "publishTitle": "Ready to share the latest version?",
+      "publishHelp": "Publishing uses one edit and updates the version your guests will see.",
+      "publish": "Publish invitation",
+      "onlineUntil": "Online until {date} · {edits} edits left",
+      "comingSoon": "Coming next",
+      "guestsTitle": "Guests & RSVP",
+      "guestsDescription": "Attendance totals, guest search and exports will arrive here next."
+    },
+    "share": {
+      "eyebrow": "Send it beautifully",
+      "title": "Share your invitation",
+      "description": "Keep the link handy, send it on WhatsApp or scan the QR code for printed cards.",
+      "copy": "Copy link",
+      "copied": "Copied",
+      "whatsapp": "Share on WhatsApp",
+      "message": "You are invited to celebrate {first} & {second} with us:",
+      "qrLabel": "Invitation QR code",
+      "launchNote": "Public page opens when public invitation pages launch"
+    },
+    "orders": {
+      "eyebrow": "Purchase history",
+      "title": "Orders",
+      "description": "Your invitation purchases and add-ons, together in one place.",
+      "emptyTitle": "No orders yet",
+      "emptyDescription": "Completed and pending purchases will appear here.",
+      "kind": "Order type",
+      "method": "Payment method",
+      "date": "Created",
+      "reference": "Fawry reference",
+      "receipt": "Receipt",
+      "receiptSoon": "Coming soon",
+      "kinds": {"new": "New invitation", "extension": "Online extension", "edits": "Extra edits"},
+      "methods": {"card": "Card", "wallet": "Mobile wallet", "fawry": "Fawry cash"}
+    },
+    "points": {
+      "eyebrow": "Loyalty rewards",
+      "title": "Points & level",
+      "description": "Every celebration moves you closer to more rewards.",
+      "balance": "Available balance",
+      "points": "points",
+      "nextLevel": "{count, plural, one {# more purchase to reach {level}} other {# more purchases to reach {level}}}",
+      "topLevel": "You have reached our highest level.",
+      "levelProgress": "Progress to the next level",
+      "redeemTitle": "How redemption works",
+      "redeemRules": "Each complete 100 points can redeem EGP 50. Points, coupons and affiliate discounts together cannot exceed 30% of an order, and redemption is applied in EGP 50 steps.",
+      "redeemExample": "With your current balance, up to {amount} can be used on an EGP 1,000 order.",
+      "history": "Points history",
+      "empty": "Your earned and redeemed points will appear here.",
+      "expires": "Expires {date}",
+      "reasons": {"purchase": "Purchase reward", "redeem": "Redeemed on an order"}
+    },
+    "account": {
+      "eyebrow": "Your details",
+      "title": "Account",
+      "description": "Manage how you access Invitely and how the dashboard speaks to you.",
+      "phone": "Verified phone",
+      "verified": "This number is your secure sign-in.",
+      "language": "Dashboard language",
+      "languageNote": "Your choice is remembered for your next visit.",
+      "signOut": "Sign out",
+      "delete": "Delete account",
+      "comingSoon": "Coming soon — account deletion will include a clear data review."
+    },
+    "signIn": {
+      "eyebrow": "Your private dashboard",
+      "title": "Welcome back",
+      "description": "Verify the phone number used at checkout to see your invitations, orders and points.",
+      "phone": "Mobile number",
+      "send": "Send code",
+      "code": "6-digit code",
+      "verify": "Open dashboard",
+      "invalidPhone": "Enter a valid Egyptian mobile number.",
+      "invalidCode": "Enter the 6-digit demo code.",
+      "generic": "Something went wrong. Check your details and try again."
+    },
+    "errors": {
+      "no_edits_left": "No published edits remain. Buy more edits to publish again.",
+      "expired": "The online period has ended. Extend it before publishing.",
+      "not_found": "This invitation could not be found."
+    },
+    "levels": {"member": "Member", "silver": "Silver", "gold": "Gold"},
+    "statuses": {"draft": "Draft", "published": "Published", "pending": "Pending", "paid": "Paid", "failed": "Failed"}
+  },
   "demoMode": {
     "banner": "Demo mode — no money is charged",
     "otpHint": "Demo code: 123456",

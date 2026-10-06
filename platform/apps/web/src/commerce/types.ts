@@ -30,6 +30,7 @@ export interface DraftInvitation {
   status: 'draft';
   editsAllowed: number;
   editsUsed: number;
+  shareSlug: string;
   firstPublishedAt?: string;
   onlineUntil?: string;
   entitlementNotes?: string[];
@@ -75,13 +76,20 @@ export interface CommerceState {
 }
 
 export interface CommerceClient {
+  getSession(): Promise<Session | null>;
+  signOut(): Promise<void>;
   sendOtp(phone: string): Promise<{ok: true}>;
   verifyOtp(phone: string, code: string, locale?: string): Promise<Session>;
   startCheckout(input: StartCheckoutInput): Promise<Order>;
   getOrder(id: string): Promise<Order | null>;
   simulatePayment(orderId: string, outcome: 'succeed' | 'fail' | 'fawry_reference' | 'fawry_paid'): Promise<Order>;
   listInvitations(): Promise<Invitation[]>;
+  getInvitation(id: string): Promise<Invitation | null>;
+  publishInvitation(id: string): Promise<PublishInvitationResult>;
   listOrders(): Promise<Order[]>;
   getPoints(): Promise<{balance: number; purchaseCount: number; level: Level; ledger: PointsLedgerEntry[]}>;
 }
 
+export type PublishInvitationResult =
+  | {ok: true; invitation: Invitation}
+  | {ok: false; reason: 'no_edits_left' | 'expired' | 'not_found'};

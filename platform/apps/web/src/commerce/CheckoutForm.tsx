@@ -6,13 +6,14 @@ import {TIER_ORDER, TIERS, type Tier} from '@platform/shared';
 import {Bidi} from '@/components/Bidi';
 import {formatMoney} from '@/lib/format';
 import {sendOtpAction, startCheckoutAction, verifyOtpAction} from './actions';
-import type {PaymentMethod} from './types';
+import type {OrderKind, PaymentMethod} from './types';
 
 type QuoteView = {subtotal: number; discount: number; total: number};
 type Props = {
   locale: 'ar' | 'en';
   templateSlug: string;
   initialTier: Tier;
+  kind: OrderKind;
   quotes: Record<Tier, {standard: QuoteView; welcome: QuoteView}>;
 };
 
@@ -21,7 +22,7 @@ function messageFor(error: unknown): string {
   return 'unknown';
 }
 
-export function CheckoutForm({locale, templateSlug, initialTier, quotes}: Props) {
+export function CheckoutForm({locale, templateSlug, initialTier, kind, quotes}: Props) {
   const t = useTranslations('checkout');
   const demo = useTranslations('demoMode');
   const [first, setFirst] = useState('');
@@ -60,7 +61,7 @@ export function CheckoutForm({locale, templateSlug, initialTier, quotes}: Props)
     if (!first.trim() || !second.trim() || !eventDate) return setError('details_required');
     if (!verified) return setError('phone_not_verified');
     run(() => startCheckoutAction({
-      locale, templateSlug, tier, kind: 'new', method,
+      locale, templateSlug, tier, kind, method,
       couponCode: coupon || undefined,
       couple: {first, second}, eventDate,
     }));
@@ -135,4 +136,3 @@ export function CheckoutForm({locale, templateSlug, initialTier, quotes}: Props)
     </div>
   );
 }
-
