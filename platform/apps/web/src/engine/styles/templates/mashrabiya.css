@@ -674,28 +674,161 @@
   margin-block: 0;
   margin-inline: 0;
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  flex-wrap: wrap;
   gap: 0.75rem;
 }
 
 .invitation-shell[data-layout="mashrabiya"] .rsvp-form legend {
+  inline-size: 100%;
   font-size: 1rem;
   font-weight: 600;
   color: var(--color-saffron);
   margin-block-end: 0.5rem;
+  text-align: start;
 }
 
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form label.rsvp-radio,
 .invitation-shell[data-layout="mashrabiya"] .rsvp-radio {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+  flex: 1 1 calc(50% - 0.4rem);
+  min-inline-size: 120px;
   min-block-size: 44px;
-  font-size: 1rem;
-  cursor: pointer;
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  padding-block: 0.75rem;
+  padding-inline: 1rem;
+  border-radius: 9999px;
+  border: 1.5px solid var(--color-saffron);
+  background-color: rgba(20, 24, 58, 0.65);
   color: var(--color-paper);
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+  user-select: none;
+  box-sizing: border-box;
+  transition: background-color 180ms ease, border-color 180ms ease, color 180ms ease;
 }
 
-.invitation-shell[data-layout="mashrabiya"] .rsvp-form label {
+.invitation-shell[data-layout="mashrabiya"] .rsvp-radio:hover {
+  background-color: rgba(227, 167, 64, 0.15);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-radio:has(input:checked) {
+  border-color: var(--color-saffron);
+  background-color: var(--color-saffron);
+  color: var(--color-night);
+  font-weight: 700;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-radio:has(input:focus-visible) {
+  outline: 2px solid var(--color-saffron);
+  outline-offset: 3px;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-radio input[type="radio"] {
+  appearance: none;
+  -webkit-appearance: none;
+  accent-color: var(--color-saffron);
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--color-saffron);
+  background-color: transparent;
+  display: grid;
+  place-content: center;
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-radio input[type="radio"]::before {
+  content: "";
+  inline-size: 0.55rem;
+  block-size: 0.55rem;
+  border-radius: 50%;
+  transform: scale(0);
+  background-color: var(--color-night);
+  transition: transform 120ms ease-in-out;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-radio input[type="radio"]:checked {
+  border-color: var(--color-night);
+  background-color: transparent;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-radio input[type="radio"]:checked::before {
+  transform: scale(1);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-radio input[type="radio"]:focus-visible {
+  outline: 2px solid var(--color-night);
+  outline-offset: 2px;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form label.rsvp-checkbox,
+.invitation-shell[data-layout="mashrabiya"] .rsvp-checkbox {
+  inline-size: 100%;
+  min-block-size: 44px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: start;
+  gap: 0.75rem;
+  padding-block: 0.4rem;
+  padding-inline: 0.25rem;
+  box-sizing: border-box;
+  font-size: 0.95rem;
+  color: var(--color-paper);
+  cursor: pointer;
+  text-align: start;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-checkbox input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  accent-color: var(--color-saffron);
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  border: 1.5px solid var(--color-saffron);
+  border-radius: 0.25rem;
+  background-color: rgba(20, 24, 58, 0.85);
+  display: grid;
+  place-content: center;
+  margin: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: background-color 150ms ease, border-color 150ms ease;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-checkbox input[type="checkbox"]::before {
+  content: "";
+  inline-size: 0.65rem;
+  block-size: 0.65rem;
+  clip-path: polygon(14% 44%, 0 60%, 42% 100%, 100% 16%, 80% 0%, 38% 66%);
+  transform: scale(0);
+  background-color: var(--color-night);
+  transition: transform 120ms ease-in-out;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-checkbox input[type="checkbox"]:checked {
+  background-color: var(--color-saffron);
+  border-color: var(--color-saffron);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-checkbox input[type="checkbox"]:checked::before {
+  transform: scale(1);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-checkbox input[type="checkbox"]:focus-visible {
+  outline: 2px solid var(--color-saffron);
+  outline-offset: 2px;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form label:not(.rsvp-radio):not(.rsvp-checkbox) {
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
