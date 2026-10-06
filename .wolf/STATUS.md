@@ -2,7 +2,7 @@
 
 > Single source of truth for resuming work. Read this FIRST when starting a session.
 > Update this file at the end of every work phase so the next `/clear` resumes in 1 read.
-> Last updated: 2026-09-30
+> Last updated: 2026-10-06
 
 ---
 
@@ -162,3 +162,20 @@ npm run preview  # preview built output
 
 ## ⚠️ Push decision pending (2026-09-30)
 Origin repo `waleed750/invitation_sample` is **PUBLIC**; 11 local commits are unpushed. Scraped thedigitalyes templates are ALREADY public on origin/main (PLATFORM_PLAN §2 says they must not be sold/published). A push would newly publish `platform/` code, the expanded PLATFORM_PLAN.md (pricing, margins, affiliate strategy) and `.wolf/` notes. Waiting for the owner to confirm (or make the repo private / move platform work to a private repo) before pushing.
+
+
+## ✅ Platform walking skeleton (2026-10-06) — commits 35df7ae..HEAD
+- Engine: intro lookup (`intro-kind.ts`), `ShuttersIntro`, `data-layout` scoping, `shell.css` split; `mashrabiya` layoutFamily
+- Shared: `catalog.ts` (license gate: live needs license on every asset), TIERS feature flags, `toDbTier/fromDbTier`
+- Original demo **Mashrabiya** (`/[locale]/templates/mashrabiya`, own SVGs + Google Fonts, no external assets)
+- Landing + `/templates` gallery (prices from TIERS), comparison table; checkout `/[locale]/checkout/[slug]?tier=&kind=` with MOCK gateway (OTP 123456, cookie `inv_demo`, `COMMERCE_MODE=mock`, prod needs `ALLOW_DEMO_COMMERCE=1`)
+- Dashboard `/[locale]/app` (sign-in, home, invitation publish + share/QR, orders, points, account) — all via `CommerceClient`
+- Scraped video-open demo intentionally KEPT (user decision) but unlisted; never live/priced (PLATFORM_PLAN §2)
+- agy lanes `gemini` / `debate` in ~/.config/delegate-skills/config.json
+
+## 🚀 Next quest
+1. T8 API commerce slice (NestJS): checkout/orders/invitations/points/templates endpoints, `PaymentProvider` + mock, migration 0004 (provider 'mock', seed mashrabiya), Jest tests; then `ApiCommerceClient` for `COMMERCE_MODE=api`
+2. Public invitation page `/[locale]/i/[slug]` (share links 404 today) + RSVP storage + guests screen
+3. Port remaining demos as `draft` catalog entries (private preview only); per-template CSS scoped by data-layout
+4. Playwright e2e in repo (currently ad-hoc scripts in scratchpad), a11y/Lighthouse pass
+5. Owner decisions pending: brand name/domain (placeholder "Invitely"), Fawry merchant account, push decision (public repo)

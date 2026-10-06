@@ -7,6 +7,8 @@
 | 2026-07-19 | Phase 1 Part 2 — wired registry, recomposed both templates | src/main.jsx, both data.js, both site .jsx, registry/index.js | build passes, separate lazy chunks, committed 2519b72 | ~10k |
 | 2026-07-19 | Phase 2 done via opencode: review fixes (13965e2) + africa demo converted (03a66b7); .wolf STATUS updated by Claude | .wolf/STATUS.md, src/sites/africa/* | ok | ~1k |
 | 2026-07-19 | Extracted shared InvitationShell, recomposed both sites, compressed africa media 26.6→13.2MB, added pipeline docs | src/shared/InvitationShell.jsx, both site .jsx, public/assets/africa/*, TASKS.md | build passes, 50% media reduction | ~8k |
+| 2026-10-06 23:10 | TASK T3 — built original Mashrabiya template (SVGs, fonts, data, registry, page, CSS, tests) | apps/web/src/templates/*, apps/web/src/engine/styles/templates/*, apps/web/public/assets/demo/mashrabiya/* | All gates passed offline | ~12k |
+| 2026-10-06 23:15 | DELTA T3 — styled RSVP attendance radio pills and start-aligned checkbox row | apps/web/src/engine/styles/templates/mashrabiya.css | All gates passed offline | ~3k |
 
 ## Session: 2026-07-20 13:07
 
@@ -832,3 +834,39 @@
 | 01:13 | Edited platform/apps/api/src/supabase/supabase-timeout.spec.ts | — | ~33 |
 | 01:15 | Session end: 2 writes across 1 files (supabase-timeout.spec.ts) | 1 reads | ~1137 tok |
 | 01:15 | Finished Supabase retry/timeout fix via Muse (resumed ses_f11bd71b...), verified live 7.05s->0.017s, committed 28db65a; found agy (Antigravity CLI 1.2.14) installed; lesson: delegate-relay temp dirs + scratchpad briefs get wiped overnight, get session id from 'opencode session list' and re-write briefs; check relay output before claiming a run started | platform/apps/api, .wolf | verified, committed, push held | ~25k |
+| 01:15 | Session end: 2 writes across 1 files (supabase-timeout.spec.ts) | 1 reads | ~1137 tok |
+| 01:15 | Session end: 2 writes across 1 files (supabase-timeout.spec.ts) | 1 reads | ~1137 tok |
+| 01:15 | Session end: 2 writes across 1 files (supabase-timeout.spec.ts) | 1 reads | ~1137 tok |
+| 01:15 | Session end: 2 writes across 1 files (supabase-timeout.spec.ts) | 1 reads | ~1137 tok |
+| 01:15 | Session end: 2 writes across 1 files (supabase-timeout.spec.ts) | 1 reads | ~1137 tok |
+| 01:15 | Session end: 2 writes across 1 files (supabase-timeout.spec.ts) | 1 reads | ~1137 tok |
+| 01:15 | Session end: 2 writes across 1 files (supabase-timeout.spec.ts) | 1 reads | ~1137 tok |
+| 01:15 | Session end: 2 writes across 1 files (supabase-timeout.spec.ts) | 1 reads | ~1137 tok |
+| 01:16 | Session end: 2 writes across 1 files (supabase-timeout.spec.ts) | 1 reads | ~1137 tok |
+
+## Session: 2026-09-30 01:18
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-09-30 01:26
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-09-30 01:26
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-10-06 21:54
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+
+## Session: 2026-10-06 22:44
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 22:46 | wrote PLATFORM_DESIGN_PROMPT.md (Figma Make/Lovable/Stitch prompt from PLATFORM_PLAN §3-7,16) | PLATFORM_DESIGN_PROMPT.md | done | ~4000 |
+| 23:41 | Platform skeleton: engine prep, catalog, Mashrabiya demo, landing, mock checkout, dashboard (Codex+agy, Claude review/commit) | platform/apps/web, packages/shared | committed 35df7ae..HEAD, build+390px verified | ~big |

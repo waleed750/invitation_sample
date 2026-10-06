@@ -51,3 +51,5 @@
 - 2026-09-29 (Correction): User asked "will it be nest.js", I said no and recommended Next.js-only; user then said "the backend should be nest.js". Backend choice is the owner's; state the trade-off once, then follow the decision and update the plan.
 
 - 2026-09-29 (Preference): User: "stop using claude" -> no Claude models as implementer workers. Use opencode/muse-spark-1.3-contributor-free (free, has network) and Codex (no network; usage limit) only. Claude just orchestrates (briefs, gates, review, commit). No model-vs-model debates.
+
+- 2026-10-06 (Decision): Keep the scraped video-open demo (apps/web demo/video-open route, data, css, assets) for later; do NOT delete it (plan task T4 dropped, incl. the provenance build check). It stays unlisted: the public gallery/landing only lists catalog entries with status live (Mashrabiya first). Platform should eventually hold ALL demos as draft/private-preview entries; scraped ones never live/priced (PLATFORM_PLAN §2). agy lanes gemini/debate added to global delegate config 2026-10-06.
