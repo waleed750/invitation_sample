@@ -7,6 +7,7 @@ import {isPubliclyListed, resolveText} from '@platform/shared';
 import {getTemplate, listLiveTemplates} from '@/templates/registry';
 import InvitationShell from '@/engine/InvitationShell';
 import '@/engine/styles/templates/mashrabiya.css';
+import '@/engine/styles/templates/diwan.css';
 
 type Props = {params: Promise<{locale: string; slug: string}>};
 

@@ -7,6 +7,8 @@ vi.mock('next/font/google', () => ({
   Fraunces: () => ({variable: '--font-fraunces'}),
   IBM_Plex_Sans_Arabic: () => ({variable: '--font-ibm-plex-sans-arabic'}),
   IBM_Plex_Sans: () => ({variable: '--font-ibm-plex-sans'}),
+  Cormorant_Garamond: () => ({variable: "--font-cormorant-garamond"}),
+  Inter: () => ({variable: "--font-inter"}),
 }));
 import {describe, expect, it} from 'vitest';
 import {listLiveTemplates, listDraftTemplates, getTemplate, getTemplateAny} from '../registry';

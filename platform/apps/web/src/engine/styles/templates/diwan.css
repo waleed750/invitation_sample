@@ -1,0 +1,584 @@
+@keyframes diwan-fade-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.invitation-shell[data-template="diwan"] {
+  --env-bg: #fcf9f5;
+  --env-body: #123629;
+  --env-flap: #1f4a3a;
+  --env-line: #c19a51;
+  --env-seal: #c19a51;
+  --env-seal-ink: #07271e;
+  --env-ink: #07271e;
+
+  --color-dark-green: #07271e;
+  --color-green-heading: #1f3d33;
+  --color-gold: #c19a51;
+  --color-gold-800: #4a3300;
+  --color-ivory: #fcf9f5;
+  --color-alt-ivory: #f6f3ef;
+  --color-sand: #e3d8c6;
+  --color-ink: #18201c;
+  --color-muted: #5a625d;
+
+  --font-ar-head: var(--font-amiri), serif;
+  --font-ar-body: var(--font-ibm-plex-sans-arabic), sans-serif;
+  --font-ar-names: var(--font-aref-ruqaa), serif;
+  --font-en-head: var(--font-cormorant-garamond), serif;
+  --font-en-body: var(--font-inter), sans-serif;
+  --font-en-names: var(--font-cormorant-garamond), serif;
+
+  background-color: var(--color-ivory);
+  color: var(--color-ink);
+}
+
+.invitation-shell[data-template="diwan"][dir="rtl"] {
+  --font-head: var(--font-ar-head);
+  --font-body: var(--font-ar-body);
+  --font-names: var(--font-ar-names);
+}
+.invitation-shell[data-template="diwan"][dir="ltr"] {
+  --font-head: var(--font-en-head);
+  --font-body: var(--font-en-body);
+  --font-names: var(--font-en-names);
+}
+
+.invitation-shell[data-template="diwan"] :is(h1, h2, h3, h4, h5, h6, .section-kicker) {
+  font-family: var(--font-head);
+  font-weight: 700;
+  line-height: 1.5;
+  font-size: clamp(20px, 1.5rem, 3rem);
+}
+.invitation-shell[data-template="diwan"][dir="ltr"] :is(h1, h2, h3, h4, h5, h6) {
+  font-weight: 600;
+}
+.invitation-shell[data-template="diwan"] p {
+  font-family: var(--font-body);
+  line-height: 1.75;
+  font-size: 1rem;
+}
+.invitation-shell[data-template="diwan"] a,
+.invitation-shell[data-template="diwan"] button {
+  font-family: var(--font-body);
+}
+
+/* Sections Base */
+.invitation-shell[data-template="diwan"] section {
+  padding-block: 4rem;
+  padding-inline: 1.25rem;
+  text-align: start;
+}
+.invitation-shell[data-template="diwan"] .section-inner {
+  max-inline-size: 48rem;
+  margin-inline: auto;
+}
+
+/* 1. Hero (Dark Green) */
+.invitation-shell[data-template="diwan"] .hero-section {
+  background-color: var(--color-dark-green);
+  background-image: url("/assets/demo/diwan/lattice-tile.svg");
+  background-repeat: repeat;
+  background-size: 56px 56px;
+  color: var(--color-ivory);
+  text-align: center;
+  min-block-size: 100svh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding-block: 6rem;
+}
+.invitation-shell[data-template="diwan"] .hero-copy {
+  border: 1px solid var(--color-gold);
+  border-image: url("/assets/demo/diwan/arch-frame.svg") 30 stretch;
+  border-image-width: 2rem;
+  padding-block: 3rem;
+  padding-inline: 2rem;
+  max-inline-size: 90vw;
+  background-color: var(--color-dark-green);
+}
+.invitation-shell[data-template="diwan"] #hero-title {
+  font-family: var(--font-names);
+  font-size: clamp(3rem, 10vw, 5rem);
+  color: var(--color-ivory);
+  line-height: 1.3;
+  margin-block: 1rem;
+}
+.invitation-shell[data-template="diwan"][dir="ltr"] #hero-title {
+  font-style: italic;
+}
+.invitation-shell[data-template="diwan"] .hero-copy .eyebrow {
+  color: var(--color-gold);
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+}
+.invitation-shell[data-template="diwan"] .hero-copy .date-line {
+  color: var(--color-sand);
+  font-size: 1.125rem;
+}
+
+/* Image Divider */
+.invitation-shell[data-template="diwan"] .image-divider {
+  padding-block: 2rem;
+  text-align: center;
+  background-color: var(--color-ivory);
+}
+.invitation-shell[data-template="diwan"] .image-divider img {
+  inline-size: 100%;
+  max-inline-size: 300px;
+  block-size: auto;
+}
+
+/* 2. Welcome (Ivory) */
+.invitation-shell[data-template="diwan"] .welcome-section {
+  background-color: var(--color-ivory);
+  color: var(--color-ink);
+  text-align: center;
+}
+.invitation-shell[data-template="diwan"] .welcome-section h2 {
+  color: var(--color-green-heading);
+}
+.invitation-shell[data-template="diwan"] .welcome-section p {
+  color: var(--color-muted);
+}
+.invitation-shell[data-template="diwan"] .event-card-list {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-block-start: 3rem;
+  align-items: center;
+}
+@media (min-width: 768px) {
+  .invitation-shell[data-template="diwan"] .event-card-list {
+    flex-direction: row;
+    justify-content: center;
+  }
+}
+.invitation-shell[data-template="diwan"] .event-card {
+  background-color: var(--color-alt-ivory);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  border-radius: 120px 120px 4px 4px;
+  padding: 2.5rem 1.5rem;
+  max-inline-size: 20rem;
+  inline-size: 100%;
+  text-align: center;
+  box-shadow: none;
+}
+.invitation-shell[data-template="diwan"] .event-card-image {
+  inline-size: 64px;
+  block-size: 64px;
+  margin-block-end: 1rem;
+}
+.invitation-shell[data-template="diwan"] .event-card h3 {
+  color: var(--color-green-heading);
+  margin-block: 0.5rem;
+}
+.invitation-shell[data-template="diwan"] .event-card-kicker,
+.invitation-shell[data-template="diwan"] .event-card-time {
+  color: var(--color-gold-800);
+  font-weight: 700;
+}
+.invitation-shell[data-template="diwan"] .event-card-link {
+  display: inline-block;
+  margin-block-start: 1.5rem;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-dark-green);
+  color: var(--color-gold);
+  border-radius: 16px;
+  text-decoration: none;
+  min-block-size: 44px;
+  font-weight: 700;
+}
+
+/* 3. Countdown (Alt-Ivory) */
+.invitation-shell[data-template="diwan"] .countdown-section {
+  background-color: var(--color-alt-ivory);
+  text-align: center;
+}
+.invitation-shell[data-template="diwan"] .countdown-section h2 {
+  color: var(--color-green-heading);
+}
+.invitation-shell[data-template="diwan"] .countdown-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-block-start: 2rem;
+}
+.invitation-shell[data-template="diwan"] .time-box {
+  background-color: var(--color-ivory);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  border-radius: 4px;
+  padding: 1rem;
+  min-inline-size: 80px;
+  display: flex;
+  flex-direction: column;
+}
+.invitation-shell[data-template="diwan"] .time-box strong {
+  color: var(--color-dark-green);
+  font-size: 2rem;
+  font-family: var(--font-head);
+}
+.invitation-shell[data-template="diwan"] .time-box span {
+  color: var(--color-gold-800);
+  font-size: 0.875rem;
+}
+
+/* 4. Story (Dark Green) */
+.invitation-shell[data-template="diwan"] .story-section {
+  background-color: var(--color-dark-green);
+  background-image: url("/assets/demo/diwan/lattice-tile.svg");
+  background-repeat: repeat;
+  background-size: 56px 56px;
+  color: var(--color-ivory);
+  text-align: center;
+}
+.invitation-shell[data-template="diwan"] .story-section h2 {
+  color: var(--color-gold);
+}
+.invitation-shell[data-template="diwan"] .story-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-block-start: 2rem;
+  max-inline-size: 36rem;
+  margin-inline: auto;
+}
+.invitation-shell[data-template="diwan"] .story-chapter {
+  background-color: color-mix(in srgb, var(--color-ivory) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  border-radius: 4px;
+  padding: 2rem;
+}
+.invitation-shell[data-template="diwan"] .story-chapter__prose {
+  color: var(--color-ivory);
+}
+
+/* 5. Schedule (Ivory) */
+.invitation-shell[data-template="diwan"] .schedule-section {
+  background-color: var(--color-ivory);
+  text-align: center;
+}
+.invitation-shell[data-template="diwan"] .schedule-section h2 {
+  color: var(--color-green-heading);
+}
+.invitation-shell[data-template="diwan"] .schedule-timeline {
+  list-style: none;
+  padding-inline: 0;
+  margin-inline: auto;
+  max-inline-size: 24rem;
+  margin-block-start: 2rem;
+  border-inline-start: 1px solid var(--color-sand);
+  text-align: start;
+}
+.invitation-shell[data-template="diwan"] .schedule-stop {
+  position: relative;
+  padding-inline-start: 2rem;
+  padding-block-end: 2rem;
+}
+.invitation-shell[data-template="diwan"] .schedule-stop::before {
+  content: url("/assets/demo/diwan/star.svg");
+  position: absolute;
+  inset-inline-start: -12px;
+  top: 0;
+  inline-size: 24px;
+  block-size: 24px;
+  background-color: var(--color-ivory);
+}
+.invitation-shell[data-template="diwan"] .schedule-stop strong {
+  display: block;
+  color: var(--color-gold-800);
+  font-family: var(--font-head);
+  font-size: 1.25rem;
+}
+.invitation-shell[data-template="diwan"] .schedule-stop span {
+  color: var(--color-muted);
+}
+
+/* 6. Dress Code (Alt-Ivory) */
+.invitation-shell[data-template="diwan"] .dresscode-section {
+  background-color: var(--color-alt-ivory);
+}
+.invitation-shell[data-template="diwan"] .dresscode-section h2 {
+  color: var(--color-green-heading);
+  text-align: center;
+  margin-block-end: 2rem;
+}
+.invitation-shell[data-template="diwan"] .dresscode-group {
+  border-block-end: 1px solid var(--color-sand);
+  padding-block: 1rem;
+}
+.invitation-shell[data-template="diwan"] .dresscode-group:first-of-type {
+  border-block-start: 1px solid var(--color-sand);
+}
+.invitation-shell[data-template="diwan"] .dresscode-group h3 {
+  color: var(--color-green-heading);
+  font-size: 1.25rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.invitation-shell[data-template="diwan"] .dresscode-group h3::before {
+  content: url("/assets/demo/diwan/star.svg");
+  display: inline-block;
+  inline-size: 20px;
+  block-size: 20px;
+  transform: scale(0.8);
+}
+.invitation-shell[data-template="diwan"] .dresscode-group p {
+  color: var(--color-muted);
+  margin-inline-start: 2rem;
+}
+
+/* 7. Details (Dark Green) */
+.invitation-shell[data-template="diwan"] .details-section {
+  background-color: var(--color-dark-green);
+  background-image: url("/assets/demo/diwan/lattice-tile.svg");
+  background-repeat: repeat;
+  background-size: 56px 56px;
+  color: var(--color-ivory);
+  text-align: center;
+}
+.invitation-shell[data-template="diwan"] .details-section h2 {
+  color: var(--color-gold);
+}
+.invitation-shell[data-template="diwan"] .badge-frame {
+  background-color: color-mix(in srgb, var(--color-ivory) 5%, transparent);
+  border: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  border-radius: 4px;
+  padding: 2.5rem 1.5rem;
+  margin-block: 2rem;
+}
+.invitation-shell[data-template="diwan"] .badge-frame h3 {
+  color: var(--color-gold);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.invitation-shell[data-template="diwan"] .badge-frame h3::before,
+.invitation-shell[data-template="diwan"] .badge-frame h3::after {
+  content: url("/assets/demo/diwan/star.svg");
+  display: inline-block;
+  inline-size: 16px;
+  block-size: 16px;
+  transform: scale(0.6);
+}
+.invitation-shell[data-template="diwan"] .venue-name {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--color-ivory);
+}
+.invitation-shell[data-template="diwan"] .time-line {
+  color: var(--color-sand);
+}
+.invitation-shell[data-template="diwan"] .details-address {
+  color: var(--color-sand);
+  margin-block-start: 1rem;
+}
+.invitation-shell[data-template="diwan"] .map-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.75rem 1.5rem;
+  background-color: var(--color-gold);
+  color: var(--color-dark-green);
+  border-radius: 16px;
+  text-decoration: none;
+  min-block-size: 44px;
+  font-weight: 700;
+  gap: 0.5rem;
+}
+
+/* 8. FAQ (Ivory) */
+.invitation-shell[data-template="diwan"] .faq-section {
+  background-color: var(--color-ivory);
+}
+.invitation-shell[data-template="diwan"] .faq-section h2 {
+  color: var(--color-green-heading);
+  text-align: center;
+  margin-block-end: 2rem;
+}
+.invitation-shell[data-template="diwan"] .faq-item {
+  border-block-end: 1px solid var(--color-sand);
+}
+.invitation-shell[data-template="diwan"] .faq-item:first-of-type {
+  border-block-start: 1px solid var(--color-sand);
+}
+.invitation-shell[data-template="diwan"] .faq-question {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  inline-size: 100%;
+  padding-block: 1rem;
+  background: transparent;
+  border: none;
+  color: var(--color-green-heading);
+  font-family: var(--font-head);
+  font-size: 1.125rem;
+  font-weight: 700;
+  text-align: start;
+  min-block-size: 44px;
+  cursor: pointer;
+}
+.invitation-shell[data-template="diwan"] .faq-question::before {
+  content: url("/assets/demo/diwan/star.svg");
+  display: inline-block;
+  inline-size: 20px;
+  block-size: 20px;
+  margin-inline-end: 0.75rem;
+  transform: scale(0.8);
+}
+.invitation-shell[data-template="diwan"] .faq-answer {
+  padding-block-end: 1rem;
+  padding-inline-start: 2rem;
+  color: var(--color-muted);
+}
+
+/* 9. RSVP (Alt-Ivory) */
+.invitation-shell[data-template="diwan"] .rsvp-section {
+  background-color: var(--color-alt-ivory);
+  text-align: center;
+}
+.invitation-shell[data-template="diwan"] .rsvp-section h2 {
+  color: var(--color-green-heading);
+}
+.invitation-shell[data-template="diwan"] .rsvp-form {
+  margin-block-start: 2rem;
+  text-align: start;
+  max-inline-size: 32rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.invitation-shell[data-template="diwan"] .rsvp-form label:not(.rsvp-radio) {
+  display: block;
+  color: var(--color-green-heading);
+  font-weight: 700;
+  margin-block-end: 0.5rem;
+}
+.invitation-shell[data-template="diwan"] .rsvp-form input[type="text"],
+.invitation-shell[data-template="diwan"] .rsvp-form input[type="email"],
+.invitation-shell[data-template="diwan"] .rsvp-form input[type="number"],
+.invitation-shell[data-template="diwan"] .rsvp-form select,
+.invitation-shell[data-template="diwan"] .rsvp-form textarea {
+  inline-size: 100%;
+  min-block-size: 44px;
+  border: 1px solid var(--color-sand);
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  background-color: var(--color-ivory);
+  font-family: var(--font-body);
+}
+.invitation-shell[data-template="diwan"] .rsvp-form fieldset {
+  border: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.invitation-shell[data-template="diwan"] .rsvp-form legend {
+  color: var(--color-green-heading);
+  font-weight: 700;
+  margin-block-end: 0.5rem;
+}
+.invitation-shell[data-template="diwan"] .rsvp-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-inline: 1rem;
+  border: 1px solid var(--color-sand);
+  border-radius: 4px;
+  background-color: var(--color-ivory);
+  cursor: pointer;
+}
+.invitation-shell[data-template="diwan"] .rsvp-radio:has(input:checked) {
+  border-color: var(--color-gold);
+  background-color: color-mix(in srgb, var(--color-gold) 10%, transparent);
+}
+.invitation-shell[data-template="diwan"] .rsvp-form button[type="submit"] {
+  inline-size: 100%;
+  min-block-size: 44px;
+  background-color: var(--color-dark-green);
+  color: var(--color-gold);
+  border: none;
+  border-radius: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-block-start: 1rem;
+}
+
+/* 10. Message Form (Dark Green) */
+.invitation-shell[data-template="diwan"] .messageform-section {
+  background-color: var(--color-dark-green);
+  background-image: url("/assets/demo/diwan/lattice-tile.svg");
+  background-repeat: repeat;
+  background-size: 56px 56px;
+  color: var(--color-ivory);
+  text-align: center;
+}
+.invitation-shell[data-template="diwan"] .messageform-section h2 {
+  color: var(--color-gold);
+}
+.invitation-shell[data-template="diwan"] .messageform-section .section-kicker {
+  color: var(--color-ivory);
+}
+.invitation-shell[data-template="diwan"] .message-form {
+  text-align: start;
+  max-inline-size: 32rem;
+  margin-inline: auto;
+  margin-block-start: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.invitation-shell[data-template="diwan"] .message-form label {
+  display: block;
+  color: var(--color-gold);
+  font-weight: 700;
+  margin-block-end: 0.5rem;
+}
+.invitation-shell[data-template="diwan"] .message-form input[type="text"],
+.invitation-shell[data-template="diwan"] .message-form textarea {
+  inline-size: 100%;
+  min-block-size: 44px;
+  border: 1px solid color-mix(in srgb, var(--color-gold) 45%, transparent);
+  border-radius: 4px;
+  padding: 0.5rem 1rem;
+  background-color: color-mix(in srgb, var(--color-ivory) 5%, transparent);
+  color: var(--color-ivory);
+  font-family: var(--font-body);
+}
+.invitation-shell[data-template="diwan"] .message-form button[type="submit"] {
+  inline-size: 100%;
+  min-block-size: 44px;
+  background-color: var(--color-gold);
+  color: var(--color-dark-green);
+  border: none;
+  border-radius: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-block-start: 1rem;
+}
+
+/* 11. Footer (Ivory) */
+.invitation-shell[data-template="diwan"] .footer-section {
+  background-color: var(--color-ivory);
+  text-align: center;
+  padding-block: 4rem;
+}
+.invitation-shell[data-template="diwan"] .footer-section img {
+  inline-size: 120px;
+  block-size: auto;
+}
+
+.invitation-shell[data-template="diwan"] .hero-section h1 {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: baseline;
+  gap: 0.1em 0.35em;
+}

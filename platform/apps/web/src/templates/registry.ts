@@ -14,6 +14,8 @@ import {getExcellenceData} from './excellence/data';
 import {fontClassName as excellenceFontClassName} from './excellence/fonts';
 import {getEleganteData} from './elegante/data';
 import {fontClassName as eleganteFontClassName} from './elegante/fonts';
+import {getDiwanData} from './diwan/data';
+import {fontClassName as diwanFontClassName} from './diwan/fonts';
 
 export interface TemplateDefinition {
   entry: CatalogEntry;
@@ -30,7 +32,7 @@ const mashrabiyaEntry: CatalogEntry = catalogEntry.parse({
   },
   tier: 'classic',
   status: 'live',
-  featured: true,
+  featured: false,
   assets: [
     {path: '/assets/demo/mashrabiya/lattice.svg', source: 'original', license: 'original, © Invitely'},
     {path: '/assets/demo/mashrabiya/khatam-rule.svg', source: 'original', license: 'original, © Invitely'},
@@ -55,7 +57,35 @@ const africaEntry: CatalogEntry = catalogEntry.parse({
   ],
 });
 
+const diwanEntry: CatalogEntry = catalogEntry.parse({
+  slug: 'diwan',
+  name: {ar: 'ديوان', en: 'Diwan'},
+  tagline: {
+    ar: 'أمسية أنيقة بخطوط الأمل والذهب',
+    en: 'An elegant evening in green and gold',
+  },
+  tier: 'classic',
+  status: 'live',
+  featured: true,
+  assets: [
+    {path: '/assets/demo/diwan/star.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/diwan/lattice-tile.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/diwan/divider-star.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/diwan/arch-frame.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/diwan/event-ceremony.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/diwan/event-reception.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/diwan/corner-ornament.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/diwan/footer-ornament.svg', source: 'original', license: 'original, © Invitely'},
+  ],
+});
+
 export const templates: Record<string, TemplateDefinition> = {
+  diwan: {
+    entry: diwanEntry,
+    getData: getDiwanData,
+    fontClassName: diwanFontClassName,
+  },
+
   africa: {
     entry: africaEntry,
     getData: getAfricaData,

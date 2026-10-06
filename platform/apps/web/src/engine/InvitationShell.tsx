@@ -13,6 +13,7 @@ import {introKindFor} from './intro-kind';
 import VideoOpenIntro from './intros/VideoOpenIntro';
 import ScratchRevealIntro from './intros/ScratchRevealIntro';
 import ShuttersIntro from './intros/ShuttersIntro';
+import EnvelopeIntro from './intros/EnvelopeIntro';
 import './styles/shell.css';
 
 export default function InvitationShell({data, locale, templateSlug}: {data: InvitationData; locale: Locale; templateSlug?: string}) {
@@ -82,6 +83,9 @@ export default function InvitationShell({data, locale, templateSlug}: {data: Inv
               isOpen={opened} isFinished={introDone} onStart={startExperience} onFinished={finishIntro} />
           ) : introKind === 'shutters' ? (
             <ShuttersIntro tapLabel={copy.tapLabel} isOpen={opened} isFinished={introDone}
+              onStart={startExperience} onFinished={finishIntro} />
+          ) : introKind === 'envelope' ? (
+            <EnvelopeIntro tapLabel={copy.tapLabel} isOpen={opened} isFinished={introDone}
               onStart={startExperience} onFinished={finishIntro} />
           ) : !opened ? <button type="button" className="open-experience" onClick={startExperience}>{t('tapOpen')}</button> : null}
           {media.musicUrl && (

@@ -10,7 +10,7 @@ describe('intro kinds', () => {
     ['video-open', 'video'],
     ['scratch-reveal', 'scratch'],
     ['tap-to-open', 'shutters'],
-    ['envelope', 'video'],
+    ['envelope', 'envelope'],
     ['none', 'none']
   ] as const)('maps %s to %s', (introType, expected) => {
     expect(introKindFor(introType)).toBe(expected);

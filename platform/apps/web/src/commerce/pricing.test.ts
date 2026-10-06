@@ -7,6 +7,8 @@ vi.mock('next/font/google', () => ({
   Fraunces: () => ({variable: ''}),
   IBM_Plex_Sans_Arabic: () => ({variable: ''}),
   IBM_Plex_Sans: () => ({variable: ''}),
+  Cormorant_Garamond: () => ({variable: "--font-cormorant-garamond"}),
+  Inter: () => ({variable: "--font-inter"}),
 }));
 
 describe('quote', () => {

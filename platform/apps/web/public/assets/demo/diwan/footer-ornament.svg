@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 40" width="120" height="40">
+  <line x1="0" y1="20" x2="40" y2="20" stroke="#c19a51" stroke-width="1" />
+  <g transform="translate(50, 10)" fill="none" stroke="#c19a51" stroke-width="1.5">
+    <rect x="0" y="0" width="20" height="20" />
+    <rect x="0" y="0" width="20" height="20" transform="rotate(45 10 10)" />
+    <circle cx="10" cy="10" r="14" />
+  </g>
+  <line x1="80" y1="20" x2="120" y2="20" stroke="#c19a51" stroke-width="1" />
+</svg>

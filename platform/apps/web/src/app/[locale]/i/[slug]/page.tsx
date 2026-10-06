@@ -10,6 +10,7 @@ import {routing} from '@/i18n/routing';
 import {formatDate} from '@/lib/format';
 import {getTemplate} from '@/templates/registry';
 import '@/engine/styles/templates/mashrabiya.css';
+import '@/engine/styles/templates/diwan.css';
 import '@/styles/public.css';
 
 type Props = {params: Promise<{locale: string; slug: string}>};

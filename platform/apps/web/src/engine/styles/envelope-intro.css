@@ -1,0 +1,35 @@
+/* Generic envelope intro. Skin it per template with --env-* variables. */
+.invitation-shell .envelope-intro {
+  --env-open-ms: 1100ms;
+  position: fixed; inset-block: 0; inset-inline: 0; z-index: 50; display: grid; place-items: center;
+  inline-size: 100%; block-size: 100%; padding: 0; border: 0; overflow: hidden; cursor: pointer;
+  background: var(--env-bg, #fcf9f5); color: var(--env-ink, #07271e);
+  transition: opacity 400ms ease, visibility 400ms ease;
+}
+.invitation-shell .envelope-intro__envelope {
+  position: relative; inline-size: min(82vw, 26rem); aspect-ratio: 4 / 3; background: var(--env-body, #123629);
+  border: 1px solid var(--env-line, #c19a51); perspective: 900px;
+  transition: transform var(--env-open-ms) cubic-bezier(.7, 0, .3, 1) .5s, opacity .5s ease 1.2s;
+}
+.invitation-shell .envelope-intro__flap {
+  position: absolute; inset-inline: 0; inset-block-start: 0; block-size: 62%; background: var(--env-flap, #1a4a39);
+  clip-path: polygon(0 0, 100% 0, 50% 100%); transform-origin: top; transition: transform .7s ease, opacity .3s ease .45s;
+}
+.invitation-shell .envelope-intro__seal {
+  position: absolute; inset-inline: 0; margin-inline: auto; inset-block-start: 50%; inline-size: 3.6rem; aspect-ratio: 1;
+  display: grid; place-items: center; border-radius: 50%; background: var(--env-seal, #c19a51); color: var(--env-seal-ink, #07271e);
+  transform: translateY(-50%); transition: opacity .3s ease;
+}
+.invitation-shell .envelope-intro__seal svg { inline-size: 70%; }
+.invitation-shell .envelope-intro__label {
+  position: absolute; inset-inline: 0; inset-block-end: 12%; text-align: center; font-size: 1rem; letter-spacing: .02em; transition: opacity .3s ease;
+}
+.invitation-shell .envelope-intro.is-open .envelope-intro__flap { transform: rotateX(180deg); opacity: 0; }
+.invitation-shell .envelope-intro.is-open .envelope-intro__seal,
+.invitation-shell .envelope-intro.is-open .envelope-intro__label { opacity: 0; }
+.invitation-shell .envelope-intro.is-open .envelope-intro__envelope { transform: translateY(120%); opacity: 0; }
+.invitation-shell .envelope-intro.is-open { background: transparent; transition: background-color .8s ease .6s; }
+.invitation-shell .envelope-intro.is-finished { visibility: hidden; opacity: 0; pointer-events: none; }
+@media (prefers-reduced-motion: reduce) {
+  .invitation-shell .envelope-intro, .invitation-shell .envelope-intro * { transition-duration: .01ms !important; transition-delay: 0s !important; }
+}
