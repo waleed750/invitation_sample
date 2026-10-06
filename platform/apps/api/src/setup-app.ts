@@ -1,4 +1,6 @@
 import {RequestMethod, type INestApplication} from '@nestjs/common';
+import type {NestExpressApplication} from '@nestjs/platform-express';
+import type {Request, Response} from 'express';
 import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
 import {ZodValidationPipe} from 'nestjs-zod';
 import {version} from '../package.json';
@@ -19,6 +21,14 @@ export const GLOBAL_PREFIX_EXCLUDES = [
  */
 export function setupApp(app: INestApplication): void {
   const config = app.get(AppConfigService);
+  // Preserve the exact bytes used for webhook HMAC verification while still
+  // parsing JSON normally for every controller.
+  (app as NestExpressApplication).useBodyParser('json', {
+    limit: '100kb',
+    verify: (request: Request & {rawBody?: Buffer}, _response: Response, buffer: Buffer) => {
+      request.rawBody = Buffer.from(buffer);
+    }
+  });
   app.setGlobalPrefix('v1', {exclude: GLOBAL_PREFIX_EXCLUDES});
   app.useGlobalPipes(new ZodValidationPipe());
   if (config.swaggerEnabled) {

@@ -2,7 +2,7 @@ import type {INestApplication} from '@nestjs/common';
 import {Test} from '@nestjs/testing';
 import {ConfigService} from '@nestjs/config';
 import {SignJWT} from 'jose';
-import type {Server} from 'node:http';
+import type {NestExpressApplication} from '@nestjs/platform-express';
 import request from 'supertest';
 import {AppModule} from './app.module';
 import {setupApp} from './setup-app';
@@ -82,9 +82,8 @@ export async function bootApp(
     builder.overrideProvider(SupabaseService).useValue({forUser: () => mockSupabaseClient(supabaseResult)});
   }
   const moduleRef = await builder.compile();
-  const app = moduleRef.createNestApplication({logger: false});
+  const app = moduleRef.createNestApplication<NestExpressApplication>({logger: false});
   setupApp(app);
   await app.init();
-  const server = app.getHttpServer() as unknown as Server;
-  return {app, http: request(server)};
+  return {app, http: request(app.getHttpServer())};
 }

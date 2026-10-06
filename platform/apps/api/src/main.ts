@@ -21,7 +21,6 @@ async function bootstrap(): Promise<void> {
     exposedHeaders: ['x-request-id'],
     maxAge: 600
   });
-  app.useBodyParser('json', {limit: '100kb'});
   setupApp(app);
   app.enableShutdownHooks();
 

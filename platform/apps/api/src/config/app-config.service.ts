@@ -61,6 +61,14 @@ export class AppConfigService {
     return this.required('THROTTLE_LIMIT');
   }
 
+  get paymentsProvider(): AppEnv['PAYMENTS_PROVIDER'] {
+    return this.required('PAYMENTS_PROVIDER');
+  }
+
+  get paymentsMockSecret(): string {
+    return this.required('PAYMENTS_MOCK_SECRET');
+  }
+
   get swaggerEnabled(): boolean {
     return this.required('SWAGGER_ENABLED');
   }

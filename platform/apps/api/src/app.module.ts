@@ -11,6 +11,12 @@ import {HealthModule} from './health/health.module';
 import {MeModule} from './me/me.module';
 import {RateLimitModule} from './rate-limit/rate-limit.module';
 import {SupabaseModule} from './supabase/supabase.module';
+import {CheckoutModule} from './checkout/checkout.module';
+import {InvitationsModule} from './invitations/invitations.module';
+import {OrdersModule} from './orders/orders.module';
+import {PaymentsModule} from './payments/payments.module';
+import {PointsModule} from './points/points.module';
+import {TemplatesModule} from './templates/templates.module';
 
 export {AuthModule};
 export {AuthGuard, RolesGuard};
@@ -22,7 +28,10 @@ export {AuthGuard, RolesGuard};
  * 3. `RolesGuard` — `@Roles('admin')` routes check `profiles.role`.
  */
 @Module({
-  imports: [AppConfigModule, SupabaseModule, RateLimitModule, AuthModule, HealthModule, MeModule, EntitlementsModule],
+  imports: [
+    AppConfigModule, SupabaseModule, RateLimitModule, AuthModule, HealthModule, MeModule, EntitlementsModule,
+    PaymentsModule, TemplatesModule, CheckoutModule, OrdersModule, InvitationsModule, PointsModule
+  ],
   providers: [
     AppLogger,
     {provide: APP_GUARD, useClass: ThrottlerGuard},

@@ -1,0 +1,96 @@
+import {Injectable, NotFoundException, ServiceUnavailableException} from '@nestjs/common';
+import {fromDbTier} from '@platform/shared';
+import {createZodDto} from 'nestjs-zod';
+import {z} from 'zod';
+import {AppLogger} from '../common/app-logger';
+import type {RequestUser} from '../common/decorators';
+import {isRecord} from '../common/type-guards';
+import {SupabaseService} from '../supabase/supabase.service';
+
+const orderId = z.object({id: z.uuid('order id must be a UUID')});
+export class OrderIdParams extends createZodDto(orderId) {}
+
+export interface OrderResponse {
+  id: string;
+  templateId: string | null;
+  tier: string;
+  kind: string;
+  amountEgp: number;
+  status: string;
+  provider: string;
+  reference?: string;
+  discountEgp: number;
+  pointsRedeemed: number;
+  createdAt: string;
+  paidAt?: string;
+}
+
+function numberValue(value: unknown): number | null {
+  const parsed = typeof value === 'number' ? value : typeof value === 'string' ? Number(value) : NaN;
+  return Number.isFinite(parsed) ? parsed : null;
+}
+
+function toResponse(value: unknown): OrderResponse {
+  if (!isRecord(value)) throw new ServiceUnavailableException('Orders service unavailable');
+  const amount = numberValue(value.amount_egp);
+  const discount = numberValue(value.discount_total);
+  if (
+    typeof value.id !== 'string' || !(typeof value.template_id === 'string' || value.template_id === null) ||
+    typeof value.tier !== 'string' || typeof value.kind !== 'string' || amount === null ||
+    typeof value.status !== 'string' || typeof value.provider !== 'string' || discount === null ||
+    typeof value.points_redeemed !== 'number' || typeof value.created_at !== 'string' ||
+    !(typeof value.provider_ref === 'string' || value.provider_ref === null) ||
+    !(typeof value.paid_at === 'string' || value.paid_at === null)
+  ) throw new ServiceUnavailableException('Orders service unavailable');
+  return {
+    id: value.id,
+    templateId: value.template_id,
+    tier: fromDbTier(value.tier),
+    kind: value.kind,
+    amountEgp: amount,
+    status: value.status,
+    provider: value.provider,
+    ...(value.provider_ref === null ? {} : {reference: value.provider_ref}),
+    discountEgp: discount,
+    pointsRedeemed: value.points_redeemed,
+    createdAt: value.created_at,
+    ...(value.paid_at === null ? {} : {paidAt: value.paid_at})
+  };
+}
+
+const COLUMNS = 'id,template_id,tier,kind,amount_egp,status,provider,provider_ref,discount_total,points_redeemed,created_at,paid_at';
+
+@Injectable()
+export class OrdersService {
+  constructor(private readonly supabase: SupabaseService, private readonly logger: AppLogger) {}
+
+  async list(user: RequestUser): Promise<OrderResponse[]> {
+    try {
+      const result: unknown = await this.supabase.forUser(user.jwt).from('orders').select(COLUMNS)
+        .eq('user_id', user.id).order('created_at', {ascending: false});
+      if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) throw new ServiceUnavailableException('Orders service unavailable');
+      return result.data.map(toResponse);
+    } catch (error) {
+      if (error instanceof ServiceUnavailableException) throw error;
+      this.logger.error('orders lookup failed');
+      throw new ServiceUnavailableException('Orders service unavailable');
+    }
+  }
+
+  async get(user: RequestUser, id: string): Promise<OrderResponse> {
+    try {
+      const result: unknown = await this.supabase.forUser(user.jwt).from('orders').select(COLUMNS)
+        .eq('id', id).eq('user_id', user.id).single();
+      if (!isRecord(result)) throw new ServiceUnavailableException('Orders service unavailable');
+      if (result.error !== null) {
+        if (isRecord(result.error) && result.error.code === 'PGRST116') throw new NotFoundException('Order not found');
+        throw new ServiceUnavailableException('Orders service unavailable');
+      }
+      return toResponse(result.data);
+    } catch (error) {
+      if (error instanceof NotFoundException || error instanceof ServiceUnavailableException) throw error;
+      this.logger.error('order lookup failed');
+      throw new ServiceUnavailableException('Orders service unavailable');
+    }
+  }
+}

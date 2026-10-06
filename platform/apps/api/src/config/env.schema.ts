@@ -35,7 +35,13 @@ const envSchema = z.object({
     .transform((value) => (value === undefined || value.trim() === '' ? undefined : value)),
   THROTTLE_TTL_MS: z.coerce.number().int().positive().default(60000),
   THROTTLE_LIMIT: z.coerce.number().int().positive().default(100),
+  PAYMENTS_PROVIDER: z.literal('mock').default('mock'),
+  PAYMENTS_MOCK_SECRET: z.string().min(32, 'PAYMENTS_MOCK_SECRET must be at least 32 characters'),
   SWAGGER_ENABLED: z.enum(['true', 'false']).default('false').transform((value) => value === 'true')
+}).superRefine((env, context) => {
+  if (env.NODE_ENV === 'production') {
+    context.addIssue({code: 'custom', path: ['PAYMENTS_PROVIDER'], message: 'mock payments are disabled in production'});
+  }
 });
 
 export type AppEnv = z.output<typeof envSchema>;

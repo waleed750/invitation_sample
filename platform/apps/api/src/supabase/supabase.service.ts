@@ -45,6 +45,16 @@ export class SupabaseService {
     });
   }
 
+  /** Anonymous/RLS client for public catalog reads. Never bypasses RLS. */
+  public() {
+    const timeoutMs = this.config.supabaseTimeoutMs;
+    return createClient(this.config.supabaseUrl, this.config.supabaseAnonKey, {
+      global: {fetch: fetchWithTimeout(timeoutMs)},
+      db: {retry: false},
+      auth: {persistSession: false, autoRefreshToken: false, detectSessionInUrl: false}
+    });
+  }
+
   admin() {
     const timeoutMs = this.config.supabaseTimeoutMs;
     return createClient(this.config.supabaseUrl, this.config.supabaseServiceRoleKey, {

@@ -14,6 +14,8 @@ export const BASE_ENV: Record<string, string> = {
   SUPABASE_TIMEOUT_MS: '5000',
   THROTTLE_TTL_MS: '60000',
   THROTTLE_LIMIT: '100',
+  PAYMENTS_PROVIDER: 'mock',
+  PAYMENTS_MOCK_SECRET: 'test-mock-secret-at-least-32-characters',
   SWAGGER_ENABLED: 'false'
 };
 

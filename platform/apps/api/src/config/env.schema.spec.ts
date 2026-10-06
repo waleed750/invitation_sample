@@ -14,6 +14,8 @@ function validEnv(): Record<string, unknown> {
     SUPABASE_JWT_SECRET: TEST_JWT_SECRET,
     THROTTLE_TTL_MS: '60000',
     THROTTLE_LIMIT: '100',
+    PAYMENTS_PROVIDER: 'mock',
+    PAYMENTS_MOCK_SECRET: 'test-mock-secret-at-least-32-characters',
     SWAGGER_ENABLED: 'false'
   };
 }
@@ -66,5 +68,13 @@ describe('validateEnv', () => {
 
   it('rejects SWAGGER_ENABLED values other than true/false', () => {
     expect(() => validateEnv({...validEnv(), SWAGGER_ENABLED: 'yes'})).toThrow(/SWAGGER_ENABLED/);
+  });
+
+  it('rejects the mock payment provider in production', () => {
+    expect(() => validateEnv({...validEnv(), NODE_ENV: 'production'})).toThrow(/mock payments are disabled in production/);
+  });
+
+  it('requires a strong mock webhook secret', () => {
+    expect(() => validateEnv({...validEnv(), PAYMENTS_MOCK_SECRET: 'short'})).toThrow(/PAYMENTS_MOCK_SECRET/);
   });
 });
