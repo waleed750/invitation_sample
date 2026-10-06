@@ -39,7 +39,7 @@ export function PricingCards() {
                     <li key={feature}>{tPricing(`${msgKey(key)}.features.${feature}`)}</li>
                   ))}
                 </ul>
-                <Link href={`/checkout/${featuredSlug}?tier=${key}`} className={isClassic ? 'button' : 'button-outline'} style={{ display: 'flex', marginTop: '1rem', justifyContent: 'center' }}>
+                <Link href={`/checkout/${featuredSlug}?tier=${key}`} className={isClassic ? 'button button-choose' : 'button-outline button-choose'}>
                   {tPricing('choose', { tier: tPricing(`${msgKey(key)}.name`) })}
                 </Link>
               </article>
@@ -65,7 +65,14 @@ export function PricingCards() {
                     const val = row.values[tier];
                     let display = row.render(val);
                     if (typeof display === 'boolean') {
-                      display = display ? '✓' : '—';
+                      return (
+                        <td key={tier}>
+                          <span aria-hidden="true">{display ? '✓' : '—'}</span>
+                          <span className="visually-hidden">
+                            {display ? tPricing('compare.yes') : tPricing('compare.no')}
+                          </span>
+                        </td>
+                      );
                     } else if (display === 'unlimited') {
                       display = tPricing('compare.unlimited');
                     }

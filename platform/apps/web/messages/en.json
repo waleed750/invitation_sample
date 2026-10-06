@@ -86,7 +86,9 @@
         "musicUpload": "Music upload",
         "guestMessages": "Guest messages",
         "prioritySupport": "Priority support",
-        "unlimited": "Unlimited"
+        "unlimited": "Unlimited",
+        "yes": "Included",
+        "no": "Not included"
       }
     },
     "faq": {

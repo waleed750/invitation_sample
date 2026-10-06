@@ -22,16 +22,16 @@ export default async function Landing({ params }: { params: Promise<{ locale: st
     <>
       <a className="skip-link" href="#main">{t('skip')}</a>
       <header className="site-header container">
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+        <div className="header-top">
           <Link className="brand" href="/">{t('brand')}</Link>
-          <nav className="main-nav" aria-label="Primary">
-            <Link href="/templates">{t('nav.templates')}</Link>
-            <a href="#pricing">{t('nav.pricing')}</a>
-            <a href="#faq">{t('nav.faq')}</a>
-            <Link href="/app" style={{ color: 'var(--muted)' }}>{t('nav.dashboard')}</Link>
-          </nav>
+          <LanguageSwitcher />
         </div>
-        <LanguageSwitcher />
+        <nav className="main-nav" aria-label="Primary">
+          <Link href="/templates">{t('nav.templates')}</Link>
+          <a href="#pricing">{t('nav.pricing')}</a>
+          <a href="#faq">{t('nav.faq')}</a>
+          <Link href="/app" style={{ color: 'var(--muted)' }}>{t('nav.dashboard')}</Link>
+        </nav>
       </header>
       <main id="main">
         <section className="hero container" aria-labelledby="hero-title">

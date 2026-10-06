@@ -44,16 +44,16 @@ export default async function TemplatesPage({ params }: Props) {
   return (
     <>
       <header className="site-header container">
-        <div style={{ display: 'flex', gap: '2rem', alignItems: 'center' }}>
+        <div className="header-top">
           <Link className="brand" href="/">{tLanding('brand')}</Link>
-          <nav className="main-nav" aria-label="Primary">
-            <Link href="/templates" style={{ fontWeight: 600 }}>{tLanding('nav.templates')}</Link>
-            <Link href="/#pricing">{tLanding('nav.pricing')}</Link>
-            <Link href="/#faq">{tLanding('nav.faq')}</Link>
-            <Link href="/app" style={{ color: 'var(--muted)' }}>{tLanding('nav.dashboard')}</Link>
-          </nav>
+          <LanguageSwitcher />
         </div>
-        <LanguageSwitcher />
+        <nav className="main-nav" aria-label="Primary">
+          <Link href="/templates" style={{ fontWeight: 600 }}>{tLanding('nav.templates')}</Link>
+          <Link href="/#pricing">{tLanding('nav.pricing')}</Link>
+          <Link href="/#faq">{tLanding('nav.faq')}</Link>
+          <Link href="/app" style={{ color: 'var(--muted)' }}>{tLanding('nav.dashboard')}</Link>
+        </nav>
       </header>
       
       <main id="main">

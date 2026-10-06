@@ -86,7 +86,9 @@
         "musicUpload": "رفع موسيقى",
         "guestMessages": "رسائل الضيوف",
         "prioritySupport": "دعم ذو أولوية",
-        "unlimited": "غير محدود"
+        "unlimited": "غير محدود",
+        "yes": "متاح",
+        "no": "غير متاح"
       }
     },
     "faq": {
