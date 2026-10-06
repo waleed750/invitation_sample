@@ -1,0 +1,53 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64" fill="none">
+  <!-- Background transparent -->
+  <defs>
+    <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" stop-color="#E3A740" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#E3A740" stop-opacity="0.3" />
+    </radialGradient>
+  </defs>
+
+  <!-- Mashrabiya grid spindles (turned wood balusters) -->
+  <g stroke="#E3A740" stroke-opacity="0.35" stroke-width="1.5" stroke-linecap="round">
+    <!-- Orthogonal grid -->
+    <line x1="0" y1="32" x2="64" y2="32" />
+    <line x1="32" y1="0" x2="32" y2="64" />
+
+    <!-- Diamond lattice -->
+    <path d="M32 0 L64 32 L32 64 L0 32 Z" />
+
+    <!-- Corner diagonals meeting outer diamonds -->
+    <line x1="0" y1="0" x2="16" y2="16" />
+    <line x1="64" y1="0" x2="48" y2="16" />
+    <line x1="64" y1="64" x2="48" y2="48" />
+    <line x1="0" y1="64" x2="16" y2="48" />
+
+    <!-- Inner 8-star accents -->
+    <line x1="24" y1="24" x2="40" y2="40" />
+    <line x1="24" y1="40" x2="40" y2="24" />
+  </g>
+
+  <!-- Secondary delicate interlacing -->
+  <g stroke="#C46A55" stroke-opacity="0.25" stroke-width="1">
+    <circle cx="32" cy="32" r="8" fill="none" />
+    <path d="M16 16 L32 24 L48 16" fill="none" />
+    <path d="M16 48 L32 40 L48 48" fill="none" />
+  </g>
+
+  <!-- Turned wood joints / spherical nodes -->
+  <g fill="#E3A740" fill-opacity="0.6">
+    <circle cx="32" cy="32" r="2.5" />
+    <circle cx="32" cy="0" r="2" />
+    <circle cx="32" cy="64" r="2" />
+    <circle cx="0" cy="32" r="2" />
+    <circle cx="64" cy="32" r="2" />
+    <circle cx="0" cy="0" r="1.5" />
+    <circle cx="64" cy="0" r="1.5" />
+    <circle cx="0" cy="64" r="1.5" />
+    <circle cx="64" cy="64" r="1.5" />
+    <circle cx="16" cy="16" r="1.5" />
+    <circle cx="48" cy="16" r="1.5" />
+    <circle cx="16" cy="48" r="1.5" />
+    <circle cx="48" cy="48" r="1.5" />
+  </g>
+</svg>

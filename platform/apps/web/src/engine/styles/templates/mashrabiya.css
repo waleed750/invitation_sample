@@ -1,0 +1,873 @@
+/* ==========================================================================
+   Mashrabiya Template Styles
+   Palette:
+     Night: #14183A | Lapis: #27306B | Saffron: #E3A740
+     Clay-Rose: #C46A55 | Paper: #F5EEE1 | Ink: #1C1B2E | Mist: #B9BEDA
+   ========================================================================== */
+
+.invitation-shell[data-layout="mashrabiya"] {
+  --color-night: #14183A;
+  --color-lapis: #27306B;
+  --color-saffron: #E3A740;
+  --color-clay-rose: #C46A55;
+  --color-paper: #F5EEE1;
+  --color-ink: #1C1B2E;
+  --color-mist: #B9BEDA;
+  --font-display: var(--font-aref-ruqaa), var(--font-fraunces), serif;
+  --font-body: var(--font-ibm-plex-sans-arabic), var(--font-ibm-plex-sans), sans-serif;
+  color: var(--color-paper);
+  background-color: var(--color-night);
+  font-family: var(--font-body);
+}
+
+.invitation-shell[data-layout="mashrabiya"][dir="rtl"] {
+  --font-display: var(--font-aref-ruqaa), serif;
+  --font-body: var(--font-ibm-plex-sans-arabic), sans-serif;
+}
+
+.invitation-shell[data-layout="mashrabiya"][dir="ltr"] {
+  --font-display: var(--font-fraunces), serif;
+  --font-body: var(--font-ibm-plex-sans), sans-serif;
+}
+
+/* Headings and Typography */
+.invitation-shell[data-layout="mashrabiya"] :is(h1, h2, h3, #hero-title, .section-kicker) {
+  font-family: var(--font-display);
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.invitation-shell[data-layout="mashrabiya"][dir="rtl"] :is(h1, h2, h3, #hero-title, .hero-name-line, .section-kicker) {
+  line-height: 1.75;
+}
+
+.invitation-shell[data-layout="mashrabiya"][dir="ltr"] :is(h1, h2, h3, #hero-title, .hero-name-line, .section-kicker) {
+  line-height: 1.3;
+}
+
+.invitation-shell[data-layout="mashrabiya"] p {
+  font-family: var(--font-body);
+  line-height: 1.75;
+}
+
+/* Ampersand styling */
+.invitation-shell[data-layout="mashrabiya"] .hero-amp {
+  font-family: var(--font-fraunces), serif;
+  font-style: italic;
+  font-weight: 400;
+  color: var(--color-saffron);
+  padding-inline: 0.35em;
+}
+
+/* --------------------------------------------------------------------------
+   Shutters Intro Skin
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .shutters-intro {
+  --shutter-color: #14183A;
+  --shutter-label-color: #E3A740;
+  --shutter-moon-size: min(44vw, 12rem);
+  --shutter-moon-background: transparent;
+  background-color: var(--color-night);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .shutters-intro__panel {
+  background-color: #191f4a;
+  background-image: url("/assets/demo/mashrabiya/lattice.svg");
+  background-repeat: repeat;
+  background-size: 64px 64px;
+  box-shadow: inset 0 0 50px rgba(10, 12, 30, 0.9);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .shutters-intro__panel--start {
+  border-inline-end: 2px solid var(--color-saffron);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .shutters-intro__panel--end {
+  border-inline-start: 2px solid var(--color-saffron);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .shutters-intro__moon {
+  background-image: url("/assets/demo/mashrabiya/crescent.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  filter: drop-shadow(0 0 30px rgba(227, 167, 64, 0.75));
+  border-radius: 50%;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .shutters-intro__label {
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  letter-spacing: normal;
+  color: var(--color-saffron);
+  background-color: rgba(20, 24, 58, 0.92);
+  border: 1px solid rgba(227, 167, 64, 0.5);
+  border-radius: 9999px;
+  padding-block: 0.75rem;
+  padding-inline: 1.5rem;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+  min-block-size: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* --------------------------------------------------------------------------
+   Music Button
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .music-button {
+  min-inline-size: 48px;
+  min-block-size: 48px;
+  background: var(--color-lapis);
+  color: var(--color-saffron);
+  border: 1px solid rgba(227, 167, 64, 0.4);
+  box-shadow: 0 4px 18px rgba(0, 0, 0, 0.45);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .music-button:hover {
+  background: var(--color-saffron);
+  color: var(--color-night);
+}
+
+/* --------------------------------------------------------------------------
+   Shared Section Layout
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] section {
+  padding-block: 4.5rem;
+  padding-inline: 1.25rem;
+  position: relative;
+  overflow: hidden;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .section-inner {
+  inline-size: 100%;
+  max-inline-size: 48rem;
+  margin-inline: auto;
+  text-align: center;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .section-inner.narrow {
+  max-inline-size: 38rem;
+}
+
+/* --------------------------------------------------------------------------
+   1. Hero Section (Night Band)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .hero-section {
+  display: grid;
+  place-items: center;
+  min-block-size: 100svh;
+  padding-block: 6rem 4rem;
+  background-color: var(--color-night);
+  background-image: radial-gradient(circle at 50% 35%, rgba(39, 48, 107, 0.6) 0%, rgba(20, 24, 58, 0) 70%);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .hero-scrim {
+  display: none;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .hero-copy {
+  inline-size: 100%;
+  max-inline-size: 42rem;
+  margin-inline: auto;
+  text-align: center;
+  padding-inline: 1rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .hero-copy .eyebrow {
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 2.5vw, 1.15rem);
+  color: var(--color-saffron);
+  margin-block-end: 1.5rem;
+  margin-inline: 0;
+  letter-spacing: 0.04em;
+}
+
+.invitation-shell[data-layout="mashrabiya"] h1#hero-title {
+  font-size: clamp(2.75rem, 8vw, 4.5rem);
+  font-weight: 700;
+  color: var(--color-paper);
+  margin-block: 0 1.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .hero-name-line {
+  display: inline-block;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .hero-copy .date-line {
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 2.8vw, 1.25rem);
+  color: var(--color-mist);
+  margin-block: 0 1.5rem;
+  margin-inline: 0;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .hero-scroll-cue {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.4rem;
+  color: var(--color-saffron);
+  font-size: 0.85rem;
+  margin-block-start: 2rem;
+}
+
+/* --------------------------------------------------------------------------
+   2. Image Divider (8-point Khatam Rule)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .image-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding-block: 1.75rem;
+  padding-inline: 1rem;
+  background: transparent;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .image-divider img {
+  inline-size: 100%;
+  max-inline-size: 320px;
+  block-size: auto;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .image-divider--line span {
+  display: none;
+}
+
+/* --------------------------------------------------------------------------
+   3. Welcome Section (Paper-Cream Band)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .welcome-section {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .welcome-section .section-kicker {
+  color: var(--color-clay-rose);
+  font-size: 1rem;
+  font-weight: 600;
+  margin-block-end: 0.75rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] h2#welcome-title {
+  color: var(--color-night);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  margin-block: 0 1.25rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .welcome-section p {
+  color: var(--color-ink);
+  font-size: 1.05rem;
+  line-height: 1.85;
+  margin-block: 0;
+}
+
+/* --------------------------------------------------------------------------
+   4. Countdown Section (Night-Indigo Band)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .countdown-section {
+  background-color: var(--color-night);
+  color: var(--color-paper);
+  padding-block: 5rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .countdown-panel {
+  background-color: var(--color-lapis);
+  background-image: url("/assets/demo/mashrabiya/lattice.svg");
+  background-repeat: repeat;
+  background-size: 64px 64px;
+  border: 1px solid rgba(227, 167, 64, 0.35);
+  border-radius: 1.25rem;
+  padding-block: 2.5rem;
+  padding-inline: 1.25rem;
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.4);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .countdown-kicker {
+  color: var(--color-saffron);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  font-weight: 600;
+  margin-block-end: 0.5rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] h2#countdown-title {
+  color: var(--color-paper);
+  font-size: clamp(1.85rem, 4.5vw, 2.35rem);
+  margin-block: 0 0.5rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .countdown-until {
+  color: var(--color-mist);
+  font-size: 0.95rem;
+  margin-block: 0 2rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .countdown-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.65rem;
+  inline-size: 100%;
+  max-inline-size: 21rem;
+  margin-inline: auto;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .time-box {
+  background: rgba(20, 24, 58, 0.9);
+  border: 1px solid rgba(227, 167, 64, 0.45);
+  border-radius: 0.85rem;
+  padding-block: 1rem;
+  padding-inline: 0.4rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .time-box strong {
+  font-family: var(--font-display);
+  font-size: clamp(1.85rem, 5vw, 2.5rem);
+  font-weight: 700;
+  color: var(--color-saffron);
+  line-height: 1.2;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .time-box span {
+  font-family: var(--font-body);
+  font-size: 0.85rem;
+  color: var(--color-mist);
+  margin-block-start: 0.35rem;
+}
+
+/* --------------------------------------------------------------------------
+   5. Story Section (Paper-Cream Band)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .story-section {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.invitation-shell[data-layout="mashrabiya"] h2#story-title {
+  color: var(--color-night);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  margin-block: 0 2rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .story-chapters {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .story-chapter {
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(196, 106, 85, 0.3);
+  border-radius: 1rem;
+  padding-block: 1.75rem;
+  padding-inline: 1.5rem;
+  text-align: start;
+  box-shadow: 0 4px 16px rgba(28, 27, 46, 0.05);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .story-chapter__quote {
+  color: var(--color-clay-rose);
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-block: 0 0.75rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .story-chapter__prose {
+  color: var(--color-ink);
+  font-size: 1.05rem;
+  line-height: 1.85;
+  margin-block: 0;
+}
+
+/* --------------------------------------------------------------------------
+   6. Schedule Section (Night-Indigo Band)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .schedule-section {
+  background-color: var(--color-night);
+  color: var(--color-paper);
+}
+
+.invitation-shell[data-layout="mashrabiya"] h2#schedule-title {
+  color: var(--color-paper);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  margin-block: 0 0.5rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .schedule-section .section-kicker {
+  color: var(--color-saffron);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  margin-block: 0 2.5rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .schedule-timeline {
+  list-style: none;
+  padding-inline: 0;
+  margin-inline: auto;
+  max-inline-size: 27rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  text-align: start;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .schedule-stop {
+  display: flex;
+  align-items: baseline;
+  gap: 1.25rem;
+  background: var(--color-lapis);
+  border: 1px solid rgba(227, 167, 64, 0.35);
+  border-radius: 0.85rem;
+  padding-block: 1.15rem;
+  padding-inline: 1.35rem;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .schedule-stop strong {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  color: var(--color-saffron);
+  white-space: nowrap;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .schedule-stop span {
+  font-family: var(--font-body);
+  font-size: 1.05rem;
+  color: var(--color-paper);
+}
+
+/* --------------------------------------------------------------------------
+   7. Details Section (Paper-Cream Band)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .details-section {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.invitation-shell[data-layout="mashrabiya"] h2#details-title {
+  color: var(--color-night);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  margin-block: 0 0.5rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .details-section .section-kicker {
+  color: var(--color-clay-rose);
+  font-size: 0.95rem;
+  margin-block: 0 2rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .badge-frame {
+  background: #FFFFFF;
+  border: 1px solid rgba(196, 106, 85, 0.3);
+  border-radius: 1.25rem;
+  padding-block: 2.25rem;
+  padding-inline: 1.5rem;
+  max-inline-size: 32rem;
+  margin-inline: auto;
+  box-shadow: 0 6px 24px rgba(28, 27, 46, 0.08);
+  margin-block-end: 2rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .badge-frame h3 {
+  color: var(--color-clay-rose);
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-block: 0 0.5rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .venue-name {
+  font-size: 1.35rem;
+  font-weight: 600;
+  color: var(--color-night);
+  margin-block: 0 1.25rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .time-line {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  color: var(--color-ink);
+  font-size: 1rem;
+  margin-block: 0.35rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .details-address {
+  margin-block-start: 1rem;
+  font-size: 0.95rem;
+  color: color-mix(in srgb, var(--color-ink) 75%, transparent);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .details-address p {
+  margin-block: 0.25rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .map-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-block-size: 44px;
+  padding-block: 0.75rem;
+  padding-inline: 1.75rem;
+  background: var(--color-night);
+  color: var(--color-saffron);
+  border-radius: 9999px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+  box-shadow: 0 4px 14px rgba(20, 24, 58, 0.3);
+  transition: transform 200ms ease, background-color 200ms ease;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .map-link:hover {
+  background: var(--color-lapis);
+  transform: translateY(-2px);
+}
+
+/* --------------------------------------------------------------------------
+   8. Dress Code Section (Night-Indigo Band)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .dresscode-section {
+  background-color: var(--color-night);
+  color: var(--color-paper);
+}
+
+.invitation-shell[data-layout="mashrabiya"] h2#dresscode-title {
+  color: var(--color-paper);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  margin-block: 0 1.25rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .dresscode-section p {
+  font-size: 1.1rem;
+  line-height: 1.85;
+  color: var(--color-mist);
+  max-inline-size: 32rem;
+  margin-inline: auto;
+  margin-block: 0;
+}
+
+/* --------------------------------------------------------------------------
+   9. FAQ Section (Paper-Cream Band)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .faq-section {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.invitation-shell[data-layout="mashrabiya"] h2#faq-title {
+  color: var(--color-night);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  margin-block: 0 2rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  max-inline-size: 34rem;
+  margin-inline: auto;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .faq-item {
+  background: #FFFFFF;
+  border: 1px solid rgba(196, 106, 85, 0.25);
+  border-radius: 0.85rem;
+  overflow: hidden;
+  box-shadow: 0 4px 14px rgba(28, 27, 46, 0.05);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .faq-question {
+  min-block-size: 48px;
+  inline-size: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-block: 1rem;
+  padding-inline: 1.25rem;
+  background: transparent;
+  border: 0;
+  color: var(--color-night);
+  font-size: 1.05rem;
+  font-weight: 600;
+  text-align: start;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .faq-answer {
+  padding-block: 0 1.25rem;
+  padding-inline: 1.25rem;
+  text-align: start;
+  color: var(--color-ink);
+  font-size: 0.98rem;
+  line-height: 1.75;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .faq-answer p {
+  margin-block: 0;
+}
+
+/* --------------------------------------------------------------------------
+   10. RSVP Section (Night-Indigo Band)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-section {
+  background-color: var(--color-night);
+  color: var(--color-paper);
+}
+
+.invitation-shell[data-layout="mashrabiya"] h2#rsvp-title {
+  color: var(--color-paper);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  margin-block: 0 0.5rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-section .section-kicker {
+  color: var(--color-saffron);
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  margin-block: 0 2.25rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form {
+  background: var(--color-lapis);
+  border: 1px solid rgba(227, 167, 64, 0.35);
+  border-radius: 1.25rem;
+  padding-block: 2.5rem;
+  padding-inline: 1.5rem;
+  max-inline-size: 32rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  text-align: start;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form fieldset {
+  border: 0;
+  padding-block: 0;
+  padding-inline: 0;
+  margin-block: 0;
+  margin-inline: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form legend {
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-saffron);
+  margin-block-end: 0.5rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-radio {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  min-block-size: 44px;
+  font-size: 1rem;
+  cursor: pointer;
+  color: var(--color-paper);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--color-mist);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form input[type="text"],
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form input[type="email"] {
+  min-block-size: 48px;
+  padding-inline: 1rem;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(227, 167, 64, 0.3);
+  background: rgba(20, 24, 58, 0.85);
+  color: var(--color-paper);
+  font-size: 1rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .guest-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .guest-stepper button {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  display: grid;
+  place-items: center;
+  background: rgba(20, 24, 58, 0.9);
+  border: 1px solid rgba(227, 167, 64, 0.5);
+  border-radius: 0.5rem;
+  color: var(--color-saffron);
+  font-size: 1.35rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .guest-stepper input {
+  inline-size: 60px;
+  min-block-size: 44px;
+  text-align: center;
+  border-radius: 0.5rem;
+  border: 1px solid rgba(227, 167, 64, 0.3);
+  background: rgba(20, 24, 58, 0.85);
+  color: var(--color-saffron);
+  font-size: 1.15rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form button[type="submit"] {
+  min-block-size: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  background: var(--color-saffron);
+  color: var(--color-night);
+  font-weight: 700;
+  font-size: 1.05rem;
+  border: 0;
+  border-radius: 9999px;
+  margin-block-start: 0.75rem;
+  cursor: pointer;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .form-status {
+  color: var(--color-saffron);
+  text-align: center;
+  font-size: 0.95rem;
+  margin-block: 0.5rem 0;
+}
+
+/* --------------------------------------------------------------------------
+   11. Message Form Section (Paper-Cream Band)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .message-section {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+}
+
+.invitation-shell[data-layout="mashrabiya"] h2#message-title {
+  color: var(--color-night);
+  font-size: clamp(2rem, 5vw, 2.75rem);
+  margin-block: 0 0.5rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .message-section .section-kicker {
+  color: var(--color-clay-rose);
+  font-size: 0.95rem;
+  margin-block: 0 2.25rem;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .message-form {
+  background: #FFFFFF;
+  border: 1px solid rgba(196, 106, 85, 0.3);
+  border-radius: 1.25rem;
+  padding-block: 2.5rem;
+  padding-inline: 1.5rem;
+  max-inline-size: 32rem;
+  margin-inline: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.35rem;
+  text-align: start;
+  box-shadow: 0 6px 24px rgba(28, 27, 46, 0.08);
+}
+
+.invitation-shell[data-layout="mashrabiya"] .message-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  font-size: 0.95rem;
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .message-form input,
+.invitation-shell[data-layout="mashrabiya"] .message-form textarea {
+  padding-block: 0.75rem;
+  padding-inline: 1rem;
+  border-radius: 0.65rem;
+  border: 1px solid rgba(28, 27, 46, 0.2);
+  font-size: 1rem;
+  color: var(--color-ink);
+  background: #FAF7F2;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .message-form input {
+  min-block-size: 48px;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .message-form button[type="submit"] {
+  min-block-size: 48px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.65rem;
+  background: var(--color-night);
+  color: var(--color-saffron);
+  font-weight: 700;
+  font-size: 1.05rem;
+  border: 0;
+  border-radius: 9999px;
+  margin-block-start: 0.75rem;
+  cursor: pointer;
+}
+
+/* --------------------------------------------------------------------------
+   12. Footer Section (Night-Indigo Band)
+   -------------------------------------------------------------------------- */
+
+.invitation-shell[data-layout="mashrabiya"] .footer-section {
+  background-color: var(--color-night);
+  padding-block: 3.5rem;
+  padding-inline: 1.5rem;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.invitation-shell[data-layout="mashrabiya"] .footer-section img {
+  max-inline-size: 160px;
+  block-size: auto;
+}
+
+/* --------------------------------------------------------------------------
+   Accessibility & Responsive
+   -------------------------------------------------------------------------- */
+
+@media (prefers-reduced-motion: reduce) {
+  .invitation-shell[data-layout="mashrabiya"] * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
