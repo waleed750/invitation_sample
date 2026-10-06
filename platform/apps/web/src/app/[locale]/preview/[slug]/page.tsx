@@ -8,6 +8,9 @@ import {getTemplateAny} from '@/templates/registry';
 import InvitationShell from '@/engine/InvitationShell';
 import '@/engine/styles/templates/mashrabiya.css';
 import '@/engine/styles/templates/africa.css';
+import '@/engine/styles/templates/citystars.css';
+import '@/engine/styles/templates/excellence.css';
+import '@/engine/styles/templates/elegante.css';
 
 type Props = {params: Promise<{locale: string; slug: string}>};
 

@@ -7,7 +7,13 @@ import {
 import {getAfricaData} from './africa/data';
 import {fontClassName as africaFontClassName} from './africa/fonts';
 import {getMashrabiyaData} from './mashrabiya/data';
-import {fontClassName} from './mashrabiya/fonts';
+import {fontClassName as mashrabiyaFontClassName} from './mashrabiya/fonts';
+import {getCitystarsData} from './citystars/data';
+import {fontClassName as citystarsFontClassName} from './citystars/fonts';
+import {getExcellenceData} from './excellence/data';
+import {fontClassName as excellenceFontClassName} from './excellence/fonts';
+import {getEleganteData} from './elegante/data';
+import {fontClassName as eleganteFontClassName} from './elegante/fonts';
 
 export interface TemplateDefinition {
   entry: CatalogEntry;
@@ -59,7 +65,64 @@ export const templates: Record<string, TemplateDefinition> = {
   mashrabiya: {
     entry: mashrabiyaEntry,
     getData: getMashrabiyaData,
-    fontClassName,
+    fontClassName: mashrabiyaFontClassName,
+  },
+
+  citystars: {
+    entry: catalogEntry.parse({
+      slug: 'citystars',
+      name: {ar: 'نجوم المدينة', en: 'Citystars Wedding'},
+      tagline: {
+        ar: 'زفاف كلاسيكي مع عد تنازلي',
+        en: 'Classic wedding with countdown',
+      },
+      tier: 'classic',
+      status: 'draft',
+      featured: false,
+      assets: [
+        {path: '/assets/drafts/citystars/intro-poster.jpg', source: 'legacy-scrape', license: ''},
+      ],
+    }),
+    getData: getCitystarsData,
+    fontClassName: citystarsFontClassName,
+  },
+
+  excellence: {
+    entry: catalogEntry.parse({
+      slug: 'excellence',
+      name: {ar: 'الامتياز', en: 'Excellence Wedding'},
+      tagline: {
+        ar: 'زفاف فاخر مع خطة لليومين',
+        en: 'Luxury wedding with weekend itinerary',
+      },
+      tier: 'classic',
+      status: 'draft',
+      featured: false,
+      assets: [
+        {path: '/assets/drafts/excellence/intro-poster.jpg', source: 'legacy-scrape', license: ''},
+      ],
+    }),
+    getData: getExcellenceData,
+    fontClassName: excellenceFontClassName,
+  },
+
+  elegante: {
+    entry: catalogEntry.parse({
+      slug: 'elegante',
+      name: {ar: 'الأناقة', en: 'Elegante Wedding'},
+      tagline: {
+        ar: 'زفاف ريفي مع معرض صور',
+        en: 'Rustic wedding with photo gallery',
+      },
+      tier: 'classic',
+      status: 'draft',
+      featured: false,
+      assets: [
+        {path: '/assets/drafts/elegante/intro-poster.jpg', source: 'legacy-scrape', license: ''},
+      ],
+    }),
+    getData: getEleganteData,
+    fontClassName: eleganteFontClassName,
   },
 };
 
