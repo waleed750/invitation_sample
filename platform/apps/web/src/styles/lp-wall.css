@@ -1,0 +1,67 @@
+/* Beat 3 — the design wall. Paper ground, one mint band, ink type. Logical properties only, flat blocking, no shadows. */
+
+.lp .lp-wall { position: relative; overflow: clip; background: var(--paper); padding-block: clamp(3rem, 8vw, 6.5rem); }
+.lp .lp-wall__sub { margin-block-start: 1rem; }
+
+/* Style filter chips */
+.lp .lp-wall__chips { display: flex; flex-wrap: wrap; gap: .6rem; margin-block-start: 1.75rem; }
+.lp .lp-wall__filter { display: inline-flex; align-items: center; justify-content: center; min-block-size: 44px; min-inline-size: 44px; padding-inline: 1.15rem; border: 2px solid var(--ink); border-radius: 999px; background: var(--paper); color: var(--ink); font: 700 .95rem/1 var(--lp-head); cursor: pointer; transition: background-color .2s var(--lp-ease), color .2s var(--lp-ease); }
+.lp .lp-wall__filter:hover { background: var(--mint); }
+.lp .lp-wall__filter[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+
+/* Mint band behind the two rows; the section clips so the page itself never scrolls sideways. */
+.lp .lp-wall__band { margin-block-start: clamp(2rem, 5vw, 3.5rem); background: var(--mint); border-block: 2px solid var(--ink); padding-block: clamp(1.75rem, 4vw, 3rem); }
+.lp .lp-wall__row { display: flex; align-items: flex-end; }
+.lp .lp-wall__row--b { align-items: flex-start; margin-block-start: clamp(1.25rem, 3vw, 2.5rem); }
+
+/* The track is wider than the viewport: cards crop at both edges while it runs. */
+.lp .lp-wall__track { --lp-marquee-sign: 1; --lp-marquee-flip: 1; display: flex; flex: none; width: max-content; margin-inline-start: -1.5rem; animation: lp-wall-marquee 70s linear infinite; }
+.lp .lp-wall__row--b .lp-wall__track { --lp-marquee-flip: -1; animation-duration: 90s; }
+/* RTL runs the same loop the other way round: flip the translate sign, never the layout. */
+.lp .lp-wall__track[dir="rtl"] { --lp-marquee-sign: -1; }
+.lp .lp-wall__row:hover .lp-wall__track,
+.lp .lp-wall__row:focus-within .lp-wall__track { animation-play-state: paused; }
+
+/* Each group is one full period: four cards plus a trailing gap, so half the track lands exactly on a seam. */
+.lp .lp-wall__group { display: flex; flex: none; gap: 1.75rem; padding-inline-end: 1.75rem; align-items: flex-end; }
+.lp .lp-wall__row--b .lp-wall__group { align-items: flex-start; }
+
+@keyframes lp-wall-marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(calc(-50% * var(--lp-marquee-sign) * var(--lp-marquee-flip))); }
+}
+
+/* Cards: arch-shaped phone silhouettes at three heights. */
+.lp .lp-wall__card { display: flex; flex: none; flex-direction: column; gap: .8rem; inline-size: clamp(10.5rem, 15vw, 16rem); color: var(--ink); text-decoration: none; transition: opacity .2s var(--lp-ease), transform .3s var(--lp-ease); }
+.lp .lp-wall__card.is-dim { opacity: .35; }
+.lp .lp-wall__arch { position: relative; flex: none; inline-size: 100%; block-size: 26rem; overflow: hidden; background: var(--paper); border: 3px solid var(--ink); border-start-start-radius: 999px; border-start-end-radius: 999px; }
+.lp .lp-wall__arch .lp-wall__invite { position: absolute; inset: 0; }
+/* The arches are narrower than a phone, so the shared cqw type would drop below 9px — nudge it back up. */
+.lp .lp-wall__arch .lp-invite__line { font-size: 6cqw; }
+.lp .lp-wall__arch .lp-invite__date { font-size: 6.5cqw; }
+.lp .lp-wall__meta { display: flex; flex-direction: column; align-items: flex-start; gap: .4rem; }
+.lp .lp-wall__name { margin: 0; font: 700 1.2rem/1.15 var(--lp-head); }
+.lp .lp-wall__tag { margin: 0; font-size: .95rem; line-height: 1.4; }
+.lp .lp-wall__badge { display: inline-flex; align-items: center; min-block-size: 32px; padding-inline: .85rem; border: 2px dashed var(--ink); border-radius: 999px; background: var(--paper); color: var(--ink); font: 700 .85rem/1 var(--lp-head); }
+
+/* Live card: lifts and shows the saffron chip on hover / keyboard focus. */
+.lp .lp-wall__card--live:hover, .lp .lp-wall__card--live:focus-visible { transform: translateY(-12px); }
+.lp .lp-wall__try { display: inline-flex; align-items: center; min-block-size: 32px; padding-inline: .95rem; border: 2px solid var(--ink); border-radius: 999px; background: var(--saffron); color: var(--ink); font: 700 .85rem/1 var(--lp-head); opacity: 0; transform: translateY(6px); transition: opacity .2s var(--lp-ease), transform .2s var(--lp-ease); }
+.lp .lp-wall__card--live:hover .lp-wall__try,
+.lp .lp-wall__card--live:focus-visible .lp-wall__try { opacity: 1; transform: none; }
+@media (hover: none) { .lp .lp-wall__try { opacity: 1; transform: none; } }
+
+.lp .lp-wall__foot { margin-block-start: clamp(2rem, 5vw, 3rem); }
+
+/* Narrow screens and reduced motion: no autoplay, each row becomes a swipe strip. */
+@media (max-width: 699px), (prefers-reduced-motion: reduce) {
+  .lp .lp-wall__row { overflow-x: auto; overflow-y: hidden; scroll-snap-type: x mandatory; scroll-padding-inline: 1rem; padding-inline: 1rem; padding-block: 1.25rem; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .lp .lp-wall__row::-webkit-scrollbar { display: none; }
+  .lp .lp-wall__track { animation: none !important; margin-inline-start: 0; }
+  .lp .lp-wall__card { scroll-snap-align: start; }
+}
+
+/* The repeats exist only to keep the marquee fed; a swipe strip shows the list once. */
+@media (max-width: 699px) {
+  .lp .lp-wall__group[aria-hidden="true"] { display: none; }
+}

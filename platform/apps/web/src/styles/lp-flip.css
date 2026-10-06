@@ -1,0 +1,23 @@
+/* Beat 4 — you stay in control. Mint band + ink + red. */
+.lp .lp-flip { background: var(--mint); padding-block: clamp(4rem, 9vw, 8rem); border-block: 2px solid var(--ink); overflow: clip; }
+.lp .lp-flip__grid { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr); gap: 2.5rem clamp(1.5rem, 5vw, 5rem); align-items: center; }
+.lp .lp-flip__panel { margin-block-start: 2rem; display: grid; gap: 1rem; background: var(--paper); border: 2px solid var(--ink); padding: clamp(1rem, 3vw, 1.75rem); max-inline-size: 34rem; }
+.lp .lp-flip__panel label { display: grid; gap: .3rem; font-weight: 700; }
+.lp .lp-flip__panel input { min-block-size: 50px; padding-inline: 1rem; background: #fff; color: var(--ink); border: 2px solid var(--ink); border-radius: 0; font: 500 1.1rem var(--lp-body); inline-size: 100%; }
+.lp .lp-flip__toggle { display: grid; grid-template-columns: 1fr 1fr; border: 2px solid var(--ink); border-radius: 999px; overflow: hidden; margin-block-start: .5rem; }
+.lp .lp-flip__toggle button { border: 0; background: transparent; color: var(--ink); font: 700 1.1rem var(--lp-head); cursor: pointer; min-block-size: 50px; }
+.lp .lp-flip__toggle button[aria-pressed="true"] { background: var(--red); color: var(--paper); }
+.lp .lp-flip__badges { list-style: none; padding: 0; margin: 1.5rem 0 0; display: flex; flex-wrap: wrap; gap: .6rem; }
+.lp .lp-flip__badges li { border: 2px solid var(--ink); border-radius: 999px; padding-block: .3rem; padding-inline: 1rem; font-weight: 500; background: var(--paper); }
+.lp .lp-flip__preview { display: grid; justify-items: center; gap: 1.5rem; }
+.lp .lp-flip__stage { perspective: 1100px; inline-size: min(100%, 18rem); }
+.lp .lp-flip__phone { --tilt: 0deg; inline-size: 100%; transition: transform .26s cubic-bezier(.5, 0, 1, .6); transform-style: preserve-3d; }
+.lp .lp-flip__stage[data-phase="out"] .lp-flip__phone { transform: rotateY(90deg); }
+.lp .lp-flip__stage[data-phase="in"] .lp-flip__phone { animation: lp-flip-in .34s cubic-bezier(0, .4, .3, 1) both; }
+@keyframes lp-flip-in { from { transform: rotateY(-90deg); } to { transform: rotateY(0); } }
+.lp .lp-flip__meter { background: var(--paper); border: 2px solid var(--ink); padding: 1rem 1.25rem; inline-size: min(100%, 22rem); display: grid; gap: .5rem; }
+.lp .lp-flip__meter-text { font: 700 1.2rem var(--lp-head); }
+.lp .lp-flip__bar { block-size: 14px; border: 2px solid var(--ink); background: var(--paper); }
+.lp .lp-flip__bar span { display: block; block-size: 100%; background: var(--red); }
+.lp .lp-flip__example { font-size: .85rem; color: color-mix(in srgb, var(--ink) 70%, transparent); }
+@media (max-width: 899px) { .lp .lp-flip__grid { grid-template-columns: 1fr; } .lp .lp-flip__preview { order: -1; } }

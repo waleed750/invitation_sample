@@ -461,5 +461,145 @@
       "use": "Use this design",
       "tier": "{tier}"
     }
+  },
+  "lp": {
+    "brand": "Invitely",
+    "skip": "Skip to content",
+    "nav": {
+      "label": "Main navigation",
+      "designs": "Designs",
+      "pricing": "Pricing",
+      "how": "How it works",
+      "start": "Start your invitation"
+    },
+    "hero": {
+      "line1": "Type your names..",
+      "line2": "watch your invitation open",
+      "namesLabel": "Type the couple's names",
+      "namesDefault": "Ahmed & Mona",
+      "dateLabel": "Wedding day",
+      "dateDefault": "2027-04-15",
+      "openCta": "Open my invitation",
+      "replayCta": "Open it again",
+      "bubble": "Look at our invitation 💌",
+      "inviteLine": "Together with their families, they invite you to their wedding",
+      "tapHint": "Tap to open",
+      "phoneLabel": "Invitation preview"
+    },
+    "journey": {
+      "title": "From WhatsApp to the replies landing in your hands",
+      "step": "Step {n}",
+      "s1": {
+        "title": "The invitation lands on WhatsApp",
+        "body": "One link, and a lovely preview card shows up before anyone even taps."
+      },
+      "s2": {
+        "title": "Your guest opens it, and it opens up",
+        "body": "The names appear, the music plays, and it looks just the way you dreamed."
+      },
+      "s3": {
+        "title": "They tap Yes.. and you watch",
+        "body": "Replies arrive on their own and are counted for you, so you never have to chase anyone."
+      },
+      "chat": {
+        "contact": "Ahmed",
+        "bubble": "Look at our invitation",
+        "previewTitle": "Ahmed & Mona",
+        "previewSub": "Wedding invitation · 15 April",
+        "now": "now"
+      },
+      "guest": {
+        "tap": "Tap to open",
+        "yes": "I'll be there",
+        "no": "Can't make it"
+      },
+      "dash": {
+        "title": "Dashboard",
+        "label": "confirmed their attendance",
+        "example": "Illustrative example"
+      }
+    },
+    "wall": {
+      "title": "Pick your vibe",
+      "sub": "The first design is ready now. More are on the way.",
+      "chipsLabel": "Choose a style",
+      "chips": {
+        "royal": "Royal",
+        "soft": "Soft",
+        "modern": "Modern",
+        "boho": "Boho",
+        "heritage": "Heritage"
+      },
+      "live": {
+        "name": "Mashrabiya",
+        "tag": "A Cairo evening under the moon",
+        "try": "Try it"
+      },
+      "soon": "Coming soon",
+      "soonNames": {
+        "a": "Royal red",
+        "b": "Soft florals",
+        "c": "Clean modern"
+      },
+      "all": "See all designs"
+    },
+    "flip": {
+    "card": {"ar": {"line": "يتشرفوا بدعوتكم لحفل زفافهم", "names": "أحمد & منى", "place": "قاعة النيل · القاهرة"}, "en": {"line": "Together with their families, they invite you to their wedding", "names": "Ahmed & Mona", "place": "Nile Hall · Cairo"}},
+      "title": "You stay in control",
+      "sub": "Change anything and watch it update, then flip between Arabic and English in one tap.",
+      "fields": {
+        "names": "Names",
+        "date": "Date",
+        "place": "Place"
+      },
+      "placeDefault": "Nile Hall · Cairo",
+      "toggleLabel": "Invitation language",
+      "ar": "عربي",
+      "en": "English",
+      "badges": {
+        "edits": "Edit as you like (up to {n} published edits)",
+        "once": "Pay once",
+        "noapp": "No app for anyone to download"
+      },
+      "meter": "{left} of {total} edits left",
+      "example": "Illustrative example",
+      "inviteLine": "Together with their families, they invite you to their wedding"
+    },
+    "price": {
+      "title": "One price for the whole invitation",
+      "sub": "You pay once per event, no subscriptions.",
+      "ticket": "Your invitation ticket",
+      "plans": {
+        "save-the-date": "Save the Date",
+        "classic": "Classic",
+        "premium": "Premium"
+      },
+      "stamp": "Most popular",
+      "months": "{n} months online",
+      "rsvp": {
+        "none": "No RSVP",
+        "limit": "Up to {n} RSVPs",
+        "unlimited": "Unlimited RSVPs"
+      },
+      "video": {
+        "yes": "Video intro",
+        "no": "No video intro"
+      },
+      "choose": "Choose {plan}",
+      "currency": "EGP"
+    },
+    "final": {
+      "title": "Start your invitation now",
+      "start": "Start",
+      "whatsapp": "Chat on WhatsApp",
+      "proof": "Coming soon: reviews from our first 100 couples"
+    },
+    "footer": {
+      "note": "Digital invitations for weddings and celebrations in Egypt.",
+      "terms": "Terms",
+      "privacy": "Privacy",
+      "refund": "Refunds",
+      "legal": "Legal pages are being prepared."
+    }
   }
 }
