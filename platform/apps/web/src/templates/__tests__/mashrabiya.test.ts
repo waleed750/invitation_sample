@@ -3,6 +3,8 @@ import path from 'node:path';
 import {describe, expect, it, vi} from 'vitest';
 
 vi.mock('next/font/google', () => ({
+  Tajawal: () => ({variable: '--font-tajawal'}),
+  Amiri: () => ({variable: '--font-amiri'}),
   Aref_Ruqaa: () => ({variable: '--font-aref-ruqaa'}),
   Fraunces: () => ({variable: '--font-fraunces'}),
   IBM_Plex_Sans_Arabic: () => ({variable: '--font-ibm-plex-sans-arabic'}),

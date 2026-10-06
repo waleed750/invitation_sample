@@ -9,7 +9,10 @@
     "lint": "eslint . --max-warnings=0",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "check:i18n": "node scripts/check-i18n.mjs"
+    "check:i18n": "node scripts/check-i18n.mjs",
+    "sync:drafts": "node scripts/sync-draft-assets.mjs",
+    "predev": "npm run sync:drafts",
+    "prebuild": "npm run sync:drafts"
   },
   "dependencies": {
     "@platform/shared": "*",

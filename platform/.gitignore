@@ -4,3 +4,5 @@ dist/
 .env*.local
 .npm-cache/
 *.tsbuildinfo
+.demo-data/
+apps/web/public/assets/drafts/

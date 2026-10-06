@@ -15,7 +15,7 @@ import ScratchRevealIntro from './intros/ScratchRevealIntro';
 import ShuttersIntro from './intros/ShuttersIntro';
 import './styles/shell.css';
 
-export default function InvitationShell({data, locale}: {data: InvitationData; locale: Locale}) {
+export default function InvitationShell({data, locale, templateSlug}: {data: InvitationData; locale: Locale; templateSlug?: string}) {
   const {theme, media, copy, sections, template} = data;
   const audioRef = useRef<HTMLAudioElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -72,7 +72,7 @@ export default function InvitationShell({data, locale}: {data: InvitationData; l
   return (
     <InvitationLocaleContext.Provider value={locale}>
       <InvitationPlaybackContext.Provider value={{contentVisible: introDone && opened}}>
-        <main className="invitation-shell" data-layout={template.layoutFamily} dir={locale === 'ar' ? 'rtl' : 'ltr'} lang={locale} style={style}>
+        <main className="invitation-shell" data-layout={template.layoutFamily} data-template={templateSlug} dir={locale === 'ar' ? 'rtl' : 'ltr'} lang={locale} style={style}>
           {media.musicUrl && <audio ref={audioRef} loop preload="none" src={media.musicUrl} />}
           {introKind === 'scratch' && scratch ? (
             <ScratchRevealIntro {...scratch.props} tapLabel={copy.tapLabel ?? scratch.props.tapLabel} isOpen={opened}

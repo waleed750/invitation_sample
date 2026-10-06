@@ -62,7 +62,7 @@ export default async function TemplatePage({params}: Props) {
 
   return (
     <div className={template.fontClassName}>
-      <InvitationShell data={data} locale={locale} />
+      <InvitationShell data={data} locale={locale} templateSlug={slug} />
     </div>
   );
 }
