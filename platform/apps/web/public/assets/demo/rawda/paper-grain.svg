@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240" width="240" height="240" role="img" aria-label="Paper grain texture">
+<!-- Original watercolor-style artwork for the Rawda template. (c) Invitely. -->
+<style></style>
+<filter id="pg-n" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".75" numOctaves="3" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 .45 0 0 0 0 .42 0 0 0 0 .36 0 0 0 .55 -.18"/></filter><rect width="240" height="240" filter="url(#pg-n)"/>
+</svg>

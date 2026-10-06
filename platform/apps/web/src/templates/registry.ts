@@ -16,6 +16,8 @@ import {getEleganteData} from './elegante/data';
 import {fontClassName as eleganteFontClassName} from './elegante/fonts';
 import {getDiwanData} from './diwan/data';
 import {fontClassName as diwanFontClassName} from './diwan/fonts';
+import {getRawdaData} from './rawda/data';
+import {fontClassName as rawdaFontClassName} from './rawda/fonts';
 
 export interface TemplateDefinition {
   entry: CatalogEntry;
@@ -79,11 +81,42 @@ const diwanEntry: CatalogEntry = catalogEntry.parse({
   ],
 });
 
+const rawdaEntry: CatalogEntry = catalogEntry.parse({
+  slug: 'rawda',
+  name: {ar: 'روضة', en: 'Rawda'},
+  tagline: {
+    ar: 'حديقة ورد أبيض وشموع تحت قوس من الحجر',
+    en: 'A garden of white roses and candlelight beneath a stone arch',
+  },
+  tier: 'classic',
+  status: 'draft',
+  featured: false,
+  assets: [
+    {path: '/assets/demo/rawda/hero-arch.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/rawda/column.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/rawda/curtain-pleat.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/rawda/curtain-valance.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/rawda/urn-roses.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/rawda/event-ceremony.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/rawda/divider.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/rawda/monogram-ring.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/rawda/roses-corner-tl.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/rawda/footer-sprig.svg', source: 'original', license: 'original, © Invitely'},
+    {path: '/assets/demo/rawda/paper-grain.svg', source: 'original', license: 'original, © Invitely'},
+  ],
+});
+
 export const templates: Record<string, TemplateDefinition> = {
   diwan: {
     entry: diwanEntry,
     getData: getDiwanData,
     fontClassName: diwanFontClassName,
+  },
+
+  rawda: {
+    entry: rawdaEntry,
+    getData: getRawdaData,
+    fontClassName: rawdaFontClassName,
   },
 
   africa: {
