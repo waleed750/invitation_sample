@@ -2,7 +2,7 @@
 
 > Single source of truth for resuming work. Read this FIRST when starting a session.
 > Update this file at the end of every work phase so the next `/clear` resumes in 1 read.
-> Last updated: 2026-10-06
+> Last updated: 2026-10-07
 
 ---
 
@@ -173,9 +173,13 @@ Origin repo `waleed750/invitation_sample` is **PUBLIC**; 11 local commits are un
 - Scraped video-open demo intentionally KEPT (user decision) but unlisted; never live/priced (PLATFORM_PLAN §2)
 - agy lanes `gemini` / `debate` in ~/.config/delegate-skills/config.json
 
+## ✅ Phase 2 batch (2026-10-07) — commits 020092a, 9f4b58e, 569fabe
+- Draft-demo pipeline: `data-template` scoping, draft registry (`listDraftTemplates/getTemplateAny`), private `/[locale]/preview/[slug]` (dev or PREVIEW_DRAFTS=1), `sync:drafts` copies legacy media into gitignored `apps/web/public/assets/drafts/` (226MB, never committed); **africa** ported as proof (draft)
+- NestJS commerce slice: checkout (server pricing, live templates only), HMAC mock webhook (raw body, amount check, idempotent via fulfill_paid_order), dev settle route (auth + owner only), orders/invitations/points/templates, PATCH /v1/me, migration 0004 (+ `create_pending_checkout` RPC, service_role only). 88 api tests
+- Public invitation `/[locale]/i/[slug]` + RSVP/guestbook via `InvitationPublicStore` (demo file store `.demo-data/`, gitignored), tier gating, honeypot + rate limit; dashboard Guests screen + owner-only CSV export; verified owner+guest in separate browsers (ar+en)
+
 ## 🚀 Next quest
-1. T8 API commerce slice (NestJS): checkout/orders/invitations/points/templates endpoints, `PaymentProvider` + mock, migration 0004 (provider 'mock', seed mashrabiya), Jest tests; then `ApiCommerceClient` for `COMMERCE_MODE=api`
-2. Public invitation page `/[locale]/i/[slug]` (share links 404 today) + RSVP storage + guests screen
-3. Port remaining demos as `draft` catalog entries (private preview only); per-template CSS scoped by data-layout
-4. Playwright e2e in repo (currently ad-hoc scripts in scratchpad), a11y/Lighthouse pass
-5. Owner decisions pending: brand name/domain (placeholder "Invitely"), Fawry merchant account, push decision (public repo)
+1. **Real auth + `ApiCommerceClient`** (`COMMERCE_MODE=api`): Supabase phone/email OTP login on web, bearer token to /v1, swap mock cookie state; real `InvitationPublicStore` (Supabase) replacing the demo file store. Needs a Supabase project + env (owner)
+2. Demo port batch D (agy, running): citystars, excellence, elegante as drafts. Remaining 10 demos need LOCAL section components first -> design a generic `custom` section (schema `{kind, data}` + per-template component map) before batch-porting; value is limited (drafts can never be sold, PLATFORM_PLAN §2) — consider replacing with ORIGINAL designs instead
+3. Original templates #2-#5 (the real product; legal blocker §2), admin dashboard (templates/affiliates/customers), Fawry provider behind `PaymentProvider`, Playwright e2e in repo (ad-hoc scripts only so far), Lighthouse/a11y pass
+4. Owner decisions pending: brand name/domain ("Invitely" placeholder), Fawry merchant account, push (repo is public), Supabase project

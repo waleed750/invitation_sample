@@ -870,3 +870,5 @@
 |------|--------|---------|---------|--------|
 | 22:46 | wrote PLATFORM_DESIGN_PROMPT.md (Figma Make/Lovable/Stitch prompt from PLATFORM_PLAN §3-7,16) | PLATFORM_DESIGN_PROMPT.md | done | ~4000 |
 | 23:41 | Platform skeleton: engine prep, catalog, Mashrabiya demo, landing, mock checkout, dashboard (Codex+agy, Claude review/commit) | platform/apps/web, packages/shared | committed 35df7ae..HEAD, build+390px verified | ~big |
+| 00:10 | wrote PLATFORM_LANDING_PROMPT_V2.md (non-traditional Stitch landing prompt + critique of v1 HTML) | PLATFORM_LANDING_PROMPT_V2.md | done | ~3500 |
+| 00:25 | Phase 2: draft pipeline+africa, NestJS commerce API, public page+RSVP+guests+CSV; Codex quota hit -> agy finished; Claude fixed bugs (dev route authz, honeypot, tel CSS, sr-only, bidi) | platform/apps/* | committed 020092a,9f4b58e,569fabe; browser-verified | ~big |
