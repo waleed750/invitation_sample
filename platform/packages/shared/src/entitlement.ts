@@ -1,9 +1,19 @@
 export const TIERS = {
-  'save-the-date': {price: 499, editsAllowed: 5, onlineMonths: 3, graceDaysAfterEvent: 7, templateSwitches: 1},
-  classic: {price: 1299, editsAllowed: 15, onlineMonths: 6, graceDaysAfterEvent: 14, templateSwitches: 2},
-  premium: {price: 2499, editsAllowed: 40, onlineMonths: 12, graceDaysAfterEvent: 30, templateSwitches: null}
-} as const satisfies Record<string, {price: number; editsAllowed: number; onlineMonths: number; graceDaysAfterEvent: number; templateSwitches: number | null}>;
+  'save-the-date': {price: 499, editsAllowed: 5, onlineMonths: 3, graceDaysAfterEvent: 7, templateSwitches: 1, rsvpLimit: 0, videoIntro: false, musicUpload: false, guestMessages: false, prioritySupport: false},
+  classic: {price: 1299, editsAllowed: 15, onlineMonths: 6, graceDaysAfterEvent: 14, templateSwitches: 2, rsvpLimit: 300, videoIntro: false, musicUpload: false, guestMessages: false, prioritySupport: false},
+  premium: {price: 2499, editsAllowed: 40, onlineMonths: 12, graceDaysAfterEvent: 30, templateSwitches: null, rsvpLimit: null, videoIntro: true, musicUpload: true, guestMessages: true, prioritySupport: true}
+} as const satisfies Record<string, {price: number; editsAllowed: number; onlineMonths: number; graceDaysAfterEvent: number; templateSwitches: number | null; rsvpLimit: number | null; videoIntro: boolean; musicUpload: boolean; guestMessages: boolean; prioritySupport: boolean}>;
 export type Tier = keyof typeof TIERS;
+export type DbTier = 'save_the_date' | 'classic' | 'premium';
+export const TIER_ORDER = ['save-the-date', 'classic', 'premium'] as const satisfies readonly Tier[];
+export function toDbTier(tier: Tier): DbTier {
+  return tier === 'save-the-date' ? 'save_the_date' : tier;
+}
+export function fromDbTier(value: string): Tier {
+  if (value === 'save_the_date') return 'save-the-date';
+  if (value === 'classic' || value === 'premium') return value;
+  throw new RangeError(`Unknown database tier: ${value}`);
+}
 const DAY_MS = 86_400_000;
 function timestamp(date: Date): number {
   const value = date.getTime();

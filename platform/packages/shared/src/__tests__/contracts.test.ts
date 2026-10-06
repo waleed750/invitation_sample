@@ -49,6 +49,10 @@ const invalidProps: Record<SectionType, unknown> = {
 
 describe('invitation contracts', () => {
   it('parses a minimal invitation', () => expect(parseInvitationData(minimal)).toEqual({ok: true, data: minimal}));
+  it('parses a mashrabiya layout family', () => {
+    const data = {...minimal, template: {...minimal.template, layoutFamily: 'mashrabiya' as const}};
+    expect(parseInvitationData(data)).toEqual({ok: true, data});
+  });
   it('covers exactly every legacy section type', () => expect(Object.keys(fixtures).sort()).toEqual(Object.keys(SECTION_TYPES).sort()));
   for (const type of Object.keys(fixtures) as SectionType[]) {
     it(`accepts ${type}`, () => expect(section.safeParse({type, props: fixtures[type]}).success).toBe(true));

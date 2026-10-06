@@ -3,6 +3,19 @@ import {sectionKey} from '../section-key';
 import {getTimeLeft} from '../countdown';
 import {videoOpenData, getVideoOpenData} from '../../data/demo/video-open';
 import {parseInvitationData} from '@platform/shared';
+import {introKindFor} from '../intro-kind';
+
+describe('intro kinds', () => {
+  it.each([
+    ['video-open', 'video'],
+    ['scratch-reveal', 'scratch'],
+    ['tap-to-open', 'shutters'],
+    ['envelope', 'video'],
+    ['none', 'none']
+  ] as const)('maps %s to %s', (introType, expected) => {
+    expect(introKindFor(introType)).toBe(expected);
+  });
+});
 
 describe('section keys', () => {
   it('prefers an explicit id, including a deliberately empty id at the helper boundary', () => {

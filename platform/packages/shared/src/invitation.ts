@@ -26,7 +26,7 @@ export const templateMeta = z.object({
   siteType: z.enum(['full-invitation', 'save-the-date', 'rsvp-only']),
   experienceType: z.enum(['cinematic-story', 'interactive-reveal', 'slideshow', 'scroll-only']),
   introType: z.enum(['video-open', 'scratch-reveal', 'tap-to-open', 'envelope', 'none']),
-  layoutFamily: z.enum(['ornate', 'minimal-interactive', 'modern', 'classic', 'safari-editorial', 'boho', 'luxury-floral', 'floral-romantic', 'finca-rustic', 'sweetlove-romantic', 'dolce-vita-lake', 'daynight-dual', 'bridgerton-regency', 'bloom-garden'])
+  layoutFamily: z.enum(['ornate', 'minimal-interactive', 'modern', 'classic', 'safari-editorial', 'boho', 'luxury-floral', 'floral-romantic', 'finca-rustic', 'sweetlove-romantic', 'dolce-vita-lake', 'daynight-dual', 'bridgerton-regency', 'bloom-garden', 'mashrabiya'])
 }).strict();
 export const theme = z.object({background: cssColor, foreground: cssColor, muted: cssColor, ivory: cssColor}).strict();
 export const couple = z.object({firstName: text, secondName: text, headline: text.optional()}).strict();

@@ -9,8 +9,11 @@ import {InvitationLocaleContext} from './InvitationLocaleContext';
 import {InvitationPlaybackContext} from './InvitationPlaybackContext';
 import {sectionComponents} from './registry';
 import {sectionKey} from './section-key';
+import {introKindFor} from './intro-kind';
 import VideoOpenIntro from './intros/VideoOpenIntro';
 import ScratchRevealIntro from './intros/ScratchRevealIntro';
+import ShuttersIntro from './intros/ShuttersIntro';
+import './styles/shell.css';
 
 export default function InvitationShell({data, locale}: {data: InvitationData; locale: Locale}) {
   const {theme, media, copy, sections, template} = data;
@@ -22,6 +25,7 @@ export default function InvitationShell({data, locale}: {data: InvitationData; l
   const t = useTranslations('engine');
   const finishIntro = useCallback(() => setIntroDone(true), []);
   const scratch = sections.find(section => section.type === 'scratchReveal');
+  const introKind = introKindFor(template.introType);
 
   useEffect(() => {
     if (!introDone) return;
@@ -68,14 +72,17 @@ export default function InvitationShell({data, locale}: {data: InvitationData; l
   return (
     <InvitationLocaleContext.Provider value={locale}>
       <InvitationPlaybackContext.Provider value={{contentVisible: introDone && opened}}>
-        <main className="invitation-shell" dir={locale === 'ar' ? 'rtl' : 'ltr'} lang={locale} style={style}>
+        <main className="invitation-shell" data-layout={template.layoutFamily} dir={locale === 'ar' ? 'rtl' : 'ltr'} lang={locale} style={style}>
           {media.musicUrl && <audio ref={audioRef} loop preload="none" src={media.musicUrl} />}
-          {template.introType === 'scratch-reveal' && scratch ? (
+          {introKind === 'scratch' && scratch ? (
             <ScratchRevealIntro {...scratch.props} tapLabel={copy.tapLabel ?? scratch.props.tapLabel} isOpen={opened}
               onOpen={startExperience} onRevealed={finishIntro} />
-          ) : template.introType !== 'none' ? (
+          ) : introKind === 'video' || introKind === 'scratch' ? (
             <VideoOpenIntro posterUrl={media.introPosterUrl} videoUrl={media.introVideoUrl} tapLabel={copy.tapLabel}
               isOpen={opened} isFinished={introDone} onStart={startExperience} onFinished={finishIntro} />
+          ) : introKind === 'shutters' ? (
+            <ShuttersIntro tapLabel={copy.tapLabel} isOpen={opened} isFinished={introDone}
+              onStart={startExperience} onFinished={finishIntro} />
           ) : !opened ? <button type="button" className="open-experience" onClick={startExperience}>{t('tapOpen')}</button> : null}
           {media.musicUrl && (
             <button className={`music-button ${introDone ? 'is-visible' : ''}`} type="button"
