@@ -292,9 +292,12 @@
       "publishHelp": "Publishing uses one edit and updates the version your guests will see.",
       "publish": "Publish invitation",
       "onlineUntil": "Online until {date} · {edits} edits left",
-      "comingSoon": "Coming next",
+      "tabsLabel": "Invitation sections",
+      "tabOverview": "Overview",
+      "tabGuests": "Guests",
+      "guestsEyebrow": "Live guest responses",
       "guestsTitle": "Guests & RSVP",
-      "guestsDescription": "Attendance totals, guest search and exports will arrive here next."
+      "guestsDescription": "{responses} responses · {attending} guests attending"
     },
     "share": {
       "eyebrow": "Send it beautifully",
@@ -305,7 +308,7 @@
       "whatsapp": "Share on WhatsApp",
       "message": "You are invited to celebrate {first} & {second} with us:",
       "qrLabel": "Invitation QR code",
-      "launchNote": "Public page opens when public invitation pages launch"
+      "launchNote": "This private link always opens the latest published version"
     },
     "orders": {
       "eyebrow": "Purchase history",
@@ -371,6 +374,20 @@
     "levels": {"member": "Member", "silver": "Silver", "gold": "Gold"},
     "statuses": {"draft": "Draft", "published": "Published", "pending": "Pending", "paid": "Paid", "failed": "Failed"}
   },
+  "guests": {
+    "eyebrow": "Guest management",
+    "title": "Guests & RSVP",
+    "description": "Live responses for {first} & {second}, visible only in your dashboard.",
+    "tabs": {"label": "Invitation sections", "overview": "Overview", "guests": "Guests"},
+    "stats": {"label": "RSVP summary", "attending": "Attending responses", "declined": "Declined responses", "totalGuests": "Guests attending", "remaining": "Capacity remaining", "unlimited": "Unlimited"},
+    "list": {"title": "Guest list", "updated": "Published {date}", "notPublished": "Publish the invitation to start collecting responses.", "export": "Export CSV", "search": "Search by name or phone", "empty": "No matching responses yet.", "name": "Name", "phone": "Phone", "response": "Response", "guests": "Guests", "note": "Note", "date": "Received", "attending": "Attending", "declined": "Declined", "whatsapp": "Message on WhatsApp", "whatsappMessage": "Hello, we are following up about your invitation RSVP."},
+    "messages": {"eyebrow": "Guestbook", "title": "Guest messages", "empty": "No guestbook messages yet."}
+  },
+  "public": {
+    "metadata": {"description": "A private invitation for a celebration on {date}."},
+    "expired": {"eyebrow": "Thank you for visiting", "title": "This invitation is no longer online", "description": "The invitation's online period has ended. Please contact the hosts if you need any details."},
+    "forms": {"submitting": "Sending…", "error": "We could not save this response. Please try again.", "limitReached": "This response exceeds the remaining guest capacity. Please contact the hosts."}
+  },
   "demoMode": {
     "banner": "Demo mode — no money is charged",
     "otpHint": "Demo code: 123456",
@@ -415,6 +432,8 @@
     "attending": "Will you be attending? *",
     "events": "Which events will you be attending? *",
     "guestCount": "How many guests in total?",
+    "phone": "Phone number (optional)",
+    "phonePlaceholder": "e.g. +201234567890",
     "email": "Email address",
     "emailPlaceholder": "you@example.com",
     "decreaseGuests": "Decrease guest count",

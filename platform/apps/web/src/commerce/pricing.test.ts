@@ -1,6 +1,8 @@
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 
 vi.mock('next/font/google', () => ({
+  Tajawal: () => ({variable: '--font-tajawal'}),
+  Amiri: () => ({variable: '--font-amiri'}),
   Aref_Ruqaa: () => ({variable: ''}),
   Fraunces: () => ({variable: ''}),
   IBM_Plex_Sans_Arabic: () => ({variable: ''}),

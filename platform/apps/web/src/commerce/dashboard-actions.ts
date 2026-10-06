@@ -4,6 +4,7 @@ import {revalidatePath} from 'next/cache';
 import {z} from 'zod';
 import {redirect} from '@/i18n/navigation';
 import {routing} from '@/i18n/routing';
+import {getPublicStore} from '@/guest';
 import {getCommerceClient} from './index';
 
 const localeSchema = z.enum(routing.locales);
@@ -15,6 +16,19 @@ const publishSchema = z.object({
 export async function publishInvitationAction(input: unknown) {
   const parsed = publishSchema.parse(input);
   const result = await getCommerceClient().publishInvitation(parsed.id);
+  if (result.ok && result.invitation.onlineUntil) {
+    await getPublicStore().publish({
+      shareSlug: result.invitation.shareSlug,
+      templateSlug: result.invitation.templateSlug,
+      tier: result.invitation.tier,
+      couple: result.invitation.couple,
+      eventDate: result.invitation.eventDate,
+      publishedAt: new Date().toISOString(),
+      onlineUntil: result.invitation.onlineUntil,
+      locale: parsed.locale,
+    });
+    revalidatePath(`/${parsed.locale}/i/${result.invitation.shareSlug}`);
+  }
   revalidatePath(`/${parsed.locale}/app`);
   revalidatePath(`/${parsed.locale}/app/invitations/${parsed.id}`);
   return result;

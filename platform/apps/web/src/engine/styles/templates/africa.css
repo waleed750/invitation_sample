@@ -424,6 +424,7 @@
 }
 .rsvp-form input[type="text"],
 .rsvp-form input[type="email"],
+.rsvp-form input[type="tel"],
 .rsvp-form select {
   display: block;
   width: 100%;

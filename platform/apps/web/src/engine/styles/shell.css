@@ -119,7 +119,7 @@
   & :is(.rsvp-form, .faq-question, .faq-answer) { text-align: start; }
   & .rsvp-form label { display: block; }
   & :is(input, textarea, select) { max-inline-size: 100%; }
-  & .rsvp-form :is(input[type="text"], input[type="email"], select) { display: block; inline-size: 100%; padding-block: .75rem; padding-inline: .75rem; }
+  & .rsvp-form :is(input[type="text"], input[type="email"], input[type="tel"], select) { display: block; inline-size: 100%; padding-block: .75rem; padding-inline: .75rem; }
   & .rsvp-form button { padding-block: .75rem; padding-inline: .75rem; }
   & .faq-question { display: flex; justify-content: space-between; align-items: center; inline-size: 100%; gap: 1rem; }
   & :is(.gallery-grid, .dresscode-card-list, .event-card-list) { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: 1.5rem; }
@@ -162,3 +162,6 @@
     inset-block-end: 16px;
   }
 }
+
+/* The UA [hidden] rule loses to section display rules; keep honeypots truly hidden. */
+.invitation-shell [hidden] { display: none !important; }

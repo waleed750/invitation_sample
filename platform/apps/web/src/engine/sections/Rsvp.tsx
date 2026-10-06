@@ -4,6 +4,7 @@
 import {Bidi} from "@/components/Bidi";
 import type {SectionProps} from "../types";
 import {useInvitationText} from "../InvitationLocaleContext";
+import {useInvitationActions} from "../InvitationActionsContext";
 import {useTranslations} from "next-intl";
 import React, { useState } from "react";
 import { Send } from "lucide-react";
@@ -28,7 +29,10 @@ export default function Rsvp({
 }: SectionProps<"rsvp">) {
   const text = useInvitationText();
   const t = useTranslations("engine");
+  const publicT = useTranslations("public.forms");
+  const actions = useInvitationActions();
   const [status, setStatus] = useState("");
+  const [submitting, setSubmitting] = useState(false);
   const [guestCount, setGuestCount] = useState(1);
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const yesLabel = attendanceOptions?.yes ?? t("attendingYes");
@@ -38,10 +42,39 @@ export default function Rsvp({
     setGuestCount(Math.min(8, Math.max(1, Number(nextValue) || 1)));
   }
 
-  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (eventOptions?.length && selectedEvents.length === 0) {
       setStatus(text(eventError ?? t("eventError")));
+      return;
+    }
+    if (actions) {
+      const form = event.currentTarget;
+      const formData = new FormData(form);
+      setSubmitting(true);
+      setStatus(publicT("submitting"));
+      try {
+        const result = await actions.submitRsvp({
+          name: String(formData.get("fullName") ?? ""),
+          phone: String(formData.get("phone") ?? "") || undefined,
+          attending: formData.get("attending") === "yes",
+          guests: guestCount,
+          note: String(formData.get("dietaryRequirements") ?? "") || undefined,
+          website: String(formData.get("website") ?? "") || undefined,
+        });
+        if (!result.ok) {
+          setStatus(publicT(result.code === "limit_reached" ? "limitReached" : "error"));
+          return;
+        }
+        setStatus(text(successMessage ?? t("rsvpSuccess")));
+        form.reset();
+        setGuestCount(1);
+        setSelectedEvents([]);
+      } catch {
+        setStatus(publicT("error"));
+      } finally {
+        setSubmitting(false);
+      }
       return;
     }
     setStatus(text(successMessage ?? t("rsvpSuccess")));
@@ -62,6 +95,7 @@ export default function Rsvp({
         <h2 id="rsvp-title">{text(title)}</h2>
         <p className="section-kicker">{text(subtitle)}</p>
         <form className="rsvp-form" onSubmit={handleSubmit}>
+          <label hidden aria-hidden="true">Website<input name="website" type="text" tabIndex={-1} autoComplete="off" /></label>
           <fieldset>
             <legend>{text(attendingLabel ?? t("attending"))}</legend>
             <label className="rsvp-radio">
@@ -141,6 +175,11 @@ export default function Rsvp({
           )}
 
           <label>
+            {t("phone")}
+            <Bidi><input dir="ltr" name="phone" type="tel" maxLength={40} placeholder={t("phonePlaceholder")} /></Bidi>
+          </label>
+
+          <label>
             {text(emailLabel ?? t("email"))}
             <Bidi><input dir="ltr" name="email" type="email" maxLength={120} placeholder={text(emailPlaceholder ?? t("emailPlaceholder"))} required /></Bidi>
           </label>
@@ -171,9 +210,9 @@ export default function Rsvp({
             </label>
           )}
 
-          <button type="submit">
+          <button type="submit" disabled={submitting}>
             <Send size={17} aria-hidden="true" />
-            {text(submitLabel ?? t("sendRsvp"))}
+            {submitting ? publicT("submitting") : text(submitLabel ?? t("sendRsvp"))}
           </button>
           {status ? <p className="form-status" role="status">{status}</p> : null}
         </form>

@@ -1,0 +1,4 @@
+.public-status-page { min-block-size: 100vh; display: grid; place-items: center; padding-block: 3rem; padding-inline: 1.25rem; background: radial-gradient(circle at 50% 15%, #fffdf6, var(--cream)); text-align: center; }
+.public-status-page > div { inline-size: min(100%, 38rem); padding-block: 2.5rem; padding-inline: clamp(1.25rem, 5vw, 3rem); border: 1px solid var(--border); border-radius: 1.25rem; background: var(--surface); box-shadow: 0 1rem 3rem rgb(54 46 24 / 8%); }
+.public-status-page h1 { max-inline-size: none; margin-block: .5rem .75rem; }
+.public-status-page p:last-child { color: var(--muted); }

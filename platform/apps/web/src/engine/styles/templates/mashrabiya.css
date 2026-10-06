@@ -837,7 +837,8 @@
 }
 
 .invitation-shell[data-layout="mashrabiya"] .rsvp-form input[type="text"],
-.invitation-shell[data-layout="mashrabiya"] .rsvp-form input[type="email"] {
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form input[type="email"],
+.invitation-shell[data-layout="mashrabiya"] .rsvp-form input[type="tel"] {
   min-block-size: 48px;
   padding-inline: 1rem;
   border-radius: 0.65rem;
