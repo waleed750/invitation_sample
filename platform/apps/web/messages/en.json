@@ -98,6 +98,75 @@
       "placeholder": "Terms, privacy and refund policies are coming soon. These links are placeholders."
     }
   },
+  "checkout": {
+    "brand": "Invitely",
+    "secure": "Secure demo checkout",
+    "eyebrow": "Your invitation starts here",
+    "title": "Make it yours, then make it official.",
+    "description": "Add your details, verify your phone and choose the plan for your celebration.",
+    "steps": {"details": "Your details", "phone": "Verify phone", "plan": "Plan & pay"},
+    "details": {
+      "first": "First partner's name",
+      "second": "Second partner's name",
+      "date": "Event date",
+      "preview": "A little preview",
+      "firstPlaceholder": "First name",
+      "secondPlaceholder": "Second name"
+    },
+    "otp": {"phone": "Mobile number", "send": "Send code", "code": "6-digit code", "verify": "Verify number", "verified": "Phone verified"},
+    "plan": {
+      "choose": "Choose a plan",
+      "tiers": {
+        "save-the-date": {"name": "Save the Date", "feature": "{edits} edits · {months} months online"},
+        "classic": {"name": "Classic", "feature": "{edits} edits · {months} months online"},
+        "premium": {"name": "Premium", "feature": "{edits} edits · {months} months online"}
+      },
+      "addons": "Need more later? Add 10 edits for EGP 99 or extend by 3 months for EGP 199.",
+      "coupon": "Coupon code",
+      "method": "Payment method",
+      "methods": {"card": "Card", "wallet": "Mobile wallet", "fawry": "Fawry cash"}
+    },
+    "summary": {"eyebrow": "One-time payment", "title": "Order summary", "subtotal": "Subtotal", "discount": "Discount", "total": "Total"},
+    "pay": {
+      "button": "Continue to payment",
+      "processing": "Please wait…",
+      "eyebrow": "Mock gateway",
+      "title": "Choose a demo outcome",
+      "description": "Use these controls to test every payment state. No payment details are collected.",
+      "order": "Order",
+      "amount": "Amount",
+      "succeed": "Succeed",
+      "fail": "Fail",
+      "reference": "Get Fawry reference",
+      "fawryReference": "Fawry reference",
+      "referenceHelp": "Use the button below to simulate paying this reference at an outlet.",
+      "cashPaid": "Simulate cash payment at outlet"
+    },
+    "result": {
+      "eyebrow": "Payment result",
+      "paid": {"title": "Payment complete", "description": "Your draft invitation is ready for you."},
+      "pending": {"title": "Waiting for payment", "description": "Your order is saved and still pending.", "instructions": "Take this reference to a Fawry outlet. This demo does not create a real payable reference."},
+      "failed": {"title": "Payment failed", "description": "No money was charged. You can return to the demo gateway and try again."},
+      "order": "Order",
+      "amount": "Amount",
+      "created": "Created",
+      "reference": "Fawry reference",
+      "dashboard": "Open dashboard",
+      "tryAgain": "Try payment again"
+    },
+    "errors": {
+      "invalidPhone": "Enter a valid Egyptian mobile number.",
+      "invalidCode": "Enter the 6-digit demo code.",
+      "verifyFirst": "Verify your phone before continuing.",
+      "detailsRequired": "Enter both names and the event date.",
+      "generic": "Something went wrong. Check your details and try again."
+    }
+  },
+  "demoMode": {
+    "banner": "Demo mode — no money is charged",
+    "otpHint": "Demo code: 123456",
+    "noCharge": "Demo only — this button will not charge you."
+  },
   "engine": {
     "openInvitation": "Open invitation",
     "introPoster": "Invitation opening poster",
