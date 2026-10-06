@@ -1,0 +1,30 @@
+/* Design gallery — arch-topped cards: one live design, three desaturated coming-soon silhouettes. */
+.hm-designs__head { display: flex; flex-wrap: wrap; align-items: flex-start; justify-content: space-between; gap: 1rem 1.5rem; margin-block-end: clamp(2rem, 5vw, 3rem); }
+.hm-designs__titles { display: grid; gap: .5rem; }
+.hm-designs__grid { display: grid; grid-template-columns: minmax(0, 1fr); gap: 1.25rem; }
+.hm-designs__card { display: flex; flex-direction: column; gap: .9rem; background: #fff; border: 1px solid var(--hairline); border-radius: 4px; padding: 1rem; }
+.hm-designs__art { position: relative; inline-size: 100%; max-inline-size: 18rem; margin-inline: auto; block-size: 18rem; overflow: hidden; background: var(--g950); border: 1px solid var(--hairline); border-start-start-radius: 999px; border-start-end-radius: 999px; }
+.hm-designs__art .hm-invite__line { font-size: 5cqw; }
+.hm-designs__art .hm-invite__date { font-size: 5.2cqw; }
+.hm-designs__badge { position: absolute; inset-block-start: 1.1rem; inset-inline: 0; margin-inline: auto; inline-size: fit-content; z-index: 2; background: var(--gold800); color: var(--gold200); border-radius: 4px; padding-block: .25rem; padding-inline: .65rem; font-size: .75rem; font-weight: 600; line-height: 1.5; }
+.hm-designs__style { position: absolute; inset-block-end: .75rem; inset-inline-start: .75rem; z-index: 2; background: var(--ivory50); color: var(--gold800); border: 1px solid var(--hairline); border-radius: 4px; padding-block: .2rem; padding-inline: .65rem; font-size: .75rem; font-weight: 600; line-height: 1.5; }
+.hm-designs__meta { display: flex; flex-direction: column; gap: .6rem; flex: 1; }
+.hm-designs__namerow { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: .25rem .75rem; }
+.hm-designs__name { font-size: 1.35rem; }
+.hm-designs__price { color: var(--gold800); font-size: .95rem; font-weight: 600; white-space: nowrap; font-variant-numeric: tabular-nums lining-nums; }
+.hm-designs__desc { color: var(--muted); font-size: .95rem; flex: 1; }
+.hm-designs__actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-block-start: auto; padding-block-start: .35rem; }
+.hm-designs__actions .hm-btn { flex: 1 1 9rem; }
+
+/* Coming soon: arch filled with the lattice and desaturated, no buttons, never purchasable. */
+.hm-designs__card--soon { background: var(--ivory50); }
+.hm-designs__art--soon { background: var(--ivory200); }
+.hm-designs__fill { position: absolute; inset: 0; background-color: var(--ivory100); background-image: var(--hm-lattice); filter: grayscale(1) opacity(.75); }
+
+@media (min-width: 600px) { .hm-designs__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+@media (min-width: 1100px) { .hm-designs__grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+@media (max-width: 599px) {
+  .hm-designs__head { flex-direction: column; align-items: flex-start; }
+  .hm-designs__actions { flex-direction: column; }
+  .hm-designs__actions .hm-btn { flex: none; inline-size: 100%; }
+}

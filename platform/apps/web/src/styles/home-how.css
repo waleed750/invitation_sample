@@ -1,0 +1,15 @@
+/* How it works — three hairline cards on an asymmetric grid: a wide lead step, then two narrower ones. */
+.hm-how__grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; }
+.hm-how__step { display: flex; flex-direction: column; gap: .85rem; background: #fff; border: 1px solid var(--hairline); border-radius: 4px; padding: clamp(1.5rem, 3vw, 2rem); }
+.hm-how__numrow { display: flex; align-items: baseline; gap: .75rem; color: var(--gold800); }
+.hm-how__num { font-family: var(--hm-head); font-size: 5rem; font-weight: 600; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px var(--gold800); }
+.hm-how__numrow .hm-star { flex: none; color: var(--gold800); }
+.hm-how__title { font-size: 1.35rem; }
+.hm-how__body { color: var(--muted); font-size: .95rem; }
+.hm-how__tag { margin-block-start: auto; padding-block-start: .75rem; border-block-start: 1px solid var(--sand); color: var(--gold800); font-size: .85rem; font-weight: 600; line-height: 1.6; }
+@supports not (-webkit-text-stroke: 1px #000) { .hm-how__num { color: var(--gold800); } }
+
+@media (min-width: 900px) {
+  .hm-how__grid { grid-template-columns: 1.5fr 1fr 1fr; align-items: start; }
+  .hm-how__step--lead { min-block-size: 28rem; padding: clamp(2.25rem, 3vw, 3rem); }
+}

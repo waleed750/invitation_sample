@@ -1,0 +1,10 @@
+/* Features — two-column editorial rows on a 60rem measure, ruled, no cards and no shadows. */
+.hm-features__list { list-style: none; margin-block: 0; margin-inline: auto; padding: 0; inline-size: min(100%, 60rem); display: grid; }
+.hm-features__row { display: grid; gap: .35rem 2rem; padding-block: 1.5rem; border-block-start: 1px solid var(--sand); }
+.hm-features__title { display: flex; align-items: center; gap: .6rem; font-size: 1.25rem; }
+.hm-features__title .hm-star { flex: none; color: var(--gold800); }
+.hm-features__body { color: var(--muted); }
+
+@media (min-width: 760px) {
+  .hm-features__row { grid-template-columns: minmax(0, 1fr) minmax(0, 1.35fr); align-items: start; gap: 2rem; }
+}

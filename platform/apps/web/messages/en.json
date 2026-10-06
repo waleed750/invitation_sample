@@ -322,8 +322,16 @@
       "reference": "Fawry reference",
       "receipt": "Receipt",
       "receiptSoon": "Coming soon",
-      "kinds": {"new": "New invitation", "extension": "Online extension", "edits": "Extra edits"},
-      "methods": {"card": "Card", "wallet": "Mobile wallet", "fawry": "Fawry cash"}
+      "kinds": {
+        "new": "New invitation",
+        "extension": "Online extension",
+        "edits": "Extra edits"
+      },
+      "methods": {
+        "card": "Card",
+        "wallet": "Mobile wallet",
+        "fawry": "Fawry cash"
+      }
     },
     "points": {
       "eyebrow": "Loyalty rewards",
@@ -340,7 +348,10 @@
       "history": "Points history",
       "empty": "Your earned and redeemed points will appear here.",
       "expires": "Expires {date}",
-      "reasons": {"purchase": "Purchase reward", "redeem": "Redeemed on an order"}
+      "reasons": {
+        "purchase": "Purchase reward",
+        "redeem": "Redeemed on an order"
+      }
     },
     "account": {
       "eyebrow": "Your details",
@@ -371,22 +382,74 @@
       "expired": "The online period has ended. Extend it before publishing.",
       "not_found": "This invitation could not be found."
     },
-    "levels": {"member": "Member", "silver": "Silver", "gold": "Gold"},
-    "statuses": {"draft": "Draft", "published": "Published", "pending": "Pending", "paid": "Paid", "failed": "Failed"}
+    "levels": {
+      "member": "Member",
+      "silver": "Silver",
+      "gold": "Gold"
+    },
+    "statuses": {
+      "draft": "Draft",
+      "published": "Published",
+      "pending": "Pending",
+      "paid": "Paid",
+      "failed": "Failed"
+    }
   },
   "guests": {
     "eyebrow": "Guest management",
     "title": "Guests & RSVP",
     "description": "Live responses for {first} & {second}, visible only in your dashboard.",
-    "tabs": {"label": "Invitation sections", "overview": "Overview", "guests": "Guests"},
-    "stats": {"label": "RSVP summary", "attending": "Attending responses", "declined": "Declined responses", "totalGuests": "Guests attending", "remaining": "Capacity remaining", "unlimited": "Unlimited"},
-    "list": {"title": "Guest list", "updated": "Published {date}", "notPublished": "Publish the invitation to start collecting responses.", "export": "Export CSV", "search": "Search by name or phone", "empty": "No matching responses yet.", "name": "Name", "phone": "Phone", "response": "Response", "guests": "Guests", "note": "Note", "date": "Received", "attending": "Attending", "declined": "Declined", "whatsapp": "Message on WhatsApp", "whatsappMessage": "Hello, we are following up about your invitation RSVP."},
-    "messages": {"eyebrow": "Guestbook", "title": "Guest messages", "empty": "No guestbook messages yet."}
+    "tabs": {
+      "label": "Invitation sections",
+      "overview": "Overview",
+      "guests": "Guests"
+    },
+    "stats": {
+      "label": "RSVP summary",
+      "attending": "Attending responses",
+      "declined": "Declined responses",
+      "totalGuests": "Guests attending",
+      "remaining": "Capacity remaining",
+      "unlimited": "Unlimited"
+    },
+    "list": {
+      "title": "Guest list",
+      "updated": "Published {date}",
+      "notPublished": "Publish the invitation to start collecting responses.",
+      "export": "Export CSV",
+      "search": "Search by name or phone",
+      "empty": "No matching responses yet.",
+      "name": "Name",
+      "phone": "Phone",
+      "response": "Response",
+      "guests": "Guests",
+      "note": "Note",
+      "date": "Received",
+      "attending": "Attending",
+      "declined": "Declined",
+      "whatsapp": "Message on WhatsApp",
+      "whatsappMessage": "Hello, we are following up about your invitation RSVP."
+    },
+    "messages": {
+      "eyebrow": "Guestbook",
+      "title": "Guest messages",
+      "empty": "No guestbook messages yet."
+    }
   },
   "public": {
-    "metadata": {"description": "A private invitation for a celebration on {date}."},
-    "expired": {"eyebrow": "Thank you for visiting", "title": "This invitation is no longer online", "description": "The invitation's online period has ended. Please contact the hosts if you need any details."},
-    "forms": {"submitting": "Sending…", "error": "We could not save this response. Please try again.", "limitReached": "This response exceeds the remaining guest capacity. Please contact the hosts."}
+    "metadata": {
+      "description": "A private invitation for a celebration on {date}."
+    },
+    "expired": {
+      "eyebrow": "Thank you for visiting",
+      "title": "This invitation is no longer online",
+      "description": "The invitation's online period has ended. Please contact the hosts if you need any details."
+    },
+    "forms": {
+      "submitting": "Sending…",
+      "error": "We could not save this response. Please try again.",
+      "limitReached": "This response exceeds the remaining guest capacity. Please contact the hosts."
+    }
   },
   "demoMode": {
     "banner": "Demo mode — no money is charged",
@@ -462,143 +525,237 @@
       "tier": "{tier}"
     }
   },
-  "lp": {
+  "home": {
     "brand": "Invitely",
+    "tagline": "Digital wedding invitations",
     "skip": "Skip to content",
     "nav": {
       "label": "Main navigation",
-      "designs": "Designs",
+      "home": "Home",
+      "templates": "Designs",
       "pricing": "Pricing",
       "how": "How it works",
-      "start": "Start your invitation"
+      "cta": "Design your invitation",
+      "account": "My account"
     },
     "hero": {
-      "line1": "Type your names..",
-      "line2": "watch your invitation open",
+      "tag": "An Egyptian platform for digital wedding invitations",
+      "title1": "Your wedding invitation..",
+      "title2": "opens on every guest's phone",
+      "sub": "Type your names, pick a design, send it on WhatsApp, and see who's coming in one table.",
       "namesLabel": "Type the couple's names",
-      "namesDefault": "Ahmed & Mona",
       "dateLabel": "Wedding day",
-      "dateDefault": "2027-04-15",
-      "openCta": "Open my invitation",
-      "replayCta": "Open it again",
-      "bubble": "Look at our invitation 💌",
-      "inviteLine": "Together with their families, they invite you to their wedding",
-      "tapHint": "Tap to open",
-      "phoneLabel": "Invitation preview"
-    },
-    "journey": {
-      "title": "From WhatsApp to the replies landing in your hands",
-      "step": "Step {n}",
-      "s1": {
-        "title": "The invitation lands on WhatsApp",
-        "body": "One link, and a lovely preview card shows up before anyone even taps."
+      "cta": "Open my invitation",
+      "replay": "Open it again",
+      "demo": "See a live example",
+      "point1": "A WhatsApp link, no app to download",
+      "point2": "One payment in Egyptian pounds",
+      "phone": {
+        "label": "Invitation preview",
+        "top": "With the blessings of God",
+        "line": "The families invite you to the wedding of",
+        "venue": "Nile Hall",
+        "city": "Cairo",
+        "open": "Open the invitation",
+        "rsvp": "RSVP",
+        "map": "Venue map",
+        "defaultNames": "Ahmed & Mona",
+        "defaultDate": "2027-04-15"
       },
-      "s2": {
-        "title": "Your guest opens it, and it opens up",
-        "body": "The names appear, the music plays, and it looks just the way you dreamed."
-      },
-      "s3": {
-        "title": "They tap Yes.. and you watch",
-        "body": "Replies arrive on their own and are counted for you, so you never have to chase anyone."
-      },
-      "chat": {
-        "contact": "Ahmed",
-        "bubble": "Look at our invitation",
-        "previewTitle": "Ahmed & Mona",
-        "previewSub": "Wedding invitation · 15 April",
-        "now": "now"
-      },
-      "guest": {
-        "tap": "Tap to open",
-        "yes": "I'll be there",
-        "no": "Can't make it"
-      },
-      "dash": {
-        "title": "Dashboard",
-        "label": "confirmed their attendance",
+      "counter": {
+        "label": "RSVPs (example)",
+        "value": "184 guests",
         "example": "Illustrative example"
       }
     },
-    "wall": {
-      "title": "Pick your vibe",
-      "sub": "The first design is ready now. More are on the way.",
-      "chipsLabel": "Choose a style",
-      "chips": {
-        "royal": "Royal",
-        "soft": "Soft",
-        "modern": "Modern",
-        "boho": "Boho",
-        "heritage": "Heritage"
+    "facts": {
+      "label": "Quick facts",
+      "once": "Pay once",
+      "noapp": "No app to download",
+      "bilingual": "Arabic and English",
+      "refund": "7-day refund before publishing"
+    },
+    "how": {
+      "eyebrow": "Simple and quick",
+      "title": "Start your invitation in 3 steps",
+      "s1": {
+        "title": "Pick your design",
+        "body": "Browse the designs and try each one with your own names before you pay.",
+        "tag": "New designs coming soon"
       },
+      "s2": {
+        "title": "Add your evening's details",
+        "body": "Names, date, the venue on the map, the day's schedule, and gift details if you like.",
+        "tag": "Up to {n} published edits on Classic"
+      },
+      "s3": {
+        "title": "Share and track replies",
+        "body": "One link on WhatsApp, and a clear table of who's coming and who declined.",
+        "tag": "Export replies to a file that opens in Excel"
+      }
+    },
+    "templates": {
+      "eyebrow": "Design gallery",
+      "title": "Pick your design",
+      "all": "All designs",
+      "soon": "Coming soon",
+      "ready": "Ready now",
+      "from": "From",
+      "preview": "Live preview",
+      "use": "Use this design",
       "live": {
         "name": "Mashrabiya",
-        "tag": "A Cairo evening under the moon",
-        "try": "Try it"
+        "style": "Heritage",
+        "desc": "A Cairo evening under the moon, behind carved mashrabiya shutters."
       },
-      "soon": "Coming soon",
-      "soonNames": {
-        "a": "Royal red",
-        "b": "Soft florals",
-        "c": "Clean modern"
+      "soonItems": {
+        "a": {
+          "name": "Royal Classic",
+          "style": "Classic"
+        },
+        "b": {
+          "name": "Soft Romance",
+          "style": "Floral"
+        },
+        "c": {
+          "name": "Clean Modern",
+          "style": "Modern"
+        }
       },
-      "all": "See all designs"
+      "soonDesc": "A new design in the works."
     },
-    "flip": {
-    "card": {"ar": {"line": "يتشرفوا بدعوتكم لحفل زفافهم", "names": "أحمد & منى", "place": "قاعة النيل · القاهرة"}, "en": {"line": "Together with their families, they invite you to their wedding", "names": "Ahmed & Mona", "place": "Nile Hall · Cairo"}},
-      "title": "You stay in control",
-      "sub": "Change anything and watch it update, then flip between Arabic and English in one tap.",
-      "fields": {
-        "names": "Names",
-        "date": "Date",
-        "place": "Place"
+    "features": {
+      "eyebrow": "Everything you need",
+      "title": "Features in every invitation",
+      "i1": {
+        "title": "RSVPs in one clear table",
+        "body": "Every reply lands in one table with the name, the headcount and the status."
       },
-      "placeDefault": "Nile Hall · Cairo",
-      "toggleLabel": "Invitation language",
-      "ar": "عربي",
-      "en": "English",
-      "badges": {
-        "edits": "Edit as you like (up to {n} published edits)",
-        "once": "Pay once",
-        "noapp": "No app for anyone to download"
+      "i2": {
+        "title": "Venue map",
+        "body": "A direct Google Maps link inside the invitation, so nobody gets lost."
       },
-      "meter": "{left} of {total} edits left",
-      "example": "Illustrative example",
-      "inviteLine": "Together with their families, they invite you to their wedding"
+      "i3": {
+        "title": "Gifts section",
+        "body": "Add account details or a transfer link if you'd like to receive gifts."
+      },
+      "i4": {
+        "title": "Music and a video intro",
+        "body": "A video intro and music upload come with the Premium plan."
+      },
+      "i5": {
+        "title": "Arabic and English",
+        "body": "Switch the invitation's language in one tap and the layout adjusts itself."
+      },
+      "i6": {
+        "title": "Countdown and day schedule",
+        "body": "A countdown to the big day and a clear schedule for your guests."
+      }
     },
-    "price": {
-      "title": "One price for the whole invitation",
-      "sub": "You pay once per event, no subscriptions.",
-      "ticket": "Your invitation ticket",
-      "plans": {
-        "save-the-date": "Save the Date",
-        "classic": "Classic",
-        "premium": "Premium"
-      },
-      "stamp": "Most popular",
-      "months": "{n} months online",
-      "rsvp": {
-        "none": "No RSVP",
-        "limit": "Up to {n} RSVPs",
-        "unlimited": "Unlimited RSVPs"
-      },
-      "video": {
-        "yes": "Video intro",
-        "no": "No video intro"
-      },
+    "pricing": {
+      "eyebrow": "Clear pricing",
+      "title": "Plans that fit your wedding",
+      "sub": "Pay once per event in Egyptian pounds, with no subscription.",
+      "per": "One-time",
+      "badge": "Right for most weddings",
       "choose": "Choose {plan}",
-      "currency": "EGP"
+      "refund": "Refund within 7 days, before you publish.",
+      "plans": {
+        "save-the-date": {
+          "name": "Save the Date",
+          "desc": "For an engagement or a simple announcement of your wedding day."
+        },
+        "classic": {
+          "name": "Classic",
+          "desc": "The best fit for most couples: a full invitation with RSVPs."
+        },
+        "premium": {
+          "name": "Premium",
+          "desc": "For big weddings: a video intro, music and unlimited replies."
+        }
+      },
+      "f": {
+        "months": "{n} months online",
+        "edits": "{n} published edits",
+        "rsvpNone": "No RSVP",
+        "rsvpLimit": "RSVPs for up to {n} guests",
+        "rsvpUnlimited": "Unlimited RSVPs",
+        "videoMusic": "Video intro and music upload",
+        "messages": "Guest well-wishes messages",
+        "support": "Priority WhatsApp support"
+      },
+      "compare": {
+        "toggle": "Compare every detail",
+        "feature": "Feature",
+        "months": "Time online",
+        "edits": "Published edits",
+        "rsvp": "RSVP",
+        "video": "Video intro",
+        "music": "Music upload",
+        "messages": "Guest messages",
+        "support": "Priority support",
+        "yes": "Included",
+        "no": "Not included",
+        "unlimited": "Unlimited"
+      }
+    },
+    "early": {
+      "eyebrow": "A fresh start",
+      "title": "Our first 100 couples",
+      "body": "We're just starting out, and we're preparing a first group of couples to walk with step by step. Start your invitation and tell us honestly what you think.",
+      "cta": "Start your invitation"
+    },
+    "faq": {
+      "eyebrow": "Clear answers",
+      "title": "Frequently asked questions",
+      "q1": {
+        "q": "How does the invitation reach my guests?",
+        "a": "You get a private link and send it on WhatsApp or any message. As soon as a guest opens it, the invitation opens on their phone."
+      },
+      "q2": {
+        "q": "Do guests need to download an app?",
+        "a": "No, not at all. The invitation is a web page that opens in the browser on iPhone and Android, with no sign-up."
+      },
+      "q3": {
+        "q": "Can I edit after I publish?",
+        "a": "Yes, and the changes appear on the same link. Each plan includes a number of published edits, and Classic includes {n}."
+      },
+      "q4": {
+        "q": "What are the payment methods?",
+        "a": "You pay in Egyptian pounds, once per event. We're running a demo mode for now, and Fawry and cards will be switched on before launch."
+      },
+      "q5": {
+        "q": "How long does it take to get my invitation ready?",
+        "a": "It's ready in minutes once you enter your names, the wedding date and pick a design."
+      },
+      "q6": {
+        "q": "Can I get a refund?",
+        "a": "Yes, within 7 days of payment, as long as you haven't published the invitation yet."
+      }
     },
     "final": {
-      "title": "Start your invitation now",
-      "start": "Start",
-      "whatsapp": "Chat on WhatsApp",
-      "proof": "Coming soon: reviews from our first 100 couples"
+      "title": "Start your invitation now, in two minutes",
+      "sub": "Share your joy with the people you love in an invitation worthy of you, and see who's coming from one place.",
+      "cta": "Pick your design",
+      "whatsapp": "Chat with us on WhatsApp",
+      "c1": "Try it with your names before you pay",
+      "c2": "7-day refund",
+      "c3": "Support on WhatsApp"
     },
     "footer": {
-      "note": "Digital invitations for weddings and celebrations in Egypt.",
-      "terms": "Terms",
-      "privacy": "Privacy",
-      "refund": "Refunds",
+      "about": "An Egyptian platform for designing and sending digital wedding and celebration invitations.",
+      "c1": "Designs and services",
+      "gallery": "Design gallery",
+      "pricing": "Pricing plans",
+      "how": "How it works",
+      "c2": "Help",
+      "terms": "Terms and conditions",
+      "privacy": "Privacy policy",
+      "faq": "FAQ",
+      "c3": "Contact",
+      "whatsapp": "Chat on WhatsApp",
+      "rights": "© 2026 {brand}. All rights reserved.",
+      "made": "Made with love in Egypt",
       "legal": "Legal pages are being prepared."
     }
   }
