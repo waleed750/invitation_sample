@@ -645,7 +645,8 @@ select set_config('request.jwt.claims', '', true);
 insert into auth.users (id, aud, role)
 values ('99999999-9999-9999-9999-999999999999', 'authenticated', 'authenticated');
 insert into public.profiles (id, email, name, preferred_locale, signup_method)
-values ('99999999-9999-9999-9999-999999999999', 'expiry-test@example.com', 'Expiry Test', 'en', 'email');
+values ('99999999-9999-9999-9999-999999999999', 'expiry-test@example.com', 'Expiry Test', 'en', 'email')
+on conflict (id) do update set email = excluded.email, name = excluded.name;
 insert into public.points_ledger (user_id, delta, reason, expires_at)
 values
   ('99999999-9999-9999-9999-999999999999', 100, 'bonus', now() - interval '1 day'),
@@ -875,11 +876,13 @@ select set_config('request.jwt.claims', '', true);
 insert into auth.users (id, aud, role)
 values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'authenticated', 'authenticated');
 insert into public.profiles (id, email, name, preferred_locale, signup_method)
-values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'history-owner@example.com', 'History Owner', 'en', 'email');
+values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'history-owner@example.com', 'History Owner', 'en', 'email')
+on conflict (id) do update set email = excluded.email, name = excluded.name;
 insert into auth.users (id, aud, role)
 values ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'authenticated', 'authenticated');
 insert into public.profiles (id, email, name, preferred_locale, signup_method)
-values ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'history-stranger@example.com', 'History Stranger', 'en', 'email');
+values ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'history-stranger@example.com', 'History Stranger', 'en', 'email')
+on conflict (id) do update set email = excluded.email, name = excluded.name;
 
 insert into public.templates (id, slug, name_ar, name_en, name, tagline, tier, status, license_complete)
 values
