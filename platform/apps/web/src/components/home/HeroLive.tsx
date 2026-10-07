@@ -5,7 +5,7 @@ import {useLocale, useTranslations} from 'next-intl';
 import {Link} from '@/i18n/navigation';
 import {formatDate, type FormatLocale} from '@/lib/format';
 import {Chevron} from './Chevron';
-import {InvitationScreen} from './InvitationScreen';
+import {RiwaqPhone} from './RiwaqPhone';
 import {Phone} from './Phone';
 import {StarMark} from './StarMark';
 
@@ -63,15 +63,9 @@ export function HeroLive({featuredSlug}: {featuredSlug: string}) {
         <div className="hm-hero__stage">
           <button type="button" className="hm-hero__phonebtn" onClick={openInvitation} aria-label={t('cta')}>
             <Phone label={t('phone.label')}>
-              <InvitationScreen names={shownNames} dateText={dateText} line={t('phone.line')} top={t('phone.top')} place={`${t('phone.venue')} · ${t('phone.city')}`}
-                variant="green" open={open} tapHint={t('phone.open')} dir={dir} lang={locale} />
+              <RiwaqPhone names={shownNames} dateText={dateText} line={t('phone.line')} tapHint={t('phone.open')} open={open} dir={dir} lang={locale} />
             </Phone>
           </button>
-          <div className="hm-hero__counter" aria-label={t('counter.label')}>
-            <small>{t('counter.label')}</small>
-            <strong>{t('counter.value')}</strong>
-            <em>{t('counter.example')}</em>
-          </div>
         </div>
       </div>
     </section>
