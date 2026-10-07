@@ -6,7 +6,7 @@ import {CLOCK, type Clock} from '../common/clock';
 import type {RequestUser} from '../common/decorators';
 import {AppLogger} from '../common/app-logger';
 import {isRecord} from '../common/type-guards';
-import {SupabaseService} from '../supabase/supabase.service';
+import {EntitlementsRepository} from './entitlements.repository';
 
 /** `GET /v1/invitations/:id/entitlement` — `:id` is a UUID, validated by Zod. */
 const invitationIdSchema = z.object({id: z.uuid('invitation id must be a UUID')});
@@ -51,27 +51,20 @@ function toRow(data: unknown): EntitlementRow {
  * Reads the caller's `invitation_entitlements` row through the user-scoped
  * client (RLS decides access — an invisible invitation is a 404) and computes
  * the dashboard meters with the pure functions from `@platform/shared`.
- * No HTTP calls here beyond the injected Supabase client, so unit tests mock
- * `SupabaseService` and fix the time via the `Clock` provider.
+ * Persistence lives in `EntitlementsRepository`, so unit tests mock
+ * the Supabase layer and fix the time via the `Clock` provider.
  */
 @Injectable()
 export class EntitlementsService {
   constructor(
-    private readonly supabase: SupabaseService,
+    private readonly repository: EntitlementsRepository,
     @Inject(CLOCK) private readonly clock: Clock,
     private readonly logger: AppLogger
   ) {}
 
   async getEntitlement(user: RequestUser, invitationId: string): Promise<EntitlementResponse> {
-    const client = this.supabase.forUser(user.jwt);
     try {
-      // The postgrest response is typed `any` without generated table types —
-      // pin it to `unknown` first and narrow from there (never `any`).
-      const result: unknown = await client
-        .from('invitation_entitlements')
-        .select('edits_allowed,edits_used,online_until')
-        .eq('invitation_id', invitationId)
-        .single();
+      const result: unknown = await this.repository.findByInvitationId(user.jwt, invitationId);
       if (!isRecord(result)) {
         this.logger.error('invitation_entitlements lookup failed (malformed response)');
         throw new ServiceUnavailableException('Entitlement service unavailable');

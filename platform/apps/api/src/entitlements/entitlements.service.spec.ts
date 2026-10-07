@@ -4,6 +4,7 @@ import {AppLogger} from '../common/app-logger';
 import {CLOCK, type Clock} from '../common/clock';
 import type {RequestUser} from '../common/decorators';
 import {SupabaseService} from '../supabase/supabase.service';
+import {EntitlementsRepository} from './entitlements.repository';
 import {mockSupabaseClient, setTestEnv} from '../test-helpers';
 import {EntitlementsService} from './entitlements.service';
 
@@ -20,7 +21,7 @@ async function buildService(
 ): Promise<{service: EntitlementsService; forUser: jest.Mock}> {
   const forUser = jest.fn().mockReturnValue(mockSupabaseClient({data: row, error}));
   const moduleRef = await Test.createTestingModule({
-    providers: [EntitlementsService, AppLogger, {provide: CLOCK, useValue: fixedClock}, {provide: SupabaseService, useValue: {forUser}}]
+    providers: [EntitlementsService, AppLogger, {provide: CLOCK, useValue: fixedClock}, EntitlementsRepository, {provide: SupabaseService, useValue: {forUser}}]
   }).compile();
   return {service: moduleRef.get(EntitlementsService), forUser};
 }

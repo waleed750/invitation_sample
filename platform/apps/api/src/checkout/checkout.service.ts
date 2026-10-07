@@ -6,7 +6,7 @@ import {z} from 'zod';
 import {AppLogger} from '../common/app-logger';
 import type {RequestUser} from '../common/decorators';
 import {isRecord} from '../common/type-guards';
-import {SupabaseService} from '../supabase/supabase.service';
+import {CheckoutRepository} from './checkout.repository';
 import {PAYMENT_PROVIDER, type PaymentProvider} from '../payments/payment-provider';
 
 const checkoutSchema = z.object({
@@ -49,7 +49,7 @@ function numeric(value: unknown): number | null {
 @Injectable()
 export class CheckoutService {
   constructor(
-    private readonly supabase: SupabaseService,
+    private readonly repository: CheckoutRepository,
     @Inject(PAYMENT_PROVIDER) private readonly provider: PaymentProvider,
     private readonly logger: AppLogger
   ) {}
@@ -94,20 +94,20 @@ export class CheckoutService {
     const amountEgp = subtotal - discount.totalDiscountEgp;
     const orderId = randomUUID();
     const invitationSlug = this.invitationSlug(body.couple.first, body.couple.second, orderId);
-    const result: unknown = await this.supabase.admin().rpc('create_pending_checkout', {
-      p_order_id: orderId,
-      p_user_id: user.id,
-      p_template_id: template.id,
-      p_tier: body.tier === 'save-the-date' ? 'save_the_date' : body.tier,
-      p_kind: body.kind,
-      p_amount_egp: amountEgp,
-      p_provider: 'mock',
-      p_idempotency_key: key ?? null,
-      p_coupon_code: body.couponCode?.trim().toLowerCase() ?? null,
-      p_discount_total: discount.totalDiscountEgp,
-      p_points_redeemed: pointsRedeemed,
-      p_invitation_slug: invitationSlug,
-      p_invitation_data: {event_date: body.eventDate, eventDate: body.eventDate, couple: body.couple}
+    const result: unknown = await this.repository.createPendingCheckoutAsServiceRole({
+      orderId,
+      userId: user.id,
+      templateId: template.id,
+      tier: body.tier === 'save-the-date' ? 'save_the_date' : body.tier,
+      kind: body.kind,
+      amountEgp,
+      provider: 'mock',
+      idempotencyKey: key ?? null,
+      couponCode: body.couponCode?.trim().toLowerCase() ?? null,
+      discountTotal: discount.totalDiscountEgp,
+      pointsRedeemed,
+      invitationSlug,
+      invitationData: {event_date: body.eventDate, eventDate: body.eventDate, couple: body.couple}
     });
     if (!isRecord(result) || result.error !== null || !isRecord(result.data)) {
       this.logger.error('checkout creation RPC failed');
@@ -120,9 +120,7 @@ export class CheckoutService {
   }
 
   private async template(slug: string): Promise<TemplateRow> {
-    const result: unknown = await this.supabase.public().from('templates')
-      .select('id,slug,name,tagline,tier,price_override_egp,status,featured')
-      .eq('slug', slug).eq('status', 'live').single();
+    const result: unknown = await this.repository.findLiveTemplateBySlug(slug);
     if (!isRecord(result) || result.error !== null || !isRecord(result.data)) {
       throw new BadRequestException('Unknown or unavailable template');
     }
@@ -144,7 +142,7 @@ export class CheckoutService {
   }
 
   private async pointsBalance(user: RequestUser): Promise<number> {
-    const result: unknown = await this.supabase.forUser(user.jwt).from('profiles').select('points_balance').eq('id', user.id).single();
+    const result: unknown = await this.repository.findPointsBalance(user.jwt, user.id);
     if (!isRecord(result) || result.error !== null || !isRecord(result.data) || typeof result.data.points_balance !== 'number') {
       throw new ServiceUnavailableException('Checkout service unavailable');
     }
@@ -153,9 +151,7 @@ export class CheckoutService {
 
   private async couponDiscount(code: string | undefined, subtotal: number): Promise<number> {
     if (code === undefined) return 0;
-    const result: unknown = await this.supabase.admin().from('coupons')
-      .select('percent_off,amount_off_egp,max_uses,used_count,expires_at,active')
-      .eq('code', code.trim().toLowerCase()).single();
+    const result: unknown = await this.repository.findCouponByCodeAsServiceRole(code.trim().toLowerCase());
     if (!isRecord(result) || result.error !== null || !isRecord(result.data)) throw new BadRequestException('Invalid coupon');
     const row = result.data;
     const expired = typeof row.expires_at === 'string' && Date.parse(row.expires_at) <= Date.now();
@@ -167,8 +163,7 @@ export class CheckoutService {
   }
 
   private async existingOrder(userId: string, key: string): Promise<StoredOrder | null> {
-    const result: unknown = await this.supabase.admin().from('orders').select('id,amount_egp')
-      .eq('user_id', userId).eq('idempotency_key', key).maybeSingle();
+    const result: unknown = await this.repository.findOrderByIdempotencyKeyAsServiceRole(userId, key);
     if (!isRecord(result) || result.error !== null) throw new ServiceUnavailableException('Checkout service unavailable');
     if (result.data === null) return null;
     if (!isRecord(result.data) || typeof result.data.id !== 'string') throw new ServiceUnavailableException('Checkout service unavailable');
@@ -178,7 +173,7 @@ export class CheckoutService {
   }
 
   private async saveProviderRef(orderId: string, providerRef: string): Promise<void> {
-    const result: unknown = await this.supabase.admin().from('orders').update({provider_ref: providerRef}).eq('id', orderId);
+    const result: unknown = await this.repository.saveProviderRefAsServiceRole(orderId, providerRef);
     if (!isRecord(result) || result.error !== null) throw new ServiceUnavailableException('Checkout service unavailable');
   }
 

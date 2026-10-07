@@ -3,6 +3,7 @@ import {ConflictException, NotFoundException, ServiceUnavailableException} from 
 import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
 import {SupabaseService} from '../supabase/supabase.service';
+import {PaymentsRepository} from './payments.repository';
 import {MockPaymentProvider} from './mock-payment.provider';
 import {PAYMENT_PROVIDER} from './payment-provider';
 import {PaymentsService} from './payments.service';
@@ -36,7 +37,7 @@ describe('PaymentsService', () => {
         PaymentsService,
         {provide: PAYMENT_PROVIDER, useValue: provider},
         {provide: MockPaymentProvider, useValue: {sign: jest.fn().mockReturnValue('signature')}},
-        {provide: SupabaseService, useValue: {admin: () => supabaseClient}},
+        PaymentsRepository, {provide: SupabaseService, useValue: {admin: () => supabaseClient}},
         {provide: AppLogger, useValue: {error: jest.fn()}}
       ]
     }).compile();

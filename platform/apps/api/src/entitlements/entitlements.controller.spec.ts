@@ -2,6 +2,7 @@ import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
 import {CLOCK, type Clock} from '../common/clock';
 import {SupabaseService} from '../supabase/supabase.service';
+import {EntitlementsRepository} from './entitlements.repository';
 import {mockSupabaseClient, setTestEnv} from '../test-helpers';
 import {EntitlementsController} from './entitlements.controller';
 import {EntitlementsService, InvitationIdParams} from './entitlements.service';
@@ -17,7 +18,7 @@ async function bootController(row: unknown, error: {code: string} | null): Promi
       EntitlementsService,
       AppLogger,
       {provide: CLOCK, useValue: fixedClock},
-      {provide: SupabaseService, useValue: {forUser: jest.fn().mockReturnValue(mockSupabaseClient({data: row, error}))}}
+      EntitlementsRepository, {provide: SupabaseService, useValue: {forUser: jest.fn().mockReturnValue(mockSupabaseClient({data: row, error}))}}
     ]
   }).compile();
   return moduleRef.get(EntitlementsController);

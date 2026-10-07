@@ -3,7 +3,7 @@ import {levelForPurchases, type Level} from '@platform/shared';
 import {AppLogger} from '../common/app-logger';
 import type {RequestUser} from '../common/decorators';
 import {isRecord} from '../common/type-guards';
-import {SupabaseService} from '../supabase/supabase.service';
+import {PointsRepository} from './points.repository';
 
 export interface PointsResponse {
   balance: number;
@@ -23,15 +23,12 @@ function ledgerRow(value: unknown): PointsResponse['ledger'][number] {
 
 @Injectable()
 export class PointsService {
-  constructor(private readonly supabase: SupabaseService, private readonly logger: AppLogger) {}
+  constructor(private readonly repository: PointsRepository, private readonly logger: AppLogger) {}
 
   async get(user: RequestUser): Promise<PointsResponse> {
-    const client = this.supabase.forUser(user.jwt);
     try {
-      const profileResult: unknown = await client.from('profiles').select('points_balance,purchases_count').eq('id', user.id).single();
-      const ledgerResult: unknown = await client.from('points_ledger')
-        .select('id,order_id,delta,reason,created_at,expires_at').eq('user_id', user.id)
-        .order('created_at', {ascending: false}).limit(50);
+      const profileResult: unknown = await this.repository.findBalance(user.jwt, user.id);
+      const ledgerResult: unknown = await this.repository.listLedger(user.jwt, user.id);
       if (!isRecord(profileResult) || profileResult.error !== null || !isRecord(profileResult.data) ||
           typeof profileResult.data.points_balance !== 'number' || typeof profileResult.data.purchases_count !== 'number' ||
           !isRecord(ledgerResult) || ledgerResult.error !== null || !Array.isArray(ledgerResult.data)) {

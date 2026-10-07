@@ -3,6 +3,7 @@ import {ServiceUnavailableException} from '@nestjs/common';
 import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
 import {SupabaseService} from '../supabase/supabase.service';
+import {PointsRepository} from './points.repository';
 import {PointsService} from './points.service';
 
 describe('PointsService', () => {
@@ -22,7 +23,7 @@ describe('PointsService', () => {
     const module = await Test.createTestingModule({
       providers: [
         PointsService,
-        {provide: SupabaseService, useValue: {forUser: () => supabaseClient}},
+        PointsRepository, {provide: SupabaseService, useValue: {forUser: () => supabaseClient}},
         {provide: AppLogger, useValue: {error: jest.fn()}}
       ]
     }).compile();

@@ -5,6 +5,7 @@ import {DevPaymentsController} from './dev-payments.controller';
 import {MockPaymentProvider} from './mock-payment.provider';
 import {PAYMENT_PROVIDER} from './payment-provider';
 import {PaymentsController} from './payments.controller';
+import {PaymentsRepository} from './payments.repository';
 import {PaymentsService} from './payments.service';
 
 export function paymentControllersForEnv(env: NodeJS.ProcessEnv): Type<unknown>[] {
@@ -17,6 +18,7 @@ export function paymentControllersForEnv(env: NodeJS.ProcessEnv): Type<unknown>[
   controllers: paymentControllersForEnv(process.env),
   providers: [
     PaymentsService,
+    PaymentsRepository,
     MockPaymentProvider,
     AppLogger,
     {

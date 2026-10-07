@@ -3,6 +3,7 @@ import {ServiceUnavailableException} from '@nestjs/common';
 import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
 import {SupabaseService} from '../supabase/supabase.service';
+import {TemplatesRepository} from './templates.repository';
 import {TemplatesService} from './templates.service';
 
 describe('TemplatesService', () => {
@@ -20,7 +21,7 @@ describe('TemplatesService', () => {
     const module = await Test.createTestingModule({
       providers: [
         TemplatesService,
-        {provide: SupabaseService, useValue: {public: () => supabaseClient}},
+        TemplatesRepository, {provide: SupabaseService, useValue: {public: () => supabaseClient}},
         {provide: AppLogger, useValue: {error: jest.fn()}}
       ]
     }).compile();

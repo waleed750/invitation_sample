@@ -2,7 +2,7 @@ import {CanActivate, ExecutionContext, ForbiddenException, Injectable, Unauthori
 import {Reflector} from '@nestjs/core';
 import {ROLES_KEY, type AuthenticatedRequest, type UserRole} from '../common/decorators';
 import {isRecord} from '../common/type-guards';
-import {SupabaseService} from '../supabase/supabase.service';
+import {AuthRepository} from './auth.repository';
 
 /**
  * Global role guard. Routes without `@Roles(...)` pass through; otherwise the
@@ -14,7 +14,7 @@ import {SupabaseService} from '../supabase/supabase.service';
 export class RolesGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly supabase: SupabaseService
+    private readonly repository: AuthRepository
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
@@ -45,10 +45,7 @@ export class RolesGuard implements CanActivate {
 
   private async loadRole(userId: string, jwt: string): Promise<string | null> {
     try {
-      const client = this.supabase.forUser(jwt);
-      // Pinned to `unknown` first: without generated table types the response
-      // is `any` (never `any` in this codebase).
-      const result: unknown = await client.from('profiles').select('role').eq('id', userId).single();
+      const result: unknown = await this.repository.findRoleByUserId(jwt, userId);
       if (!isRecord(result)) return null;
       const {data, error}: {data: unknown; error: unknown} = result as {data: unknown; error: unknown};
       if (error !== null || data === null || !isRecord(data)) return null;

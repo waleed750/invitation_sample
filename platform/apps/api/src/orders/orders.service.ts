@@ -5,7 +5,7 @@ import {z} from 'zod';
 import {AppLogger} from '../common/app-logger';
 import type {RequestUser} from '../common/decorators';
 import {isRecord} from '../common/type-guards';
-import {SupabaseService} from '../supabase/supabase.service';
+import {OrdersRepository} from './orders.repository';
 
 const orderId = z.object({id: z.uuid('order id must be a UUID')});
 export class OrderIdParams extends createZodDto(orderId) {}
@@ -58,16 +58,13 @@ function toResponse(value: unknown): OrderResponse {
   };
 }
 
-const COLUMNS = 'id,template_id,tier,kind,amount_egp,status,provider,provider_ref,discount_total,points_redeemed,created_at,paid_at';
-
 @Injectable()
 export class OrdersService {
-  constructor(private readonly supabase: SupabaseService, private readonly logger: AppLogger) {}
+  constructor(private readonly repository: OrdersRepository, private readonly logger: AppLogger) {}
 
   async list(user: RequestUser): Promise<OrderResponse[]> {
     try {
-      const result: unknown = await this.supabase.forUser(user.jwt).from('orders').select(COLUMNS)
-        .eq('user_id', user.id).order('created_at', {ascending: false});
+      const result: unknown = await this.repository.listByUser(user.jwt, user.id);
       if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) throw new ServiceUnavailableException('Orders service unavailable');
       return result.data.map(toResponse);
     } catch (error) {
@@ -79,8 +76,7 @@ export class OrdersService {
 
   async get(user: RequestUser, id: string): Promise<OrderResponse> {
     try {
-      const result: unknown = await this.supabase.forUser(user.jwt).from('orders').select(COLUMNS)
-        .eq('id', id).eq('user_id', user.id).single();
+      const result: unknown = await this.repository.findByIdForUser(user.jwt, user.id, id);
       if (!isRecord(result)) throw new ServiceUnavailableException('Orders service unavailable');
       if (result.error !== null) {
         if (isRecord(result.error) && result.error.code === 'PGRST116') throw new NotFoundException('Order not found');

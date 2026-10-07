@@ -4,6 +4,7 @@ import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
 import {PAYMENT_PROVIDER} from '../payments/payment-provider';
 import {SupabaseService} from '../supabase/supabase.service';
+import {CheckoutRepository} from './checkout.repository';
 import {CheckoutService} from './checkout.service';
 
 describe('CheckoutService', () => {
@@ -37,7 +38,7 @@ describe('CheckoutService', () => {
     const module = await Test.createTestingModule({
       providers: [
         CheckoutService,
-        {provide: SupabaseService, useValue: supabaseClient},
+        CheckoutRepository, {provide: SupabaseService, useValue: supabaseClient},
         {provide: PAYMENT_PROVIDER, useValue: provider},
         {provide: AppLogger, useValue: {error: jest.fn()}}
       ]

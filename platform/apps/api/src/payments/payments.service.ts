@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import {AppLogger} from '../common/app-logger';
 import {isRecord} from '../common/type-guards';
-import {SupabaseService} from '../supabase/supabase.service';
+import {PaymentsRepository} from './payments.repository';
 import {MockPaymentProvider} from './mock-payment.provider';
 import {PAYMENT_PROVIDER, type PaymentProvider, type PaymentStatus} from './payment-provider';
 
@@ -32,7 +32,7 @@ export class PaymentsService {
   constructor(
     @Inject(PAYMENT_PROVIDER) private readonly provider: PaymentProvider,
     private readonly mockProvider: MockPaymentProvider,
-    private readonly supabase: SupabaseService,
+    private readonly repository: PaymentsRepository,
     private readonly logger: AppLogger
   ) {}
 
@@ -65,16 +65,16 @@ export class PaymentsService {
   }
 
   private async findOrder(providerRef: string): Promise<OrderRow> {
-    return this.lookup('provider_ref', providerRef);
+    return this.lookup(() => this.repository.findOrderByProviderRefAsServiceRole(providerRef));
   }
 
   private async findOrderById(id: string): Promise<OrderRow> {
-    return this.lookup('id', id);
+    return this.lookup(() => this.repository.findOrderByIdAsServiceRole(id));
   }
 
-  private async lookup(column: 'id' | 'provider_ref', value: string): Promise<OrderRow> {
+  private async lookup(query: () => Promise<unknown>): Promise<OrderRow> {
     try {
-      const result: unknown = await this.supabase.admin().from('orders').select('id,amount_egp,status,user_id').eq(column, value).single();
+      const result: unknown = await query();
       if (!isRecord(result)) throw new ServiceUnavailableException('Payment service unavailable');
       const {data, error}: {data: unknown; error: unknown} = result as {data: unknown; error: unknown};
       if (error !== null) {
@@ -92,10 +92,9 @@ export class PaymentsService {
   private async applyStatus(order: OrderRow, status: PaymentStatus): Promise<void> {
     if (status === 'pending' || order.status !== 'pending') return;
     try {
-      const client = this.supabase.admin();
       const result: unknown = status === 'paid'
-        ? await client.rpc('fulfill_paid_order', {p_order_id: order.id})
-        : await client.from('orders').update({status: 'failed'}).eq('id', order.id).eq('status', 'pending');
+        ? await this.repository.fulfillPaidOrderAsServiceRole(order.id)
+        : await this.repository.markOrderFailedAsServiceRole(order.id);
       if (!isRecord(result) || result.error !== null) throw new ServiceUnavailableException('Payment service unavailable');
     } catch (error) {
       if (error instanceof ServiceUnavailableException) throw error;

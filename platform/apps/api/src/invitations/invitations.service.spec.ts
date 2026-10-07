@@ -4,6 +4,7 @@ import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
 import {CLOCK} from '../common/clock';
 import {SupabaseService} from '../supabase/supabase.service';
+import {InvitationsRepository} from './invitations.repository';
 import {InvitationsService} from './invitations.service';
 
 describe('InvitationsService', () => {
@@ -21,7 +22,7 @@ describe('InvitationsService', () => {
     const module = await Test.createTestingModule({
       providers: [
         InvitationsService,
-        {provide: SupabaseService, useValue: {forUser: () => supabaseClient}},
+        InvitationsRepository, {provide: SupabaseService, useValue: {forUser: () => supabaseClient}},
         {provide: AppLogger, useValue: {error: jest.fn()}},
         {provide: CLOCK, useValue: {now: () => new Date('2026-10-07T00:00:00Z')}}
       ]

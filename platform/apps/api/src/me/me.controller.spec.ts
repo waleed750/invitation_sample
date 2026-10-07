@@ -1,6 +1,7 @@
 import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
 import {SupabaseService} from '../supabase/supabase.service';
+import {MeRepository} from './me.repository';
 import {mockSupabaseClient, setTestEnv} from '../test-helpers';
 import {MeController} from './me.controller';
 import {MeService} from './me.service';
@@ -23,7 +24,7 @@ async function bootController(row: unknown, error: {code: string} | null): Promi
     providers: [
       MeService,
       AppLogger,
-      {provide: SupabaseService, useValue: {forUser: jest.fn().mockReturnValue(mockSupabaseClient({data: row, error}))}}
+      MeRepository, {provide: SupabaseService, useValue: {forUser: jest.fn().mockReturnValue(mockSupabaseClient({data: row, error}))}}
     ]
   }).compile();
   return moduleRef.get(MeController);

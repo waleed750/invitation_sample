@@ -2,7 +2,7 @@ import {Injectable, NotFoundException, ServiceUnavailableException} from '@nestj
 import type {RequestUser} from '../common/decorators';
 import {AppLogger} from '../common/app-logger';
 import {isRecord} from '../common/type-guards';
-import {SupabaseService} from '../supabase/supabase.service';
+import {MeRepository} from './me.repository';
 import {createZodDto} from 'nestjs-zod';
 import {z} from 'zod';
 
@@ -40,20 +40,13 @@ function toMeResponse(row: unknown): MeResponse {
 @Injectable()
 export class MeService {
   constructor(
-    private readonly supabase: SupabaseService,
+    private readonly repository: MeRepository,
     private readonly logger: AppLogger
   ) {}
 
   async getMe(user: RequestUser): Promise<MeResponse> {
-    const client = this.supabase.forUser(user.jwt);
     try {
-      // The postgrest response is typed `any` without generated table types —
-      // pin it to `unknown` first and narrow from there (never `any`).
-      const result: unknown = await client
-        .from('profiles')
-        .select('id,name,preferred_locale,role,level,purchases_count,points_balance')
-        .eq('id', user.id)
-        .single();
+      const result: unknown = await this.repository.findProfile(user.jwt, user.id);
       if (!isRecord(result)) {
         this.logger.error('profiles lookup failed (malformed response)');
         throw new ServiceUnavailableException('Profile service unavailable');
@@ -77,10 +70,8 @@ export class MeService {
   }
 
   async updateLocale(user: RequestUser, locale: 'ar' | 'en'): Promise<MeResponse> {
-    const client = this.supabase.forUser(user.jwt);
     try {
-      const result: unknown = await client.from('profiles').update({preferred_locale: locale}).eq('id', user.id)
-        .select('id,name,preferred_locale,role,level,purchases_count,points_balance').single();
+      const result: unknown = await this.repository.updatePreferredLocale(user.jwt, user.id, locale);
       if (!isRecord(result)) throw new ServiceUnavailableException('Profile service unavailable');
       const {data, error}: {data: unknown; error: unknown} = result as {data: unknown; error: unknown};
       if (error !== null || data === null) {

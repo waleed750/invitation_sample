@@ -4,7 +4,7 @@ import {AppLogger} from '../common/app-logger';
 import {CLOCK, type Clock} from '../common/clock';
 import type {RequestUser} from '../common/decorators';
 import {isRecord} from '../common/type-guards';
-import {SupabaseService} from '../supabase/supabase.service';
+import {InvitationsRepository} from './invitations.repository';
 
 export interface InvitationSummary {
   id: string;
@@ -79,16 +79,14 @@ function toSummary(value: unknown, now: Date): InvitationSummary {
 @Injectable()
 export class InvitationsService {
   constructor(
-    private readonly supabase: SupabaseService,
+    private readonly repository: InvitationsRepository,
     @Inject(CLOCK) private readonly clock: Clock,
     private readonly logger: AppLogger
   ) {}
 
   async list(user: RequestUser): Promise<InvitationSummary[]> {
     try {
-      const result: unknown = await this.supabase.forUser(user.jwt).from('invitations')
-        .select('id,order_id,slug,data,locale,status,created_at,template:templates(slug),entitlement:invitation_entitlements(tier,edits_allowed,edits_used,online_until)')
-        .eq('owner_id', user.id).order('created_at', {ascending: false});
+      const result: unknown = await this.repository.listByOwner(user.jwt, user.id);
       if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) {
         throw new ServiceUnavailableException('Invitations service unavailable');
       }

@@ -27,6 +27,35 @@ export default defineConfig(
     }
   },
   {
+    // Persistence boundary: only repositories (and the Supabase wiring itself)
+    // may touch Supabase, so swapping the database only touches repositories.
+    files: ['src/**/*.ts'],
+    ignores: [
+      'src/**/*.repository.ts',
+      'src/supabase/**',
+      'src/**/*.spec.ts',
+      'src/test-helpers.ts',
+      'src/jest.setup.ts',
+      'src/testing/**'
+    ],
+    rules: {
+      'no-restricted-imports': [
+        'error',
+        {
+          patterns: [
+            {
+              group: ['**/supabase/supabase.service'],
+              message: 'Only *.repository.ts files may use SupabaseService. Add a repository method instead.'
+            }
+          ],
+          paths: [
+            {name: '@supabase/supabase-js', message: 'Only src/supabase/** and *.repository.ts may import the Supabase SDK.'}
+          ]
+        }
+      ]
+    }
+  },
+  {
     files: ['**/*.spec.ts'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',

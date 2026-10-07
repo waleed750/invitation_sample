@@ -2,7 +2,7 @@ import {Injectable, ServiceUnavailableException} from '@nestjs/common';
 import {catalogEntry, fromDbTier, type CatalogEntry} from '@platform/shared';
 import {AppLogger} from '../common/app-logger';
 import {isRecord} from '../common/type-guards';
-import {SupabaseService} from '../supabase/supabase.service';
+import {TemplatesRepository} from './templates.repository';
 
 export type PublicCatalogEntry = Omit<CatalogEntry, 'assets'>;
 
@@ -33,16 +33,13 @@ function toEntry(row: unknown): PublicCatalogEntry {
 @Injectable()
 export class TemplatesService {
   constructor(
-    private readonly supabase: SupabaseService,
+    private readonly repository: TemplatesRepository,
     private readonly logger: AppLogger
   ) {}
 
   async listLive(): Promise<PublicCatalogEntry[]> {
     try {
-      const result: unknown = await this.supabase.public().from('templates')
-        .select('slug,name,tagline,tier,price_override_egp,status,featured')
-        .eq('status', 'live')
-        .order('sort_order', {ascending: true});
+      const result: unknown = await this.repository.listLive();
       if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) {
         this.logger.error('templates catalog lookup failed');
         throw new ServiceUnavailableException('Template catalog unavailable');
