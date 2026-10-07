@@ -30,3 +30,7 @@
 ## Bustan (apps/web/public/assets/demo/bustan/)
 
 All nine images were generated for Invitely with an AI image tool run by the owner (Figma AI image generation) from our own written prompts, then compressed to JPEG. They contain no third-party artwork, no people, no logos and no text. Files: gate.jpg, hero.jpg, arch.jpg, garland.jpg, ceremony.jpg, reception.jpg, urn.jpg, seal.jpg, paper.jpg. Licence label in the catalog: "original images generated for Invitely with an AI image tool".
+
+## Riwaq (apps/web/public/assets/demo/riwaq/)
+
+Working copy in progress. The current files are copies of the Bustan images generated for Invitely with an AI image tool (see the Bustan section). They are placeholders: the owner will generate Riwaq's own intro poster and video, hero loop and poster, music, column, event illustrations and candles (prompts in the project notes) and drop them into this folder under the same names. When the real files are in, record here the tool name, plan and date for each (music and video especially: confirm the plan allows commercial use). No third-party artwork, no scraped files, no competitor copy.

@@ -13,6 +13,7 @@ import '@/engine/styles/templates/excellence.css';
 import '@/engine/styles/templates/elegante.css';
 import '@/engine/styles/templates/rawda.css';
 import '@/engine/styles/templates/bustan.css';
+import '@/engine/styles/templates/riwaq.css';
 
 type Props = {params: Promise<{locale: string; slug: string}>};
 

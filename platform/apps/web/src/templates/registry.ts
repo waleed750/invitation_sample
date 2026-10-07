@@ -20,6 +20,8 @@ import {getRawdaData} from './rawda/data';
 import {fontClassName as rawdaFontClassName} from './rawda/fonts';
 import {getBustanData} from './bustan/data';
 import {fontClassName as bustanFontClassName} from './bustan/fonts';
+import {getRiwaqData} from './riwaq/data';
+import {fontClassName as riwaqFontClassName} from './riwaq/fonts';
 
 export interface TemplateDefinition {
   entry: CatalogEntry;
@@ -134,11 +136,43 @@ const bustanEntry: CatalogEntry = catalogEntry.parse({
   ],
 });
 
+const riwaqEntry: CatalogEntry = catalogEntry.parse({
+  slug: 'riwaq',
+  name: {ar: 'رواق', en: 'Riwaq'},
+  tagline: {
+    ar: 'رواق من الأعمدة والستائر وضوء الشموع',
+    en: 'A colonnade of columns, curtains and candlelight',
+  },
+  tier: 'classic',
+  status: 'draft',
+  featured: false,
+  assets: [
+    {path: '/assets/demo/riwaq/intro-poster.jpg', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+    {path: '/assets/demo/riwaq/hero-poster.jpg', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+    {path: '/assets/demo/riwaq/candles.jpg', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+    {path: '/assets/demo/riwaq/column.png', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+    {path: '/assets/demo/riwaq/event-welcome.png', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+    {path: '/assets/demo/riwaq/event-venue.png', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+    {path: '/assets/demo/riwaq/urn.png', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+    {path: '/assets/demo/riwaq/paper.jpg', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+    {path: '/assets/demo/riwaq/seal.jpg', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+    {path: '/assets/demo/riwaq/arch.jpg', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+    {path: '/assets/demo/riwaq/garland.jpg', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+    {path: '/assets/demo/riwaq/sprigs.jpg', source: 'ai-generated', license: "original images generated for Invitely with an AI image tool (placeholder copies of Bustan art until the owner's own Riwaq set is dropped in); no third-party artwork"},
+  ],
+});
+
 export const templates: Record<string, TemplateDefinition> = {
   diwan: {
     entry: diwanEntry,
     getData: getDiwanData,
     fontClassName: diwanFontClassName,
+  },
+
+  riwaq: {
+    entry: riwaqEntry,
+    getData: getRiwaqData,
+    fontClassName: riwaqFontClassName,
   },
 
   bustan: {
