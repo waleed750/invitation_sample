@@ -892,3 +892,4 @@
 | 10:09 | CI first runs: fixed stale SQL test fixtures (name, tagline); database job green; web build hit next/font Google fetch flake, rerun | platform/supabase/tests | done | ~6k |
 | 10:56 | Landed B1a (9c1d6ff) + money minor units/prices 0006 (1bb40ed, CI database green); B2a (muse-spark) on branch b2a-public-rsvp awaiting CI | platform/ | done | ~10k |
 | 10:59 | 40-min run closed: B0 complete, B1a, B2a landed + pushed; STATUS handoff written | .wolf/STATUS.md | done | ~3k |
+| 11:28 | Round 2 closed: CI fix, B7a (d94af30), B4 (7c1541d) landed; STATUS next list | .wolf/STATUS.md | done | ~4k |

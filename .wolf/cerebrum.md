@@ -24,6 +24,8 @@
 
 ## Do-Not-Repeat
 
+- **(2026-10-07)** Points expiry: balance = sum of ledger deltas with expires_at null or in the future (points_balance_v). Never add compensating 'expire' rows on top — that double-deducts. Expiry jobs only refresh the cached profiles.points_balance.
+
 - **(2026-10-07)** Don't propose a direct Postgres connection (Drizzle/pg) for owner requests: auth.uid() is null there, so the RLS policies and guard triggers (0003_rls.sql:73 `if auth.uid() is null then return new`) stop protecting anything. Keep forUser(jwt); for portability, use set local role authenticated + set_config('request.jwt.claims') per transaction.
 
 <!-- Mistakes made and corrected. Each entry prevents the same mistake recurring. -->

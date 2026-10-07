@@ -756,8 +756,8 @@
         "flaky"
       ],
       "related_bugs": [],
-      "occurrences": 2,
-      "last_seen": "2026-10-07T10:09:46.877025"
+      "occurrences": 3,
+      "last_seen": "2026-10-07T11:25:58.685293"
     },
     {
       "id": "bug-045",
@@ -775,6 +775,24 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-10-07T10:56:33.600044"
+    },
+    {
+      "id": "bug-046",
+      "timestamp": "2026-10-07T11:25:58.685293",
+      "error_message": "Review finding: lifecycle_expire_points (B4, muse-spark) inserted 'expire' ledger rows although points_balance_v already excludes rows past expires_at -> expired points subtracted twice; with 100 expired + 50 valid the user would lose the valid 50",
+      "file": "platform/supabase/migrations/0010_lifecycle.sql",
+      "root_cause": "Implementer assumed expiry needs compensating rows; existing model expires by filtering expires_at in the balance definition (0002 points_balance_v / fulfill_paid_order)",
+      "fix": "Function now only recomputes cached profiles.points_balance for users with expired rows (is distinct from -> idempotent); dropped points_ledger.expire_of column; SQL test asserts 100 expired + 50 valid = 50 and no expire rows",
+      "tags": [
+        "points",
+        "sql",
+        "double-count",
+        "review",
+        "lifecycle"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-10-07T11:25:58.685293"
     }
   ]
 }
