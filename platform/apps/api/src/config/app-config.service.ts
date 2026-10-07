@@ -70,8 +70,8 @@ export class AppConfigService {
     return this.config.get<ManualPaymentInstructions | undefined>('MANUAL_PAYMENT_INSTRUCTIONS_JSON');
   }
 
-  get paymentsMockSecret(): string {
-    return this.required('PAYMENTS_MOCK_SECRET');
+  get paymentsMockSecret(): string | undefined {
+    return this.config.get<string | undefined>('PAYMENTS_MOCK_SECRET');
   }
 
   get ipHashSecret(): string {

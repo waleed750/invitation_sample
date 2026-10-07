@@ -73,7 +73,10 @@ const envSchema = z.object({
       }
     })
     .pipe(manualPaymentInstructionsSchema.optional()),
-  PAYMENTS_MOCK_SECRET: z.string().min(32, 'PAYMENTS_MOCK_SECRET must be at least 32 characters'),
+  PAYMENTS_MOCK_SECRET: z
+    .string()
+    .optional()
+    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
   // HMAC secret for guest IP hashing (server only, never returned). Raw IPs are never stored.
   IP_HASH_SECRET: z.string().min(32, 'IP_HASH_SECRET must be at least 32 characters'),
   // Optional: blank/whitespace counts as unset (revalidation then only logs). Web route that revalidates a published page.
@@ -104,6 +107,11 @@ const envSchema = z.object({
     }
     if (env.PAYMENTS_PROVIDER === 'fawry') {
       context.addIssue({code: 'custom', path: ['PAYMENTS_PROVIDER'], message: 'fawry not implemented yet'});
+    }
+  }
+  if (env.PAYMENTS_PROVIDER === 'mock') {
+    if (!env.PAYMENTS_MOCK_SECRET || env.PAYMENTS_MOCK_SECRET.length < 32) {
+      context.addIssue({code: 'custom', path: ['PAYMENTS_MOCK_SECRET'], message: 'PAYMENTS_MOCK_SECRET must be at least 32 characters when provider is mock'});
     }
   }
 }).transform((env) => ({...env, SENTRY_ENVIRONMENT: env.SENTRY_ENVIRONMENT ?? env.NODE_ENV}));

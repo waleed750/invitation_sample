@@ -670,6 +670,62 @@ begin
     'a second run must not change the balance';
 end;
 $$;
+-- ---------------------------------------------------------------------------
+-- 9. Profile on signup trigger tests (0013)
+-- ---------------------------------------------------------------------------
+set local role service_role;
+
+do $$
+declare
+  p record;
+begin
+  -- (a) google user with full_name -> profile with name, signup_method google, locale ar, role customer
+  insert into auth.users (id, aud, role, email, raw_app_meta_data, raw_user_meta_data)
+  values (
+    'b1000000-0000-0000-0000-00000000000a', 'authenticated', 'authenticated', 'google@example.com',
+    '{"provider": "google"}', '{"full_name": "Google User"}'
+  );
+  select * into p from public.profiles where id = 'b1000000-0000-0000-0000-00000000000a';
+  assert p.name = 'Google User', 'google user must get full_name';
+  assert p.signup_method = 'google', 'google user must have signup_method google';
+  assert p.preferred_locale = 'ar', 'default locale must be ar';
+  assert p.role = 'customer', 'default role must be customer';
+  assert p.email = 'google@example.com', 'email must be copied';
+
+  -- (b) phone user '201000000099' -> phone '+201000000099'; (c) raw_user_meta_data {"role":"admin"} does NOT make an admin
+  insert into auth.users (id, aud, role, phone, raw_app_meta_data, raw_user_meta_data)
+  values (
+    'b1000000-0000-0000-0000-00000000000b', 'authenticated', 'authenticated', '201000000099',
+    '{"provider": "phone"}', '{"name": "Phone User", "role": "admin"}'
+  );
+  select * into p from public.profiles where id = 'b1000000-0000-0000-0000-00000000000b';
+  assert p.phone = '+201000000099', 'phone digits must get leading +';
+  assert p.signup_method = 'whatsapp', 'phone provider must map to whatsapp';
+  assert p.role = 'customer', 'role in metadata must be ignored, role must be customer';
+  assert p.name = 'Phone User', 'name must be copied';
+
+  -- (d) locale 'en' honoured
+  insert into auth.users (id, aud, role, raw_app_meta_data, raw_user_meta_data)
+  values (
+    'b1000000-0000-0000-0000-00000000000c', 'authenticated', 'authenticated',
+    '{"provider": "email"}', '{"locale": "en"}'
+  );
+  select * into p from public.profiles where id = 'b1000000-0000-0000-0000-00000000000c';
+  assert p.preferred_locale = 'en', 'locale en must be honoured';
+  assert p.signup_method = 'email', 'email provider must map to email';
+
+  -- (e) a second auth user with an already-taken email still gets a profile (email null) instead of failing
+  insert into auth.users (id, aud, role, email, raw_app_meta_data, raw_user_meta_data)
+  values (
+    'b1000000-0000-0000-0000-00000000000d', 'authenticated', 'authenticated', 'google@example.com',
+    '{"provider": "email"}', '{"name": "Duplicate Email"}'
+  );
+  select * into p from public.profiles where id = 'b1000000-0000-0000-0000-00000000000d';
+  assert p.id = 'b1000000-0000-0000-0000-00000000000d', 'profile must be created even with duplicate email';
+  assert p.email is null, 'duplicate email must be stored as null';
+  assert p.name = 'Duplicate Email', 'other fields must still be saved';
+end;
+$$;
 reset role;
 
 -- ---------------------------------------------------------------------------

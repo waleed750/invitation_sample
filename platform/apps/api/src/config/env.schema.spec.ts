@@ -103,8 +103,17 @@ describe('validateEnv', () => {
       .toThrow(/MANUAL_PAYMENT_INSTRUCTIONS_JSON/);
   });
 
-  it('requires a strong mock webhook secret', () => {
+  it('requires a strong mock webhook secret when provider is mock', () => {
     expect(() => validateEnv({...validEnv(), PAYMENTS_MOCK_SECRET: 'short'})).toThrow(/PAYMENTS_MOCK_SECRET/);
+    expect(() => validateEnv({...validEnv(), PAYMENTS_MOCK_SECRET: '   '})).toThrow(/PAYMENTS_MOCK_SECRET/);
+    expect(() => validateEnv({...validEnv(), PAYMENTS_MOCK_SECRET: undefined})).toThrow(/PAYMENTS_MOCK_SECRET/);
+  });
+
+  it('allows blank mock webhook secret when provider is manual', () => {
+    const validWithManual: Record<string, unknown> = {...validEnv(), PAYMENTS_PROVIDER: 'manual'};
+    delete validWithManual.PAYMENTS_MOCK_SECRET;
+    expect(validateEnv(validWithManual).PAYMENTS_MOCK_SECRET).toBeUndefined();
+    expect(validateEnv({...validWithManual, PAYMENTS_MOCK_SECRET: '  '}).PAYMENTS_MOCK_SECRET).toBeUndefined();
   });
 
   it('treats a blank SENTRY_DSN as unset and accepts a valid one', () => {

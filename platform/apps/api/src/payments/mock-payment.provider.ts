@@ -15,6 +15,7 @@ const webhookPayload = z.object({
 export class MockPaymentProvider implements PaymentProvider {
   constructor(private readonly config: AppConfigService) {
     if (config.isProduction && config.paymentsProvider !== 'manual') throw new Error('Mock payment provider is disabled in production');
+    if (!config.paymentsMockSecret) throw new Error('PAYMENTS_MOCK_SECRET is required when using the mock provider');
   }
 
   createCheckout(order: CheckoutOrder): Promise<{redirectUrl: string; providerRef: string; reference?: string}> {
@@ -48,7 +49,9 @@ export class MockPaymentProvider implements PaymentProvider {
   }
 
   sign(rawBody: Buffer): string {
-    return createHmac('sha256', this.config.paymentsMockSecret).update(rawBody).digest('hex');
+    const secret = this.config.paymentsMockSecret;
+    if (!secret) throw new Error('PAYMENTS_MOCK_SECRET is required');
+    return createHmac('sha256', secret).update(rawBody).digest('hex');
   }
 
   private isValidSignature(rawBody: Buffer, supplied: string): boolean {
@@ -59,7 +62,9 @@ export class MockPaymentProvider implements PaymentProvider {
   }
 
   private referenceFor(orderId: string): string {
-    const digest = createHmac('sha256', this.config.paymentsMockSecret).update(orderId).digest();
+    const secret = this.config.paymentsMockSecret;
+    if (!secret) throw new Error('PAYMENTS_MOCK_SECRET is required');
+    const digest = createHmac('sha256', secret).update(orderId).digest();
     return String(100_000_000 + (digest.readUInt32BE(0) % 900_000_000));
   }
 }
