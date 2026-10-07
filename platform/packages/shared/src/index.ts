@@ -4,3 +4,4 @@ export * from './themeSpec';
 export * from './entitlement';
 export * from './catalog';
 export * from './points';
+export * from './slug';

@@ -100,6 +100,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/invitations/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["InvitationsController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["InvitationsController_update"];
+        trace?: never;
+    };
     "/v1/invitations/{id}/entitlement": {
         parameters: {
             query?: never;
@@ -114,6 +130,38 @@ export interface paths {
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/v1/invitations/{id}/publish": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["InvitationsController_publish"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/invitations/{id}/slug": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch: operations["InvitationsController_updateSlug"];
         trace?: never;
     };
     "/v1/me": {
@@ -196,6 +244,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/slugs/{slug}/availability": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["SlugsController_availability"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/templates": {
         parameters: {
             query?: never;
@@ -233,9 +297,927 @@ export interface components {
             /** @enum {string} */
             tier: "save-the-date" | "classic" | "premium";
         };
+        UpdateInvitationBody: {
+            data: {
+                copy: {
+                    detailsSubtitle?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    detailsTitle?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    messageSubtitle?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    messageTitle?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    scheduleSubtitle?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    scheduleTitle?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    tapLabel?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    welcome?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    welcomeTitle?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                };
+                couple: {
+                    firstName: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    headline?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    secondName: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                };
+                event: {
+                    date: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    displayDate?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    endTime?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    label?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    location?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    mapUrl?: string;
+                    startTime?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    venue?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                };
+                media: {
+                    coupleDancingUrl?: string;
+                    footerOrnamentUrl?: string;
+                    heroVideoUrl?: string;
+                    introPosterUrl?: string;
+                    introVideoUrl?: string;
+                    musicUrl?: string;
+                    ornamentUrl?: string;
+                    ornateBadgeUrl?: string;
+                    photoUrl?: string;
+                    stringLightsUrl?: string;
+                };
+                schedule?: {
+                    description?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    stops?: {
+                        text: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        time?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    }[];
+                    subtitle?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    time?: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                    title: string | {
+                        ar?: string;
+                        en?: string;
+                    };
+                }[];
+                sections: ({
+                    id?: string;
+                    props: {
+                        ctaLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        displayDate: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        firstName: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        headline?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        heroPosterUrl?: string;
+                        heroVideoLoop?: boolean;
+                        heroVideoUrl?: string;
+                        overlayFadeOutAt?: number;
+                        scrollCueLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        secondName: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        showOverlayCopy?: boolean;
+                    };
+                    /** @constant */
+                    type: "hero";
+                } | {
+                    id?: string;
+                    props: {
+                        bgImage?: string;
+                        columnLeftUrl?: string;
+                        columnRightUrl?: string;
+                        /** Format: date-time */
+                        date: string;
+                        kicker?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        labels?: {
+                            days?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            hours?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            minutes?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            months?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            seconds?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                        };
+                        overlayImage?: string;
+                        showMonths?: boolean;
+                        showSeconds?: boolean;
+                        showYears?: boolean;
+                        title?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        untilLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "countdown";
+                } | {
+                    id?: string;
+                    props: {
+                        bgUrl?: string;
+                        body: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        cards?: {
+                            body?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            date?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            heading?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            imageUrl?: string;
+                            kicker?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            mapLabel?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            mapUrl?: string;
+                            time?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                        }[];
+                        kicker?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        sectionId?: string;
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "welcome";
+                } | {
+                    id?: string;
+                    props: {
+                        alternate?: boolean;
+                        bgUrl?: string;
+                        coupleDancingUrl?: string;
+                        items: {
+                            description?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            stops?: {
+                                text: string | {
+                                    ar?: string;
+                                    en?: string;
+                                };
+                                time?: string | {
+                                    ar?: string;
+                                    en?: string;
+                                };
+                            }[];
+                            subtitle?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            time?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            title: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                        }[];
+                        stops?: {
+                            text: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            time?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                        }[];
+                        subtitle: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "schedule";
+                } | {
+                    id?: string;
+                    props: {
+                        addressLines?: (string | {
+                            ar?: string;
+                            en?: string;
+                        })[];
+                        dateLine?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        endTime: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        imageUrl?: string;
+                        locationLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        mapLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        mapUrl: string;
+                        ornateBadgeUrl?: string;
+                        startTime: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        subtitle: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        venue: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "details";
+                } | {
+                    id?: string;
+                    props: {
+                        src: string | "/maps/embed/index.html";
+                        title?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "map";
+                } | {
+                    id?: string;
+                    props: {
+                        messageLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        messagePlaceholder?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        nameFieldLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        namePlaceholder?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        submitLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        subtitle: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        successMessage?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    } & {
+                        [key: string]: unknown;
+                    };
+                    /** @constant */
+                    type: "messageForm";
+                } | {
+                    id?: string;
+                    props: {
+                        alt?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        imageUrl: string;
+                        line?: boolean;
+                    };
+                    /** @constant */
+                    type: "imageDivider";
+                } | {
+                    id?: string;
+                    props: {
+                        ornamentUrl: string;
+                    };
+                    /** @constant */
+                    type: "footer";
+                } | {
+                    id?: string;
+                    props: {
+                        date: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        firstName: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        label: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        location: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        photoUrl: string;
+                        scratchLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        sealWords?: (string | {
+                            ar?: string;
+                            en?: string;
+                        })[];
+                        secondName: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        tapLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "scratchReveal";
+                } | {
+                    id?: string;
+                    props: {
+                        birdsFrame1?: string;
+                        birdsFrame2?: string;
+                        chapters: {
+                            photos?: (string)[];
+                            prose: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            quote?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                        }[];
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "story";
+                } | {
+                    id?: string;
+                    props: {
+                        body: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        cards?: {
+                            attire?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            date?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            heading?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            imageUrl?: string;
+                        }[];
+                        groups?: {
+                            body: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            heading: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                        }[];
+                        illustrationUrl?: string;
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "dressCode";
+                } | {
+                    id?: string;
+                    props: {
+                        bankAccounts?: {
+                            accountName: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            bankLabel: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            bic: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            iban: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                        }[];
+                        bgUrl?: string;
+                        body: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        buttonLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        buttonUrl?: string;
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "gifts";
+                } | {
+                    id?: string;
+                    props: {
+                        attendanceOptions?: {
+                            no?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            yes?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                        };
+                        attendingLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        bgUrl?: string;
+                        bottomUrl?: string;
+                        childrenLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        /** @enum {string} */
+                        childrenMode?: "checkbox" | "radios";
+                        dietaryFieldLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        dietaryPlaceholder?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        emailLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        emailPlaceholder?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        eventError?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        eventOptions?: {
+                            label: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            value?: string;
+                        }[];
+                        eventsLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        guestCountLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        /** @enum {string} */
+                        guestCountMode?: "select" | "stepper";
+                        nameFieldLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        namePlaceholder?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        showDietaryField?: boolean;
+                        submitLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        subtitle: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        successMessage?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "rsvp";
+                } | {
+                    id?: string;
+                    props: {
+                        items: {
+                            answer: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            question: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                        }[];
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "faq";
+                } | {
+                    id?: string;
+                    props: {
+                        body: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        events: {
+                            dateLabel: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            title: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                        }[];
+                        eyebrow: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        leafDividerUrl?: string;
+                        palmSunsetUrl?: string;
+                        tileFrameUrl?: string;
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "weddingWeekend";
+                } | {
+                    id?: string;
+                    props: {
+                        airports: {
+                            code: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            frameUrl?: string;
+                            illustrationUrl?: string;
+                            illustrations?: (string)[];
+                            location: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            name: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                        }[];
+                        body: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        eyebrow: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        flowerDividerUrl?: string;
+                        palmDividerUrl?: string;
+                        palmStampUrl?: string;
+                        shellDividerUrl?: string;
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "travelInfo";
+                } | {
+                    id?: string;
+                    props: {
+                        creditLine?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        creditName?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        frameUrl?: string;
+                        monogramUrl?: string;
+                        month: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        names: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        starfishUrl?: string;
+                        year: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "bohoFooter";
+                } | {
+                    id?: string;
+                    props: {
+                        coupleNames?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        creditLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        eventDate?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        monogramUrl?: string;
+                        name?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        portfolioLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        portfolioUrl?: string;
+                    } & {
+                        [key: string]: unknown;
+                    };
+                    /** @constant */
+                    type: "credit";
+                } | {
+                    id?: string;
+                    props: {
+                        closingNote?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        hotels: {
+                            bookingNote?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            city?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            distanceNote?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            email?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            imageUrl?: string;
+                            name: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            phone?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            priceNote?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            pricePerNight?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            promoCode?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            websiteLabel?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            websiteUrl?: string;
+                        }[];
+                        subtitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        title: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    /** @constant */
+                    type: "hotelList";
+                } | {
+                    id?: string;
+                    props: {
+                        images?: ((string) | {
+                            alt?: string | {
+                                ar?: string;
+                                en?: string;
+                            };
+                            src: string;
+                        })[];
+                        title?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    } & {
+                        [key: string]: unknown;
+                    };
+                    /** @constant */
+                    type: "gallery";
+                } | {
+                    id?: string;
+                    props: {
+                        [key: string]: unknown;
+                    };
+                    /** @constant */
+                    type: "locationTransport";
+                })[];
+                template: {
+                    /** @enum {string} */
+                    eventType: "engagement" | "save-the-date" | "wedding" | "birthday";
+                    /** @enum {string} */
+                    experienceType: "cinematic-story" | "interactive-reveal" | "slideshow" | "scroll-only";
+                    /** @enum {string} */
+                    introType: "video-open" | "scratch-reveal" | "tap-to-open" | "envelope" | "none";
+                    /** @enum {string} */
+                    layoutFamily: "ornate" | "minimal-interactive" | "modern" | "classic" | "safari-editorial" | "boho" | "luxury-floral" | "floral-romantic" | "finca-rustic" | "sweetlove-romantic" | "dolce-vita-lake" | "daynight-dual" | "bridgerton-regency" | "bloom-garden" | "mashrabiya";
+                    /** @enum {string} */
+                    siteType: "full-invitation" | "save-the-date" | "rsvp-only";
+                };
+                theme: {
+                    background: string;
+                    foreground: string;
+                    ivory: string;
+                    muted: string;
+                };
+            };
+        };
         UpdateMeBody: {
             /** @enum {string} */
             locale: "ar" | "en";
+        };
+        UpdateSlugBody: {
+            slug: string;
         };
     };
     responses: never;
@@ -358,6 +1340,50 @@ export interface operations {
             };
         };
     };
+    InvitationsController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    InvitationsController_update: {
+        parameters: {
+            query?: never;
+            header: {
+                "if-match": string;
+            };
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateInvitationBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     EntitlementsController_getEntitlement: {
         parameters: {
             query?: never;
@@ -368,6 +1394,48 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    InvitationsController_publish: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    InvitationsController_updateSlug: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateSlugBody"];
+            };
+        };
         responses: {
             200: {
                 headers: {
@@ -475,6 +1543,25 @@ export interface operations {
             query?: never;
             header?: never;
             path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    SlugsController_availability: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                slug: string;
+            };
             cookie?: never;
         };
         requestBody?: never;

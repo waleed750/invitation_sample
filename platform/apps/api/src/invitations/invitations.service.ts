@@ -32,15 +32,11 @@ function relation(value: unknown): Record<string, unknown> | null {
   return null;
 }
 
-function toSummary(value: unknown, now: Date): InvitationSummary {
-  if (!isRecord(value)) throw new ServiceUnavailableException('Invitations service unavailable');
-  const template = relation(value.template);
-  const entitlement = relation(value.entitlement);
-  if (
-    typeof value.id !== 'string' || !(typeof value.order_id === 'string' || value.order_id === null) ||
-    typeof value.slug !== 'string' || typeof value.locale !== 'string' || typeof value.status !== 'string' ||
-    typeof value.created_at !== 'string'
-  ) throw new ServiceUnavailableException('Invitations service unavailable');
+export type InvitationEntitlement = InvitationSummary['entitlement'];
+
+/** Validates a raw entitlement relation (or its absence) and computes the dashboard meters. */
+export function toEntitlement(raw: unknown, now: Date): InvitationEntitlement & {tier: string | null} {
+  const entitlement = relation(raw);
   const editsAllowed = entitlement === null ? 0 : entitlement.edits_allowed;
   const editsUsed = entitlement === null ? 0 : entitlement.edits_used;
   const onlineUntilRaw = entitlement === null ? null : entitlement.online_until;
@@ -56,25 +52,40 @@ function toSummary(value: unknown, now: Date): InvitationSummary {
     ? {ok: false as const, reason: 'expired' as const}
     : canPublish({editsAllowed, editsUsed, onlineUntil, now});
   return {
+    tier: tierRaw === null ? null : fromDbTier(tierRaw),
+    editsAllowed,
+    editsUsed,
+    remaining,
+    onlineUntil: onlineUntil?.toISOString() ?? null,
+    daysOnlineLeft: onlineUntil === null ? 0 : daysOnlineLeft({onlineUntil, now}),
+    canPublish: verdict
+  };
+}
+
+function toSummary(value: unknown, now: Date): InvitationSummary {
+  if (!isRecord(value)) throw new ServiceUnavailableException('Invitations service unavailable');
+  const template = relation(value.template);
+  if (
+    typeof value.id !== 'string' || !(typeof value.order_id === 'string' || value.order_id === null) ||
+    typeof value.slug !== 'string' || typeof value.locale !== 'string' || typeof value.status !== 'string' ||
+    typeof value.created_at !== 'string'
+  ) throw new ServiceUnavailableException('Invitations service unavailable');
+  const {tier, ...entitlement} = toEntitlement(value.entitlement, now);
+  return {
     id: value.id,
     orderId: value.order_id,
     templateSlug: template !== null && typeof template.slug === 'string' ? template.slug : null,
-    tier: tierRaw === null ? null : fromDbTier(tierRaw),
+    tier,
     shareSlug: value.slug,
     data: value.data,
     locale: value.locale,
     status: value.status,
     createdAt: value.created_at,
-    entitlement: {
-      editsAllowed,
-      editsUsed,
-      remaining,
-      onlineUntil: onlineUntil?.toISOString() ?? null,
-      daysOnlineLeft: onlineUntil === null ? 0 : daysOnlineLeft({onlineUntil, now}),
-      canPublish: verdict
-    }
+    entitlement
   };
 }
+
+export {relation};
 
 @Injectable()
 export class InvitationsService {
