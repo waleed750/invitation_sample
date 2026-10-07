@@ -19,6 +19,8 @@
 --   6. anon cannot select a draft invitation (but sees published ones)
 --   7. prices: EGP tier defaults seeded, public read of active rows, no client
 --      writes; a non-EGP paid order earns 0 points
+--   8. manual payments (0009): confirm, idempotent re-confirm, mismatch rules,
+--      reject, expiry; authenticated cannot execute the admin RPCs
 
 begin;
 
@@ -471,6 +473,162 @@ begin
   begin
     update public.prices set amount_minor = 1;
     assert false, 'authenticated must not update prices';
+  exception when insufficient_privilege then
+    null;
+  end;
+end;
+$$;
+
+reset role;
+
+-- ---------------------------------------------------------------------------
+-- 8. Manual payments (0009): admin_confirm_manual_payment, reject, expiry.
+--    Orders: A (exact confirm, with invitation), B (mismatch), C (old pending),
+--    D (reject). Created as the table owner, then driven as service_role.
+-- ---------------------------------------------------------------------------
+
+reset role;
+
+insert into public.orders (id, user_id, template_id, tier, kind, amount_minor, currency, provider, provider_ref, status)
+values
+  ('a1000000-0000-0000-0000-00000000000a', '11111111-1111-1111-1111-111111111111',
+   '22222222-2222-2222-2222-222222222222', 'classic', 'new', 129900, 'EGP', 'manual', 'INV-AAAAAA', 'pending'),
+  ('a1000000-0000-0000-0000-00000000000b', '11111111-1111-1111-1111-111111111111',
+   '22222222-2222-2222-2222-222222222222', 'classic', 'edits', 9900, 'EGP', 'manual', 'INV-BBBBBB', 'pending'),
+  ('a1000000-0000-0000-0000-00000000000d', '11111111-1111-1111-1111-111111111111',
+   '22222222-2222-2222-2222-222222222222', 'classic', 'edits', 9900, 'EGP', 'manual', 'INV-DDDDDD', 'pending');
+
+insert into public.orders (id, user_id, template_id, tier, kind, amount_minor, currency, provider, provider_ref, status, created_at)
+values
+  ('a1000000-0000-0000-0000-00000000000c', '11111111-1111-1111-1111-111111111111',
+   '22222222-2222-2222-2222-222222222222', 'classic', 'edits', 9900, 'EGP', 'manual', 'INV-CCCCCC', 'pending',
+   now() - interval '100 hours');
+
+insert into public.invitations (id, owner_id, template_id, order_id, slug, data, status)
+values (
+  'a2000000-0000-0000-0000-00000000000a',
+  '11111111-1111-1111-1111-111111111111',
+  '22222222-2222-2222-2222-222222222222',
+  'a1000000-0000-0000-0000-00000000000a',
+  'test-manual-pay',
+  '{"event_date": "2027-03-20"}',
+  'draft'
+);
+
+set local role service_role;
+
+do $$
+declare
+  r jsonb;
+  v_points_before integer;
+begin
+  -- Exact amount: paid, entitlement created, bookkeeping + audit written.
+  r := public.admin_confirm_manual_payment(
+    'a1000000-0000-0000-0000-00000000000a', '11111111-1111-1111-1111-111111111111',
+    129900, 'TXN-1', null, false);
+  assert (r ->> 'ok') = 'true', 'exact manual confirm must succeed, got: ' || r::text;
+  assert (select status from public.orders where id = 'a1000000-0000-0000-0000-00000000000a') = 'paid',
+    'confirmed order must be paid';
+  assert (select paid_amount_minor from public.orders where id = 'a1000000-0000-0000-0000-00000000000a') = 129900,
+    'paid_amount_minor must be recorded';
+  assert (select payment_txn_ref from public.orders where id = 'a1000000-0000-0000-0000-00000000000a') = 'TXN-1',
+    'txn ref must be recorded';
+  assert (select confirmed_by from public.orders where id = 'a1000000-0000-0000-0000-00000000000a')
+         = '11111111-1111-1111-1111-111111111111', 'confirmed_by must be the admin';
+  assert (select count(*) from public.invitation_entitlements
+          where invitation_id = 'a2000000-0000-0000-0000-00000000000a') = 1,
+    'confirm must create the entitlement';
+  assert (select count(*) from public.audit_log
+          where action = 'order.mark_paid' and target_id = 'a1000000-0000-0000-0000-00000000000a') = 1,
+    'confirm must write one audit_log row';
+
+  -- Second confirm: no-op, no second audit row, no extra points.
+  select points_balance into v_points_before from public.profiles
+    where id = '11111111-1111-1111-1111-111111111111';
+  r := public.admin_confirm_manual_payment(
+    'a1000000-0000-0000-0000-00000000000a', '11111111-1111-1111-1111-111111111111',
+    129900, 'TXN-2', null, false);
+  assert (r ->> 'ok') = 'true' and (r ->> 'already') = 'true', 'second confirm must be already:true, got: ' || r::text;
+  assert (select payment_txn_ref from public.orders where id = 'a1000000-0000-0000-0000-00000000000a') = 'TXN-1',
+    'second confirm must not overwrite the txn ref';
+  assert (select count(*) from public.audit_log
+          where action = 'order.mark_paid' and target_id = 'a1000000-0000-0000-0000-00000000000a') = 1,
+    'second confirm must not write another audit row';
+  assert (select points_balance from public.profiles where id = '11111111-1111-1111-1111-111111111111') = v_points_before,
+    'second confirm must not change points';
+
+  -- Mismatch without accept.
+  r := public.admin_confirm_manual_payment(
+    'a1000000-0000-0000-0000-00000000000b', '11111111-1111-1111-1111-111111111111',
+    5000, 'TXN-3', null, false);
+  assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'amount_mismatch', 'expected amount_mismatch, got: ' || r::text;
+  assert (select status from public.orders where id = 'a1000000-0000-0000-0000-00000000000b') = 'pending',
+    'mismatch must leave the order pending';
+
+  -- Accepted mismatch without a note.
+  r := public.admin_confirm_manual_payment(
+    'a1000000-0000-0000-0000-00000000000b', '11111111-1111-1111-1111-111111111111',
+    5000, 'TXN-3', '   ', true);
+  assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'note_required', 'expected note_required, got: ' || r::text;
+  assert (select status from public.orders where id = 'a1000000-0000-0000-0000-00000000000b') = 'pending',
+    'note_required must leave the order pending';
+
+  -- Accepted mismatch with a note succeeds and stores the received amount.
+  r := public.admin_confirm_manual_payment(
+    'a1000000-0000-0000-0000-00000000000b', '11111111-1111-1111-1111-111111111111',
+    5000, 'TXN-3', 'customer short-paid, agreed by phone', true);
+  assert (r ->> 'ok') = 'true', 'accepted mismatch with note must succeed, got: ' || r::text;
+  assert (select paid_amount_minor from public.orders where id = 'a1000000-0000-0000-0000-00000000000b') = 5000,
+    'the received amount must be stored, not the expected one';
+
+  -- Reject: pending -> rejected, audited; a rejected order cannot be confirmed.
+  r := public.admin_reject_manual_payment(
+    'a1000000-0000-0000-0000-00000000000d', '11111111-1111-1111-1111-111111111111', 'no payment received');
+  assert (r ->> 'ok') = 'true', 'reject must succeed, got: ' || r::text;
+  assert (select status from public.orders where id = 'a1000000-0000-0000-0000-00000000000d') = 'rejected',
+    'rejected order must have status rejected';
+  assert (select count(*) from public.audit_log
+          where action = 'order.reject_payment' and target_id = 'a1000000-0000-0000-0000-00000000000d') = 1,
+    'reject must write an audit row';
+  r := public.admin_confirm_manual_payment(
+    'a1000000-0000-0000-0000-00000000000d', '11111111-1111-1111-1111-111111111111',
+    9900, 'TXN-4', null, false);
+  assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'not_pending', 'rejected order must not confirm, got: ' || r::text;
+
+  -- Expiry: the 100h-old pending manual order flips; paid orders are untouched.
+  assert public.expire_stale_manual_orders() >= 1, 'expiry must flip at least the stale order';
+  assert (select status from public.orders where id = 'a1000000-0000-0000-0000-00000000000c') = 'expired',
+    'stale pending manual order must be expired';
+  assert (select status from public.orders where id = 'a1000000-0000-0000-0000-00000000000a') = 'paid',
+    'expiry must not touch paid orders';
+end;
+$$;
+
+-- Customers (authenticated) can execute none of the three functions.
+reset role;
+set local role authenticated;
+
+do $$
+begin
+  begin
+    perform public.admin_confirm_manual_payment(
+      'a1000000-0000-0000-0000-00000000000c', '11111111-1111-1111-1111-111111111111', 9900, 'X', null, false);
+    assert false, 'authenticated must not execute admin_confirm_manual_payment';
+  exception when insufficient_privilege then
+    null;
+  end;
+
+  begin
+    perform public.admin_reject_manual_payment(
+      'a1000000-0000-0000-0000-00000000000c', '11111111-1111-1111-1111-111111111111', 'nope');
+    assert false, 'authenticated must not execute admin_reject_manual_payment';
+  exception when insufficient_privilege then
+    null;
+  end;
+
+  begin
+    perform public.expire_stale_manual_orders();
+    assert false, 'authenticated must not execute expire_stale_manual_orders';
   exception when insufficient_privilege then
     null;
   end;

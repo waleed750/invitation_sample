@@ -2,6 +2,7 @@
 import {BadRequestException, ServiceUnavailableException, UnprocessableEntityException} from '@nestjs/common';
 import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
+import {AppConfigService} from '../config/app-config.service';
 import {PAYMENT_PROVIDER} from '../payments/payment-provider';
 import {SupabaseService} from '../supabase/supabase.service';
 import {CheckoutRepository} from './checkout.repository';
@@ -11,6 +12,7 @@ describe('CheckoutService', () => {
   let service: CheckoutService;
   let supabaseClient: any;
   let provider: any;
+  let config: any;
   let queryBuilder: any;
 
   beforeEach(async () => {
@@ -36,12 +38,15 @@ describe('CheckoutService', () => {
       createCheckout: jest.fn().mockResolvedValue({redirectUrl: 'url', providerRef: 'ref', reference: 'mock-ref'})
     };
     
+    config = {paymentsProvider: 'mock', manualPaymentInstructions: undefined};
+
     const module = await Test.createTestingModule({
       providers: [
         CheckoutService,
         CheckoutRepository, {provide: SupabaseService, useValue: supabaseClient},
         {provide: PAYMENT_PROVIDER, useValue: provider},
-        {provide: AppLogger, useValue: {error: jest.fn()}}
+        {provide: AppLogger, useValue: {error: jest.fn()}},
+        {provide: AppConfigService, useValue: config}
       ]
     }).compile();
 
@@ -163,5 +168,52 @@ describe('CheckoutService', () => {
     const result = await service.start(user, body, 'idemp-1234');
     expect(result.orderId).toBe('old_order');
     expect(supabaseClient.rpc).not.toHaveBeenCalled();
+  });
+
+  describe('manual payments', () => {
+    const methods = [{id: 'instapay', label: {ar: 'a', en: 'InstaPay'}, details: {ar: 'b', en: 'pay to x'}}];
+
+    beforeEach(() => {
+      config.paymentsProvider = 'manual';
+      config.manualPaymentInstructions = {methods};
+      provider.createCheckout.mockResolvedValue({redirectUrl: '/checkout/result/new_order', providerRef: 'INV-ABC234', reference: 'INV-ABC234'});
+    });
+
+    it('creates a manual order and returns the payment block', async () => {
+      mockHappyPrefix();
+      queryBuilder.maybeSingle.mockResolvedValueOnce({data: {amount_minor: 50000}, error: null});
+      supabaseClient.rpc.mockResolvedValueOnce({data: {order_id: 'new_order', amount_minor: 50000, currency: 'EGP'}, error: null});
+
+      const before = Date.now();
+      const result: any = await service.start(user, body(), 'idemp-1234');
+      expect(rpcArgs()).toMatchObject({p_provider: 'manual'});
+      expect(result.reference).toBe('INV-ABC234');
+      expect(result.payment).toMatchObject({reference: 'INV-ABC234', amountMinor: 50000, currency: 'EGP', methods});
+      const expires = Date.parse(result.payment.expiresAt);
+      expect(expires).toBeGreaterThanOrEqual(before + 72 * 3_600_000);
+      expect(expires).toBeLessThan(Date.now() + 72 * 3_600_000 + 1000);
+      expect(queryBuilder.update).toHaveBeenCalledWith({provider_ref: 'INV-ABC234'});
+    });
+
+    it('keeps the existing reference and the original expiry on an idempotent retry', async () => {
+      const created = '2026-10-01T00:00:00.000Z';
+      queryBuilder.maybeSingle.mockResolvedValueOnce({
+        data: {id: 'old_order', amount_minor: 50000, currency: 'EGP', provider_ref: 'INV-KEEP22', created_at: created}, error: null
+      });
+      const result: any = await service.start(user, body(), 'idemp-1234');
+      expect(provider.createCheckout).not.toHaveBeenCalled();
+      expect(result.payment.reference).toBe('INV-KEEP22');
+      expect(result.payment.expiresAt).toBe('2026-10-04T00:00:00.000Z');
+    });
+
+    it('does not include a payment block for the mock provider', async () => {
+      config.paymentsProvider = 'mock';
+      mockHappyPrefix();
+      queryBuilder.maybeSingle.mockResolvedValueOnce({data: {amount_minor: 50000}, error: null});
+      supabaseClient.rpc.mockResolvedValueOnce({data: {order_id: 'new_order', amount_minor: 50000, currency: 'EGP'}, error: null});
+      const result: any = await service.start(user, body(), 'idemp-1234');
+      expect(result.payment).toBeUndefined();
+      expect(rpcArgs()).toMatchObject({p_provider: 'mock'});
+    });
   });
 });

@@ -4,6 +4,8 @@ import {randomUUID} from 'node:crypto';
 import {createZodDto} from 'nestjs-zod';
 import {z} from 'zod';
 import {AppLogger} from '../common/app-logger';
+import {AppConfigService} from '../config/app-config.service';
+import type {ManualPaymentInstructions} from '../config/env.schema';
 import type {RequestUser} from '../common/decorators';
 import {isRecord} from '../common/type-guards';
 import {CheckoutRepository} from './checkout.repository';
@@ -28,7 +30,20 @@ export interface CheckoutResponse {
   /** Amount charged, in integer minor units of `currency`. */
   amountMinor: number;
   currency: string;
+  /** Manual payments only: what the customer must pay, quoting the reference. */
+  payment?: ManualPaymentDetails;
 }
+
+export interface ManualPaymentDetails {
+  reference: string;
+  amountMinor: number;
+  currency: string;
+  /** ISO timestamp: order creation + 72 h, after which an unpaid order expires. */
+  expiresAt: string;
+  methods: ManualPaymentInstructions['methods'];
+}
+
+const MANUAL_ORDER_TTL_MS = 72 * 60 * 60 * 1000;
 
 /** Only EGP is sold today; other currencies arrive with their gateways (BACKEND_PLAN §2b). */
 const CHECKOUT_CURRENCY = 'EGP';
@@ -44,6 +59,9 @@ interface StoredOrder {
   id: string;
   amountMinor: number;
   currency: string;
+  /** Present only for orders that already existed (idempotent retry). */
+  providerRef?: string;
+  createdAt?: string;
 }
 
 function numeric(value: unknown): number | null {
@@ -71,7 +89,8 @@ export class CheckoutService {
   constructor(
     private readonly repository: CheckoutRepository,
     @Inject(PAYMENT_PROVIDER) private readonly provider: PaymentProvider,
-    private readonly logger: AppLogger
+    private readonly logger: AppLogger,
+    private readonly config: AppConfigService
   ) {}
 
   async start(user: RequestUser, body: CheckoutBody, idempotencyKey?: string): Promise<CheckoutResponse> {
@@ -79,14 +98,26 @@ export class CheckoutService {
     try {
       const existing = key === undefined ? null : await this.existingOrder(user.id, key);
       const order = existing ?? await this.createOrder(user, body, key);
-      const checkout = await this.provider.createCheckout({id: order.id, amountMinor: order.amountMinor, currency: order.currency, method: body.method});
-      await this.saveProviderRef(order.id, checkout.providerRef);
+      const manual = this.config.paymentsProvider === 'manual';
+      // A manual order keeps its reference across idempotent retries: the customer may already have quoted it.
+      const checkout = manual && order.providerRef !== undefined
+        ? {redirectUrl: `/checkout/result/${order.id}`, providerRef: order.providerRef, reference: order.providerRef}
+        : await this.provider.createCheckout({id: order.id, amountMinor: order.amountMinor, currency: order.currency, method: body.method});
+      if (checkout.providerRef !== order.providerRef) await this.saveProviderRef(order.id, checkout.providerRef);
+      const createdMs = order.createdAt === undefined ? Date.now() : Date.parse(order.createdAt);
       return {
         orderId: order.id,
         redirectUrl: checkout.redirectUrl,
         ...(checkout.reference === undefined ? {} : {reference: checkout.reference}),
         amountMinor: order.amountMinor,
-        currency: order.currency
+        currency: order.currency,
+        ...(manual ? {payment: {
+          reference: checkout.reference ?? checkout.providerRef,
+          amountMinor: order.amountMinor,
+          currency: order.currency,
+          expiresAt: new Date((Number.isNaN(createdMs) ? Date.now() : createdMs) + MANUAL_ORDER_TTL_MS).toISOString(),
+          methods: this.config.manualPaymentInstructions?.methods ?? []
+        }} : {})
       };
     } catch (error) {
       if (error instanceof BadRequestException || error instanceof ServiceUnavailableException || error instanceof UnprocessableEntityException) throw error;
@@ -132,7 +163,7 @@ export class CheckoutService {
       kind: body.kind,
       amountMinor,
       currency: CHECKOUT_CURRENCY,
-      provider: 'mock',
+      provider: this.config.paymentsProvider === 'manual' ? 'manual' : 'mock',
       idempotencyKey: key ?? null,
       couponCode: body.couponCode?.trim().toLowerCase() ?? null,
       discountTotalMinor,
@@ -214,7 +245,12 @@ export class CheckoutService {
     if (!isRecord(result) || result.error !== null) throw new ServiceUnavailableException('Checkout service unavailable');
     if (result.data === null) return null;
     if (!isRecord(result.data) || typeof result.data.id !== 'string') throw new ServiceUnavailableException('Checkout service unavailable');
-    return storedOrder(result.data.id, result.data.amount_minor, result.data.currency);
+    const stored = storedOrder(result.data.id, result.data.amount_minor, result.data.currency);
+    return {
+      ...stored,
+      ...(typeof result.data.provider_ref === 'string' ? {providerRef: result.data.provider_ref} : {}),
+      ...(typeof result.data.created_at === 'string' ? {createdAt: result.data.created_at} : {})
+    };
   }
 
   private async saveProviderRef(orderId: string, providerRef: string): Promise<void> {

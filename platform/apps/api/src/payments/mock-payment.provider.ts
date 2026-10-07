@@ -14,7 +14,7 @@ const webhookPayload = z.object({
 @Injectable()
 export class MockPaymentProvider implements PaymentProvider {
   constructor(private readonly config: AppConfigService) {
-    if (config.isProduction) throw new Error('Mock payment provider is disabled in production');
+    if (config.isProduction && config.paymentsProvider !== 'manual') throw new Error('Mock payment provider is disabled in production');
   }
 
   createCheckout(order: CheckoutOrder): Promise<{redirectUrl: string; providerRef: string; reference?: string}> {

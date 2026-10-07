@@ -58,7 +58,7 @@ export class CheckoutRepository {
 
   /** Existing order for an idempotency key (service role). Raw postgrest envelope. */
   async findOrderByIdempotencyKeyAsServiceRole(userId: string, key: string): Promise<unknown> {
-    return this.supabase.admin().from('orders').select('id,amount_minor,currency')
+    return this.supabase.admin().from('orders').select('id,amount_minor,currency,provider_ref,created_at')
       .eq('user_id', userId).eq('idempotency_key', key).maybeSingle();
   }
 

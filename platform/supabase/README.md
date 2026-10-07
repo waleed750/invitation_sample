@@ -7,6 +7,7 @@ SQL only. Three migrations + one test file, applied in numeric order.
 | `migrations/0001_core.sql` | Extensions (`pgcrypto`), `handle_updated_at()`, all tables, checks, unique constraints, indexes |
 | `migrations/0002_functions.sql` | `is_admin()`, `level_for_purchases()`, `points_balance_v`, `fulfill_paid_order()`, `refund_order()`, `assert_can_publish()`, `publish_invitation()` |
 | `migrations/0003_rls.sql` | `ENABLE ROW LEVEL SECURITY` on every table, all policies, column-guard triggers, `REVOKE … FROM anon` |
+| `migrations/0009_manual_payments.sql` | B7a manual payments: `orders.paid_amount_minor/payment_txn_ref/payment_note/confirmed_by`, statuses `expired`/`rejected`, unique `provider_ref` for manual orders; service-role-only `admin_confirm_manual_payment()` (idempotent, amount-mismatch needs accept + note, calls `fulfill_paid_order`, writes `audit_log`), `admin_reject_manual_payment()`, `expire_stale_manual_orders(interval default '72 hours')` |
 | `tests/rls_and_fulfillment.sql` | Assertions in one rolled-back transaction (fulfillment, refunds, publish gate, anon privacy) |
 
 ## Table overview

@@ -86,6 +86,36 @@
         ],
         "type": "object"
       },
+      "ConfirmPaymentBody": {
+        "properties": {
+          "acceptMismatch": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "note": {
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "paidAmountMinor": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "txnRef": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "paidAmountMinor",
+          "txnRef"
+        ],
+        "type": "object"
+      },
       "GuestMessageBody": {
         "properties": {
           "name": {
@@ -109,6 +139,20 @@
         "required": [
           "name",
           "text"
+        ],
+        "type": "object"
+      },
+      "RejectPaymentBody": {
+        "properties": {
+          "reason": {
+            "maxLength": 500,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "reason"
         ],
         "type": "object"
       },
@@ -4854,6 +4898,90 @@
   },
   "openapi": "3.0.0",
   "paths": {
+    "/v1/admin/payments/pending": {
+      "get": {
+        "operationId": "AdminPaymentsController_pending",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminPayments"
+        ]
+      }
+    },
+    "/v1/admin/payments/{orderId}/confirm": {
+      "post": {
+        "operationId": "AdminPaymentsController_confirm",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmPaymentBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminPayments"
+        ]
+      }
+    },
+    "/v1/admin/payments/{orderId}/reject": {
+      "post": {
+        "operationId": "AdminPaymentsController_reject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectPaymentBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminPayments"
+        ]
+      }
+    },
     "/v1/checkout": {
       "post": {
         "operationId": "CheckoutController_start",

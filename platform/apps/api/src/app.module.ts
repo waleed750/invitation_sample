@@ -2,6 +2,7 @@ import {MiddlewareConsumer, Module, type NestModule} from '@nestjs/common';
 import {APP_FILTER, APP_GUARD} from '@nestjs/core';
 import {ThrottlerGuard} from '@nestjs/throttler';
 import {LoggerModule} from 'nestjs-pino';
+import {AdminPaymentsModule} from './admin-payments/admin-payments.module';
 import {AuthModule, AuthGuard, RolesGuard} from './auth';
 import {AppLogger} from './common/app-logger';
 import {buildLoggerParams} from './common/logging';
@@ -41,7 +42,7 @@ export {AuthGuard, RolesGuard};
     }),
     SupabaseModule, RateLimitModule, AuthModule, HealthModule, MeModule, EntitlementsModule,
     PaymentsModule, TemplatesModule, CheckoutModule, OrdersModule, InvitationsModule, PointsModule,
-    PublicInvitationsModule, GuestsModule
+    PublicInvitationsModule, GuestsModule, AdminPaymentsModule
   ],
   providers: [
     AppLogger,

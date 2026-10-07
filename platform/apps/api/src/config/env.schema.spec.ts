@@ -75,6 +75,22 @@ describe('validateEnv', () => {
     expect(() => validateEnv({...validEnv(), NODE_ENV: 'production'})).toThrow(/mock payments are disabled in production/);
   });
 
+  it('allows the manual payment provider in production and refuses fawry', () => {
+    expect(validateEnv({...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'manual'}).PAYMENTS_PROVIDER).toBe('manual');
+    expect(() => validateEnv({...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'fawry'})).toThrow(/fawry not implemented yet/);
+    expect(validateEnv({...validEnv(), PAYMENTS_PROVIDER: 'fawry'}).PAYMENTS_PROVIDER).toBe('fawry');
+    expect(() => validateEnv({...validEnv(), PAYMENTS_PROVIDER: 'stripe'})).toThrow(/PAYMENTS_PROVIDER/);
+  });
+
+  it('parses MANUAL_PAYMENT_INSTRUCTIONS_JSON, treating blank as unset', () => {
+    expect(validateEnv({...validEnv(), MANUAL_PAYMENT_INSTRUCTIONS_JSON: '  '}).MANUAL_PAYMENT_INSTRUCTIONS_JSON).toBeUndefined();
+    const json = JSON.stringify({methods: [{id: 'instapay', label: {ar: 'a', en: 'InstaPay'}, details: {ar: 'b', en: 'pay to x'}}]});
+    expect(validateEnv({...validEnv(), MANUAL_PAYMENT_INSTRUCTIONS_JSON: json}).MANUAL_PAYMENT_INSTRUCTIONS_JSON?.methods[0]?.id).toBe('instapay');
+    expect(() => validateEnv({...validEnv(), MANUAL_PAYMENT_INSTRUCTIONS_JSON: '{nope'})).toThrow(/valid JSON/);
+    expect(() => validateEnv({...validEnv(), MANUAL_PAYMENT_INSTRUCTIONS_JSON: '{"methods":[{"id":"cash","label":{"ar":"a","en":"b"},"details":{"ar":"a","en":"b"}}]}'}))
+      .toThrow(/MANUAL_PAYMENT_INSTRUCTIONS_JSON/);
+  });
+
   it('requires a strong mock webhook secret', () => {
     expect(() => validateEnv({...validEnv(), PAYMENTS_MOCK_SECRET: 'short'})).toThrow(/PAYMENTS_MOCK_SECRET/);
   });

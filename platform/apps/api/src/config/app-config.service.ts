@@ -1,6 +1,6 @@
 import {Injectable} from '@nestjs/common';
 import {ConfigService} from '@nestjs/config';
-import type {AppEnv} from './env.schema';
+import type {AppEnv, ManualPaymentInstructions} from './env.schema';
 
 /** Typed, fail-loud accessor over the validated environment. */
 @Injectable()
@@ -63,6 +63,11 @@ export class AppConfigService {
 
   get paymentsProvider(): AppEnv['PAYMENTS_PROVIDER'] {
     return this.required('PAYMENTS_PROVIDER');
+  }
+
+  /** Manual-payment instructions; `undefined` when unset (checkout then returns no methods). */
+  get manualPaymentInstructions(): ManualPaymentInstructions | undefined {
+    return this.config.get<ManualPaymentInstructions | undefined>('MANUAL_PAYMENT_INSTRUCTIONS_JSON');
   }
 
   get paymentsMockSecret(): string {

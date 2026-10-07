@@ -3,6 +3,18 @@ import {z} from 'zod';
 // Environment contract for the API. Everything is validated once at boot via
 // `validateEnv` (wired into `ConfigModule.forRoot({ validate })`) so the
 // process fails fast with a readable list instead of crashing mid-request.
+const localized = z.object({ar: z.string().min(1), en: z.string().min(1)}).strict();
+
+/** Manual payment instructions shown to the customer after checkout (admin-editable later). */
+export const manualPaymentInstructionsSchema = z.object({
+  methods: z.array(z.object({
+    id: z.enum(['instapay', 'wallet', 'bank']),
+    label: localized,
+    details: localized
+  }).strict()).min(1)
+}).strict();
+export type ManualPaymentInstructions = z.output<typeof manualPaymentInstructionsSchema>;
+
 const envSchema = z.object({
   PORT: z.coerce.number().int().min(1).max(65535).default(3001),
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
@@ -46,14 +58,33 @@ const envSchema = z.object({
     .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
   THROTTLE_TTL_MS: z.coerce.number().int().positive().default(60000),
   THROTTLE_LIMIT: z.coerce.number().int().positive().default(100),
-  PAYMENTS_PROVIDER: z.literal('mock').default('mock'),
+  PAYMENTS_PROVIDER: z.enum(['mock', 'manual', 'fawry']).default('mock'),
+  // Optional: blank/whitespace counts as unset. JSON `{methods:[{id,label:{ar,en},details:{ar,en}}]}`.
+  MANUAL_PAYMENT_INSTRUCTIONS_JSON: z
+    .string()
+    .optional()
+    .transform((value, context): unknown => {
+      if (value === undefined || value.trim() === '') return undefined;
+      try {
+        return JSON.parse(value) as unknown;
+      } catch {
+        context.addIssue({code: 'custom', message: 'MANUAL_PAYMENT_INSTRUCTIONS_JSON must be valid JSON'});
+        return z.NEVER;
+      }
+    })
+    .pipe(manualPaymentInstructionsSchema.optional()),
   PAYMENTS_MOCK_SECRET: z.string().min(32, 'PAYMENTS_MOCK_SECRET must be at least 32 characters'),
   // HMAC secret for guest IP hashing (server only, never returned). Raw IPs are never stored.
   IP_HASH_SECRET: z.string().min(32, 'IP_HASH_SECRET must be at least 32 characters'),
   SWAGGER_ENABLED: z.enum(['true', 'false']).default('false').transform((value) => value === 'true')
 }).superRefine((env, context) => {
   if (env.NODE_ENV === 'production') {
-    context.addIssue({code: 'custom', path: ['PAYMENTS_PROVIDER'], message: 'mock payments are disabled in production'});
+    if (env.PAYMENTS_PROVIDER === 'mock') {
+      context.addIssue({code: 'custom', path: ['PAYMENTS_PROVIDER'], message: 'mock payments are disabled in production'});
+    }
+    if (env.PAYMENTS_PROVIDER === 'fawry') {
+      context.addIssue({code: 'custom', path: ['PAYMENTS_PROVIDER'], message: 'fawry not implemented yet'});
+    }
   }
 }).transform((env) => ({...env, SENTRY_ENVIRONMENT: env.SENTRY_ENVIRONMENT ?? env.NODE_ENV}));
 
