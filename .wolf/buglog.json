@@ -723,6 +723,41 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-09-30T09:00:00+03:00"
+    },
+    {
+      "id": "bug-043",
+      "timestamp": "2026-10-07T10:09:46.877025",
+      "error_message": "CI database job: rls_and_fulfillment.sql:80 null value in column \"name\" (then \"tagline\") of relation \"templates\" violates not-null constraint",
+      "file": "platform/supabase/tests/rls_and_fulfillment.sql",
+      "root_cause": "Migration 0004 added NOT NULL jsonb name + tagline to templates; SQL test was never re-run (no Docker locally) so its fixture insert went stale",
+      "fix": "Fixture insert now sets name and tagline jsonb {ar,en}. CI database job (supabase start + db reset + psql) now passes; it is the only place SQL is tested.",
+      "tags": [
+        "supabase",
+        "sql-test",
+        "migration",
+        "ci",
+        "not-null"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-10-07T10:09:46.877025"
+    },
+    {
+      "id": "bug-044",
+      "timestamp": "2026-10-07T10:09:46.877025",
+      "error_message": "CI web build: src/templates/diwan/fonts.ts An error occurred in next/font. TypeError: Cannot read properties of null (reading '1') at @next/font google loader.js:122",
+      "file": "platform/apps/web/src/templates/diwan/fonts.ts",
+      "root_cause": "next/font/google downloads font CSS at build time; a transient/odd Google Fonts response on the runner breaks the loader regex. File unchanged and passed in earlier runs.",
+      "fix": "Rerun the failed job. If it recurs, self-host the fonts with next/font/local.",
+      "tags": [
+        "ci",
+        "next-font",
+        "google-fonts",
+        "flaky"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-10-07T10:09:46.877025"
     }
   ]
 }
