@@ -29,8 +29,8 @@ jobs:
       # The web build only needs a public site URL (see apps/web/.env.example).
       NEXT_PUBLIC_SITE_URL: http://localhost:3000
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
           cache: npm
@@ -52,10 +52,11 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - uses: supabase/setup-cli@v1
         with:
-          version: latest
+          # Pinned: "latest" queries the GitHub API unauthenticated and can hit its rate limit.
+          version: 2.120.0
       - name: Start local Supabase
         run: supabase start
       - name: Apply migrations
