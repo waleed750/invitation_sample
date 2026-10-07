@@ -793,6 +793,56 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-10-07T11:25:58.685293"
+    },
+    {
+      "id": "bug-047",
+      "timestamp": "2026-10-07T15:50:29.537641",
+      "error_message": "CI database: profiles_pkey duplicate key 9999... (lifecycle test) after adding on_auth_user_created trigger (0013)",
+      "file": "platform/supabase/tests/rls_and_fulfillment.sql",
+      "root_cause": "New signup trigger auto-creates a profile for every auth.users insert; older test fixtures inserted their own profile after the auth user",
+      "fix": "Profile fixtures use on conflict (id) do update; any new fixture that inserts auth.users must NOT insert a profile afterwards without on conflict",
+      "tags": [
+        "sql-test",
+        "trigger",
+        "fixtures",
+        "integration"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-10-07T15:50:29.537641"
+    },
+    {
+      "id": "bug-048",
+      "timestamp": "2026-10-07T15:50:29.537641",
+      "error_message": "CI database: users_email_partial_key duplicate email in signup fallback test",
+      "file": "platform/supabase/tests/rls_and_fulfillment.sql",
+      "root_cause": "auth.users forbids duplicate emails itself, so the 'duplicate email still signs up' case cannot occur through auth.users (agy-written test assumption)",
+      "fix": "Test (e) now makes a profile-level clash: update profiles.email to X, then create an auth user with email X; trigger falls back to null email",
+      "tags": [
+        "sql-test",
+        "agy",
+        "auth-users"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-10-07T15:50:29.537641"
+    },
+    {
+      "id": "bug-049",
+      "timestamp": "2026-10-07T15:50:29.537641",
+      "error_message": "CI database: invitations: status changes are allowed only via publish_invitation() when a test calls publish_invitation under JWT claims",
+      "file": "platform/supabase/tests/rls_and_fulfillment.sql",
+      "root_cause": "invitations_guard bypasses only when current_user <> session_user (production: pooler session user). Under psql as postgres they are equal, so SECURITY DEFINER status flips with claims set are blocked",
+      "fix": "Tests never call publish_invitation under claims; build the published state as fixtures (claims cleared) then set claims for the function under test",
+      "tags": [
+        "sql-test",
+        "guard",
+        "session_user",
+        "psql"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-10-07T15:50:29.537641"
     }
   ]
 }

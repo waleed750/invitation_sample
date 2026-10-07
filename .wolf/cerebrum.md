@@ -24,6 +24,8 @@
 
 ## Do-Not-Repeat
 
+- **(2026-10-07) SQL test harness (psql as postgres, one transaction):** (1) invitations_guard/profiles_guard bypass needs current_user <> session_user, which is never true under psql — never call publish_invitation (or anything flipping invitations.status) with JWT claims set; build published state as fixtures with claims cleared. (2) Every auth.users insert now auto-creates a profile (trigger 0013) — fixtures must use `on conflict (id) do update` when also inserting a profile. (3) auth.users forbids duplicate emails itself. (4) Stack parallel agents' SQL on ONE integration branch and run CI once; their SQL test sections collide in the same file (merge by appending sections, not by resolving hunks).
+
 - **(2026-10-07)** Points expiry: balance = sum of ledger deltas with expires_at null or in the future (points_balance_v). Never add compensating 'expire' rows on top — that double-deducts. Expiry jobs only refresh the cached profiles.points_balance.
 
 - **(2026-10-07)** Don't propose a direct Postgres connection (Drizzle/pg) for owner requests: auth.uid() is null there, so the RLS policies and guard triggers (0003_rls.sql:73 `if auth.uid() is null then return new`) stop protecting anything. Keep forUser(jwt); for portability, use set local role authenticated + set_config('request.jwt.claims') per transaction.

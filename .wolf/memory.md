@@ -894,3 +894,4 @@
 | 10:59 | 40-min run closed: B0 complete, B1a, B2a landed + pushed; STATUS handoff written | .wolf/STATUS.md | done | ~3k |
 | 11:28 | Round 2 closed: CI fix, B7a (d94af30), B4 (7c1541d) landed; STATUS next list | .wolf/STATUS.md | done | ~4k |
 | 11:30 | Wired expire_stale_manual_orders into daily job (7b2aeee) | apps/api/src/lifecycle | done | ~3k |
+| 15:50 | Round 3: B5a+B1b+B3a (Sonnet x2, agy Gemini) stacked, 3 SQL-test harness fixes, CI green, landed d92b74e | platform/ | done | ~12k |
