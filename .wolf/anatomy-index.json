@@ -1,12 +1,12 @@
 {
   "version": 1,
   "meta": {
-    "lastScanned": "2026-07-18T16:26:25.313Z",
-    "fileCount": 35,
+    "lastScanned": "2026-09-30T22:13:01.342Z",
+    "fileCount": 162,
     "hits": 0,
     "misses": 0,
-    "renderedHash": "42ae266ee36a48570ed69cadbf917ac0a1ea152d6dc9b758a59151a537c5750e",
-    "storeUpdatedAt": "2026-07-18T16:26:25.313Z"
+    "renderedHash": "2b9227dbbcd0f102c0960972d8e13a319cddbc5f94b641b03de0f0b1ad750b65",
+    "storeUpdatedAt": "2026-09-30T22:13:01.342Z"
   },
   "files": {
     ".claude/commands/reframe.md": {
@@ -367,13 +367,13 @@
       "source": "scan"
     },
     "src/sites/video-open-invitation/VideoOpenInvitation.jsx": {
-      "description": "useCountdown — renders form, map",
-      "tokens": 2938,
+      "description": "Thin wrapper: local section components + InvitationShell render",
+      "tokens": 100,
       "hash": "96075fa330ee65eb",
       "size": 10281,
       "mtimeMs": 1784380087957.2173,
-      "updatedAt": "2026-07-18T16:26:25.312Z",
-      "source": "scan",
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import",
       "symbols": [
         {
           "name": "useCountdown",
@@ -490,6 +490,1002 @@
       "mtimeMs": 1784379767165.1006,
       "updatedAt": "2026-07-18T16:26:25.312Z",
       "source": "scan"
+    },
+    "PLATFORM_PLAN.md": {
+      "description": "SaaS launch plan: inventory, legal blocker, stack, auth, pricing, dashboards, DDoS/rate limits, AI Theme Spec + reels, roadmap",
+      "tokens": 6500,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/InvitationShell.jsx": {
+      "description": "Shared invitation shell: useRevealOnScroll, audio/music toggle, body bg, theme CSS vars, intro wiring, sections.map render loop",
+      "tokens": 500,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/intros/VideoOpenIntro.jsx": {
+      "description": "Tap-to-open poster + video intro, fully data-driven",
+      "tokens": 310,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/intros/ScratchRevealIntro.jsx": {
+      "description": "Scratch canvas + reveal intro, fully data-driven",
+      "tokens": 640,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/Hero.jsx": {
+      "description": "Hero section: names, headline, background video",
+      "tokens": 170,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/Countdown.jsx": {
+      "description": "Live countdown + kicker eyebrow prop (added for floral \"Cuenta atrás\")",
+      "tokens": 230,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/Welcome.jsx": {
+      "description": "Heading + body paragraph",
+      "tokens": 90,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/Schedule.jsx": {
+      "description": "Ordered schedule items",
+      "tokens": 170,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/Details.jsx": {
+      "description": "Venue details, time, map link",
+      "tokens": 240,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/Map.jsx": {
+      "description": "Embedded Google Maps iframe",
+      "tokens": 100,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/MessageForm.jsx": {
+      "description": "Guestbook/message form",
+      "tokens": 260,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/Credit.jsx": {
+      "description": "Reusable credit footer with portfolio link",
+      "tokens": 120,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/HotelList.jsx": {
+      "description": "Recommended hotel cards with image, price, note, booking status",
+      "tokens": 180,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/Gallery.jsx": {
+      "description": "Responsive image grid for invitation photo galleries",
+      "tokens": 120,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/ImageDivider.jsx": {
+      "description": "Centered decorative divider image with optional horizontal rule",
+      "tokens": 60,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/shared/sections/index.js": {
+      "description": "Barrel export for all sections",
+      "tokens": 90,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/registry/templateTypes.js": {
+      "description": "Frozen enum objects for eventType, siteType, experienceType, introType, layoutFamily",
+      "tokens": 260,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/registry/schema.js": {
+      "description": "JSDoc invitation data schema + Section type definitions",
+      "tokens": 900,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/registry/index.js": {
+      "description": "Central templates array with React.lazy per site",
+      "tokens": 200,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/africa/data.js": {
+      "description": "Exports invitationData, siteMeta (10 sections, safari-editorial)",
+      "tokens": 800,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/africa/styles.css": {
+      "description": "Styles: safari-editorial theme, ~600 lines",
+      "tokens": 2200,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/africa/AfricaInvitation.jsx": {
+      "description": "Thin wrapper: AfricaFooter + sectionComponents map + InvitationShell render",
+      "tokens": 80,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/excellence/data.js": {
+      "description": "Exports invitationData, siteMeta (10 sections, luxury-floral)",
+      "tokens": 750,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/excellence/styles.css": {
+      "description": "Styles: luxury-floral theme, ~500 lines",
+      "tokens": 1800,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/excellence/ExcellenceInvitation.jsx": {
+      "description": "Thin wrapper: sectionComponents map + InvitationShell render",
+      "tokens": 70,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/elegante/data.js": {
+      "description": "Exports invitationData, siteMeta for Andrea & Pedro Elegante wedding route",
+      "tokens": 1000,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/elegante/styles.css": {
+      "description": "Gold/tan Elegante theme, gallery, venue, alternating timeline, hotel/gifts/RSVP styling",
+      "tokens": 2600,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/elegante/EleganteInvitation.jsx": {
+      "description": "Thin wrapper plus local Location & Transportation section",
+      "tokens": 220,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/floral/data.js": {
+      "description": "Exports invitationData, siteMeta for Carla & Miguel Ángel floral route (hero/video intro, countdown with kicker, venue map, program, gifts accordion, RSVP, footer)",
+      "tokens": 650,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/floral/FloralInvitation.jsx": {
+      "description": "Thin wrapper: local FloralHero/Venue/Schedule/Gifts/Divider/Footer + shared Countdown(kicker) & Rsvp, side floral border decorations via decor wrapper",
+      "tokens": 280,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/floral/styles.css": {
+      "description": "Dusty rose floral-romantic theme, side decor absolute images (11 variants), hero video overlay, countdown cards, venue map card, schedule grid, gifts accordion, rsvp, footer",
+      "tokens": 550,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/finca/data.js": {
+      "description": "Exports invitationData, siteMeta for Mar & Jaume finca route (hero loop + intro mov, countdown, venue photo+map, 7-step schedule, 2 hotels, gifts IBAN, RSVP allergies, footer)",
+      "tokens": 650,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/finca/FincaInvitation.jsx": {
+      "description": "Thin wrapper: local FincaHero/Venue/Schedule/Hotels/Gifts/Rsvp/Divider/Footer + shared Countdown, InvitationShell with sage palette",
+      "tokens": 450,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/finca/styles.css": {
+      "description": "Sage finca-rustic theme, hero scrim + diamond divider, countdown dark panel, venue card with map, schedule desktop-grid+mobile-timeline, hotel grid, gifts accordion with confetti, rsvp with companions/allergies, footer",
+      "tokens": 650,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/sweetlove/data.js": {
+      "description": "Exports invitationData, siteMeta for Laura & Javier sweetlove route (hero loop + intro envelope, countdown, venue map, 7-step schedule, gifts IBAN, RSVP allergies/companions + confirmation video, footer)",
+      "tokens": 750,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/sweetlove/SweetloveInvitation.jsx": {
+      "description": "Thin wrapper: local SweetloveHero/Venue/Schedule/Gifts/Rsvp/Divider/Footer + shared Countdown, InvitationShell with ivory palette",
+      "tokens": 450,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/sweetlove/styles.css": {
+      "description": "Ivory sweetlove-romantic theme, hero loop zoom, countdown cream panel, venue card with map, schedule desktop-grid+mobile-timeline, gifts accordion with confetti, rsvp with companions/allergies + confirmation video fade, footer",
+      "tokens": 650,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/dolcevita/data.js": {
+      "description": "Exports invitationData, siteMeta for Marco & Sofia Lake Como route (hero loop 7.04s + intro hevc 3.33s, countdown with bg, dual-venue location with maps, 8-step schedule image, dress code fan/parasol, accommodation Grand Hotel Tremezzo, boat transport, gifts Bank/Satispay/WWF, RSVP dinner/transport/accommodation + confirmation video, footer kiss+manor)",
+      "tokens": 900,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/dolcevita/DolceVitaInvitation.jsx": {
+      "description": "Thin wrapper: local DolceHero/Location/Schedule/DressCode/Accommodation/Transport/Gifts/Rsvp/PetsDivider/Footer + shared Countdown, InvitationShell ivory/navy palette",
+      "tokens": 550,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/dolcevita/styles.css": {
+      "description": "Ivory lake-romantic theme, hero full-screen loop, countdown bg overlay, location blue-bow ribbons + church/villa maps, schedule image, dress code, accommodation, transport bus/birds, gifts globe/balloons, RSVP ribbon + swans + confirmation video fade, footer kiss+manor overlay, overflow hidden",
+      "tokens": 650,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/daynight/data.js": {
+      "description": "Exports invitationData, siteMeta for Lucía & Felipe daynight route (hero scrub 3.04s + intro mov 1.70s, day/night toggle, countdown, framed venue, 5-step schedule, dress code, 2 hotels, transport, gifts, framed couple photo, RSVP companions/transport + confirmation video, footer)",
+      "tokens": 750,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/daynight/DayNightInvitation.jsx": {
+      "description": "Thin wrapper: local DayNightHero (raf scrub forward/backward, isDark toggle) + Venue/Schedule/Dress/Hotels/Transport/Gifts/PhotoDivider/Rsvp/Footer + shared Countdown, InvitationShell with ivory/sage palette",
+      "tokens": 550,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/daynight/styles.css": {
+      "description": "Ivory daynight theme, hero day-night scrub video + toggle, monogram countdown dark panel, framed venue with ornate border, schedule venue entrance overlay, dress code, hotel cards + quick tips, transport, gifts accordion with bouquet, photo divider, rsvp with companions, footer cover + credit, overflow hidden",
+      "tokens": 700,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/bridgerton/data.js": {
+      "description": "Exports invitationData, siteMeta for Lucia & Matteo bridgerton route (hero loop 7.04s + intro envelope 4.0s, countdown with drapes, dress code portrait, 3 hotels, discover Nouvelle-Aquitaine guide, gifts cake + bank accordion, RSVP, footer)",
+      "tokens": 800,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/bridgerton/BridgertonInvitation.jsx": {
+      "description": "Thin wrapper: local BridgertonHero/Welcome/Countdown/Dress/Hotels/Discover/Gifts/Rsvp/Footer + shared Countdown, InvitationShell ivory/plum regency palette",
+      "tokens": 600,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/bridgerton/styles.css": {
+      "description": "Ivory regency theme, hero loop scrim, chateau welcome frame, countdown drape, dress portrait, hotel grid, discover categories + fountain/balustrade/pools decor, gifts tassels + cake, RSVP floral frame, footer, overflow hidden",
+      "tokens": 750,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/bloom/data.js": {
+      "description": "Exports invitationData, siteMeta for Martina & Javier bloom route (hero SVG arch + hero-bg image 941×1672, countdown framed, welcome with flowers, ceremony oval + venue illust, black-tie dress code, 4-step programme, story expandable + butterflies + 19-image marquee, weekend Restaurant César, 2 hotels, transport shuttle/valet, RSVP, footer checkered frame)",
+      "tokens": 900,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/bloom/BloomInvitation.jsx": {
+      "description": "Thin wrapper: local BloomHero/Countdown/Welcome/Ceremony/Dress/Programme/Story/Weekend/Hotels/Transport/Rsvp/Footer + shared Countdown, InvitationShell ivory/sage garden palette",
+      "tokens": 650,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "src/sites/bloom/styles.css": {
+      "description": "Ivory bloom garden theme, hero arch SVG, countdown oval frame, welcome floral absolute, ceremony oval with venue illust, dress frame + illustration, programme frame, story butterfly pair + gallery marquee, weekend church/flower/hummingbird/starfish/oranges, hotels archway/bellhop/key/pool, transport palms/surf/shell/bus/car, RSVP portrait mask + floral, footer checkered border-image, overflow hidden",
+      "tokens": 750,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "md-import"
+    },
+    "platform/supabase/migrations/0001_core.sql": {
+      "description": "Declares public",
+      "tokens": 4551,
+      "hash": "c757a3fcc76b6aa7",
+      "size": 17065,
+      "mtimeMs": 1790702287827.6753,
+      "updatedAt": "2026-09-29T17:18:07.830Z",
+      "source": "hook"
+    },
+    "platform/supabase/migrations/0002_functions.sql": {
+      "description": "Declares pins",
+      "tokens": 5435,
+      "hash": "9d17acce2397b60b",
+      "size": 20388,
+      "mtimeMs": 1790702320356.333,
+      "updatedAt": "2026-09-29T17:18:40.357Z",
+      "source": "hook"
+    },
+    "platform/supabase/migrations/0003_rls.sql": {
+      "description": "Declares public",
+      "tokens": 4599,
+      "hash": "71fb49bf74e993c1",
+      "size": 17268,
+      "mtimeMs": 1790702651994.8313,
+      "updatedAt": "2026-09-29T17:24:11.998Z",
+      "source": "hook"
+    },
+    "platform/supabase/tests/rls_and_fulfillment.sql": {
+      "description": "Declares auth",
+      "tokens": 3826,
+      "hash": "13dc27cbaed036c9",
+      "size": 14364,
+      "mtimeMs": 1790702779396.3806,
+      "updatedAt": "2026-09-29T17:26:19.399Z",
+      "source": "hook"
+    },
+    "platform/supabase/README.md": {
+      "description": "Project documentation",
+      "tokens": 1653,
+      "hash": "7c22185f9524652e",
+      "size": 6639,
+      "mtimeMs": 1790702487098.7026,
+      "updatedAt": "2026-09-29T17:21:27.108Z",
+      "source": "hook"
+    },
+    "platform/apps/web/src/app/[locale]/demo/video-open/page.tsx": {
+      "description": "Next.js page component",
+      "tokens": 452,
+      "hash": "21a25f771cc419c4",
+      "size": 1581,
+      "mtimeMs": 1790703469204.4675,
+      "updatedAt": "2026-09-29T17:37:49.208Z",
+      "source": "hook"
+    },
+    "platform/apps/web/src/data/demo/video-open.ts": {
+      "description": "Exports videoOpenData, getVideoOpenData",
+      "tokens": 1639,
+      "hash": "e74677a37bdc69a2",
+      "size": 6353,
+      "mtimeMs": 1790703469204.928,
+      "updatedAt": "2026-09-29T17:37:49.213Z",
+      "source": "hook"
+    },
+    "platform/apps/web/src/engine/registry.tsx": {
+      "description": "Exports sectionComponents",
+      "tokens": 742,
+      "hash": "74c54ae7cdfe4e1c",
+      "size": 2596,
+      "mtimeMs": 1790703469205.1147,
+      "updatedAt": "2026-09-29T17:37:49.217Z",
+      "source": "hook"
+    },
+    "platform/apps/web/src/engine/section-key.ts": {
+      "description": "Exports sectionKey",
+      "tokens": 55,
+      "hash": "9a1a88f789b58a98",
+      "size": 191,
+      "mtimeMs": 1790703469205.3262,
+      "updatedAt": "2026-09-29T17:37:49.219Z",
+      "source": "hook"
+    },
+    "platform/apps/web/src/engine/types.ts": {
+      "description": "Exports SectionProps",
+      "tokens": 43,
+      "hash": "1effda447496be29",
+      "size": 148,
+      "mtimeMs": 1790703469205.416,
+      "updatedAt": "2026-09-29T17:37:49.222Z",
+      "source": "hook"
+    },
+    "platform/apps/web/src/engine/intros/VideoOpenIntro.tsx": {
+      "description": "Declares Props",
+      "tokens": 546,
+      "hash": "89e21205ca7bcaca",
+      "size": 1910,
+      "mtimeMs": 1790703469205.5696,
+      "updatedAt": "2026-09-29T17:37:49.226Z",
+      "source": "hook"
+    },
+    "platform/apps/web/src/engine/InvitationShell.tsx": {
+      "description": "Declares CSSProperties",
+      "tokens": 1341,
+      "hash": "a8426714d3295c31",
+      "size": 4692,
+      "mtimeMs": 1790703469205.7017,
+      "updatedAt": "2026-09-29T17:37:49.228Z",
+      "source": "hook"
+    },
+    "platform/apps/web/src/engine/InvitationLocaleContext.tsx": {
+      "description": "Exports InvitationLocaleContext, useInvitationText",
+      "tokens": 117,
+      "hash": "6ce17cfde71ffb37",
+      "size": 408,
+      "mtimeMs": 1790703469205.7942,
+      "updatedAt": "2026-09-29T17:37:49.231Z",
+      "source": "hook"
+    },
+    "platform/apps/web/src/engine/__tests__/engine.test.ts": {
+      "description": "Declares now",
+      "tokens": 646,
+      "hash": "65d6189a2b32f60b",
+      "size": 2272,
+      "mtimeMs": 1790703469205.9165,
+      "updatedAt": "2026-09-29T17:37:49.233Z",
+      "source": "hook"
+    },
+    "platform/packages/shared/src/__tests__/contracts.test.ts": {
+      "description": "Declares InvitationData",
+      "tokens": 2646,
+      "hash": "1ac7958062b9aac4",
+      "size": 9285,
+      "mtimeMs": 1790703521844.2944,
+      "updatedAt": "2026-09-29T17:38:41.856Z",
+      "source": "hook"
+    },
+    "platform/apps/web/package.json": {
+      "description": "Node.js package manifest",
+      "tokens": 228,
+      "hash": "3834eac5a86e38b7",
+      "size": 797,
+      "mtimeMs": 1790703562718.8328,
+      "updatedAt": "2026-09-29T17:39:22.720Z",
+      "source": "hook"
+    },
+    "platform/packages/shared/package.json": {
+      "description": "Node.js package manifest",
+      "tokens": 154,
+      "hash": "ffd7f7bd7f1b0ed1",
+      "size": 536,
+      "mtimeMs": 1790703939802.7153,
+      "updatedAt": "2026-09-29T17:45:39.814Z",
+      "source": "hook"
+    },
+    "platform/packages/shared/tsconfig.json": {
+      "description": "TypeScript configuration",
+      "tokens": 100,
+      "hash": "bf5862547c0ec3a1",
+      "size": 347,
+      "mtimeMs": 1790705286729.7385,
+      "updatedAt": "2026-09-29T18:08:06.734Z",
+      "source": "hook"
+    },
+    "platform/packages/shared/vitest.config.ts": {
+      "description": "",
+      "tokens": 37,
+      "hash": "e3b79f0118dde0dc",
+      "size": 129,
+      "mtimeMs": 1790703568012.2751,
+      "updatedAt": "2026-09-29T17:39:28.018Z",
+      "source": "hook"
+    },
+    "platform/tsconfig.base.json": {
+      "description": "",
+      "tokens": 110,
+      "hash": "62aecdc6a1007241",
+      "size": 385,
+      "mtimeMs": 1790703568012.3662,
+      "updatedAt": "2026-09-29T17:39:28.020Z",
+      "source": "hook"
+    },
+    "platform/package.json": {
+      "description": "Node.js package manifest",
+      "tokens": 200,
+      "hash": "1c2d1939de79ddfe",
+      "size": 700,
+      "mtimeMs": 1790710002340.056,
+      "updatedAt": "2026-09-29T19:26:42.343Z",
+      "source": "hook"
+    },
+    "platform/apps/web/next.config.ts": {
+      "description": "Declares withNextIntl",
+      "tokens": 79,
+      "hash": "02e7392fab3c1d75",
+      "size": 275,
+      "mtimeMs": 1790703568012.544,
+      "updatedAt": "2026-09-29T17:39:28.025Z",
+      "source": "hook"
+    },
+    "platform/apps/web/tsconfig.json": {
+      "description": "TypeScript configuration",
+      "tokens": 102,
+      "hash": "32cf37d97152f321",
+      "size": 357,
+      "mtimeMs": 1790703568012.6934,
+      "updatedAt": "2026-09-29T17:39:28.027Z",
+      "source": "hook"
+    },
+    "platform/.gitignore": {
+      "description": "Git ignore rules",
+      "tokens": 18,
+      "hash": "a610d9798eb396a4",
+      "size": 65,
+      "mtimeMs": 1790703592409.9668,
+      "updatedAt": "2026-09-29T17:39:52.413Z",
+      "source": "hook"
+    },
+    "platform/README.md": {
+      "description": "Project documentation",
+      "tokens": 2152,
+      "hash": "25bae7b2514f388f",
+      "size": 8625,
+      "mtimeMs": 1790720679178.131,
+      "updatedAt": "2026-09-29T22:24:39.180Z",
+      "source": "hook"
+    },
+    "platform/packages/shared/tsup.config.ts": {
+      "description": "",
+      "tokens": 173,
+      "hash": "cadf1b350215c7d2",
+      "size": 603,
+      "mtimeMs": 1790703950169.0369,
+      "updatedAt": "2026-09-29T17:45:50.171Z",
+      "source": "hook"
+    },
+    "platform/apps/api/package.json": {
+      "description": "Node.js package manifest",
+      "tokens": 394,
+      "hash": "567bfb3c715107bd",
+      "size": 1379,
+      "mtimeMs": 1790710205722.4446,
+      "updatedAt": "2026-09-29T19:30:05.725Z",
+      "source": "hook"
+    },
+    "platform/apps/api/tsconfig.json": {
+      "description": "TypeScript configuration",
+      "tokens": 189,
+      "hash": "00203cbae16cc216",
+      "size": 659,
+      "mtimeMs": 1790705315355.3474,
+      "updatedAt": "2026-09-29T18:08:35.359Z",
+      "source": "hook"
+    },
+    "platform/apps/api/tsconfig.build.json": {
+      "description": "",
+      "tokens": 53,
+      "hash": "018183b77ffec4cc",
+      "size": 184,
+      "mtimeMs": 1790720679178.3086,
+      "updatedAt": "2026-09-29T22:24:39.183Z",
+      "source": "hook"
+    },
+    "platform/apps/api/nest-cli.json": {
+      "description": "",
+      "tokens": 62,
+      "hash": "571f7760f530b8c0",
+      "size": 214,
+      "mtimeMs": 1790704005099.813,
+      "updatedAt": "2026-09-29T17:46:45.100Z",
+      "source": "hook"
+    },
+    "platform/apps/api/jest.config.js": {
+      "description": "",
+      "tokens": 266,
+      "hash": "cee2b3cc92a98c38",
+      "size": 931,
+      "mtimeMs": 1790704962522.7085,
+      "updatedAt": "2026-09-29T18:02:42.526Z",
+      "source": "hook"
+    },
+    "platform/apps/api/eslint.config.mjs": {
+      "description": "",
+      "tokens": 418,
+      "hash": "b86607d48d475879",
+      "size": 1565,
+      "mtimeMs": 1790709967543.8345,
+      "updatedAt": "2026-09-29T19:26:07.550Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/config/app-config.module.ts": {
+      "description": "Exports AppConfigModule",
+      "tokens": 151,
+      "hash": "de603f69ff74b4bd",
+      "size": 526,
+      "mtimeMs": 1790704119134.1978,
+      "updatedAt": "2026-09-29T17:48:39.139Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/config/env.schema.ts": {
+      "description": "Exports AppEnv, validateEnv",
+      "tokens": 720,
+      "hash": "7dbe6a860b4b07de",
+      "size": 2517,
+      "mtimeMs": 1790720564296.8364,
+      "updatedAt": "2026-09-29T22:22:44.302Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/config/app-config.service.ts": {
+      "description": "Exports AppConfigService",
+      "tokens": 490,
+      "hash": "6239e76a6927e5d3",
+      "size": 1714,
+      "mtimeMs": 1790720601473.2686,
+      "updatedAt": "2026-09-29T22:23:21.476Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/common/type-guards.ts": {
+      "description": "Exports isRecord",
+      "tokens": 66,
+      "hash": "a6d509bd15e5d216",
+      "size": 229,
+      "mtimeMs": 1790704129915.767,
+      "updatedAt": "2026-09-29T17:48:49.916Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/common/request-context.ts": {
+      "description": "Exports RequestContext, runWithRequestContext, getRequestId",
+      "tokens": 171,
+      "hash": "b2d72e87500a5c86",
+      "size": 598,
+      "mtimeMs": 1790704129957.979,
+      "updatedAt": "2026-09-29T17:48:49.958Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/common/app-logger.ts": {
+      "description": "Exports AppLogger",
+      "tokens": 414,
+      "hash": "3d8074ad4aa1347d",
+      "size": 1449,
+      "mtimeMs": 1790704130020.9084,
+      "updatedAt": "2026-09-29T17:48:50.021Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/common/request-id.middleware.ts": {
+      "description": "Exports REQUEST_ID_HEADER, RequestWithId, RequestIdMiddleware",
+      "tokens": 438,
+      "hash": "9d9c5e80052e3e70",
+      "size": 1534,
+      "mtimeMs": 1790704130021.0676,
+      "updatedAt": "2026-09-29T17:48:50.024Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/common/http-exception.filter.ts": {
+      "description": "Exports ErrorEnvelope, HttpExceptionFilter",
+      "tokens": 938,
+      "hash": "b041ba6f241eaebf",
+      "size": 3283,
+      "mtimeMs": 1790705975563.0325,
+      "updatedAt": "2026-09-29T18:19:35.564Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/common/decorators.ts": {
+      "description": "Exports IS_PUBLIC_KEY, Public, UserRole, ROLES_KEY + 4 more",
+      "tokens": 446,
+      "hash": "7dd1841ca8f47c20",
+      "size": 1563,
+      "mtimeMs": 1790704159714.782,
+      "updatedAt": "2026-09-29T17:49:19.715Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/common/clock.ts": {
+      "description": "Exports CLOCK, Clock, SystemClock",
+      "tokens": 125,
+      "hash": "29046c71d4fcb848",
+      "size": 436,
+      "mtimeMs": 1790704159714.8435,
+      "updatedAt": "2026-09-29T17:49:19.717Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/supabase/supabase.module.ts": {
+      "description": "Exports SupabaseModule",
+      "tokens": 88,
+      "hash": "7b2d99613d1081e0",
+      "size": 306,
+      "mtimeMs": 1790704172110.2253,
+      "updatedAt": "2026-09-29T17:49:32.116Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/auth/auth.module.ts": {
+      "description": "Exports AuthModule",
+      "tokens": 94,
+      "hash": "2fa3dc7e3096e3e0",
+      "size": 330,
+      "mtimeMs": 1790704172115.1858,
+      "updatedAt": "2026-09-29T17:49:32.120Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/supabase/supabase.service.ts": {
+      "description": "Exports SupabaseService",
+      "tokens": 709,
+      "hash": "d9e7ff7fe1f5c5c0",
+      "size": 2487,
+      "mtimeMs": 1790720601473.5955,
+      "updatedAt": "2026-09-29T22:23:21.479Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/auth/auth.guard.ts": {
+      "description": "Exports AuthGuard",
+      "tokens": 889,
+      "hash": "c01e0c84bb0ea1b5",
+      "size": 3113,
+      "mtimeMs": 1790709937228.494,
+      "updatedAt": "2026-09-29T19:25:37.236Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/auth/roles.guard.ts": {
+      "description": "Exports RolesGuard",
+      "tokens": 727,
+      "hash": "0124c46ea088fc2f",
+      "size": 2546,
+      "mtimeMs": 1790705988173.6614,
+      "updatedAt": "2026-09-29T18:19:48.174Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/rate-limit/rate-limit.module.ts": {
+      "description": "Exports RateLimitStorageModule, RateLimitModule",
+      "tokens": 362,
+      "hash": "27f8d67bf2d5c371",
+      "size": 1267,
+      "mtimeMs": 1790704422068.9436,
+      "updatedAt": "2026-09-29T17:53:42.072Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/rate-limit/rate-limit-storage.ts": {
+      "description": "Exports RATE_LIMIT_STORAGE, RateLimitStorage, InMemoryRateLimitStorage",
+      "tokens": 232,
+      "hash": "f68e3aae02247fed",
+      "size": 814,
+      "mtimeMs": 1790705955726.6738,
+      "updatedAt": "2026-09-29T18:19:15.730Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/health/health.controller.ts": {
+      "description": "Exports HealthResponse, HealthController",
+      "tokens": 264,
+      "hash": "14f5274066f6a9c7",
+      "size": 921,
+      "mtimeMs": 1790705630975.6948,
+      "updatedAt": "2026-09-29T18:13:50.977Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/health/health.module.ts": {
+      "description": "Exports HealthModule",
+      "tokens": 48,
+      "hash": "dea6041f244e7aab",
+      "size": 166,
+      "mtimeMs": 1790704422080.7227,
+      "updatedAt": "2026-09-29T17:53:42.090Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/me/me.controller.ts": {
+      "description": "Exports MeController",
+      "tokens": 110,
+      "hash": "23a705fc97f3ebb9",
+      "size": 382,
+      "mtimeMs": 1790704447005.4126,
+      "updatedAt": "2026-09-29T17:54:07.012Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/me/me.module.ts": {
+      "description": "Exports MeModule",
+      "tokens": 78,
+      "hash": "b72dee64ce7e47e8",
+      "size": 273,
+      "mtimeMs": 1790704447005.413,
+      "updatedAt": "2026-09-29T17:54:07.017Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/me/me.service.ts": {
+      "description": "Exports MeResponse, MeService",
+      "tokens": 874,
+      "hash": "b80672e18b30f98a",
+      "size": 3059,
+      "mtimeMs": 1790705988157.5127,
+      "updatedAt": "2026-09-29T18:19:48.162Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/entitlements/entitlements.controller.ts": {
+      "description": "Exports EntitlementsController",
+      "tokens": 169,
+      "hash": "d1b9a33ef038ef9c",
+      "size": 591,
+      "mtimeMs": 1790704464968.5374,
+      "updatedAt": "2026-09-29T17:54:24.971Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/entitlements/entitlements.service.ts": {
+      "description": "Exports InvitationIdParams, CanPublishResult, EntitlementResponse, EntitlementsService",
+      "tokens": 1494,
+      "hash": "c57764d2996b1524",
+      "size": 5235,
+      "mtimeMs": 1790705988157.4075,
+      "updatedAt": "2026-09-29T18:19:48.159Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/entitlements/entitlements.module.ts": {
+      "description": "Exports EntitlementsModule",
+      "tokens": 127,
+      "hash": "86c238760aaa9ed0",
+      "size": 442,
+      "mtimeMs": 1790704464968.5393,
+      "updatedAt": "2026-09-29T17:54:24.979Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/app.module.ts": {
+      "description": "Exports AppModule",
+      "tokens": 465,
+      "hash": "00631be1c48622fb",
+      "size": 1632,
+      "mtimeMs": 1790704534953.0337,
+      "updatedAt": "2026-09-29T17:55:34.955Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/auth/index.ts": {
+      "description": "",
+      "tokens": 36,
+      "hash": "8a540b46c5d2b0ca",
+      "size": 124,
+      "mtimeMs": 1790704542091.5222,
+      "updatedAt": "2026-09-29T17:55:42.098Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/main.ts": {
+      "description": "Declares bootstrap",
+      "tokens": 335,
+      "hash": "3c90c15858746360",
+      "size": 1171,
+      "mtimeMs": 1790704613425.7424,
+      "updatedAt": "2026-09-29T17:56:53.427Z",
+      "source": "hook"
+    },
+    "platform/apps/api/Dockerfile": {
+      "description": "",
+      "tokens": 322,
+      "hash": "279137fb5bb0de55",
+      "size": 1204,
+      "mtimeMs": 1790704548371.7827,
+      "updatedAt": "2026-09-29T17:55:48.374Z",
+      "source": "hook"
+    },
+    "platform/.dockerignore": {
+      "description": "",
+      "tokens": 42,
+      "hash": "feadde6aaede0231",
+      "size": 154,
+      "mtimeMs": 1790704548372.2056,
+      "updatedAt": "2026-09-29T17:55:48.379Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/setup-app.ts": {
+      "description": "Exports GLOBAL_PREFIX_EXCLUDES, setupApp",
+      "tokens": 409,
+      "hash": "b4479933db380506",
+      "size": 1430,
+      "mtimeMs": 1790704600799.6128,
+      "updatedAt": "2026-09-29T17:56:40.805Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/test-helpers.ts": {
+      "description": "Exports TestTokenOptions, signTestToken, MockSingleResult, StubSupabaseClient + 4 more",
+      "tokens": 992,
+      "hash": "3a37c0dd540c11f3",
+      "size": 3471,
+      "mtimeMs": 1790708961204.6794,
+      "updatedAt": "2026-09-29T19:09:21.211Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/config/env.schema.spec.ts": {
+      "description": "Declares validEnv",
+      "tokens": 779,
+      "hash": "e6f658c5b764c729",
+      "size": 2730,
+      "mtimeMs": 1790720673884.493,
+      "updatedAt": "2026-09-29T22:24:33.893Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/common/http-exception.filter.spec.ts": {
+      "description": "Declares CapturedResponse",
+      "tokens": 1096,
+      "hash": "8eb926fe3537299c",
+      "size": 3836,
+      "mtimeMs": 1790704692736.8916,
+      "updatedAt": "2026-09-29T17:58:12.739Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/entitlements/entitlements.service.spec.ts": {
+      "description": "Declares Clock",
+      "tokens": 1385,
+      "hash": "3a5dfa322036fed2",
+      "size": 4847,
+      "mtimeMs": 1790705027107.2908,
+      "updatedAt": "2026-09-29T18:03:47.115Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/me/me.controller.spec.ts": {
+      "description": "Declares ROW",
+      "tokens": 491,
+      "hash": "94b864b2c389577f",
+      "size": 1718,
+      "mtimeMs": 1790705027107.5403,
+      "updatedAt": "2026-09-29T18:03:47.118Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/entitlements/entitlements.controller.spec.ts": {
+      "description": "Declares Clock",
+      "tokens": 590,
+      "hash": "af7d9b56de82b080",
+      "size": 2065,
+      "mtimeMs": 1790708961230.9768,
+      "updatedAt": "2026-09-29T19:09:21.232Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/auth/auth.e2e.spec.ts": {
+      "description": "Declares HttpClient",
+      "tokens": 992,
+      "hash": "5dca59585739b4a0",
+      "size": 3473,
+      "mtimeMs": 1790705641060.807,
+      "updatedAt": "2026-09-29T18:14:01.062Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/auth/roles.e2e.spec.ts": {
+      "description": "Declares INestApplication",
+      "tokens": 722,
+      "hash": "aa940e0069332a52",
+      "size": 2527,
+      "mtimeMs": 1790708961204.8276,
+      "updatedAt": "2026-09-29T19:09:21.214Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/rate-limit/throttle.e2e.spec.ts": {
+      "description": "Declares res",
+      "tokens": 639,
+      "hash": "81b50b337d9f4935",
+      "size": 2234,
+      "mtimeMs": 1790705641045.65,
+      "updatedAt": "2026-09-29T18:14:01.050Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/app.e2e.spec.ts": {
+      "description": "Declares HttpClient",
+      "tokens": 698,
+      "hash": "99f18525b0135f8c",
+      "size": 2445,
+      "mtimeMs": 1790708961204.96,
+      "updatedAt": "2026-09-29T19:09:21.217Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/jest.setup.ts": {
+      "description": "Declares originalFetch",
+      "tokens": 341,
+      "hash": "efd9ece6daa529b4",
+      "size": 1193,
+      "mtimeMs": 1790708961204.4246,
+      "updatedAt": "2026-09-29T19:09:21.207Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/testing/env.ts": {
+      "description": "Exports TEST_JWT_SECRET, BASE_ENV, setTestEnv",
+      "tokens": 284,
+      "hash": "78968660d87ce50f",
+      "size": 993,
+      "mtimeMs": 1790720668379.711,
+      "updatedAt": "2026-09-29T22:24:28.383Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/scratch-debug.spec.ts": {
+      "description": "Declares start",
+      "tokens": 314,
+      "hash": "9c0d7738d88051af",
+      "size": 1099,
+      "mtimeMs": 1790705151176.2703,
+      "updatedAt": "2026-09-29T18:05:51.179Z",
+      "source": "hook"
+    },
+    "../../../../tmp/sign-test-jwt.cjs": {
+      "description": "Declares secret",
+      "tokens": 188,
+      "hash": "9823b996ce88d087",
+      "size": 703,
+      "mtimeMs": 1790710253161.6873,
+      "updatedAt": "2026-09-29T19:30:53.163Z",
+      "source": "hook"
+    },
+    "platform/apps/api/src/supabase/supabase-timeout.spec.ts": {
+      "description": "Declares Server",
+      "tokens": 936,
+      "hash": "b54d39002cda49ee",
+      "size": 3278,
+      "mtimeMs": 1790806381339.5505,
+      "updatedAt": "2026-09-30T22:13:01.342Z",
+      "source": "hook"
     }
   }
 }

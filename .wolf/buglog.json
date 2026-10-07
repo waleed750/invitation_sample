@@ -6,7 +6,7 @@
       "timestamp": "2026-07-23T01:15:00+00:00",
       "error_message": "excellence demo intro had no video/music playback despite media files existing in public/assets/excellence/",
       "file": "src/sites/excellence/data.js",
-      "root_cause": "opencode-delegate scraped and saved hero-video, intro-video, and background-music files with hashed filenames but never wired media.introVideoUrl, media.musicUrl, or hero section's heroVideoUrl props in data.js — InvitationShell/Hero silently render without video/audio when those props are undefined (no error thrown).",
+      "root_cause": "opencode-delegate scraped and saved hero-video, intro-video, and background-music files with hashed filenames but never wired media.introVideoUrl, media.musicUrl, or hero section's heroVideoUrl props in data.js \u2014 InvitationShell/Hero silently render without video/audio when those props are undefined (no error thrown).",
       "fix": "Renamed to clean kebab-case, compressed with ffmpeg (hero-video 22.9MB->3.1MB, intro-video 5.8MB->1.9MB, background-music 5.5MB->2.2MB @128k) per TASKS.md pipeline rules, then added introVideoUrl/musicUrl to media{} and heroVideoUrl/heroPosterUrl to the hero section props in data.js. Verified with Playwright: audio.paused === false after tap, 2 <video> elements found.",
       "tags": [
         "media-wiring",
@@ -25,7 +25,7 @@
       "timestamp": "2026-07-23T02:30:00+00:00",
       "error_message": "hero showed garbled overlapping text: bold sans headline/names/date rendered on top of a video that already has its own baked-in script-font 'Diana & Richard', date, and venue text; video also looped, restarting the animated card reveal every 10s",
       "file": "src/shared/sections/Hero.jsx, src/sites/excellence/data.js",
-      "root_cause": "hero-video.mp4 (scraped from the source site) is a self-contained one-shot animated invitation card with its own baked-in typography — not an ambient loop backdrop. opencode-delegate treated it like a generic hero background: passed headline/firstName/secondName/displayDate/ctaLabel for Hero's text overlay (duplicating the video's own text) and Hero.jsx hardcoded `loop` on the <video> unconditionally (causing the one-shot reveal to visibly restart every ~10s instead of settling on its final frame).",
+      "root_cause": "hero-video.mp4 (scraped from the source site) is a self-contained one-shot animated invitation card with its own baked-in typography \u2014 not an ambient loop backdrop. opencode-delegate treated it like a generic hero background: passed headline/firstName/secondName/displayDate/ctaLabel for Hero's text overlay (duplicating the video's own text) and Hero.jsx hardcoded `loop` on the <video> unconditionally (causing the one-shot reveal to visibly restart every ~10s instead of settling on its final frame).",
       "fix": "Added `heroVideoLoop` (default true, preserves existing sites) and `showOverlayCopy` (default true) props to shared Hero.jsx; made eyebrow/h1/date-line conditionally rendered. excellence's hero section now passes only heroVideoUrl/heroPosterUrl with heroVideoLoop:false and showOverlayCopy:false. Verified via Playwright: video.ended===true and currentTime frozen at 10.04s after playing once (not looping), zero .hero-copy elements rendered, screenshot matches the source design with no duplicate text.",
       "tags": [
         "duplicate-content",
@@ -45,7 +45,7 @@
     {
       "id": "bug-003",
       "timestamp": "2026-07-23T02:00:00+00:00",
-      "error_message": "excellence demo not responsive on mobile — page had 524px of horizontal overflow (390px viewport, 914px content)",
+      "error_message": "excellence demo not responsive on mobile \u2014 page had 524px of horizontal overflow (390px viewport, 914px content)",
       "file": "src/sites/excellence/styles.css",
       "root_cause": "src/shared/sections/Details.jsx renders <img src={ornateBadgeUrl}> with NO className, so it has zero CSS constraint anywhere unless the consuming site's styles.css explicitly styles it. video-open-invitation/styles.css has `.badge-frame`/`.badge-frame img` rules (ornate frame background sized via aspect-ratio), but that CSS lives only in that one site's local stylesheet, not shared. opencode-delegate copied the Details section usage into excellence's data.js/styles.css but never added equivalent .badge-frame CSS, so monogram.png (a solid ~890px-wide glyph, not a hollow decorative frame) rendered at native size and blew out the whole page width on every viewport.",
       "fix": "Added .badge-frame CSS to src/sites/excellence/styles.css. Did NOT copy video-open-invitation's exact approach (absolutely-positioned full-bleed frame behind text) because excellence's monogram.png is a solid glyph, not a hollow ornate frame -- overlaying body text on it is illegible at any size. Instead redesigned as a small (88px) decorative accent stacked above the text via flex column. Verified 0px overflow at 390px and 1280px viewports via Playwright, and confirmed visually legible in screenshots.",
@@ -68,7 +68,7 @@
     {
       "id": "bug-002",
       "timestamp": "2026-07-23T01:15:00+00:00",
-      "error_message": "map section iframe would not load — fabricated Google Maps embed pb= parameter",
+      "error_message": "map section iframe would not load \u2014 fabricated Google Maps embed pb= parameter",
       "file": "src/sites/excellence/data.js",
       "root_cause": "opencode-delegate could not obtain the real Google Maps Embed API pb= string (requires either the live site's actual iframe src or an API key) and fabricated a plausible-looking but fake one (fake coordinates, fake place id, fake base64 segment) instead of flagging it as unknown.",
       "fix": "Replaced with the no-API-key embed pattern https://www.google.com/maps?q=<address>&output=embed, which resolves to a real interactive map. Verified visually via Playwright screenshot showing 'The Peninsula Istanbul' pin correctly placed.",
@@ -183,8 +183,8 @@
         "delegation"
       ],
       "related_bugs": [],
-      "occurrences": 1,
-      "last_seen": "2026-09-29T20:30:00+03:00"
+      "occurrences": 2,
+      "last_seen": "2026-10-07T02:16:56.857884"
     },
     {
       "id": "bug-010",

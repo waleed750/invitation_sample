@@ -91,6 +91,7 @@
 3. ⏳ Port shared sections + intros + `InvitationShell` into `platform/` as TSX components, RTL-safe (logical CSS), driven by the Zod types; one original demo route `/[locale]/templates/[slug]`.
 3b. ✅ **Monorepo split (5f413a0) + NestJS API skeleton (7fe28fe)** — apps/web + apps/api + packages/shared; API has auth guard, roles, throttling, /v1/health, /v1/me, /v1/invitations/:id/entitlement; 47 api + 20 web + 125 shared tests; live boot verified. ✅ Follow-up done: Supabase retry:false + SUPABASE_TIMEOUT_MS (prod hang 7.05s -> 0.017s; hanging host fails at the 1s timeout), test files excluded from dist. (original plan text:) (owner decision 2026-09-29: backend = NestJS, see PLATFORM_PLAN.md §6.5): move `platform/` → `apps/web`, add `apps/api` (auth guard, health, OpenAPI, throttler, Redis), move Zod schemas + pure functions to `packages/shared`.
 4. ✅ (committed 2416fc0) Supabase migrations (profiles, orders, invitations, entitlements, points_ledger, affiliates, templates + RLS + tests) — plan §6.4 + §16.8.
+4b. 📋 **Backend plan written (2026-10-07): `platform/docs/BACKEND_PLAN.md`** — milestones B0–B12. API already has checkout/mock payments/orders/points/templates/read-only invitations (9f4b58e); web still runs on mocks (`CommerceClient`, `InvitationPublicStore`). Revised after agy review. Next: slim B0 (thin repositories over forUser, amount_minor+currency+prices migration, Google sign-in, pino/Sentry, OpenAPI client, GitHub Actions CI, Contabo+Coolify staging; NO Redis/Drizzle yet). Payments at launch are MANUAL (B7a); Fawry later. 2026-10-07: B0-1 repositories ✅ 03a596e; B0-2 pino/Sentry/api-client/CI ✅ 120c2bb (Sonnet subagents in worktrees, reviewed by Claude). Remaining B0: money migration; money migration (amount_minor) waits for a way to run SQL tests (no Docker locally; CI needs push approval). → B1 invitation edit/publish → B2 public/RSVP → B3 email OTP → B3.5 web cutover behind `COMMERCE_BACKEND=mock|api`.
 5. ⏳ Phase 3 items in the order of PLATFORM_PLAN.md §16.9 (accounts/OTP → Fawry + `fulfillPaidOrder` → entitlements/dashboard meters → admin customers/manual orders → admin templates manager → affiliates → points).
 
 **Blocked on the owner (don't stall coding):** brand name/domain, Meta Business verification, Fawry merchant account, company/tax registration, original template designs (PLATFORM_PLAN.md §2, §14).
@@ -137,7 +138,7 @@ Source of truth for the "partial/broken" flag: `imports/cloudflare-link/current-
 
 ## ⚠️ External blockers (don't block coding)
 
-- Commits a2e9a6f..03a66b7 are local-only (not pushed) — push pending user approval
+- main pushed to origin 2026-10-07 (owner approved)
 - Vercel deploy (Phase 3) needs the user's Vercel account/login
 
 ---

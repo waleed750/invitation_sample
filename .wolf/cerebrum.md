@@ -5,16 +5,24 @@
 > Last updated: 2026-07-18
 
 ## User Preferences
+- [2026-10-07] CORRECTION: after the radical v3 prompt, user said the ORIGINAL Stitch page (Zaffat, cream/green/gold, standard section order) "was better". Do not over-rotate to avant-garde; refine the liked design (PLATFORM_LANDING_PROMPT_V4.md) and ask what they liked before the next big redesign.
+- [2026-10-07] Landing/UI design: user earlier called v1 "old fashioned" but then preferred it over v3 — ambiguous; clarify the specific complaint (fonts? claims? layout?). Original note: user rejects "traditional"/template-looking pages (cream+green+gold luxury-wedding, SaaS section stack). Use /reframe anti-generic principles; derive visuals from the product (Egypt, WhatsApp family thread, mashrabiya lattice). Design prompts for Stitch live in PLATFORM_LANDING_PROMPT_V3.md. Never invent stats/testimonials in prompts; use real plan limits (PLATFORM_PLAN §4, §16.3).
 - [2026-09-24] Wants to commercialize this repo as a paid invitation platform (customer + admin dashboards, WhatsApp/email quick sign-in, AI agent for new designs + reels). Likes Claude to debate decisions with opencode before finalizing plans.
 
 <!-- How the user likes things done. Code style, tools, patterns, communication. -->
 
 ## Key Learnings
 
+- **(2026-10-07) Worktree subagents start from a stale base (9c6f943, no platform/)** — tell them to `git reset --hard main` / ff first. Another Claude session commits templates to main concurrently, so land worktree work with `git -C <main> cherry-pick <sha>` after rebasing on main. No Docker locally → SQL can only be tested in CI (platform-ci.yml database job). A large package-lock diff after npm install on Mac was only reordering — verify linux optional deps still present before panicking.
+
+- **(2026-10-07) Web↔API seam:** the web app talks to the backend only through two interfaces, `CommerceClient` (apps/web/src/commerce/types.ts) and `InvitationPublicStore` (apps/web/src/guest/store.ts); both are mocks today. Backend work = implement these over the API, swap via env flag. Backend roadmap lives in platform/docs/BACKEND_PLAN.md. STATUS.md lagged the real API surface — grep `@Controller` before trusting it.
+
 - **Project:** abdelrahman-nourhan-invitation
 - **Description:** Editable React/Vite invitation template lab for Abdelrahman and Nourhan.
 
 ## Do-Not-Repeat
+
+- **(2026-10-07)** Don't propose a direct Postgres connection (Drizzle/pg) for owner requests: auth.uid() is null there, so the RLS policies and guard triggers (0003_rls.sql:73 `if auth.uid() is null then return new`) stop protecting anything. Keep forUser(jwt); for portability, use set local role authenticated + set_config('request.jwt.claims') per transaction.
 
 <!-- Mistakes made and corrected. Each entry prevents the same mistake recurring. -->
 <!-- Format: [YYYY-MM-DD] Description of what went wrong and what to do instead. -->
@@ -36,6 +44,12 @@
   - [2026-09-24] Bloom French Riviera: hero is static image `hero-bg-RvVOmFvi.png` (941×1672 rgb24 2.5M→333K JPG) as CSS background, text is DOM SVG arch `We're getting married` + `Martina & Javier` + `27 SEP 2026` not baked — so overlay always rendered, no video loop logic needed (unlike excellence's baked card). Intro has two sequential videos `intro-video-new` hevc 5.48s 2.5M + `intro-video-2-a` h264 7.04s 19M → compress each crf26 (932K+3.1M) then concat via `ffmpeg -f concat` to single 12.54s h264 4.0M for standard VideoOpenIntro; verify duration matches sum (12.54 vs 12.57). Music 320→128k 5.2→2.1M; hero/oval/rsvp-portrait rgb24 2.5/2.0/1.3M→333/117/62K JPG q4, intro-poster 918→93K q4; remaining 26 PNGs are RGBA — leave alone. Gallery 19 JPGs all <500K leave. Added `BLOOM_GARDEN` to `layoutFamily`. Dev server binds ok (no EPERM) unlike earlier sandbox, but gallery marquee must be `overflow-x:auto` + `max-width:max-content` + `animation: marquee 60s linear` to avoid overflow on mobile.
 
 ## Decision Log
+
+- **(2026-10-07) Owner: payments are MANUAL at launch** (InstaPay / wallets / bank transfer, proof on WhatsApp, admin marks paid -> fulfill_paid_order). Fawry is post-launch. Plan milestone B7a.
+
+- **(2026-10-07) Backend plan revised after agy review:** no Drizzle; thin repositories over forUser; no Redis/BullMQ until media/WhatsApp bot; web wired per milestone; Fawry before admin extras; mobile-first section-list customer editor (dnd-kit), Puck only maybe for admin. Contabo kept (owner budget). opencode Zen still 402.
+
+- **(2026-10-07) Backend stack v2 (owner wants easy + scalable + DB-swappable):** keep NestJS; Postgres on Supabase now via Drizzle repositories (portable); Supabase Auth with Google first; Contabo Cloud VPS 10 (~€4.50) + Coolify for API/worker/Redis (owner chose cheapest; Hetzner +176% June 2026); Puck for WordPress-style block editor; WhatsApp auto-reply bot + worldwide payments (Merchant of Record, since Stripe doesn't take Egyptian merchants) designed now, built later; money as amount_minor+currency. See platform/docs/BACKEND_PLAN.md §2b.
 - [2026-09-24] Platform direction (PLATFORM_PLAN.md): Next.js App Router + Supabase + R2; ISR invitations (RSVP is a separate API so ISR is fine); NO Cloudflare orange-cloud proxy in front of Vercel (Vercel Firewall for app; Cloudflare DNS + R2 media only); passwordless-first auth (WhatsApp OTP, email OTP code, Google) with explicit OTP confirm at checkout; Paymob + MoR (Stripe can't pay out to Egypt); AI Theme Spec Zod contract early, agent after launch. thedigitalyes-derived templates are reference-only — ship original designs.
 
 <!-- Significant technical decisions with rationale. Why X was chosen over Y. -->
@@ -56,3 +70,8 @@
 
  - [2026-10-07] Delegation lessons: (1) Codex hit its usage limit mid-task (resets ~3am) and leaves PARTIAL work + no report — check `events.jsonl` in the relay temp dir for "usage limit", then hand the partial tree to agy with a HANDOFF note; two parallel Codex runs may also collide on one result dir. (2) agy self-reports are unreliable: it once left a TS error "intentionally bypassed", re-added draft CSS to a public page, and reported "ERROR" status with a clean-looking report — always re-run gates + browser-check at 390px in ar+en. (3) Gates + `next build` do NOT catch missing i18n keys at render (MISSING_MESSAGE only appears in the build log) — grep the build output. (4) `<label hidden>` loses to author `display:flex` CSS; honeypots need `.invitation-shell [hidden]{display:none!important}`. (5) Cookie/per-user dashboard routes must be `export const dynamic='force-dynamic'` or build prerenders them and the production guard throws. (6) Playwright `networkidle` hangs on next/link prefetch; use `load`. (7) Dev-only payment shortcuts must still require auth + ownership, not just NODE_ENV.
  - [2026-10-07] User now allows Claude to implement directly (supersedes no-Claude-workers rule).
+
+- (2026-10-07) Rawda art is generated by a seeded node script (scratchpad art/gen.mjs + lib.mjs, NOT in repo): roses as <use>-referenced symbols, CSS-class attribute compression, integer relative paths keep SVGs ~10-75KB (hero-arch ~135KB raw). feTurbulence+feDisplacementMap+grain-alpha composite = watercolor look; lower displacement (2-3) for small assets or leaves blur.
+- (2026-10-07) ShuttersIntro: the button itself has a background; set it transparent to reveal a bloom behind the panels. Avoid `transform` transitions on intro pseudo-elements (transitionend 'transform' bubbles and ends the intro early); animate `scale`/opacity instead.
+- (2026-10-07) Message section class is `.message-section` (diwan.css targets a non-existent `.messageform-section`).
+- (2026-10-07) CSS scoping tests must parse selector preludes (multi-line values and :is(a, b) commas break line-based checks).

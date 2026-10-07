@@ -872,3 +872,20 @@
 | 23:41 | Platform skeleton: engine prep, catalog, Mashrabiya demo, landing, mock checkout, dashboard (Codex+agy, Claude review/commit) | platform/apps/web, packages/shared | committed 35df7ae..HEAD, build+390px verified | ~big |
 | 00:10 | wrote PLATFORM_LANDING_PROMPT_V2.md (non-traditional Stitch landing prompt + critique of v1 HTML) | PLATFORM_LANDING_PROMPT_V2.md | done | ~3500 |
 | 00:25 | Phase 2: draft pipeline+africa, NestJS commerce API, public page+RSVP+guests+CSV; Codex quota hit -> agy finished; Claude fixed bugs (dev route authz, honeypot, tel CSS, sr-only, bidi) | platform/apps/* | committed 020092a,9f4b58e,569fabe; browser-verified | ~big |
+| 00:40 | reframe audit of Stitch landing (v1 + own v2) -> wrote PLATFORM_LANDING_PROMPT_V3.md (mashrabiya/WhatsApp-thread concept, limestone/walnut/turquoise/hibiscus palette) | PLATFORM_LANDING_PROMPT_V3.md | done | ~5000 |
+| 00:59 | user preferred original Stitch v1 over v3 direction -> wrote PLATFORM_LANDING_PROMPT_V4.md (refine, keep look, fix fonts/claims) | PLATFORM_LANDING_PROMPT_V4.md | done | ~2500 |
+
+## Session: 2026-10-06 01:58
+
+| Time | Action | File(s) | Outcome | ~Tokens |
+|------|--------|---------|---------|--------|
+| 02:00 | Wrote backend implementation plan (B0–B12) from audit of apps/api, supabase migrations, web mocks | platform/docs/BACKEND_PLAN.md, .wolf/STATUS.md | done | ~6k |
+| 02:07 | Backend plan v2: NestJS kept, Hetzner+Coolify, Drizzle repos, Google auth, Puck block editor, WhatsApp bot + global payments design, minor-unit money | platform/docs/BACKEND_PLAN.md | done | ~5k |
+| 02:13 | Hosting switched to Contabo Cloud VPS 10 + Coolify (budget) | platform/docs/BACKEND_PLAN.md | done | ~2k |
+| 02:14 | Rawda draft template (original watercolor SVGs, curtains intro, arch hero, urn countdown); preview /ar|en/preview/rawda | apps/web/src/templates/rawda/*, engine/styles/templates/rawda.css, public/assets/demo/rawda/*, registry.ts, preview page, rawda.test.ts, ASSET_LICENSES.md | gates green, QA 390/1280 ar/en no overflow/errors | ~120k |
+| 02:20 | Debate: opencode failed (402 Zen funds); agy read-only review -> plan revised (no Drizzle, slim B0, no Redis yet, mobile section editor, reorder) | platform/docs/BACKEND_PLAN.md | done | ~8k |
+| 02:30 | Owner: manual payments at launch -> added B7a (pending order + reference, admin Mark as paid -> fulfill_paid_order), Fawry moved after launch | platform/docs/BACKEND_PLAN.md | done | ~2k |
+| 02:57 | Committed BACKEND_PLAN.md (45abef4); launched B0-1 + B0-2 Sonnet worktree subagents | platform/docs/BACKEND_PLAN.md | running | ~4k |
+| 03:02 | B0-1 repositories landed (03a596e): 9 repos, ESLint boundary, 89/89 API tests, reviewed+gates rerun | platform/apps/api | done | ~6k |
+| 03:06 | B0-2 landed (120c2bb): pino+redaction, optional Sentry, packages/api-client, CI workflow, supabase/config.toml; API 99, shared 108, web 136 green | platform/ | done | ~8k |
+| 03:10 | Committed .wolf bookkeeping and pushed main (35 commits) to origin; CI first run | .wolf/ | done | ~1k |
