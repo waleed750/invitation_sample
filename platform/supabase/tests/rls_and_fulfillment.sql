@@ -718,10 +718,13 @@ begin
   assert p.preferred_locale = 'en', 'locale en must be honoured';
   assert p.signup_method = 'email', 'email provider must map to email';
 
-  -- (e) a second auth user with an already-taken email still gets a profile (email null) instead of failing
+  -- (e) an email already owned by another PROFILE (auth.users itself forbids
+  --     duplicate emails, so make the profile-level clash explicitly) must not
+  --     block sign-up: the new profile is created with email null.
+  update public.profiles set email = 'taken@example.com' where id = 'b1000000-0000-0000-0000-00000000000a';
   insert into auth.users (id, aud, role, email, raw_app_meta_data, raw_user_meta_data)
   values (
-    'b1000000-0000-0000-0000-00000000000d', 'authenticated', 'authenticated', 'google@example.com',
+    'b1000000-0000-0000-0000-00000000000d', 'authenticated', 'authenticated', 'taken@example.com',
     '{"provider": "email"}', '{"name": "Duplicate Email"}'
   );
   select * into p from public.profiles where id = 'b1000000-0000-0000-0000-00000000000d';
