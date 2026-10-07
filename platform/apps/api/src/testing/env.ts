@@ -18,7 +18,8 @@ export const BASE_ENV: Record<string, string> = {
   MANUAL_PAYMENT_INSTRUCTIONS_JSON: '',
   PAYMENTS_MOCK_SECRET: 'test-mock-secret-at-least-32-characters',
   IP_HASH_SECRET: 'test-ip-hash-secret-at-least-32-chars',
-  SWAGGER_ENABLED: 'false'
+  SWAGGER_ENABLED: 'false',
+  LIFECYCLE_CRON_ENABLED: 'true'
 };
 
 /** Deterministic env for specs. `jest.setup.ts` calls this before any import. */

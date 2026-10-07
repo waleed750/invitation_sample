@@ -23,6 +23,7 @@ Object.assign(process.env, {
   PAYMENTS_MOCK_SECRET: 'openapi-dummy-mock-secret-at-least-32-chars',
   IP_HASH_SECRET: 'openapi-dummy-ip-hash-secret-at-least-32-ch',
   SWAGGER_ENABLED: 'true',
+  LIFECYCLE_CRON_ENABLED: 'false',
   SENTRY_DSN: ''
 });
 

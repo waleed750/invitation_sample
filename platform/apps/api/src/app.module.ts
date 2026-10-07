@@ -1,5 +1,6 @@
 import {MiddlewareConsumer, Module, type NestModule} from '@nestjs/common';
 import {APP_FILTER, APP_GUARD} from '@nestjs/core';
+import {ScheduleModule} from '@nestjs/schedule';
 import {ThrottlerGuard} from '@nestjs/throttler';
 import {LoggerModule} from 'nestjs-pino';
 import {AdminPaymentsModule} from './admin-payments/admin-payments.module';
@@ -18,6 +19,7 @@ import {SupabaseModule} from './supabase/supabase.module';
 import {CheckoutModule} from './checkout/checkout.module';
 import {GuestsModule} from './guests/guests.module';
 import {InvitationsModule} from './invitations/invitations.module';
+import {LifecycleModule} from './lifecycle/lifecycle.module';
 import {OrdersModule} from './orders/orders.module';
 import {PaymentsModule} from './payments/payments.module';
 import {PointsModule} from './points/points.module';
@@ -36,13 +38,14 @@ export {AuthGuard, RolesGuard};
 @Module({
   imports: [
     AppConfigModule,
+    ScheduleModule.forRoot(),
     LoggerModule.forRootAsync({
       inject: [AppConfigService],
       useFactory: (config: AppConfigService) => buildLoggerParams(config.nodeEnv)
     }),
     SupabaseModule, RateLimitModule, AuthModule, HealthModule, MeModule, EntitlementsModule,
     PaymentsModule, TemplatesModule, CheckoutModule, OrdersModule, InvitationsModule, PointsModule,
-    PublicInvitationsModule, GuestsModule, AdminPaymentsModule
+    PublicInvitationsModule, GuestsModule, AdminPaymentsModule, LifecycleModule
   ],
   providers: [
     AppLogger,

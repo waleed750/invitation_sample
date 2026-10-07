@@ -637,4 +637,39 @@ $$;
 
 reset role;
 
+-- ---------------------------------------------------------------------------
+-- Lifecycle: points expiry only refreshes the cache (no double deduction).
+-- A user with 100 expired + 50 valid points must end with exactly 50.
+-- ---------------------------------------------------------------------------
+select set_config('request.jwt.claims', '', true);
+insert into auth.users (id, aud, role)
+values ('99999999-9999-9999-9999-999999999999', 'authenticated', 'authenticated');
+insert into public.profiles (id, email, name, preferred_locale, signup_method)
+values ('99999999-9999-9999-9999-999999999999', 'expiry-test@example.com', 'Expiry Test', 'en', 'email');
+insert into public.points_ledger (user_id, delta, reason, expires_at)
+values
+  ('99999999-9999-9999-9999-999999999999', 100, 'bonus', now() - interval '1 day'),
+  ('99999999-9999-9999-9999-999999999999', 50, 'bonus', now() + interval '30 days');
+select set_config('request.jwt.claims', '', true);
+set local role service_role;
+update public.profiles set points_balance = 150 where id = '99999999-9999-9999-9999-999999999999';
+do $$
+declare
+  v_first  integer;
+  v_second integer;
+begin
+  v_first := public.lifecycle_expire_points(now());
+  assert v_first >= 1, 'expire_points must refresh the stale cached balance';
+  assert (select points_balance from public.profiles where id = '99999999-9999-9999-9999-999999999999') = 50,
+    'expired points must drop out exactly once (100 expired + 50 valid = 50)';
+  assert (select count(*) from public.points_ledger
+          where user_id = '99999999-9999-9999-9999-999999999999' and reason = 'expire') = 0,
+    'expiry must not write extra ledger rows';
+  v_second := public.lifecycle_expire_points(now());
+  assert (select points_balance from public.profiles where id = '99999999-9999-9999-9999-999999999999') = 50,
+    'a second run must not change the balance';
+end;
+$$;
+reset role;
+
 rollback;

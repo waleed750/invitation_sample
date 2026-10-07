@@ -82,6 +82,10 @@ export class AppConfigService {
     return this.required('SWAGGER_ENABLED');
   }
 
+  get lifecycleCronEnabled(): boolean {
+    return this.required('LIFECYCLE_CRON_ENABLED');
+  }
+
   get sentryDsn(): string | undefined {
     return this.required('SENTRY_DSN');
   }

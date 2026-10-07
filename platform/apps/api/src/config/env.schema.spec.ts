@@ -111,4 +111,14 @@ describe('validateEnv', () => {
     expect(validateEnv({...validEnv(), SENTRY_ENVIRONMENT: '  '}).SENTRY_ENVIRONMENT).toBe('test');
     expect(validateEnv({...validEnv(), SENTRY_ENVIRONMENT: 'staging'}).SENTRY_ENVIRONMENT).toBe('staging');
   });
+
+  it('defaults LIFECYCLE_CRON_ENABLED to true and parses true/false', () => {
+    expect(validateEnv(validEnv()).LIFECYCLE_CRON_ENABLED).toBe(true);
+    expect(validateEnv({...validEnv(), LIFECYCLE_CRON_ENABLED: 'true'}).LIFECYCLE_CRON_ENABLED).toBe(true);
+    expect(validateEnv({...validEnv(), LIFECYCLE_CRON_ENABLED: 'false'}).LIFECYCLE_CRON_ENABLED).toBe(false);
+  });
+
+  it('rejects LIFECYCLE_CRON_ENABLED values other than true/false', () => {
+    expect(() => validateEnv({...validEnv(), LIFECYCLE_CRON_ENABLED: 'yes'})).toThrow(/LIFECYCLE_CRON_ENABLED/);
+  });
 });
