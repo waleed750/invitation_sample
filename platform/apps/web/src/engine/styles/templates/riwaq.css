@@ -1023,5 +1023,21 @@
   pointer-events: none;
 }
 
+@media (min-width: 900px) {
+  .invitation-shell[data-template="riwaq"] .hero-section .hero-video {
+    inset-inline: 0;
+    margin-inline: auto;
+    inline-size: auto;
+    aspect-ratio: 9 / 16;
+    max-inline-size: 100%;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 18%, #000 82%, transparent);
+  }
+
+  .invitation-shell[data-template="riwaq"] .hero-section .hero-scrim {
+    display: none;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
 }

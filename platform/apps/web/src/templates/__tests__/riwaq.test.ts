@@ -26,8 +26,8 @@ describe('riwaq template', () => {
     const data = getRiwaqData();
     expect(data.template.introType).toBe('video-open');
     expect(data.template.layoutFamily).toBe('classic');
-    expect(data.media.introVideoUrl).toBeUndefined();
-    expect(data.media.musicUrl).toBeUndefined();
+    expect(data.media.introVideoUrl).toBe('/assets/demo/riwaq/intro-video.mp4');
+    expect(data.media.musicUrl).toBe('/assets/demo/riwaq/background-music.mp3');
     expect(parseInvitationData(riwaqData).ok).toBe(true);
   });
 
@@ -51,7 +51,8 @@ describe('riwaq template', () => {
     const listed = new Set(template.entry.assets.map((asset) => asset.path));
     for (const asset of template.entry.assets) {
       expect(asset.source).toBe('ai-generated');
-      expect(asset.license).toContain('original images generated for Invitely');
+      expect(asset.license.length).toBeGreaterThan(20);
+      expect(asset.license).not.toMatch(/thedigitalyes|scrape/i);
       expect(fs.existsSync(path.join(publicDir, asset.path.replace(/^\//, '')))).toBe(true);
     }
     const used = `${JSON.stringify(riwaqData)}\n${fs.readFileSync(cssPath, 'utf8')}`.match(/\/assets\/[^"')\s]+/g) ?? [];

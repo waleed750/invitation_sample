@@ -1,0 +1,46 @@
+{
+  "background-music.mp3": {
+    "bytes": 1098021
+  },
+  "candles.jpg": {
+    "width": 1080,
+    "height": 1350,
+    "bytes": 185362
+  },
+  "column.png": {
+    "width": 500,
+    "height": 1800,
+    "bytes": 1011387
+  },
+  "event-venue.png": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 892443
+  },
+  "event-welcome.png": {
+    "width": 1000,
+    "height": 1000,
+    "bytes": 914500
+  },
+  "hero-poster.jpg": {
+    "width": 1080,
+    "height": 1920,
+    "bytes": 201869
+  },
+  "hero-video.mp4": {
+    "bytes": 136867
+  },
+  "intro-poster.jpg": {
+    "width": 1080,
+    "height": 1920,
+    "bytes": 202945
+  },
+  "intro-video.mp4": {
+    "bytes": 225594
+  },
+  "riwaq-raw-generated-sheet.png": {
+    "width": 1024,
+    "height": 1536,
+    "bytes": 3116962
+  }
+}
