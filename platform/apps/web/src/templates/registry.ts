@@ -18,6 +18,8 @@ import {getDiwanData} from './diwan/data';
 import {fontClassName as diwanFontClassName} from './diwan/fonts';
 import {getRawdaData} from './rawda/data';
 import {fontClassName as rawdaFontClassName} from './rawda/fonts';
+import {getBustanData} from './bustan/data';
+import {fontClassName as bustanFontClassName} from './bustan/fonts';
 
 export interface TemplateDefinition {
   entry: CatalogEntry;
@@ -106,11 +108,40 @@ const rawdaEntry: CatalogEntry = catalogEntry.parse({
   ],
 });
 
+const bustanEntry: CatalogEntry = catalogEntry.parse({
+  slug: 'bustan',
+  name: {ar: 'بستان', en: 'Bustan'},
+  tagline: {
+    ar: 'بوابة حديقة تُفتح على ممشى الورد وأضواء المساء',
+    en: 'A garden gate that opens onto a rose path and evening lights',
+  },
+  tier: 'classic',
+  status: 'draft',
+  featured: false,
+  assets: [
+    {path: '/assets/demo/bustan/gate.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+    {path: '/assets/demo/bustan/hero.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+    {path: '/assets/demo/bustan/arch.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+    {path: '/assets/demo/bustan/garland.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+    {path: '/assets/demo/bustan/ceremony.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+    {path: '/assets/demo/bustan/reception.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+    {path: '/assets/demo/bustan/urn.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+    {path: '/assets/demo/bustan/seal.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+    {path: '/assets/demo/bustan/paper.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+  ],
+});
+
 export const templates: Record<string, TemplateDefinition> = {
   diwan: {
     entry: diwanEntry,
     getData: getDiwanData,
     fontClassName: diwanFontClassName,
+  },
+
+  bustan: {
+    entry: bustanEntry,
+    getData: getBustanData,
+    fontClassName: bustanFontClassName,
   },
 
   rawda: {

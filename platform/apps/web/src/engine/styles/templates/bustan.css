@@ -1,0 +1,939 @@
+/* Bustan: painterly garden template. Scene art is original, generated for Invitely (see ASSET_LICENSES.md). */
+
+@keyframes bustan-seal-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(184, 154, 90, 0.45); }
+  50% { box-shadow: 0 0 0 14px rgba(184, 154, 90, 0); }
+}
+
+@keyframes bustan-drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-8px); }
+}
+
+.invitation-shell[data-template="bustan"] {
+  --b-deep: #2f4a3c;
+  --b-sage: #6f8f7a;
+  --b-sage-ink: #4f6457;
+  --b-mist: #e8eee7;
+  --b-ivory: #f8f5ee;
+  --b-paper: #fbf9f4;
+  --b-blush: #ecd9d0;
+  --b-gold: #b89a5a;
+  --b-gold-ink: #7d6534;
+  --b-ink: #1f2a24;
+  --b-hair: color-mix(in srgb, var(--b-gold) 55%, transparent);
+  --b-paper-tex: url("/assets/demo/bustan/paper.jpg");
+
+  --font-head: var(--font-cormorant-garamond), "Cormorant Garamond", Georgia, serif;
+  --font-body: var(--font-cormorant-garamond), "Cormorant Garamond", Georgia, serif;
+  --font-names: var(--font-cormorant-garamond), "Cormorant Garamond", Georgia, serif;
+  --font-ui: var(--font-cormorant-garamond), Georgia, serif;
+
+  color: var(--b-ink);
+  background: var(--b-paper-tex) repeat 0 0 / 420px auto, var(--b-ivory);
+  font-family: var(--font-body);
+  font-size: 1.15rem;
+  font-variant-numeric: lining-nums;
+}
+
+.invitation-shell[data-template="bustan"][dir="rtl"] {
+  --font-head: var(--font-amiri), "Amiri", serif;
+  --font-body: var(--font-amiri), "Amiri", serif;
+  --font-names: var(--font-aref-ruqaa), "Aref Ruqaa", serif;
+  --font-ui: var(--font-ibm-plex-sans-arabic), "IBM Plex Sans Arabic", sans-serif;
+  font-size: 1.08rem;
+}
+
+.invitation-shell[data-template="bustan"] h1,
+.invitation-shell[data-template="bustan"] h2,
+.invitation-shell[data-template="bustan"] h3 {
+  font-family: var(--font-head);
+  color: var(--b-deep);
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+.invitation-shell[data-template="bustan"][dir="rtl"] h1,
+.invitation-shell[data-template="bustan"][dir="rtl"] h2,
+.invitation-shell[data-template="bustan"][dir="rtl"] h3 {
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+/* ---------- Garden gate intro ---------- */
+.invitation-shell[data-template="bustan"] .shutters-intro {
+  --gw: max(100vw, calc(100svh * 0.5581));
+  --gh: calc(var(--gw) / 0.5581);
+  --o-start: left center;
+  --o-end: right center;
+  --r-start: -108deg;
+  --r-end: 108deg;
+  --p-start: calc(50vw - var(--gw) / 2);
+  --p-end: calc(var(--gw) / -2);
+  background: url("/assets/demo/bustan/hero.jpg") center / cover no-repeat;
+  perspective: 1600px;
+  color: var(--b-deep);
+}
+
+.invitation-shell[data-template="bustan"][dir="rtl"] .shutters-intro {
+  --o-start: right center;
+  --o-end: left center;
+  --r-start: 108deg;
+  --r-end: -108deg;
+  --p-start: calc(var(--gw) / -2);
+  --p-end: calc(50vw - var(--gw) / 2);
+}
+
+.invitation-shell[data-template="bustan"] .shutters-intro__panel {
+  background-color: var(--b-mist);
+  background-image: url("/assets/demo/bustan/gate.jpg");
+  background-repeat: no-repeat;
+  background-size: var(--gw) var(--gh);
+  backface-visibility: hidden;
+  transition: transform 1900ms cubic-bezier(0.55, 0, 0.2, 1), opacity 500ms ease 1400ms;
+}
+
+.invitation-shell[data-template="bustan"] .shutters-intro__panel--start {
+  background-position: var(--p-start) 50%;
+  transform-origin: var(--o-start);
+}
+
+.invitation-shell[data-template="bustan"] .shutters-intro__panel--end {
+  background-position: var(--p-end) 50%;
+  transform-origin: var(--o-end);
+}
+
+.invitation-shell[data-template="bustan"] .shutters-intro.is-open .shutters-intro__panel--start {
+  transform: rotateY(var(--r-start));
+  opacity: 0;
+}
+
+.invitation-shell[data-template="bustan"] .shutters-intro.is-open .shutters-intro__panel--end {
+  transform: rotateY(var(--r-end));
+  opacity: 0;
+}
+
+.invitation-shell[data-template="bustan"] .shutters-intro__moon {
+  inline-size: clamp(5.5rem, 22vw, 7.5rem);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 3px solid var(--b-gold);
+  background: url("/assets/demo/bustan/seal.jpg") center / cover no-repeat, var(--b-ivory);
+  animation: bustan-seal-pulse 2600ms ease-in-out infinite;
+  z-index: 3;
+}
+
+.invitation-shell[data-template="bustan"] .shutters-intro__label {
+  z-index: 3;
+  color: var(--b-deep);
+  background: color-mix(in srgb, var(--b-paper) 92%, transparent);
+  border: 1px solid var(--b-gold);
+  border-radius: 999px;
+  padding-block: 0.55rem;
+  padding-inline: 1.5rem;
+  letter-spacing: 0.08em;
+  text-transform: none;
+  font-family: var(--font-ui);
+  font-size: 1rem;
+}
+
+.invitation-shell[data-template="bustan"][dir="rtl"] .shutters-intro__label {
+  letter-spacing: 0;
+}
+
+/* ---------- Hero ---------- */
+.invitation-shell[data-template="bustan"] .hero-section {
+  position: relative;
+  min-block-size: 100svh;
+  display: grid;
+  justify-items: center;
+  align-items: start;
+  padding-block: clamp(4.5rem, 15svh, 8.5rem) 6rem;
+  padding-inline: 1.25rem;
+  background: url("/assets/demo/bustan/hero.jpg") center top / cover no-repeat;
+  text-align: center;
+  overflow: clip;
+}
+
+.invitation-shell[data-template="bustan"] .hero-section::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 20%;
+  background: linear-gradient(to bottom, rgba(248, 245, 238, 0), var(--b-ivory));
+  pointer-events: none;
+}
+
+.invitation-shell[data-template="bustan"] .hero-copy {
+  position: relative;
+  z-index: 1;
+  max-inline-size: 30rem;
+  padding-block: 2.5rem;
+  padding-inline: 1.5rem;
+}
+
+.invitation-shell[data-template="bustan"] .hero-copy::before {
+  content: "";
+  position: absolute;
+  inset-block: -6%;
+  inset-inline: -16%;
+  z-index: -1;
+  background: radial-gradient(ellipse at center, rgba(248, 245, 238, 0.9) 0, rgba(248, 245, 238, 0.72) 42%, rgba(248, 245, 238, 0) 72%);
+}
+
+.invitation-shell[data-template="bustan"] .hero-copy .eyebrow {
+  color: var(--b-gold-ink);
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  line-height: 1.9;
+  margin-block-end: 1rem;
+}
+
+.invitation-shell[data-template="bustan"][dir="rtl"] .hero-copy .eyebrow {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.invitation-shell[data-template="bustan"] .hero-copy h1 {
+  display: grid;
+  justify-items: center;
+  gap: 0;
+  font-family: var(--font-names);
+  font-weight: 500;
+  font-size: clamp(3.6rem, 12vw, 6rem);
+  line-height: 1.02;
+  color: var(--b-deep);
+}
+
+.invitation-shell[data-template="bustan"][dir="ltr"] .hero-copy h1 {
+  font-style: italic;
+}
+
+.invitation-shell[data-template="bustan"][dir="rtl"] .hero-copy h1 {
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.invitation-shell[data-template="bustan"] .hero-name-line {
+  display: block;
+}
+
+.invitation-shell[data-template="bustan"] .hero-amp {
+  display: block;
+  color: var(--b-gold);
+  font-size: 0.5em;
+  line-height: 1.2;
+  font-style: normal;
+}
+
+.invitation-shell[data-template="bustan"] .hero-copy .date-line {
+  display: inline-block;
+  margin-block-start: 1.5rem;
+  padding-block: 0.7rem;
+  padding-inline: 1.5rem;
+  border-block: 1px solid var(--b-gold);
+  color: var(--b-sage-ink);
+  font-family: var(--font-ui);
+  font-size: 0.92rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.invitation-shell[data-template="bustan"][dir="rtl"] .hero-copy .date-line {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 1.05rem;
+  font-weight: 500;
+}
+
+/* ---------- Shared section rhythm ---------- */
+.invitation-shell[data-template="bustan"] .section-inner {
+  position: relative;
+  z-index: 1;
+}
+
+.invitation-shell[data-template="bustan"] .section-kicker,
+.invitation-shell[data-template="bustan"] .countdown-kicker {
+  color: var(--b-gold-ink);
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.invitation-shell[data-template="bustan"][dir="rtl"] .section-kicker,
+.invitation-shell[data-template="bustan"][dir="rtl"] .countdown-kicker {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.invitation-shell[data-template="bustan"] h2 {
+  font-size: clamp(2.1rem, 6vw, 3.1rem);
+}
+
+/* ---------- Countdown between the urns ---------- */
+.invitation-shell[data-template="bustan"] .countdown-section {
+  position: relative;
+  overflow: clip;
+  padding-block: clamp(4rem, 9vw, 6.5rem) clamp(7rem, 20vw, 11rem);
+  padding-inline: 1.25rem;
+  background: var(--b-paper-tex) repeat 0 0 / 420px auto, var(--b-ivory);
+  text-align: center;
+}
+
+.invitation-shell[data-template="bustan"] .countdown-column-left,
+.invitation-shell[data-template="bustan"] .countdown-column-right {
+  position: absolute;
+  inset-block: auto 0;
+  inline-size: clamp(5.5rem, 26vw, 13rem);
+  max-inline-size: none;
+  block-size: auto;
+  object-fit: initial;
+  mix-blend-mode: multiply;
+  filter: brightness(1.06) contrast(1.06);
+  pointer-events: none;
+}
+
+.invitation-shell[data-template="bustan"] .countdown-column-left {
+  inset-inline-start: 0;
+}
+
+.invitation-shell[data-template="bustan"] .countdown-column-right {
+  inset-inline-end: 0;
+  transform: scaleX(-1);
+}
+
+.invitation-shell[data-template="bustan"] .countdown-panel {
+  position: relative;
+  z-index: 1;
+}
+
+.invitation-shell[data-template="bustan"] .countdown-grid {
+  display: flex;
+  justify-content: center;
+  gap: clamp(0.5rem, 2vw, 1rem);
+  margin-block-start: 1.75rem;
+}
+
+.invitation-shell[data-template="bustan"] .time-box {
+  min-inline-size: clamp(5rem, 22vw, 7.5rem);
+  padding-block: 1.1rem;
+  padding-inline: 0.5rem;
+  background: color-mix(in srgb, var(--b-paper) 90%, transparent);
+  border: 1px solid var(--b-hair);
+  border-radius: 4px;
+}
+
+.invitation-shell[data-template="bustan"] .time-box strong {
+  display: block;
+  font-family: var(--font-head);
+  font-size: clamp(2.2rem, 8vw, 3.2rem);
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--b-deep);
+}
+
+.invitation-shell[data-template="bustan"] .time-box span {
+  display: block;
+  margin-block-start: 0.2rem;
+  color: var(--b-gold-ink);
+  font-family: var(--font-ui);
+  font-size: 0.8rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.invitation-shell[data-template="bustan"][dir="rtl"] .time-box span {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.95rem;
+}
+
+/* ---------- Welcome + two event scenes under a floral garland ---------- */
+.invitation-shell[data-template="bustan"] .welcome-section {
+  position: relative;
+  overflow: clip;
+  padding-block: clamp(8rem, 24vw, 12rem) clamp(4rem, 9vw, 6rem);
+  padding-inline: 1.25rem;
+  text-align: center;
+}
+
+.invitation-shell[data-template="bustan"] .welcome-section::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: clamp(7rem, 22vw, 13rem);
+  background: url("/assets/demo/bustan/garland.jpg") 50% 0 / min(100%, 72rem) auto no-repeat;
+  mix-blend-mode: multiply;
+  filter: brightness(1.06) contrast(1.06);
+  pointer-events: none;
+}
+
+.invitation-shell[data-template="bustan"] .welcome-section .section-inner {
+  max-inline-size: 64rem;
+}
+
+.invitation-shell[data-template="bustan"] .welcome-section p {
+  max-inline-size: 38rem;
+  margin-inline: auto;
+}
+
+.invitation-shell[data-template="bustan"] .event-card-list {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 2.25rem;
+  margin-block-start: 2.5rem;
+}
+
+.invitation-shell[data-template="bustan"] .event-card {
+  background: color-mix(in srgb, var(--b-paper) 88%, transparent);
+  border: 1px solid var(--b-hair);
+  border-radius: 4px;
+  padding: 1rem;
+  padding-block-end: 1.75rem;
+}
+
+.invitation-shell[data-template="bustan"] .event-card-image {
+  display: block;
+  inline-size: 100%;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  border-start-start-radius: 999px;
+  border-start-end-radius: 999px;
+  border: 1px solid var(--b-hair);
+  margin-block-end: 1.25rem;
+}
+
+.invitation-shell[data-template="bustan"] .event-card-kicker {
+  color: var(--b-gold-ink);
+  font-family: var(--font-ui);
+  font-size: 0.82rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.invitation-shell[data-template="bustan"][dir="rtl"] .event-card-kicker {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+.invitation-shell[data-template="bustan"] .event-card h3 {
+  font-size: 1.7rem;
+  margin-block: 0.25rem 0.5rem;
+}
+
+.invitation-shell[data-template="bustan"] .event-card-divider {
+  inline-size: 3rem;
+  margin: 0.9rem auto;
+  border-block-start: 1px solid var(--b-gold);
+}
+
+.invitation-shell[data-template="bustan"] .event-card-date,
+.invitation-shell[data-template="bustan"] .event-card-time {
+  color: var(--b-sage-ink);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+}
+
+.invitation-shell[data-template="bustan"] .event-card-link,
+.invitation-shell[data-template="bustan"] .map-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 44px;
+  margin-block-start: 0.9rem;
+  padding-inline: 1.4rem;
+  border: 1px solid var(--b-deep);
+  border-radius: 4px;
+  color: var(--b-deep);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+  text-decoration: none;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.invitation-shell[data-template="bustan"] .event-card-link:hover,
+.invitation-shell[data-template="bustan"] .map-link:hover {
+  background: var(--b-deep);
+  color: var(--b-paper);
+}
+
+/* ---------- Story ---------- */
+.invitation-shell[data-template="bustan"] .story-section {
+  padding-block: clamp(4rem, 9vw, 6.5rem);
+  padding-inline: 1.25rem;
+  background: var(--b-mist);
+  text-align: center;
+}
+
+.invitation-shell[data-template="bustan"] .story-chapters {
+  display: grid;
+  gap: 1.5rem;
+  margin-block-start: 2rem;
+}
+
+.invitation-shell[data-template="bustan"] .story-chapter {
+  padding: clamp(1.5rem, 4vw, 2.25rem);
+  background: color-mix(in srgb, var(--b-paper) 92%, transparent);
+  border: 1px solid var(--b-hair);
+  border-radius: 4px;
+}
+
+.invitation-shell[data-template="bustan"] .story-chapter__quote {
+  color: var(--b-gold-ink);
+  font-size: 1.45rem;
+  margin-block-end: 0.6rem;
+}
+
+.invitation-shell[data-template="bustan"] .story-chapter__prose {
+  color: var(--b-ink);
+}
+
+/* ---------- Schedule timeline ---------- */
+.invitation-shell[data-template="bustan"] .schedule-section {
+  padding-block: clamp(4rem, 9vw, 6.5rem);
+  padding-inline: 1.25rem;
+  text-align: center;
+}
+
+.invitation-shell[data-template="bustan"] .schedule-timeline {
+  list-style: none;
+  margin: 2.25rem auto 0;
+  padding: 0;
+  max-inline-size: 28rem;
+  position: relative;
+  text-align: start;
+}
+
+.invitation-shell[data-template="bustan"] .schedule-timeline::before {
+  content: "";
+  position: absolute;
+  inset-block: 0.6rem;
+  inset-inline-start: 0.42rem;
+  border-inline-start: 1px solid var(--b-hair);
+}
+
+.invitation-shell[data-template="bustan"] .schedule-stop {
+  position: relative;
+  display: grid;
+  grid-template-columns: 5.5rem 1fr;
+  align-items: baseline;
+  gap: 0.75rem;
+  padding-block: 0.9rem;
+  padding-inline-start: 1.9rem;
+}
+
+.invitation-shell[data-template="bustan"] .schedule-stop::before {
+  content: "";
+  position: absolute;
+  inset-inline-start: 0;
+  inset-block-start: 1.35rem;
+  inline-size: 0.85rem;
+  aspect-ratio: 1;
+  background: var(--b-ivory);
+  border: 1px solid var(--b-gold);
+  border-radius: 50%;
+  box-shadow: inset 0 0 0 3px var(--b-ivory), inset 0 0 0 10px var(--b-gold);
+}
+
+.invitation-shell[data-template="bustan"] .schedule-stop strong {
+  color: var(--b-gold-ink);
+  font-family: var(--font-ui);
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.invitation-shell[data-template="bustan"] .schedule-stop span {
+  color: var(--b-ink);
+  font-size: 1.2rem;
+}
+
+/* ---------- Dress code ---------- */
+.invitation-shell[data-template="bustan"] .dresscode-section {
+  padding-block: clamp(4rem, 9vw, 6rem);
+  padding-inline: 1.25rem;
+  background: var(--b-mist);
+  text-align: center;
+}
+
+.invitation-shell[data-template="bustan"] .dresscode-section .section-inner > p {
+  max-inline-size: 36rem;
+  margin: 1rem auto 0;
+}
+
+.invitation-shell[data-template="bustan"] .dresscode-section .section-inner::after {
+  content: "";
+  display: block;
+  inline-size: 11rem;
+  block-size: 1.6rem;
+  margin: 1.5rem auto 0;
+  background:
+    radial-gradient(circle at 12% 50%, var(--b-sage) 0 0.7rem, transparent 0.75rem),
+    radial-gradient(circle at 37% 50%, var(--b-mist) 0 0.7rem, transparent 0.75rem),
+    radial-gradient(circle at 62% 50%, var(--b-blush) 0 0.7rem, transparent 0.75rem),
+    radial-gradient(circle at 87% 50%, var(--b-gold) 0 0.7rem, transparent 0.75rem);
+  filter: drop-shadow(0 0 0 var(--b-hair));
+}
+
+.invitation-shell[data-template="bustan"] .dresscode-group-list {
+  display: grid;
+  gap: 1rem;
+  margin-block-start: 1.75rem;
+}
+
+.invitation-shell[data-template="bustan"] .dresscode-group {
+  padding: 1.25rem;
+  background: color-mix(in srgb, var(--b-paper) 92%, transparent);
+  border: 1px solid var(--b-hair);
+  border-radius: 4px;
+}
+
+.invitation-shell[data-template="bustan"] .dresscode-group h3 {
+  font-size: 1.35rem;
+  margin-block-end: 0.3rem;
+}
+
+/* ---------- Venue inside a floral arch ---------- */
+.invitation-shell[data-template="bustan"] .details-section {
+  position: relative;
+  padding-block: clamp(3rem, 8vw, 5rem);
+  padding-inline: 1.25rem;
+  text-align: center;
+  overflow: clip;
+}
+
+  .invitation-shell[data-template="bustan"].invitation-shell[data-template="bustan"] .details-section .section-inner {
+  position: relative;
+  z-index: auto;
+  inline-size: min(100%, 26rem);
+  margin-inline: auto;
+  aspect-ratio: 848 / 1264;
+  padding-block: 25% 17%;
+  padding-inline: 22%;
+  display: grid;
+  align-content: center;
+  justify-items: center;
+}
+
+.invitation-shell[data-template="bustan"] .details-section::before {
+  content: "";
+  position: absolute;
+  inset-block-start: clamp(3rem, 8vw, 5rem);
+  inset-inline: 0;
+  inline-size: min(calc(100% - 2.5rem), 26rem);
+  margin-inline: auto;
+  aspect-ratio: 848 / 1264;
+  background: url("/assets/demo/bustan/arch.jpg") center / 100% 100% no-repeat;
+  mix-blend-mode: multiply;
+  filter: brightness(1.06) contrast(1.06);
+  pointer-events: none;
+}
+
+.invitation-shell[data-template="bustan"] .details-section .section-kicker,
+.invitation-shell[data-template="bustan"] .details-address {
+  display: none;
+}
+
+.invitation-shell[data-template="bustan"] .details-section h2 {
+  font-size: clamp(1.5rem, 5vw, 2rem);
+  margin: 0;
+}
+
+.invitation-shell[data-template="bustan"] .badge-frame {
+  display: grid;
+  justify-items: center;
+  margin-block-start: 0.35rem;
+}
+
+.invitation-shell[data-template="bustan"] .badge-frame h3 {
+  color: var(--b-gold-ink);
+  font-family: var(--font-ui);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+.invitation-shell[data-template="bustan"][dir="rtl"] .badge-frame h3 {
+  letter-spacing: 0;
+  text-transform: none;
+  font-size: 0.9rem;
+}
+
+.invitation-shell[data-template="bustan"] .venue-name {
+  font-family: var(--font-head);
+  font-size: clamp(0.9rem, 3.4vw, 1.15rem);
+  line-height: 1.45;
+  color: var(--b-deep);
+  margin-block: 0.25rem;
+}
+
+.invitation-shell[data-template="bustan"] .time-line {
+  color: var(--b-sage-ink);
+  font-family: var(--font-ui);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.invitation-shell[data-template="bustan"] .details-section .map-link {
+  margin-block-start: 0.45rem;
+  padding-inline: 0.9rem;
+  font-size: 0.82rem;
+}
+
+/* ---------- FAQ ---------- */
+.invitation-shell[data-template="bustan"] .faq-section {
+  padding-block: clamp(4rem, 9vw, 6rem);
+  padding-inline: 1.25rem;
+  background: var(--b-mist);
+  text-align: center;
+}
+
+.invitation-shell[data-template="bustan"] .faq-list {
+  display: grid;
+  gap: 0.75rem;
+  margin-block-start: 1.75rem;
+  text-align: start;
+}
+
+.invitation-shell[data-template="bustan"] .faq-item {
+  background: color-mix(in srgb, var(--b-paper) 92%, transparent);
+  border: 1px solid var(--b-hair);
+  border-radius: 4px;
+}
+
+.invitation-shell[data-template="bustan"] .faq-question {
+  inline-size: 100%;
+  min-block-size: 52px;
+  padding-inline: 1.1rem;
+  background: transparent;
+  border: 0;
+  color: var(--b-deep);
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  font-weight: 600;
+  text-align: start;
+  cursor: pointer;
+}
+
+.invitation-shell[data-template="bustan"] .faq-answer {
+  padding-block: 0 1.1rem;
+  padding-inline: 1.1rem;
+  color: var(--b-sage-ink);
+}
+
+/* ---------- RSVP + guestbook forms ---------- */
+.invitation-shell[data-template="bustan"] .rsvp-section,
+.invitation-shell[data-template="bustan"] .message-section {
+  padding-block: clamp(4rem, 9vw, 6rem);
+  padding-inline: 1.25rem;
+  text-align: center;
+}
+
+.invitation-shell[data-template="bustan"] .rsvp-form,
+.invitation-shell[data-template="bustan"] .message-form {
+  display: grid;
+  gap: 1rem;
+  margin-block-start: 1.75rem;
+  padding: clamp(1.25rem, 4vw, 2rem);
+  background: color-mix(in srgb, var(--b-paper) 92%, transparent);
+  border: 1px solid var(--b-hair);
+  border-radius: 4px;
+  text-align: start;
+}
+
+.invitation-shell[data-template="bustan"] .rsvp-form label,
+.invitation-shell[data-template="bustan"] .message-form label {
+  display: grid;
+  gap: 0.35rem;
+  color: var(--b-sage-ink);
+  font-family: var(--font-ui);
+  font-size: 0.95rem;
+}
+
+.invitation-shell[data-template="bustan"] .rsvp-form :is(input[type="text"], input[type="email"], input[type="tel"], select),
+.invitation-shell[data-template="bustan"] .message-form :is(input[type="text"], textarea) {
+  inline-size: 100%;
+  min-block-size: 48px;
+  padding-inline: 0.9rem;
+  background: #fff;
+  color: var(--b-ink);
+  border: 1px solid var(--b-hair);
+  border-radius: 4px;
+  font: 400 1.05rem var(--font-ui);
+}
+
+.invitation-shell[data-template="bustan"] .message-form textarea {
+  min-block-size: 8rem;
+  padding-block: 0.7rem;
+}
+
+.invitation-shell[data-template="bustan"] .rsvp-form :is(input, select, textarea):focus-visible,
+.invitation-shell[data-template="bustan"] .message-form :is(input, textarea):focus-visible {
+  outline: 2px solid var(--b-deep);
+  outline-offset: 1px;
+}
+
+.invitation-shell[data-template="bustan"] .rsvp-form .rsvp-radio,
+.invitation-shell[data-template="bustan"] .rsvp-form .rsvp-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-block-size: 44px;
+  padding-inline: 0.9rem;
+  border: 1px solid var(--b-hair);
+  border-radius: 4px;
+  background: #fff;
+  color: var(--b-ink);
+}
+
+.invitation-shell[data-template="bustan"] .rsvp-form input[type="radio"],
+.invitation-shell[data-template="bustan"] .rsvp-form input[type="checkbox"] {
+  accent-color: var(--b-deep);
+  inline-size: 1.15rem;
+  block-size: 1.15rem;
+}
+
+.invitation-shell[data-template="bustan"] .rsvp-form button[type="submit"],
+.invitation-shell[data-template="bustan"] .message-form button[type="submit"] {
+  min-block-size: 52px;
+  background: var(--b-deep);
+  color: var(--b-paper);
+  border: 0;
+  border-radius: 4px;
+  font: 600 1.05rem var(--font-ui);
+  cursor: pointer;
+  transition: background-color 200ms ease;
+}
+
+.invitation-shell[data-template="bustan"] .rsvp-form button[type="submit"]:hover,
+.invitation-shell[data-template="bustan"] .message-form button[type="submit"]:hover {
+  background: var(--b-sage-ink);
+}
+
+.invitation-shell[data-template="bustan"] .guest-stepper button {
+  min-inline-size: 44px;
+  min-block-size: 44px;
+  background: #fff;
+  color: var(--b-deep);
+  border: 1px solid var(--b-hair);
+  border-radius: 4px;
+}
+
+.invitation-shell[data-template="bustan"] .form-status {
+  color: var(--b-deep);
+  font-weight: 600;
+}
+
+.invitation-shell[data-template="bustan"] .rsvp-form fieldset {
+  display: grid;
+  gap: 0.6rem;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-inline-size: 0;
+}
+
+.invitation-shell[data-template="bustan"] .rsvp-form legend {
+  padding: 0;
+  margin-block-end: 0.5rem;
+  color: var(--b-deep);
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+}
+
+/* ---------- Footer: wax seal over a garland ---------- */
+.invitation-shell[data-template="bustan"] .footer-section {
+  position: relative;
+  overflow: clip;
+  display: grid;
+  justify-items: center;
+  padding-block: clamp(7rem, 22vw, 11rem) 3rem;
+  background: var(--b-paper-tex) repeat 0 0 / 420px auto, var(--b-ivory);
+}
+
+.invitation-shell[data-template="bustan"] .footer-section::before {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: clamp(6rem, 20vw, 11rem);
+  background: url("/assets/demo/bustan/garland.jpg") 50% 100% / min(100%, 72rem) auto no-repeat;
+  mix-blend-mode: multiply;
+  filter: brightness(1.06) contrast(1.06);
+  transform: scaleY(-1);
+  pointer-events: none;
+}
+
+.invitation-shell[data-template="bustan"] .footer-section img {
+  position: relative;
+  inline-size: clamp(5.5rem, 22vw, 7.5rem);
+  aspect-ratio: 1;
+  object-fit: cover;
+  object-position: 50% 50%;
+  border-radius: 50%;
+  border: 3px solid var(--b-gold);
+  background: var(--b-ivory);
+  transform: scale(1);
+}
+
+/* ---------- Layout upgrades for larger screens ---------- */
+@media (min-width: 760px) {
+  .invitation-shell[data-template="bustan"] .event-card-list {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .invitation-shell[data-template="bustan"] .story-chapters {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .invitation-shell[data-template="bustan"] .dresscode-group-list {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (min-width: 900px) {
+  .invitation-shell[data-template="bustan"] .hero-section {
+    background: none;
+  }
+
+  .invitation-shell[data-template="bustan"] .hero-copy {
+    max-inline-size: calc(100svh * 0.42);
+    padding-inline: 0.5rem;
+  }
+
+  .invitation-shell[data-template="bustan"] .hero-copy .eyebrow {
+    letter-spacing: 0.14em;
+    font-size: 0.74rem;
+  }
+
+  .invitation-shell[data-template="bustan"] .hero-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: url("/assets/demo/bustan/hero.jpg") 50% 0 / auto 100% no-repeat;
+    -webkit-mask-image: linear-gradient(to right, transparent, #000 20%, #000 80%, transparent);
+    mask-image: linear-gradient(to right, transparent, #000 20%, #000 80%, transparent);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .invitation-shell[data-template="bustan"] .shutters-intro__moon {
+    animation: none;
+  }
+
+  .invitation-shell[data-template="bustan"] .shutters-intro__panel {
+    transition-duration: 0.01ms;
+    transition-delay: 0s;
+  }
+}

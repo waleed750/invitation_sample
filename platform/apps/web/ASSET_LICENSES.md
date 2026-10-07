@@ -26,3 +26,7 @@
 | `/assets/demo/rawda/footer-sprig.svg` | original | original, © Invitely (placeholder brand) |
 | `/assets/demo/rawda/paper-grain.svg` | original | original, © Invitely (placeholder brand) |
 | `/assets/drafts/*` | legacy-scrape | legacy scrape — draft only, not licensed for sale |
+
+## Bustan (apps/web/public/assets/demo/bustan/)
+
+All nine images were generated for Invitely with an AI image tool run by the owner (Figma AI image generation) from our own written prompts, then compressed to JPEG. They contain no third-party artwork, no people, no logos and no text. Files: gate.jpg, hero.jpg, arch.jpg, garland.jpg, ceremony.jpg, reception.jpg, urn.jpg, seal.jpg, paper.jpg. Licence label in the catalog: "original images generated for Invitely with an AI image tool".
