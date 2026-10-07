@@ -672,4 +672,138 @@ end;
 $$;
 reset role;
 
+-- ---------------------------------------------------------------------------
+-- 9. Admin tools (0011): admin_adjust_entitlement, admin_adjust_points.
+-- ---------------------------------------------------------------------------
+
+select set_config('request.jwt.claims', '', true);
+
+insert into public.invitations (id, owner_id, template_id, slug, data, status)
+values
+  ('a3000000-0000-0000-0000-00000000000a', '11111111-1111-1111-1111-111111111111',
+   '22222222-2222-2222-2222-222222222222', 'test-admin-adjust', '{}', 'published'),
+  ('a3000000-0000-0000-0000-00000000000b', '11111111-1111-1111-1111-111111111111',
+   '22222222-2222-2222-2222-222222222222', 'test-admin-ended', '{}', 'ended');
+
+insert into public.invitation_entitlements (invitation_id, tier, edits_allowed, edits_used, online_until)
+values
+  ('a3000000-0000-0000-0000-00000000000a', 'classic', 5, 1, now() + interval '10 days'),
+  ('a3000000-0000-0000-0000-00000000000b', 'classic', 5, 5, now() - interval '3 days');
+
+set local role service_role;
+
+do $$
+declare
+  r jsonb;
+  v_before timestamptz;
+begin
+  -- Adds edits and extends from the current online_until; one audit row.
+  select online_until into v_before from public.invitation_entitlements
+  where invitation_id = 'a3000000-0000-0000-0000-00000000000a';
+  r := public.admin_adjust_entitlement(
+    '11111111-1111-1111-1111-111111111111', 'a3000000-0000-0000-0000-00000000000a', 10, 30, 'goodwill');
+  assert (r ->> 'ok') = 'true', 'adjust entitlement must succeed, got: ' || r::text;
+  assert (select edits_allowed from public.invitation_entitlements
+          where invitation_id = 'a3000000-0000-0000-0000-00000000000a') = 15,
+    'adjust must add edits';
+  assert (select online_until from public.invitation_entitlements
+          where invitation_id = 'a3000000-0000-0000-0000-00000000000a') = v_before + interval '30 days',
+    'adjust must extend online_until by the given days';
+  assert (select count(*) from public.audit_log
+          where action = 'entitlement.adjust' and target_id = 'a3000000-0000-0000-0000-00000000000a') = 1,
+    'adjust must write one audit_log row';
+  assert (select details ->> 'reason' from public.audit_log
+          where action = 'entitlement.adjust' and target_id = 'a3000000-0000-0000-0000-00000000000a') = 'goodwill',
+    'audit must keep the reason';
+  assert (select (details -> 'before' ->> 'edits_allowed')::integer from public.audit_log
+          where action = 'entitlement.adjust' and target_id = 'a3000000-0000-0000-0000-00000000000a') = 5
+     and (select (details -> 'after' ->> 'edits_allowed')::integer from public.audit_log
+          where action = 'entitlement.adjust' and target_id = 'a3000000-0000-0000-0000-00000000000a') = 15,
+    'audit must keep before/after values';
+
+  -- Validation.
+  r := public.admin_adjust_entitlement(
+    '11111111-1111-1111-1111-111111111111', 'a3000000-0000-0000-0000-00000000000a', 1, 0, '   ');
+  assert (r ->> 'reason') = 'reason_required', 'blank reason must be refused, got: ' || r::text;
+  r := public.admin_adjust_entitlement(
+    '11111111-1111-1111-1111-111111111111', 'a3000000-0000-0000-0000-00000000000a', 0, 0, 'nothing');
+  assert (r ->> 'reason') = 'invalid_adjustment', 'zero/zero must be invalid, got: ' || r::text;
+  r := public.admin_adjust_entitlement(
+    '11111111-1111-1111-1111-111111111111', 'a3000000-0000-0000-0000-00000000000a', 101, 0, 'too many');
+  assert (r ->> 'reason') = 'invalid_adjustment', 'edits over 100 must be invalid, got: ' || r::text;
+  r := public.admin_adjust_entitlement(
+    '11111111-1111-1111-1111-111111111111', 'a3000000-0000-0000-0000-00000000000a', 0, 366, 'too long');
+  assert (r ->> 'reason') = 'invalid_adjustment', 'days over 365 must be invalid, got: ' || r::text;
+  r := public.admin_adjust_entitlement(
+    '11111111-1111-1111-1111-111111111111', 'a3ffffff-0000-0000-0000-00000000000f', 1, 0, 'missing');
+  assert (r ->> 'reason') = 'not_found', 'unknown invitation must be not_found, got: ' || r::text;
+  assert (select count(*) from public.audit_log where action = 'entitlement.adjust') = 1,
+    'refused adjustments must not write audit rows';
+
+  -- An ended invitation extended into the future is published again.
+  r := public.admin_adjust_entitlement(
+    '11111111-1111-1111-1111-111111111111', 'a3000000-0000-0000-0000-00000000000b', 0, 30, 'late payment');
+  assert (r ->> 'ok') = 'true', 'extend ended must succeed, got: ' || r::text;
+  assert (select status from public.invitations where id = 'a3000000-0000-0000-0000-00000000000b') = 'published',
+    'extending an ended invitation must publish it again';
+  assert (select online_until from public.invitation_entitlements
+          where invitation_id = 'a3000000-0000-0000-0000-00000000000b') > now() + interval '29 days',
+    'extension of an expired window starts from now';
+
+  -- Points: ledger row + recomputed cache + audit.
+  r := public.admin_adjust_points(
+    '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 500, 'goodwill');
+  assert (r ->> 'ok') = 'true', 'adjust points must succeed, got: ' || r::text;
+  assert (r ->> 'balance')::integer = (select points_balance from public.profiles
+          where id = '11111111-1111-1111-1111-111111111111'),
+    'returned balance must equal the cached balance';
+  assert (select count(*) from public.points_ledger
+          where user_id = '11111111-1111-1111-1111-111111111111' and reason = 'admin' and delta = 500
+            and expires_at is null) = 1,
+    'adjust points must write an admin ledger row';
+  assert (select points_balance from public.profiles where id = '11111111-1111-1111-1111-111111111111')
+         = (select coalesce(sum(delta), 0)::integer from public.points_ledger
+            where user_id = '11111111-1111-1111-1111-111111111111'
+              and (expires_at is null or expires_at > now())),
+    'cached balance must equal the non-expired ledger sum';
+  assert (select count(*) from public.audit_log
+          where action = 'points.adjust' and target_id = '11111111-1111-1111-1111-111111111111') = 1,
+    'adjust points must write one audit_log row';
+  r := public.admin_adjust_points(
+    '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 0, 'zero');
+  assert (r ->> 'reason') = 'invalid_adjustment', 'zero delta must be invalid, got: ' || r::text;
+  r := public.admin_adjust_points(
+    '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 100001, 'huge');
+  assert (r ->> 'reason') = 'invalid_adjustment', 'delta over 100000 must be invalid, got: ' || r::text;
+  r := public.admin_adjust_points(
+    '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 5, '');
+  assert (r ->> 'reason') = 'reason_required', 'empty reason must be refused, got: ' || r::text;
+end;
+$$;
+
+reset role;
+set local role authenticated;
+
+do $$
+begin
+  begin
+    perform public.admin_adjust_entitlement(
+      '11111111-1111-1111-1111-111111111111', 'a3000000-0000-0000-0000-00000000000a', 1, 0, 'nope');
+    assert false, 'authenticated must not execute admin_adjust_entitlement';
+  exception when insufficient_privilege then
+    null;
+  end;
+
+  begin
+    perform public.admin_adjust_points(
+      '11111111-1111-1111-1111-111111111111', '11111111-1111-1111-1111-111111111111', 5, 'nope');
+    assert false, 'authenticated must not execute admin_adjust_points';
+  exception when insufficient_privilege then
+    null;
+  end;
+end;
+$$;
+
+reset role;
+
 rollback;

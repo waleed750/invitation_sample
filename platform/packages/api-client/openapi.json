@@ -1,6 +1,53 @@
 {
   "components": {
     "schemas": {
+      "AdjustEntitlementBody": {
+        "properties": {
+          "addEdits": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "extendDays": {
+            "maximum": 365,
+            "minimum": 0,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "reason": {
+            "maxLength": 500,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "reason"
+        ],
+        "type": "object"
+      },
+      "AdjustPointsBody": {
+        "properties": {
+          "delta": {
+            "maximum": 100000,
+            "minimum": -100000,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "reason": {
+            "maxLength": 500,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "delta",
+          "reason"
+        ],
+        "type": "object"
+      },
       "CheckoutBody": {
         "properties": {
           "couple": {
@@ -4898,6 +4945,136 @@
   },
   "openapi": "3.0.0",
   "paths": {
+    "/v1/admin/customers": {
+      "get": {
+        "operationId": "AdminCustomersController_search",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "maxLength": 120,
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 20,
+              "maximum": 50,
+              "minimum": 1,
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCustomers"
+        ]
+      }
+    },
+    "/v1/admin/customers/{id}": {
+      "get": {
+        "operationId": "AdminCustomersController_detail",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCustomers"
+        ]
+      }
+    },
+    "/v1/admin/customers/{id}/points-adjustments": {
+      "post": {
+        "operationId": "AdminCustomersController_adjustPoints",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustPointsBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCustomers"
+        ]
+      }
+    },
+    "/v1/admin/invitations/{id}/entitlement-adjustments": {
+      "post": {
+        "operationId": "AdminCustomersController_adjustEntitlement",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustEntitlementBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCustomers"
+        ]
+      }
+    },
     "/v1/admin/payments/pending": {
       "get": {
         "operationId": "AdminPaymentsController_pending",

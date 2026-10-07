@@ -3,6 +3,7 @@ import {APP_FILTER, APP_GUARD} from '@nestjs/core';
 import {ScheduleModule} from '@nestjs/schedule';
 import {ThrottlerGuard} from '@nestjs/throttler';
 import {LoggerModule} from 'nestjs-pino';
+import {AdminCustomersModule} from './admin-customers/admin-customers.module';
 import {AdminPaymentsModule} from './admin-payments/admin-payments.module';
 import {AuthModule, AuthGuard, RolesGuard} from './auth';
 import {AppLogger} from './common/app-logger';
@@ -45,7 +46,7 @@ export {AuthGuard, RolesGuard};
     }),
     SupabaseModule, RateLimitModule, AuthModule, HealthModule, MeModule, EntitlementsModule,
     PaymentsModule, TemplatesModule, CheckoutModule, OrdersModule, InvitationsModule, PointsModule,
-    PublicInvitationsModule, GuestsModule, AdminPaymentsModule, LifecycleModule
+    PublicInvitationsModule, GuestsModule, AdminPaymentsModule, AdminCustomersModule, LifecycleModule
   ],
   providers: [
     AppLogger,
