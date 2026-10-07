@@ -5,6 +5,8 @@
 > Last updated: 2026-07-18
 
 ## User Preferences
+
+- **(2026-10-07)** Owner allows `opencode/muse-spark-1.3-contributor-free` (free) as an implementer, plus Sonnet subagents (Agent tool model=sonnet) for cheap tokens. Owner wants time-boxed runs (e.g. stop at 40 min) with a done/left list.
 - [2026-10-07] CORRECTION: after the radical v3 prompt, user said the ORIGINAL Stitch page (Zaffat, cream/green/gold, standard section order) "was better". Do not over-rotate to avant-garde; refine the liked design (PLATFORM_LANDING_PROMPT_V4.md) and ask what they liked before the next big redesign.
 - [2026-10-07] Landing/UI design: user earlier called v1 "old fashioned" but then preferred it over v3 — ambiguous; clarify the specific complaint (fonts? claims? layout?). Original note: user rejects "traditional"/template-looking pages (cream+green+gold luxury-wedding, SaaS section stack). Use /reframe anti-generic principles; derive visuals from the product (Egypt, WhatsApp family thread, mashrabiya lattice). Design prompts for Stitch live in PLATFORM_LANDING_PROMPT_V3.md. Never invent stats/testimonials in prompts; use real plan limits (PLATFORM_PLAN §4, §16.3).
 - [2026-09-24] Wants to commercialize this repo as a paid invitation platform (customer + admin dashboards, WhatsApp/email quick sign-in, AI agent for new designs + reels). Likes Claude to debate decisions with opencode before finalizing plans.

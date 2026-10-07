@@ -890,3 +890,5 @@
 | 03:06 | B0-2 landed (120c2bb): pino+redaction, optional Sentry, packages/api-client, CI workflow, supabase/config.toml; API 99, shared 108, web 136 green | platform/ | done | ~8k |
 | 03:10 | Committed .wolf bookkeeping and pushed main (35 commits) to origin; CI first run | .wolf/ | done | ~1k |
 | 10:09 | CI first runs: fixed stale SQL test fixtures (name, tagline); database job green; web build hit next/font Google fetch flake, rerun | platform/supabase/tests | done | ~6k |
+| 10:56 | Landed B1a (9c1d6ff) + money minor units/prices 0006 (1bb40ed, CI database green); B2a (muse-spark) on branch b2a-public-rsvp awaiting CI | platform/ | done | ~10k |
+| 10:59 | 40-min run closed: B0 complete, B1a, B2a landed + pushed; STATUS handoff written | .wolf/STATUS.md | done | ~3k |

@@ -758,6 +758,23 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-10-07T10:09:46.877025"
+    },
+    {
+      "id": "bug-045",
+      "timestamp": "2026-10-07T10:56:33.600044",
+      "error_message": "CI database job: Failed to resolve latest Supabase CLI release: rate limit exceeded",
+      "file": ".github/workflows/platform-ci.yml",
+      "root_cause": "supabase/setup-cli@v1 with version: latest calls the GitHub releases API unauthenticated and hits the rate limit",
+      "fix": "Rerun worked; permanent fix = pin a concrete CLI version in the workflow (TODO)",
+      "tags": [
+        "ci",
+        "supabase-cli",
+        "rate-limit",
+        "flaky"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-10-07T10:56:33.600044"
     }
   ]
 }
