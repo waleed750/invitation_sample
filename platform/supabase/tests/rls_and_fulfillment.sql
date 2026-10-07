@@ -72,11 +72,12 @@ values (
 on conflict (id) do update set
   purchases_count = 0, level = 'member', points_balance = 0;
 
-insert into public.templates (id, slug, name_ar, name_en, name, tier, status, license_complete)
+insert into public.templates (id, slug, name_ar, name_en, name, tagline, tier, status, license_complete)
 values (
   '22222222-2222-2222-2222-222222222222',
   'test-classic', 'قالب تجريبي', 'Test Classic',
-  jsonb_build_object('ar', 'قالب تجريبي', 'en', 'Test Classic'), 'classic', 'live', true
+  jsonb_build_object('ar', 'قالب تجريبي', 'en', 'Test Classic'),
+  jsonb_build_object('ar', '', 'en', ''), 'classic', 'live', true
 )
 on conflict (id) do update set status = 'live';
 
