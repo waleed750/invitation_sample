@@ -671,9 +671,12 @@ begin
 end;
 $$;
 -- ---------------------------------------------------------------------------
--- 9. Profile on signup trigger tests (0013)
+-- 10. Profile on signup trigger tests (0013)
+-- Rows are created as the table owner (like the other fixtures); the trigger
+-- itself runs as SECURITY DEFINER.
 -- ---------------------------------------------------------------------------
-set local role service_role;
+reset role;
+select set_config('request.jwt.claims', '', true);
 
 do $$
 declare
