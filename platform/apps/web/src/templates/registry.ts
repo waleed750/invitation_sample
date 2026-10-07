@@ -127,6 +127,9 @@ const bustanEntry: CatalogEntry = catalogEntry.parse({
     {path: '/assets/demo/bustan/reception.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
     {path: '/assets/demo/bustan/urn.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
     {path: '/assets/demo/bustan/seal.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+    {path: '/assets/demo/bustan/memory1.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+    {path: '/assets/demo/bustan/memory2.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
+    {path: '/assets/demo/bustan/sprigs.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
     {path: '/assets/demo/bustan/paper.jpg', source: 'ai-generated', license: 'original images generated for Invitely with an AI image tool (owner-run, Figma AI); no third-party artwork'},
   ],
 });

@@ -34,6 +34,18 @@ export const bustanData: InvitationData = {
   sections: [
     {type: 'hero', props: {headline, firstName, secondName, displayDate}},
     {
+      type: 'welcome',
+      props: {
+        sectionId: 'verse',
+        kicker: {ar: 'بسم الله', en: 'With blessings'},
+        title: {
+          ar: '﴿وَمِنْ آيَاتِهِ أَنْ خَلَقَ لَكُم مِّنْ أَنفُسِكُمْ أَزْوَاجًا لِّتَسْكُنُوا إِلَيْهَا وَجَعَلَ بَيْنَكُم مَّوَدَّةً وَرَحْمَةً﴾',
+          en: 'And among His signs is that He created for you partners from yourselves, that you may find tranquility in them, and placed between you affection and mercy.',
+        },
+        body: {ar: 'صدق الله العظيم · سورة الروم', en: 'Quran 30:21'},
+      },
+    },
+    {
       type: 'countdown',
       props: {
         date,
@@ -73,6 +85,29 @@ export const bustanData: InvitationData = {
             mapUrl,
             mapLabel: {ar: 'عرض الموقع', en: 'View on the map'},
           },
+        ],
+      },
+    },
+    {
+      type: 'welcome',
+      props: {
+        sectionId: 'families',
+        kicker: {ar: 'العائلتان الكريمتان', en: 'The two families'},
+        title: {ar: 'يتشرف بدعوتكم', en: 'Request the honour of your presence'},
+        body: {ar: 'لتشاركونا فرحة زفاف أبنائهم.', en: 'at the wedding of their children.'},
+        cards: [
+          {kicker: {ar: 'أسرة العريس', en: 'The groom’s family'}, heading: {ar: 'عائلة المنصوري', en: 'The Mansouri family'}},
+          {kicker: {ar: 'أسرة العروس', en: 'The bride’s family'}, heading: {ar: 'عائلة الراشدي', en: 'The Rashidi family'}},
+        ],
+      },
+    },
+    {
+      type: 'gallery',
+      props: {
+        title: {ar: 'بعض ذكرياتنا', en: 'A few memories'},
+        images: [
+          {src: art('memory1.jpg'), alt: {ar: 'عروسان يسيران بين الورد', en: 'The couple walking among the roses'}},
+          {src: art('memory2.jpg'), alt: {ar: 'عروسان على مقعد الحديقة عند الغروب', en: 'The couple on a garden bench at dusk'}},
         ],
       },
     },
