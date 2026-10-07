@@ -748,7 +748,7 @@
       "error_message": "CI web build: src/templates/diwan/fonts.ts An error occurred in next/font. TypeError: Cannot read properties of null (reading '1') at @next/font google loader.js:122",
       "file": "platform/apps/web/src/templates/diwan/fonts.ts",
       "root_cause": "next/font/google downloads font CSS at build time; a transient/odd Google Fonts response on the runner breaks the loader regex. File unchanged and passed in earlier runs.",
-      "fix": "Rerun the failed job. If it recurs, self-host the fonts with next/font/local.",
+      "fix": "Recurring (2x on 2026-10-07): rerun passes. Permanent fix TODO: self-host the 5 Diwan fonts with next/font/local (template area owned by the other session).",
       "tags": [
         "ci",
         "next-font",
@@ -756,7 +756,7 @@
         "flaky"
       ],
       "related_bugs": [],
-      "occurrences": 1,
+      "occurrences": 2,
       "last_seen": "2026-10-07T10:09:46.877025"
     },
     {
