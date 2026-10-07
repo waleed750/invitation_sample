@@ -1,0 +1,988 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#faf9f5;color:#141413}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>KinCony Wi-Fi Handoff</title>
+<style>
+  :root{
+    --bg:#F5F7FA;
+    --surface:#FFFFFF;
+    --surface-2:#EEF2F8;
+    --border:#E1E7F0;
+    --text:#17233D;
+    --text-muted:#67748C;
+    --text-faint:#9DA8B4;
+    --primary:#004CC0;
+    --primary-ink:#FFFFFF;
+    --primary-tint:#E7EFFC;
+    --success:#1AA35A;
+    --success-tint:#E6F7ED;
+    --error:#E1483B;
+    --error-tint:#FCEAE8;
+    --grey-btn:#667085;
+    --shadow: 0 1px 2px rgba(23,35,61,.04), 0 8px 24px rgba(23,35,61,.06);
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#0E1420;
+      --surface:#161E2E;
+      --surface-2:#1E2739;
+      --border:#2A3448;
+      --text:#EAF0FA;
+      --text-muted:#96A3B8;
+      --text-faint:#6D7A90;
+      --primary:#3F79E8;
+      --primary-ink:#FFFFFF;
+      --primary-tint:#1B2942;
+      --success:#3FC17E;
+      --success-tint:#123626;
+      --error:#F0665A;
+      --error-tint:#3A1E1C;
+      --grey-btn:#4A5468;
+      --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#0E1420;
+    --surface:#161E2E;
+    --surface-2:#1E2739;
+    --border:#2A3448;
+    --text:#EAF0FA;
+    --text-muted:#96A3B8;
+    --text-faint:#6D7A90;
+    --primary:#3F79E8;
+    --primary-ink:#FFFFFF;
+    --primary-tint:#1B2942;
+    --success:#3FC17E;
+    --success-tint:#123626;
+    --error:#F0665A;
+    --error-tint:#3A1E1C;
+    --grey-btn:#4A5468;
+    --shadow: 0 1px 2px rgba(0,0,0,.3), 0 8px 24px rgba(0,0,0,.4);
+    color-scheme: dark;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+    padding-inline:16px;
+    padding-block:28px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    gap:22px;
+  }
+
+  .page-head{
+    max-width:920px;
+    width:100%;
+    text-align:center;
+    display:flex;
+    flex-direction:column;
+    gap:6px;
+  }
+  .page-head h1{
+    margin:0;
+    font-size:1.4rem;
+    font-weight:700;
+    letter-spacing:-.01em;
+  }
+  .page-head p{
+    margin:0;
+    color:var(--text-muted);
+    font-size:.92rem;
+  }
+
+  .toolbar{
+    display:flex;
+    gap:8px;
+    flex-wrap:wrap;
+    justify-content:center;
+    max-width:920px;
+    width:100%;
+  }
+  .toolbar button{
+    font:inherit;
+    font-size:.82rem;
+    font-weight:600;
+    padding:8px 14px;
+    border-radius:999px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    color:var(--text-muted);
+    cursor:pointer;
+    transition:background .15s, color .15s, border-color .15s, transform .1s;
+    white-space:nowrap;
+  }
+  .toolbar button:hover{ transform:translateY(-1px); }
+  .toolbar button.active{
+    background:var(--primary);
+    border-color:var(--primary);
+    color:var(--primary-ink);
+  }
+  .toolbar .divider{
+    width:1px;
+    background:var(--border);
+    margin:4px 2px;
+  }
+  .theme-toggle{
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+
+  .stage{
+    display:flex;
+    gap:28px;
+    flex-wrap:wrap;
+    justify-content:center;
+    align-items:flex-start;
+    max-width:960px;
+    width:100%;
+  }
+
+  /* Phone frame */
+  .phone{
+    width:340px;
+    height:700px;
+    background:#000;
+    border-radius:46px;
+    padding:12px;
+    box-shadow:0 30px 60px -20px rgba(0,0,0,.4), 0 0 0 1px rgba(0,0,0,.06);
+    flex-shrink:0;
+  }
+  .phone-screen{
+    position:relative;
+    width:100%;
+    height:100%;
+    background:var(--surface-2);
+    border-radius:34px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+  }
+  .notch{
+    position:absolute;
+    top:8px;
+    left:50%;
+    transform:translateX(-50%);
+    width:110px;
+    height:22px;
+    background:#000;
+    border-radius:14px;
+    z-index:20;
+  }
+
+  .appbar{
+    padding:38px 16px 12px;
+    background:var(--surface-2);
+    display:flex;
+    align-items:center;
+    gap:10px;
+    flex-shrink:0;
+  }
+  .appbar .back{
+    width:32px;height:32px;
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text);
+    font-size:1.1rem;
+  }
+  .appbar h2{
+    margin:0;
+    font-size:1.05rem;
+    font-weight:700;
+    flex:1;
+  }
+
+  .screen-body{
+    flex:1;
+    overflow-y:auto;
+    padding:14px 16px 24px;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .screen-body::-webkit-scrollbar{ width:0; }
+
+  /* Devices list screen */
+  .device-row{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:14px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    box-shadow:var(--shadow);
+  }
+  .device-icon{
+    width:42px;height:42px;
+    border-radius:12px;
+    background:var(--primary-tint);
+    color:var(--primary);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .device-icon svg{ width:22px; height:22px; }
+  .device-info{ flex:1; min-width:0; }
+  .device-name{ font-weight:700; font-size:.92rem; }
+  .device-sub{ font-size:.78rem; margin-top:2px; }
+  .status-dot{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-size:.76rem;
+    font-weight:600;
+  }
+  .status-dot::before{
+    content:"";
+    width:7px;height:7px;
+    border-radius:50%;
+    background:currentColor;
+  }
+  .status-dot.on{ color:var(--success); }
+  .status-dot.off{ color:var(--error); }
+  .chev{ color:var(--text-faint); flex-shrink:0; }
+
+  .section-label{
+    font-size:.72rem;
+    font-weight:700;
+    text-transform:uppercase;
+    letter-spacing:.06em;
+    color:var(--text-faint);
+    margin:2px 2px 0;
+  }
+
+  /* Card surface (matches _SectionSurface) */
+  .card{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:16px;
+    box-shadow:var(--shadow);
+  }
+  .card + .card{ margin-top:0; }
+
+  .device-head{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .device-head .device-icon{ width:48px;height:48px; }
+  .device-head .device-info{ flex:1; }
+  .device-head .device-name{ font-size:1rem; }
+  .device-head .device-mac{
+    font-size:.76rem;
+    color:var(--text-muted);
+    margin-top:2px;
+  }
+
+  .banner{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    background:var(--error-tint);
+    border:1px solid color-mix(in srgb, var(--error) 30%, transparent);
+    border-radius:16px;
+    padding:14px;
+  }
+  .banner .icon{
+    width:38px;height:38px;
+    border-radius:11px;
+    background:color-mix(in srgb, var(--error) 16%, transparent);
+    color:var(--error);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .banner-copy{ flex:1; min-width:0; }
+  .banner-title{ font-weight:700; font-size:.88rem; color:var(--error); }
+  .banner-sub{ font-size:.76rem; color:var(--text-muted); margin-top:2px; }
+  .banner-btn{
+    font:inherit;
+    font-size:.78rem;
+    font-weight:700;
+    padding:9px 14px;
+    border-radius:20px;
+    border:none;
+    background:var(--primary);
+    color:#fff;
+    white-space:nowrap;
+    cursor:pointer;
+  }
+
+  .section-title-row{
+    display:flex;
+    align-items:flex-start;
+    gap:12px;
+  }
+  .section-icon{
+    width:38px;height:38px;
+    border-radius:12px;
+    background:var(--primary-tint);
+    color:var(--primary);
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .section-icon svg{ width:19px;height:19px; }
+  .section-title{ font-weight:700; font-size:.98rem; }
+  .section-sub{ font-size:.78rem; color:var(--text-muted); margin-top:3px; }
+
+  .field{
+    margin-top:14px;
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+  }
+  .field label{
+    font-size:.74rem;
+    font-weight:600;
+    color:var(--text-muted);
+  }
+  .field .input{
+    border:1px solid var(--border);
+    background:var(--surface-2);
+    border-radius:12px;
+    padding:11px 12px;
+    font-size:.88rem;
+    color:var(--text);
+  }
+
+  .primary-btn{
+    margin-top:14px;
+    width:100%;
+    font:inherit;
+    font-size:.88rem;
+    font-weight:700;
+    padding:13px;
+    border-radius:14px;
+    border:none;
+    background:var(--primary);
+    color:#fff;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+  }
+  .primary-btn:disabled{
+    opacity:.5;
+    cursor:default;
+  }
+
+  /* Online-check card */
+  .check-card{
+    border-radius:18px;
+    padding:16px;
+    border:1px solid;
+  }
+  .check-card.waiting{
+    background:color-mix(in srgb, var(--primary) 8%, var(--surface));
+    border-color:color-mix(in srgb, var(--primary) 25%, transparent);
+  }
+  .check-card.offline{
+    background:color-mix(in srgb, var(--error) 8%, var(--surface));
+    border-color:color-mix(in srgb, var(--error) 25%, transparent);
+  }
+  .check-card.online{
+    background:color-mix(in srgb, var(--success) 10%, var(--surface));
+    border-color:color-mix(in srgb, var(--success) 30%, transparent);
+  }
+  .check-head{
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  .ring-wrap{
+    width:40px;height:40px;
+    flex-shrink:0;
+    position:relative;
+  }
+  .ring-wrap svg{ width:40px;height:40px; transform:rotate(-90deg); }
+  .ring-wrap .ring-bg{ stroke:color-mix(in srgb, var(--primary) 18%, transparent); }
+  .ring-wrap .ring-fg{
+    stroke:var(--primary);
+    stroke-linecap:round;
+    transition:stroke-dashoffset .3s linear;
+  }
+  .ring-wrap .ring-num{
+    position:absolute;
+    inset:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-size:.72rem;
+    font-weight:800;
+    color:var(--primary);
+  }
+  .status-icon{
+    width:40px;height:40px;
+    border-radius:50%;
+    display:flex;align-items:center;justify-content:center;
+    flex-shrink:0;
+  }
+  .status-icon.offline{ background:color-mix(in srgb, var(--error) 16%, transparent); color:var(--error); }
+  .status-icon.online{ background:color-mix(in srgb, var(--success) 18%, transparent); color:var(--success); }
+  .check-title{ font-weight:700; font-size:.9rem; }
+  .check-msg{ font-size:.78rem; color:var(--text-muted); margin-top:3px; }
+  .check-card.waiting .check-title{ color:var(--primary); }
+  .check-card.offline .check-title{ color:var(--error); }
+  .check-card.online .check-title{ color:var(--success); }
+
+  .progress-track{
+    margin-top:12px;
+    height:6px;
+    border-radius:4px;
+    background:color-mix(in srgb, var(--primary) 15%, transparent);
+    overflow:hidden;
+  }
+  .progress-fill{
+    height:100%;
+    background:var(--primary);
+    border-radius:4px;
+    transition:width .3s linear;
+  }
+  .progress-label{
+    font-size:.72rem;
+    color:var(--text-muted);
+    margin-top:6px;
+    font-variant-numeric:tabular-nums;
+  }
+
+  .check-actions{
+    margin-top:14px;
+    display:flex;
+    gap:10px;
+  }
+  .btn-fill{
+    flex:1;
+    font:inherit;
+    font-size:.82rem;
+    font-weight:700;
+    padding:11px;
+    border-radius:12px;
+    border:none;
+    color:#fff;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:6px;
+  }
+  .btn-fill.retry{ background:var(--primary); }
+  .btn-fill.back{ background:var(--grey-btn); }
+
+  .toast{
+    position:absolute;
+    left:16px;right:16px;
+    top:52px;
+    background:var(--success-tint);
+    border:1px solid color-mix(in srgb, var(--success) 35%, transparent);
+    color:var(--success);
+    border-radius:14px;
+    padding:11px 14px;
+    font-size:.82rem;
+    font-weight:600;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    box-shadow:var(--shadow);
+    opacity:0;
+    transform:translateY(-8px);
+    transition:opacity .25s, transform .25s;
+    z-index:30;
+    pointer-events:none;
+  }
+  .toast.show{ opacity:1; transform:translateY(0); }
+
+  /* Timeline / explainer panel */
+  .panel{
+    max-width:340px;
+    width:100%;
+    display:flex;
+    flex-direction:column;
+    gap:14px;
+  }
+  .timeline{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:18px;
+    padding:16px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    gap:2px;
+  }
+  .timeline h3{
+    margin:0 0 10px;
+    font-size:.86rem;
+    font-weight:700;
+  }
+  .step{
+    display:flex;
+    gap:10px;
+    padding-block:9px;
+    position:relative;
+  }
+  .step:not(:last-child)::after{
+    content:"";
+    position:absolute;
+    left:11px;
+    top:28px;
+    bottom:-3px;
+    width:2px;
+    background:var(--border);
+  }
+  .step-dot{
+    width:23px;height:23px;
+    border-radius:50%;
+    flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-size:.66rem;
+    font-weight:800;
+    background:var(--surface-2);
+    color:var(--text-faint);
+    border:2px solid var(--border);
+    z-index:1;
+  }
+  .step.done .step-dot{
+    background:var(--primary);
+    border-color:var(--primary);
+    color:#fff;
+  }
+  .step.current .step-dot{
+    background:var(--primary-tint);
+    border-color:var(--primary);
+    color:var(--primary);
+  }
+  .step.failed .step-dot{
+    background:var(--error);
+    border-color:var(--error);
+    color:#fff;
+  }
+  .step-copy{ padding-top:1px; }
+  .step-title{ font-size:.82rem; font-weight:600; }
+  .step.done .step-title, .step.current .step-title{ color:var(--text); }
+  .step:not(.done):not(.current):not(.failed) .step-title{ color:var(--text-faint); }
+  .step-detail{ font-size:.72rem; color:var(--text-muted); margin-top:1px; }
+
+  .note{
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:14px 16px;
+    font-size:.78rem;
+    color:var(--text-muted);
+    line-height:1.5;
+    box-shadow:var(--shadow);
+  }
+  .note b{ color:var(--text); }
+  .note code{
+    background:var(--surface-2);
+    border-radius:5px;
+    padding:1px 5px;
+    font-size:.72rem;
+  }
+
+  @media (max-width: 720px){
+    .stage{ justify-content:center; }
+    .panel{ max-width:340px; }
+  }
+</style>
+
+<div class="page-head">
+  <h1>KinCony Wi-Fi Handoff — UI Logic Mockup</h1>
+  <p>Every screen state after the board accepts new Wi-Fi credentials. Placeholder data only — nothing here talks to Bluetooth or the backend.</p>
+</div>
+
+<div class="toolbar" id="stateToolbar"></div>
+
+<div class="toolbar theme-toggle">
+  <button data-theme-btn="system" class="active">System theme</button>
+  <button data-theme-btn="light">Light</button>
+  <button data-theme-btn="dark">Dark</button>
+</div>
+
+<div class="stage">
+  <div class="phone">
+    <div class="phone-screen">
+      <div class="notch"></div>
+      <div class="appbar">
+        <span class="back">‹</span>
+        <h2 id="appbarTitle">SyncN_control</h2>
+      </div>
+      <div class="screen-body" id="screenBody"></div>
+      <div class="toast" id="toast"><span>✓</span><span id="toastText"></span></div>
+    </div>
+  </div>
+
+  <div class="panel">
+    <div class="timeline" id="timeline">
+      <h3>Where this state sits in the flow</h3>
+    </div>
+    <div class="note" id="stateNote"></div>
+  </div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---------- Theme toggle (demo-only, not a real preference) ----------
+  var themeBtns = document.querySelectorAll('[data-theme-btn]');
+  themeBtns.forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var mode = btn.getAttribute('data-theme-btn');
+      if (mode === 'system') document.documentElement.removeAttribute('data-theme');
+      else document.documentElement.setAttribute('data-theme', mode);
+      themeBtns.forEach(function(b){ b.classList.toggle('active', b === btn); });
+    });
+  });
+
+  // ---------- Icons ----------
+  var ICONS = {
+    board: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="3"/><path d="M9 9h.01M15 9h.01M9 15h.01M15 15h.01"/></svg>',
+    wifi: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 13a10 10 0 0 1 14 0"/><path d="M8.5 16.5a5 5 0 0 1 7 0"/><path d="M12 20h.01"/></svg>',
+    chev: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>',
+    alert: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.3 3.9 1.9 18a2 2 0 0 0 1.7 3h16.8a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/></svg>',
+    off: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 2l20 20M8.5 16.5a5 5 0 0 1 5.4-1.1M5 13a10 10 0 0 1 3-2.3M19 13a10 10 0 0 0-3.4-2.6M12 20h.01"/></svg>',
+    check: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+    refresh: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.6-6.4"/><path d="M21 3v6h-6"/></svg>',
+    devices: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 21h8M12 16v5"/></svg>'
+  };
+
+  // ---------- State definitions ----------
+  // Every state mirrors the real strings in app_en.arb / the widget tree
+  // in kincony_device_details_page.dart + device_online_check_card.dart.
+  var TOTAL = 3; // onlineCheckWindow (30s) / onlineCheckInterval (10s)
+
+  var STATES = [
+    {
+      key: 'devices-offline',
+      label: '1 · Devices list',
+      appbar: 'Devices',
+      timelineStep: -1,
+      note: 'Starting point. The board is marked offline from the last known backend status. Tapping the row opens its device details screen.',
+      render: renderDevicesList
+    },
+    {
+      key: 'offline-banner',
+      label: '2 · Offline banner',
+      appbar: 'Device Info',
+      timelineStep: -1,
+      note: 'Device details screen for an offline board. The "Board is offline" banner is the entry point into Wi-Fi re-provisioning — tapping "Configure Wi-Fi" opens the BLE flow.',
+      render: renderEditDeviceOffline
+    },
+    {
+      key: 'sending',
+      label: '3 · Sending credentials',
+      appbar: 'SyncN_control',
+      timelineStep: 0,
+      note: 'BLE is connected. The user just entered the Wi-Fi network name and password and tapped "Send Credentials". The app writes SET,ssid,password to the board and waits for its reply.',
+      render: function(root){ renderKinconyDetails(root, {phase:'sending'}); }
+    },
+    {
+      key: 'waiting-1',
+      label: '4 · Waiting (0/3)',
+      appbar: 'SyncN_control',
+      timelineStep: 1,
+      note: 'The board replied OK. The app now polls GET /devices/{id} every 10s for up to 30s. This is the instant the countdown starts: 30s left, 0 of 3 checks done.',
+      render: function(root){ renderKinconyDetails(root, {phase:'waiting', remaining:30, done:0}); }
+    },
+    {
+      key: 'waiting-2',
+      label: '5 · Waiting (1/3)',
+      appbar: 'SyncN_control',
+      timelineStep: 1,
+      note: 'First status check ran at the 10s mark and came back offline — the board is still joining the network. The app keeps waiting; 20s left, 1 of 3 checks done.',
+      render: function(root){ renderKinconyDetails(root, {phase:'waiting', remaining:20, done:1}); }
+    },
+    {
+      key: 'waiting-3',
+      label: '6 · Waiting (2/3)',
+      appbar: 'SyncN_control',
+      timelineStep: 1,
+      note: 'Second check at the 20s mark, still offline. One check left before the 30s window closes; 10s left, 2 of 3 checks done.',
+      render: function(root){ renderKinconyDetails(root, {phase:'waiting', remaining:10, done:2}); }
+    },
+    {
+      key: 'online',
+      label: '7a · Came online',
+      appbar: 'SyncN_control',
+      timelineStep: 2,
+      note: 'A status check returned connection_status = true. The app updates the device in the list, shows a success toast, and navigates back to the Devices page automatically.',
+      render: function(root){ renderKinconyDetails(root, {phase:'online'}); },
+      toast: 'Device is online now.'
+    },
+    {
+      key: 'devices-online',
+      label: '7b · Back on Devices',
+      appbar: 'Devices',
+      timelineStep: 3,
+      note: 'End of the happy path. The same row now shows Online with no extra fetch — the app already knows the fresh status from the last check.',
+      render: function(root){ renderDevicesList(root, {online:true}); }
+    },
+    {
+      key: 'still-offline',
+      label: '8 · Still offline',
+      appbar: 'SyncN_control',
+      timelineStep: 4,
+      note: 'All 3 checks came back offline. The countdown card is replaced with a result card: a clear explanation plus two ways forward, "Check again" (restarts a fresh 30s window) or "Back to devices" (returns without changing the stored status).',
+      render: function(root){ renderKinconyDetails(root, {phase:'offline'}); }
+    }
+  ];
+
+  var TIMELINE_STEPS = [
+    {title:'Send Wi-Fi credentials', detail:'App writes SET,ssid,password over BLE'},
+    {title:'Wait up to 30s', detail:'Poll GET /devices/{id} every 10s'},
+    {title:'Device online', detail:'Update device, show success, go back'},
+    {title:'Back on Devices list', detail:'Row now shows Online'},
+    {title:'Still offline (alt path)', detail:'Check again, or back to devices'}
+  ];
+
+  // ---------- Chrome: toolbar + timeline (built once) ----------
+  var toolbar = document.getElementById('stateToolbar');
+  STATES.forEach(function(s, i){
+    var b = document.createElement('button');
+    b.textContent = s.label;
+    b.dataset.key = s.key;
+    b.addEventListener('click', function(){ goTo(i); });
+    toolbar.appendChild(b);
+    if (i === 1 || i === 6) {
+      var d = document.createElement('div');
+      d.className = 'divider';
+      toolbar.appendChild(d);
+    }
+  });
+
+  var timelineEl = document.getElementById('timeline');
+  TIMELINE_STEPS.forEach(function(step, i){
+    var row = document.createElement('div');
+    row.className = 'step';
+    row.dataset.step = i;
+    row.innerHTML =
+      '<div class="step-dot">' + (i+1) + '</div>' +
+      '<div class="step-copy">' +
+        '<div class="step-title">' + step.title + '</div>' +
+        '<div class="step-detail">' + step.detail + '</div>' +
+      '</div>';
+    timelineEl.appendChild(row);
+  });
+
+  var current = 0;
+  var toastTimer = null;
+
+  function goTo(index){
+    current = index;
+    var s = STATES[index];
+
+    toolbar.querySelectorAll('button').forEach(function(b){
+      b.classList.toggle('active', b.dataset.key === s.key);
+    });
+
+    document.getElementById('appbarTitle').textContent = s.appbar;
+    document.getElementById('stateNote').innerHTML = s.note;
+
+    timelineEl.querySelectorAll('.step').forEach(function(row){
+      var i = Number(row.dataset.step);
+      row.classList.remove('done','current','failed');
+      if (s.timelineStep < 0) return;
+      if (s.key === 'still-offline' && i === 4) row.classList.add('current');
+      else if (i < s.timelineStep) row.classList.add('done');
+      else if (i === s.timelineStep) row.classList.add('current');
+    });
+
+    var body = document.getElementById('screenBody');
+    body.innerHTML = '';
+    s.render(body);
+
+    var toast = document.getElementById('toast');
+    clearTimeout(toastTimer);
+    if (s.toast) {
+      document.getElementById('toastText').textContent = s.toast;
+      // restart the transition
+      toast.classList.remove('show');
+      void toast.offsetWidth;
+      toast.classList.add('show');
+      toastTimer = setTimeout(function(){ toast.classList.remove('show'); }, 2200);
+    } else {
+      toast.classList.remove('show');
+    }
+  }
+
+  // ---------- Screen renderers ----------
+  function renderDevicesList(root, opts){
+    opts = opts || {};
+    var online = !!opts.online;
+    root.innerHTML =
+      '<div class="section-label">Your devices</div>' +
+      deviceRow('Living room lights', true, ICONS.board) +
+      deviceRow('SyncN_control', online, ICONS.board, !online) +
+      deviceRow('Garage door', true, ICONS.board);
+    if (!online) {
+      root.querySelector('[data-row="SyncN_control"]').addEventListener('click', function(){
+        goTo(1);
+      });
+    }
+  }
+
+  function deviceRow(name, online, icon, clickable){
+    return (
+      '<div class="device-row"' + (clickable ? ' data-row="'+name+'" style="cursor:pointer"' : '') + '>' +
+        '<div class="device-icon">' + icon + '</div>' +
+        '<div class="device-info">' +
+          '<div class="device-name">' + name + '</div>' +
+          '<div class="device-sub"><span class="status-dot ' + (online?'on':'off') + '">' + (online?'Online':'Offline') + '</span></div>' +
+        '</div>' +
+        '<span class="chev">' + ICONS.chev + '</span>' +
+      '</div>'
+    );
+  }
+
+  function renderEditDeviceOffline(root){
+    root.innerHTML =
+      '<div class="card device-head">' +
+        '<div class="device-icon">' + ICONS.board + '</div>' +
+        '<div class="device-info">' +
+          '<div class="device-name">SyncN_control</div>' +
+          '<div class="device-mac">AA:BB:CC:DD:EE:FF</div>' +
+          '<span class="status-dot off" style="margin-top:4px">Offline</span>' +
+        '</div>' +
+      '</div>' +
+      '<div class="banner">' +
+        '<div class="icon">' + ICONS.alert + '</div>' +
+        '<div class="banner-copy">' +
+          '<div class="banner-title">Board is offline</div>' +
+          '<div class="banner-sub">Reconnect it to your Wi-Fi network to bring it back online.</div>' +
+        '</div>' +
+        '<button class="banner-btn" id="goConfigureWifi">Configure Wi-Fi</button>' +
+      '</div>' +
+      '<div class="note" style="margin-top:2px">Tapping <b>Configure Wi-Fi</b> opens the BLE scan screen, then the device details screen shown in the next states.</div>';
+    root.querySelector('#goConfigureWifi').addEventListener('click', function(){ goTo(2); });
+  }
+
+  function renderKinconyDetails(root, opts){
+    var phase = opts.phase;
+    var sending = phase === 'sending';
+    var waiting = phase === 'waiting';
+    var isOnline = phase === 'online';
+    var isOffline = phase === 'offline';
+    var connected = !isOnline; // BLE typically drops once the board joins Wi-Fi
+
+    var html = '';
+
+    // Device header card
+    html +=
+      '<div class="card device-head">' +
+        '<div class="device-icon" style="background:' + (connected ? 'var(--primary-tint)' : 'var(--surface-2)') + ';color:' + (connected ? 'var(--primary)' : 'var(--text-faint)') + '">' + (connected ? boltIcon() : ICONS.off) + '</div>' +
+        '<div class="device-info">' +
+          '<div class="device-name">SyncN_control</div>' +
+          '<div class="device-mac">AA:BB:CC:DD:EE:FF</div>' +
+          '<div style="font-size:.78rem;font-weight:600;margin-top:3px;color:' + (connected ? 'var(--primary)' : 'var(--error)') + '">' + (connected ? 'Device is connected.' : 'Device is disconnected.') + '</div>' +
+        '</div>' +
+      '</div>';
+
+    // Status / check card (replaces or accompanies the credentials form)
+    if (sending) {
+      html +=
+        '<div class="check-card waiting">' +
+          '<div class="check-head">' +
+            spinner() +
+            '<div>' +
+              '<div class="check-title">Sending Wi-Fi credentials to the board...</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    } else if (waiting) {
+      var remaining = opts.remaining, done = opts.done;
+      var pct = Math.round(((TOTAL*10 - remaining) / (TOTAL*10)) * 100);
+      var dash = 100.5; // circumference approximation for r=16
+      var offset = dash - (dash * (remaining/30));
+      html +=
+        '<div class="check-card waiting">' +
+          '<div class="check-head">' +
+            '<div class="ring-wrap">' +
+              '<svg viewBox="0 0 40 40">' +
+                '<circle class="ring-bg" cx="20" cy="20" r="16" fill="none" stroke-width="3"/>' +
+                '<circle class="ring-fg" cx="20" cy="20" r="16" fill="none" stroke-width="3" stroke-dasharray="' + dash + '" stroke-dashoffset="' + offset + '"/>' +
+              '</svg>' +
+              '<div class="ring-num">' + remaining + '</div>' +
+            '</div>' +
+            '<div>' +
+              '<div class="check-title">Connecting device to Wi-Fi</div>' +
+              '<div class="check-msg">Waiting for the device to come online... ' + remaining + 's left</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="progress-track"><div class="progress-fill" style="width:' + pct + '%"></div></div>' +
+          '<div class="progress-label">Status checks: ' + done + ' of ' + TOTAL + '</div>' +
+        '</div>';
+    } else if (isOnline) {
+      html +=
+        '<div class="check-card online">' +
+          '<div class="check-head">' +
+            '<div class="status-icon online">' + ICONS.check + '</div>' +
+            '<div>' +
+              '<div class="check-title">Device is online now.</div>' +
+              '<div class="check-msg">Returning to the devices list…</div>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+    } else if (isOffline) {
+      html +=
+        '<div class="check-card offline">' +
+          '<div class="check-head">' +
+            '<div class="status-icon offline">' + ICONS.off + '</div>' +
+            '<div>' +
+              '<div class="check-title">Device is still offline</div>' +
+              '<div class="check-msg">The device did not come online within 30 seconds. Check the Wi-Fi name and password, then try again.</div>' +
+            '</div>' +
+          '</div>' +
+          '<div class="check-actions">' +
+            '<button class="btn-fill back" id="btnBack">Back to devices</button>' +
+            '<button class="btn-fill retry" id="btnRetry">' + ICONS.refresh + ' Check again</button>' +
+          '</div>' +
+        '</div>';
+    }
+
+    // Credentials form (disabled/locked once sending or waiting)
+    var formLocked = sending || waiting || isOnline;
+    html +=
+      '<div class="card">' +
+        '<div class="section-title-row">' +
+          '<div class="section-icon">' + ICONS.wifi + '</div>' +
+          '<div>' +
+            '<div class="section-title">Network credentials</div>' +
+            '<div class="section-sub">Credentials are sent over BLE and are not saved on this device.</div>' +
+          '</div>' +
+        '</div>' +
+        '<div class="field">' +
+          '<label>Wi-Fi Network Name (SSID)</label>' +
+          '<div class="input" style="opacity:' + (formLocked?'.55':'1') + '">HomeNet_5G</div>' +
+        '</div>' +
+        '<div class="field">' +
+          '<label>Wi-Fi Password</label>' +
+          '<div class="input" style="opacity:' + (formLocked?'.55':'1') + '">••••••••••</div>' +
+        '</div>' +
+        '<button class="primary-btn" ' + (formLocked||isOffline ? 'disabled' : '') + '>Send Credentials</button>' +
+      '</div>';
+
+    root.innerHTML = html;
+
+    if (isOffline) {
+      root.querySelector('#btnRetry').addEventListener('click', function(){ goTo(3); }); // restarts at "waiting-1"
+      root.querySelector('#btnBack').addEventListener('click', function(){ goTo(7); }); // devices-online-ish exit
+    }
+  }
+
+  function boltIcon(){
+    return '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h7l-1 8 10-12h-7l1-8Z"/></svg>';
+  }
+  function spinner(){
+    return '<svg width="40" height="40" viewBox="0 0 40 40" style="flex-shrink:0"><circle cx="20" cy="20" r="16" fill="none" stroke="color-mix(in srgb, var(--primary) 20%, transparent)" stroke-width="3"/><circle cx="20" cy="20" r="16" fill="none" stroke="var(--primary)" stroke-width="3" stroke-linecap="round" stroke-dasharray="30 100"><animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="0.9s" repeatCount="indefinite"/></circle></svg>';
+  }
+
+  goTo(0);
+})();
+</script>
+
+</body></html>
