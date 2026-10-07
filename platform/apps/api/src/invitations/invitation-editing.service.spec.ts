@@ -4,6 +4,7 @@ import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
 import {CLOCK} from '../common/clock';
 import {InvitationEditingService} from './invitation-editing.service';
+import {RevalidationService} from '../revalidation/revalidation.service';
 import {InvitationsRepository} from './invitations.repository';
 
 const user = {id: 'owner-1', jwt: 'jwt-1'} as any;
@@ -24,17 +25,20 @@ const fail = (code: string, message = 'x') => ({data: null, error: {code, messag
 describe('InvitationEditingService', () => {
   let service: InvitationEditingService;
   let repo: Record<string, jest.Mock>;
+  let revalidation: {revalidateInvitation: jest.Mock};
 
   beforeEach(async () => {
     repo = {
       findById: jest.fn(), updateDataIfMatch: jest.fn(), updateSlug: jest.fn(), publish: jest.fn(),
-      slugsTakenAsServiceRole: jest.fn()
+      slugsTakenAsServiceRole: jest.fn(), undoPublish: jest.fn(), switchTemplate: jest.fn()
     };
+    revalidation = {revalidateInvitation: jest.fn()};
     const module = await Test.createTestingModule({
       providers: [
         InvitationEditingService,
         {provide: InvitationsRepository, useValue: repo},
         {provide: AppLogger, useValue: {error: jest.fn()}},
+        {provide: RevalidationService, useValue: revalidation},
         {provide: CLOCK, useValue: {now: () => new Date('2026-10-07T00:00:00Z')}}
       ]
     }).compile();
@@ -196,12 +200,15 @@ describe('InvitationEditingService', () => {
       expect(repo.publish).toHaveBeenCalledWith('jwt-1', ID, {a: 1});
       expect(result.ok).toBe(true);
       if (result.ok) expect(result.invitation.status).toBe('published');
+      expect(revalidation.revalidateInvitation).toHaveBeenCalledTimes(1);
+      expect(revalidation.revalidateInvitation).toHaveBeenCalledWith('ahmed-mona');
     });
 
     it('no edits left', async () => {
       repo.findById.mockResolvedValue(ok(row()));
       repo.publish.mockResolvedValue(ok({ok: false, reason: 'no_edits_left'}));
       await expect(service.publish(user, ID)).resolves.toEqual({ok: false, reason: 'no_edits_left'});
+      expect(revalidation.revalidateInvitation).not.toHaveBeenCalled();
     });
 
     it('expired', async () => {
@@ -226,6 +233,83 @@ describe('InvitationEditingService', () => {
       repo.findById.mockResolvedValue(ok(row()));
       repo.publish.mockResolvedValue(fail('P0001'));
       await expect(service.publish(user, ID)).rejects.toThrow(ServiceUnavailableException);
+      expect(revalidation.revalidateInvitation).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('undoPublish', () => {
+    it('success returns the refreshed invitation and revalidates once', async () => {
+      repo.findById.mockResolvedValue(ok(row({status: 'published'})));
+      repo.undoPublish.mockResolvedValue(ok({ok: true, published_at: U1}));
+      const result = await service.undoPublish(user, ID);
+      expect(repo.undoPublish).toHaveBeenCalledWith('jwt-1', ID);
+      expect(result.ok).toBe(true);
+      expect(revalidation.revalidateInvitation).toHaveBeenCalledTimes(1);
+      expect(revalidation.revalidateInvitation).toHaveBeenCalledWith('ahmed-mona');
+    });
+
+    it.each(['nothing_to_undo', 'expired'])('maps %s through and never revalidates', async (reason) => {
+      repo.findById.mockResolvedValue(ok(row()));
+      repo.undoPublish.mockResolvedValue(ok({ok: false, reason}));
+      await expect(service.undoPublish(user, ID)).resolves.toEqual({ok: false, reason});
+      expect(revalidation.revalidateInvitation).not.toHaveBeenCalled();
+    });
+
+    it('not_owner from SQL maps to not_found', async () => {
+      repo.findById.mockResolvedValue(ok(row()));
+      repo.undoPublish.mockResolvedValue(ok({ok: false, reason: 'not_owner'}));
+      await expect(service.undoPublish(user, ID)).resolves.toEqual({ok: false, reason: 'not_found'});
+    });
+
+    it("someone else's invitation is not_found and never reaches the RPC", async () => {
+      repo.findById.mockResolvedValue(ok(null));
+      await expect(service.undoPublish(user, ID)).resolves.toEqual({ok: false, reason: 'not_found'});
+      expect(repo.undoPublish).not.toHaveBeenCalled();
+    });
+
+    it('RPC error and unknown reason are 503s', async () => {
+      repo.findById.mockResolvedValue(ok(row()));
+      repo.undoPublish.mockResolvedValueOnce(fail('P0001'));
+      await expect(service.undoPublish(user, ID)).rejects.toThrow(ServiceUnavailableException);
+      repo.undoPublish.mockResolvedValueOnce(ok({ok: false, reason: 'weird'}));
+      await expect(service.undoPublish(user, ID)).rejects.toThrow(ServiceUnavailableException);
+      expect(revalidation.revalidateInvitation).not.toHaveBeenCalled();
+    });
+  });
+
+  describe('switchTemplate', () => {
+    it('success returns the refreshed invitation and revalidates once', async () => {
+      repo.findById.mockResolvedValue(ok(row({status: 'published'})));
+      repo.switchTemplate.mockResolvedValue(ok({ok: true}));
+      const result = await service.switchTemplate(user, ID, 'garden');
+      expect(repo.switchTemplate).toHaveBeenCalledWith('jwt-1', ID, 'garden');
+      expect(result.ok).toBe(true);
+      expect(revalidation.revalidateInvitation).toHaveBeenCalledTimes(1);
+    });
+
+    it.each(['no_switches_left', 'tier_mismatch', 'template_not_found'])('maps %s through and never revalidates', async (reason) => {
+      repo.findById.mockResolvedValue(ok(row()));
+      repo.switchTemplate.mockResolvedValue(ok({ok: false, reason}));
+      await expect(service.switchTemplate(user, ID, 'garden')).resolves.toEqual({ok: false, reason});
+      expect(revalidation.revalidateInvitation).not.toHaveBeenCalled();
+    });
+
+    it('not_owner from SQL maps to not_found', async () => {
+      repo.findById.mockResolvedValue(ok(row()));
+      repo.switchTemplate.mockResolvedValue(ok({ok: false, reason: 'not_owner'}));
+      await expect(service.switchTemplate(user, ID, 'garden')).resolves.toEqual({ok: false, reason: 'not_found'});
+    });
+
+    it("someone else's invitation is not_found and never reaches the RPC", async () => {
+      repo.findById.mockResolvedValue(ok(null));
+      await expect(service.switchTemplate(user, ID, 'garden')).resolves.toEqual({ok: false, reason: 'not_found'});
+      expect(repo.switchTemplate).not.toHaveBeenCalled();
+    });
+
+    it('RPC error is a 503', async () => {
+      repo.findById.mockResolvedValue(ok(row()));
+      repo.switchTemplate.mockResolvedValue(fail('P0001'));
+      await expect(service.switchTemplate(user, ID, 'garden')).rejects.toThrow(ServiceUnavailableException);
     });
   });
 });

@@ -806,4 +806,149 @@ $$;
 
 reset role;
 
+-- ---------------------------------------------------------------------------
+-- Publish history (0012): undo_publish + switch_template.
+-- Fixtures are inserted as the database owner, then the functions run with
+-- the owner's / a stranger's JWT claims (same impersonation as section 5).
+-- ---------------------------------------------------------------------------
+select set_config('request.jwt.claims', '', true);
+
+insert into auth.users (id, aud, role)
+values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'authenticated', 'authenticated');
+insert into public.profiles (id, email, name, preferred_locale, signup_method)
+values ('aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', 'history-owner@example.com', 'History Owner', 'en', 'email');
+insert into auth.users (id, aud, role)
+values ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'authenticated', 'authenticated');
+insert into public.profiles (id, email, name, preferred_locale, signup_method)
+values ('bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb', 'history-stranger@example.com', 'History Stranger', 'en', 'email');
+
+insert into public.templates (id, slug, name_ar, name_en, name, tagline, tier, status, license_complete)
+values
+  ('cccccccc-cccc-cccc-cccc-ccccccccccc1', 'test-history-classic-b', 'ب', 'B',
+   jsonb_build_object('ar', 'ب', 'en', 'B'), jsonb_build_object('ar', '', 'en', ''), 'classic', 'live', true),
+  ('cccccccc-cccc-cccc-cccc-ccccccccccc2', 'test-history-premium', 'ج', 'C',
+   jsonb_build_object('ar', 'ج', 'en', 'C'), jsonb_build_object('ar', '', 'en', ''), 'premium', 'live', true),
+  ('cccccccc-cccc-cccc-cccc-ccccccccccc3', 'test-history-draft', 'د', 'D',
+   jsonb_build_object('ar', 'د', 'en', 'D'), jsonb_build_object('ar', '', 'en', ''), 'classic', 'draft', true);
+
+-- inv 1: two publishes (undo works, switch tests). inv 2: one publish only.
+insert into public.invitations (id, owner_id, template_id, slug, data, status)
+values
+  ('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+   '22222222-2222-2222-2222-222222222222', 'test-history-a', '{"v": 0}', 'draft'),
+  ('dddddddd-dddd-dddd-dddd-ddddddddddd2', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
+   '22222222-2222-2222-2222-222222222222', 'test-history-b', '{"v": 0}', 'draft');
+insert into public.invitation_entitlements
+  (invitation_id, tier, edits_allowed, edits_used, template_switches_left, online_until)
+values
+  ('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'classic', 15, 0, 1, now() + interval '30 days'),
+  ('dddddddd-dddd-dddd-dddd-ddddddddddd2', 'classic', 15, 0, 1, now() + interval '30 days');
+
+set local "request.jwt.claims" = '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa","role":"authenticated"}';
+
+do $$
+declare
+  r jsonb;
+begin
+  -- A draft is not live: undo reports expired by contract.
+  r := public.undo_publish('dddddddd-dddd-dddd-dddd-ddddddddddd1');
+  assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'expired',
+    'undo on a draft must report expired, got: ' || r::text;
+
+  -- inv 1: publish v1 then v2 (v1 is backdated: now() is constant in a transaction).
+  r := public.publish_invitation('dddddddd-dddd-dddd-dddd-ddddddddddd1', '{"v": 1}');
+  assert (r ->> 'ok') = 'true', 'publish v1 must succeed, got: ' || r::text;
+  update public.invitation_publishes set published_at = now() - interval '1 hour'
+  where invitation_id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1';
+  r := public.publish_invitation('dddddddd-dddd-dddd-dddd-ddddddddddd1', '{"v": 2}');
+  assert (r ->> 'ok') = 'true', 'publish v2 must succeed, got: ' || r::text;
+
+  -- inv 2: a single publish.
+  r := public.publish_invitation('dddddddd-dddd-dddd-dddd-ddddddddddd2', '{"v": 1}');
+  assert (r ->> 'ok') = 'true', 'publish on inv 2 must succeed, got: ' || r::text;
+
+  -- Undo restores v1, removes the latest row, keeps edits_used = 2.
+  r := public.undo_publish('dddddddd-dddd-dddd-dddd-ddddddddddd1');
+  assert (r ->> 'ok') = 'true', 'undo must succeed, got: ' || r::text;
+  assert (r -> 'published_at') is not null, 'undo must return the live snapshot published_at';
+  assert (select data from public.invitations where id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1') = '{"v": 1}'::jsonb,
+    'undo must restore the previous snapshot data';
+  assert (select count(*) from public.invitation_publishes
+          where invitation_id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1') = 1,
+    'undo must delete exactly the latest publish row';
+  assert (select edits_used from public.invitation_entitlements
+          where invitation_id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1') = 2,
+    'undo must not change edits_used';
+
+  -- One publish left -> nothing_to_undo (inv 1 now, inv 2 from the start).
+  r := public.undo_publish('dddddddd-dddd-dddd-dddd-ddddddddddd1');
+  assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'nothing_to_undo',
+    'one remaining publish must report nothing_to_undo, got: ' || r::text;
+  r := public.undo_publish('dddddddd-dddd-dddd-dddd-ddddddddddd2');
+  assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'nothing_to_undo',
+    'single publish must report nothing_to_undo, got: ' || r::text;
+
+  -- switch_template: unknown / non-live template.
+  r := public.switch_template('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'no-such-template');
+  assert (r ->> 'reason') = 'template_not_found', 'unknown slug must report template_not_found, got: ' || r::text;
+  r := public.switch_template('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'test-history-draft');
+  assert (r ->> 'reason') = 'template_not_found', 'draft template must report template_not_found, got: ' || r::text;
+
+  -- Same template: unchanged, nothing consumed.
+  r := public.switch_template('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'test-classic');
+  assert (r ->> 'ok') = 'true' and (r ->> 'unchanged') = 'true', 'same template must be unchanged, got: ' || r::text;
+  assert (select template_switches_left from public.invitation_entitlements
+          where invitation_id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1') = 1,
+    'unchanged switch must not consume a switch';
+
+  -- Other tier -> tier_mismatch (nothing consumed).
+  r := public.switch_template('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'test-history-premium');
+  assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'tier_mismatch', 'premium on classic must report tier_mismatch, got: ' || r::text;
+  assert (select template_switches_left from public.invitation_entitlements
+          where invitation_id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1') = 1,
+    'tier_mismatch must not consume a switch';
+
+  -- A real switch decrements and updates template_id.
+  r := public.switch_template('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'test-history-classic-b');
+  assert (r ->> 'ok') = 'true', 'switch must succeed, got: ' || r::text;
+  assert (select template_switches_left from public.invitation_entitlements
+          where invitation_id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1') = 0,
+    'switch must decrement template_switches_left';
+  assert (select template_id from public.invitations where id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1')
+         = 'cccccccc-cccc-cccc-cccc-ccccccccccc1',
+    'switch must update template_id';
+
+  -- No switches left.
+  r := public.switch_template('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'test-classic');
+  assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'no_switches_left', 'zero left must report no_switches_left, got: ' || r::text;
+
+  -- Unlimited (null) never decrements.
+  update public.invitation_entitlements set template_switches_left = null
+  where invitation_id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1';
+  r := public.switch_template('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'test-classic');
+  assert (r ->> 'ok') = 'true', 'unlimited switch must succeed, got: ' || r::text;
+  assert (select template_switches_left from public.invitation_entitlements
+          where invitation_id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1') is null,
+    'unlimited switches must stay null';
+end;
+$$;
+
+-- A stranger gets not_owner for both, and nothing changes.
+set local "request.jwt.claims" = '{"sub":"bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb","role":"authenticated"}';
+
+do $$
+declare
+  r jsonb;
+begin
+  r := public.undo_publish('dddddddd-dddd-dddd-dddd-ddddddddddd1');
+  assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'not_owner', 'stranger undo must be not_owner, got: ' || r::text;
+  r := public.switch_template('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'test-history-classic-b');
+  assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'not_owner', 'stranger switch must be not_owner, got: ' || r::text;
+  assert (select template_id from public.invitations where id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1')
+         = '22222222-2222-2222-2222-222222222222',
+    'a refused switch must leave template_id alone';
+end;
+$$;
+select set_config('request.jwt.claims', '', true);
+
 rollback;

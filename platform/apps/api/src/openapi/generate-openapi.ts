@@ -22,6 +22,8 @@ Object.assign(process.env, {
   MANUAL_PAYMENT_INSTRUCTIONS_JSON: '',
   PAYMENTS_MOCK_SECRET: 'openapi-dummy-mock-secret-at-least-32-chars',
   IP_HASH_SECRET: 'openapi-dummy-ip-hash-secret-at-least-32-ch',
+  WEB_REVALIDATE_URL: '',
+  REVALIDATE_SECRET: '',
   SWAGGER_ENABLED: 'true',
   LIFECYCLE_CRON_ENABLED: 'false',
   SENTRY_DSN: ''

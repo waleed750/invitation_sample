@@ -244,6 +244,20 @@
         ],
         "type": "object"
       },
+      "SwitchTemplateBody": {
+        "properties": {
+          "templateSlug": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "templateSlug"
+        ],
+        "type": "object"
+      },
       "UpdateInvitationBody": {
         "properties": {
           "data": {
@@ -5500,6 +5514,66 @@
           },
           "required": true
         },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Invitations"
+        ]
+      }
+    },
+    "/v1/invitations/{id}/switch-template": {
+      "post": {
+        "operationId": "InvitationsController_switchTemplate",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SwitchTemplateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Invitations"
+        ]
+      }
+    },
+    "/v1/invitations/{id}/undo-publish": {
+      "post": {
+        "operationId": "InvitationsController_undoPublish",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": ""

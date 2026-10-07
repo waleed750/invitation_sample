@@ -2,8 +2,9 @@ import {Body, Controller, Get, Headers, HttpCode, Param, Patch, Post} from '@nes
 import {Throttle} from '@nestjs/throttler';
 import {CurrentUser, type RequestUser} from '../common/decorators';
 import {
-  InvitationEditingService, InvitationIdParams, SlugParams, UpdateInvitationBody, UpdateSlugBody,
-  type InvitationDetail, type PublishInvitationResult, type SlugAvailability
+  InvitationEditingService, InvitationIdParams, SlugParams, SwitchTemplateBody, UpdateInvitationBody, UpdateSlugBody,
+  type InvitationDetail, type PublishInvitationResult, type SlugAvailability, type SwitchTemplateResult,
+  type UndoPublishResult
 } from './invitation-editing.service';
 import {InvitationsService, type InvitationSummary} from './invitations.service';
 
@@ -48,6 +49,22 @@ export class InvitationsController {
   @HttpCode(200)
   publish(@Param() params: InvitationIdParams, @CurrentUser() user: RequestUser): Promise<PublishInvitationResult> {
     return this.editing.publish(user, params.id);
+  }
+
+  @Post(':id/undo-publish')
+  @HttpCode(200)
+  undoPublish(@Param() params: InvitationIdParams, @CurrentUser() user: RequestUser): Promise<UndoPublishResult> {
+    return this.editing.undoPublish(user, params.id);
+  }
+
+  @Post(':id/switch-template')
+  @HttpCode(200)
+  switchTemplate(
+    @Param() params: InvitationIdParams,
+    @Body() body: SwitchTemplateBody,
+    @CurrentUser() user: RequestUser
+  ): Promise<SwitchTemplateResult> {
+    return this.editing.switchTemplate(user, params.id, body.templateSlug);
   }
 }
 

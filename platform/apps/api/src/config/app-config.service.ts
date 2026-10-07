@@ -86,6 +86,15 @@ export class AppConfigService {
     return this.required('LIFECYCLE_CRON_ENABLED');
   }
 
+  /** Web route to POST revalidation to; `undefined` = disabled. */
+  get webRevalidateUrl(): string | undefined {
+    return this.config.get<string | undefined>('WEB_REVALIDATE_URL');
+  }
+
+  get revalidateSecret(): string | undefined {
+    return this.config.get<string | undefined>('REVALIDATE_SECRET');
+  }
+
   get sentryDsn(): string | undefined {
     return this.required('SENTRY_DSN');
   }

@@ -76,11 +76,28 @@ const envSchema = z.object({
   PAYMENTS_MOCK_SECRET: z.string().min(32, 'PAYMENTS_MOCK_SECRET must be at least 32 characters'),
   // HMAC secret for guest IP hashing (server only, never returned). Raw IPs are never stored.
   IP_HASH_SECRET: z.string().min(32, 'IP_HASH_SECRET must be at least 32 characters'),
+  // Optional: blank/whitespace counts as unset (revalidation then only logs). Web route that revalidates a published page.
+  WEB_REVALIDATE_URL: z
+    .string()
+    .optional()
+    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim()))
+    .pipe(z.url('WEB_REVALIDATE_URL must be a valid URL').optional()),
+  // HMAC-SHA256 key for the revalidation webhook. Required when WEB_REVALIDATE_URL is set.
+  REVALIDATE_SECRET: z
+    .string()
+    .optional()
+    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
   SWAGGER_ENABLED: z.enum(['true', 'false']).default('false').transform((value) => value === 'true'),
   // Kill-switch for the daily lifecycle cron (B4). Off in tests via NODE_ENV,
   // but this flag also lets ops pause the job without a redeploy.
   LIFECYCLE_CRON_ENABLED: z.enum(['true', 'false']).default('true').transform((value) => value === 'true')
 }).superRefine((env, context) => {
+  if (env.WEB_REVALIDATE_URL !== undefined && (env.REVALIDATE_SECRET === undefined || env.REVALIDATE_SECRET.length < 32)) {
+    context.addIssue({
+      code: 'custom', path: ['REVALIDATE_SECRET'],
+      message: 'REVALIDATE_SECRET (at least 32 characters) is required when WEB_REVALIDATE_URL is set'
+    });
+  }
   if (env.NODE_ENV === 'production') {
     if (env.PAYMENTS_PROVIDER === 'mock') {
       context.addIssue({code: 'custom', path: ['PAYMENTS_PROVIDER'], message: 'mock payments are disabled in production'});

@@ -147,8 +147,11 @@ Each milestone is one brief → implement → review → commit cycle (Codex / o
 | `POST /v1/invitations/:id/undo-publish` | Republishes the previous snapshot. Does **not** use an edit. Needs a new SQL function. |
 | `POST /v1/invitations/:id/switch-template` | Uses `template_switches_left`. |
 
-- New module `RevalidationModule`: queue job → `POST {WEB_URL}/api/revalidate` with an HMAC header. Retried with backoff. The Next.js route is added in the same milestone.
-- Migration `0006`: `undo_publish()`, `switch_template()`.
+- **Built (migration `0012`, not `0006`):** `undo_publish()` (drops the latest publish row, restores `data` from the previous snapshot, edits unchanged) and `switch_template()` (live + same tier, `null` = unlimited).
+- **`RevalidationModule`** (`apps/api/src/revalidation/`): after a successful publish / undo-publish / switch-template the API calls `RevalidationService.revalidateInvitation(slug)`, fire-and-forget (no queue yet): 3 s timeout, 3 attempts, exponential backoff + jitter, never throws.
+  - Request: `POST {WEB_REVALIDATE_URL}` (env, blank = disabled, only logs), `content-type: application/json`, body `{"type":"invitation","slug":"<slug>"}`.
+  - Auth: header `x-signature` = hex `HMAC-SHA256(raw body, REVALIDATE_SECRET)` (env, 32+ chars, required when the URL is set). The web route must verify it over the raw body with a constant-time compare and answer 2xx.
+  - The Next.js route itself (`/api/revalidate`) is **not** built yet; it belongs to the web milestone.
 - **Gate:** integration tests prove a user can't edit or publish someone else's invitation, can't publish with 0 edits, and can't change the slug after publishing.
 
 ### B2 — Public invitation, RSVP, guestbook (M) · no blockers

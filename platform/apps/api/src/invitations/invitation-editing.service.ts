@@ -10,6 +10,7 @@ import {AppLogger} from '../common/app-logger';
 import {CLOCK, type Clock} from '../common/clock';
 import type {RequestUser} from '../common/decorators';
 import {isRecord} from '../common/type-guards';
+import {RevalidationService} from '../revalidation/revalidation.service';
 import {InvitationsRepository} from './invitations.repository';
 import {toEntitlement, type InvitationEntitlement} from './invitations.service';
 
@@ -19,6 +20,7 @@ export class InvitationIdParams extends createZodDto(invitationIdSchema) {}
 export class UpdateInvitationBody extends createZodDto(z.object({data: invitationData}).strict()) {}
 
 const slugField = z.string().min(1).max(120);
+export class SwitchTemplateBody extends createZodDto(z.object({templateSlug: z.string().min(1).max(120)}).strict()) {}
 export class UpdateSlugBody extends createZodDto(z.object({slug: slugField}).strict()) {}
 export class SlugParams extends createZodDto(z.object({slug: slugField})) {}
 
@@ -37,6 +39,14 @@ export interface InvitationDetail {
 export type PublishInvitationResult =
   | {ok: true; invitation: InvitationDetail}
   | {ok: false; reason: 'no_edits_left' | 'expired' | 'not_found'};
+
+export type UndoPublishResult =
+  | {ok: true; invitation: InvitationDetail}
+  | {ok: false; reason: 'nothing_to_undo' | 'expired' | 'not_found'};
+
+export type SwitchTemplateResult =
+  | {ok: true; invitation: InvitationDetail}
+  | {ok: false; reason: 'no_switches_left' | 'tier_mismatch' | 'template_not_found' | 'not_found'};
 
 export interface SlugAvailability {
   available: boolean;
@@ -80,7 +90,8 @@ export class InvitationEditingService {
   constructor(
     private readonly repository: InvitationsRepository,
     @Inject(CLOCK) private readonly clock: Clock,
-    private readonly logger: AppLogger
+    private readonly logger: AppLogger,
+    private readonly revalidation: RevalidationService
   ) {}
 
   /** `null` when RLS hides the row (or it does not exist). */
@@ -182,6 +193,51 @@ export class InvitationEditingService {
       }
       const fresh = await this.find(user, id);
       if (fresh === null) throw unavailable();
+      this.revalidation.revalidateInvitation(fresh.slug);
+      return {ok: true, invitation: fresh};
+    });
+  }
+
+  async undoPublish(user: RequestUser, id: string): Promise<UndoPublishResult> {
+    return this.guarded(async () => {
+      if ((await this.find(user, id)) === null) return {ok: false, reason: 'not_found'};
+      const {data, error} = envelope(await this.repository.undoPublish(user.jwt, id));
+      if (error !== null) {
+        this.logger.error('undo_publish failed (upstream error)');
+        throw unavailable();
+      }
+      if (!isRecord(data) || typeof data.ok !== 'boolean') throw unavailable();
+      if (!data.ok) {
+        if (data.reason === 'not_owner') return {ok: false, reason: 'not_found'};
+        if (data.reason === 'nothing_to_undo' || data.reason === 'expired') return {ok: false, reason: data.reason};
+        throw unavailable();
+      }
+      const fresh = await this.find(user, id);
+      if (fresh === null) throw unavailable();
+      this.revalidation.revalidateInvitation(fresh.slug);
+      return {ok: true, invitation: fresh};
+    });
+  }
+
+  async switchTemplate(user: RequestUser, id: string, templateSlug: string): Promise<SwitchTemplateResult> {
+    return this.guarded(async () => {
+      if ((await this.find(user, id)) === null) return {ok: false, reason: 'not_found'};
+      const {data, error} = envelope(await this.repository.switchTemplate(user.jwt, id, templateSlug));
+      if (error !== null) {
+        this.logger.error('switch_template failed (upstream error)');
+        throw unavailable();
+      }
+      if (!isRecord(data) || typeof data.ok !== 'boolean') throw unavailable();
+      if (!data.ok) {
+        if (data.reason === 'not_owner') return {ok: false, reason: 'not_found'};
+        if (data.reason === 'no_switches_left' || data.reason === 'tier_mismatch' || data.reason === 'template_not_found') {
+          return {ok: false, reason: data.reason};
+        }
+        throw unavailable();
+      }
+      const fresh = await this.find(user, id);
+      if (fresh === null) throw unavailable();
+      this.revalidation.revalidateInvitation(fresh.slug);
       return {ok: true, invitation: fresh};
     });
   }

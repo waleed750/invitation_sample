@@ -71,6 +71,18 @@ describe('validateEnv', () => {
     expect(() => validateEnv({...validEnv(), SWAGGER_ENABLED: 'yes'})).toThrow(/SWAGGER_ENABLED/);
   });
 
+  it('treats blank WEB_REVALIDATE_URL as disabled and needs a 32+ char secret when set', () => {
+    const blank = validateEnv({...validEnv(), WEB_REVALIDATE_URL: '  ', REVALIDATE_SECRET: ''});
+    expect(blank.WEB_REVALIDATE_URL).toBeUndefined();
+    expect(blank.REVALIDATE_SECRET).toBeUndefined();
+    const url = 'https://example.com/api/revalidate';
+    expect(() => validateEnv({...validEnv(), WEB_REVALIDATE_URL: url})).toThrow(/REVALIDATE_SECRET/);
+    expect(() => validateEnv({...validEnv(), WEB_REVALIDATE_URL: url, REVALIDATE_SECRET: 'short'})).toThrow(/REVALIDATE_SECRET/);
+    expect(() => validateEnv({...validEnv(), WEB_REVALIDATE_URL: 'nope', REVALIDATE_SECRET: 'x'.repeat(32)})).toThrow(/WEB_REVALIDATE_URL/);
+    const ok = validateEnv({...validEnv(), WEB_REVALIDATE_URL: url, REVALIDATE_SECRET: 'x'.repeat(32)});
+    expect(ok.WEB_REVALIDATE_URL).toBe(url);
+  });
+
   it('rejects the mock payment provider in production', () => {
     expect(() => validateEnv({...validEnv(), NODE_ENV: 'production'})).toThrow(/mock payments are disabled in production/);
   });

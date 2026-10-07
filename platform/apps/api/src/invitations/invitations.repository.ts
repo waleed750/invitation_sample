@@ -47,6 +47,16 @@ export class InvitationsRepository {
     return this.supabase.forUser(jwt).rpc('publish_invitation', {p_invitation_id: id, p_data: data});
   }
 
+  /** `undo_publish(id)` RPC (0012). `authenticated` may execute it; ownership is checked in SQL via auth.uid(). */
+  async undoPublish(jwt: string, id: string): Promise<unknown> {
+    return this.supabase.forUser(jwt).rpc('undo_publish', {p_invitation_id: id});
+  }
+
+  /** `switch_template(id, slug)` RPC (0012). Same privilege model as `publish`. */
+  async switchTemplate(jwt: string, id: string, templateSlug: string): Promise<unknown> {
+    return this.supabase.forUser(jwt).rpc('switch_template', {p_invitation_id: id, p_template_slug: templateSlug});
+  }
+
   /**
    * Which of `slugs` are already used by any invitation (drafts included). Service role, because RLS hides
    * other people's drafts; the caller only ever gets the slug strings back, never any invitation data.

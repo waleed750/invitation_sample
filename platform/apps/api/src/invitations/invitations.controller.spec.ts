@@ -26,6 +26,8 @@ describe('InvitationsController', () => {
             updateData: jest.fn().mockResolvedValue({updatedAt: 'u2'}),
             updateSlug: jest.fn().mockResolvedValue({slug: 'new-slug'}),
             publish: jest.fn().mockResolvedValue({ok: false, reason: 'no_edits_left'}),
+            undoPublish: jest.fn().mockResolvedValue({ok: false, reason: 'nothing_to_undo'}),
+            switchTemplate: jest.fn().mockResolvedValue({ok: false, reason: 'no_switches_left'}),
             availability: jest.fn().mockResolvedValue({available: true, suggestions: []})
           }
         }
@@ -64,6 +66,17 @@ describe('InvitationsController', () => {
   it('publishes', async () => {
     expect(await controller.publish({id: 'i1'} as any, user)).toEqual({ok: false, reason: 'no_edits_left'});
     expect(editing.publish).toHaveBeenCalledWith(user, 'i1');
+  });
+
+  it('undoes the last publish', async () => {
+    expect(await controller.undoPublish({id: 'i1'} as any, user)).toEqual({ok: false, reason: 'nothing_to_undo'});
+    expect(editing.undoPublish).toHaveBeenCalledWith(user, 'i1');
+  });
+
+  it('switches template', async () => {
+    expect(await controller.switchTemplate({id: 'i1'} as any, {templateSlug: 'garden'} as any, user))
+      .toEqual({ok: false, reason: 'no_switches_left'});
+    expect(editing.switchTemplate).toHaveBeenCalledWith(user, 'i1', 'garden');
   });
 
   it('checks slug availability', async () => {
