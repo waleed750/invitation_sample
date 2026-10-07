@@ -920,17 +920,31 @@ begin
   assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'expired',
     'undo on a draft must report expired, got: ' || r::text;
 
-  -- inv 1: publish v1 then v2 (v1 is backdated: now() is constant in a transaction).
-  r := public.publish_invitation('dddddddd-dddd-dddd-dddd-ddddddddddd1', '{"v": 1}');
-  assert (r ->> 'ok') = 'true', 'publish v1 must succeed, got: ' || r::text;
-  update public.invitation_publishes set published_at = now() - interval '1 hour'
+  -- Published state is built as fixtures (the same rows publish_invitation writes):
+  -- under psql the session user is the table owner, so invitations_guard cannot
+  -- tell a SECURITY DEFINER status flip from a client write (in production the
+  -- session user is the pooler role). Claims are cleared while the fixtures
+  -- are written, then restored for the calls under test.
+  perform set_config('request.jwt.claims', '', true);
+  update public.invitations
+  set status = 'published', published_at = now() - interval '1 hour', data = '{"v": 2}'
+  where id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1';
+  update public.invitations
+  set status = 'published', published_at = now() - interval '1 hour', data = '{"v": 1}'
+  where id = 'dddddddd-dddd-dddd-dddd-ddddddddddd2';
+  insert into public.invitation_publishes (invitation_id, published_by, published_at, snapshot)
+  values
+    ('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', now() - interval '1 hour',
+     '{"data": {"v": 1}, "edits_used": 1, "edits_allowed": 15}'::jsonb),
+    ('dddddddd-dddd-dddd-dddd-ddddddddddd1', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', now(),
+     '{"data": {"v": 2}, "edits_used": 2, "edits_allowed": 15}'::jsonb),
+    ('dddddddd-dddd-dddd-dddd-ddddddddddd2', 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa', now(),
+     '{"data": {"v": 1}, "edits_used": 1, "edits_allowed": 15}'::jsonb);
+  update public.invitation_entitlements set edits_used = 2
   where invitation_id = 'dddddddd-dddd-dddd-dddd-ddddddddddd1';
-  r := public.publish_invitation('dddddddd-dddd-dddd-dddd-ddddddddddd1', '{"v": 2}');
-  assert (r ->> 'ok') = 'true', 'publish v2 must succeed, got: ' || r::text;
-
-  -- inv 2: a single publish.
-  r := public.publish_invitation('dddddddd-dddd-dddd-dddd-ddddddddddd2', '{"v": 1}');
-  assert (r ->> 'ok') = 'true', 'publish on inv 2 must succeed, got: ' || r::text;
+  update public.invitation_entitlements set edits_used = 1
+  where invitation_id = 'dddddddd-dddd-dddd-dddd-ddddddddddd2';
+  perform set_config('request.jwt.claims', '{"sub":"aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa","role":"authenticated"}', true);
 
   -- Undo restores v1, removes the latest row, keeps edits_used = 2.
   r := public.undo_publish('dddddddd-dddd-dddd-dddd-ddddddddddd1');
