@@ -1,14 +1,15 @@
+import './instrument';
 import {NestFactory} from '@nestjs/core';
 import {NestExpressApplication} from '@nestjs/platform-express';
 import helmet from 'helmet';
 import {AppModule} from './app.module';
-import {AppLogger} from './common/app-logger';
+import {Logger} from 'nestjs-pino';
 import {AppConfigService} from './config/app-config.service';
 import {setupApp} from './setup-app';
 
 async function bootstrap(): Promise<void> {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {bufferLogs: true});
-  const logger = app.get(AppLogger);
+  const logger = app.get(Logger);
   app.useLogger(logger);
   const config = app.get(AppConfigService);
 

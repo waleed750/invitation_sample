@@ -1,40 +1,42 @@
-import {ConsoleLogger, Injectable} from '@nestjs/common';
-import {getRequestId} from './request-context';
+import {Injectable, Optional} from '@nestjs/common';
+import {PinoLogger} from 'nestjs-pino';
 
 /**
- * Console logger that appends the current request id to every line emitted
- * while handling a request. Register with `app.useLogger(new AppLogger())`
- * and enter the context in `RequestIdMiddleware`.
+ * Thin facade over pino used by services and the exception filter. Lines
+ * inherit the per-request pino child logger (so they carry the request id and
+ * are redacted) via nestjs-pino's async-local storage.
  */
 @Injectable()
-export class AppLogger extends ConsoleLogger {
-  private contextWithRequestId(context?: string): string | undefined {
-    const requestId = getRequestId();
-    if (requestId === undefined) return context;
-    return context === undefined || context === '' ? `requestId=${requestId}` : `${context} requestId=${requestId}`;
+export class AppLogger {
+  /** `pino` is always present in the running app (global `LoggerModule`); it is
+   * optional only so specs can instantiate services without wiring logging. */
+  constructor(@Optional() private readonly pino?: PinoLogger) {}
+
+  log(message: unknown, context?: string): void {
+    this.pino?.info(this.fields(context), String(message));
   }
 
-  override log(message: unknown, context?: string): void {
-    super.log(message, this.contextWithRequestId(context));
+  error(message: unknown, stack?: string, context?: string): void {
+    this.pino?.error(this.fields(context, stack), String(message));
   }
 
-  override error(message: unknown, stack?: string, context?: string): void {
-    super.error(message, stack, this.contextWithRequestId(context));
+  warn(message: unknown, context?: string): void {
+    this.pino?.warn(this.fields(context), String(message));
   }
 
-  override warn(message: unknown, context?: string): void {
-    super.warn(message, this.contextWithRequestId(context));
+  debug(message: unknown, context?: string): void {
+    this.pino?.debug(this.fields(context), String(message));
   }
 
-  override debug(message: unknown, context?: string): void {
-    super.debug(message, this.contextWithRequestId(context));
+  verbose(message: unknown, context?: string): void {
+    this.pino?.trace(this.fields(context), String(message));
   }
 
-  override verbose(message: unknown, context?: string): void {
-    super.verbose(message, this.contextWithRequestId(context));
+  fatal(message: unknown, context?: string): void {
+    this.pino?.fatal(this.fields(context), String(message));
   }
 
-  override fatal(message: unknown, context?: string): void {
-    super.fatal(message, this.contextWithRequestId(context));
+  private fields(context?: string, stack?: string): Record<string, string> {
+    return {...(context === undefined ? {} : {context}), ...(stack === undefined ? {} : {stack})};
   }
 }

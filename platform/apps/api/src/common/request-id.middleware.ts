@@ -1,37 +1,25 @@
 import {Injectable, type NestMiddleware} from '@nestjs/common';
-import {randomUUID} from 'node:crypto';
 import type {NextFunction, Request, Response} from 'express';
-import {AppLogger} from './app-logger';
+import {REQUEST_ID_HEADER, resolveRequestId} from './request-id';
 import {runWithRequestContext} from './request-context';
 
-export const REQUEST_ID_HEADER = 'x-request-id';
+export {REQUEST_ID_HEADER};
 
 export interface RequestWithId extends Request {
   requestId?: string;
 }
 
 /**
- * Reuses an incoming `x-request-id` (so callers can trace their own calls) or
- * generates one. The id is echoed on the response, stored on the request for
- * the exception filter, and installed as the logging context for the whole
- * request (see `AppLogger`). Only method/URL/status/duration are logged —
- * never headers, tokens, keys or bodies.
+ * Resolves the request id (shared with pino-http, see `resolveRequestId`),
+ * echoes it on the response, stores it on the request for the exception
+ * filter, and installs it as the request context. Request/response logging
+ * itself is done by pino-http (headers redacted, never bodies).
  */
 @Injectable()
 export class RequestIdMiddleware implements NestMiddleware {
-  constructor(private readonly logger: AppLogger) {}
-
   use(req: RequestWithId, res: Response, next: NextFunction): void {
-    const incoming = req.headers[REQUEST_ID_HEADER];
-    const candidate = Array.isArray(incoming) ? incoming[0] : incoming;
-    const requestId = candidate !== undefined && candidate.trim() !== '' ? candidate.trim() : randomUUID();
-    req.requestId = requestId;
-    res.setHeader(REQUEST_ID_HEADER, requestId);
+    const requestId = resolveRequestId(req, res);
     runWithRequestContext({requestId}, () => {
-      const startedAt = Date.now();
-      res.on('finish', () => {
-        this.logger.log(`${req.method} ${req.originalUrl} ${String(res.statusCode)} ${String(Date.now() - startedAt)}ms`);
-      });
       next();
     });
   }

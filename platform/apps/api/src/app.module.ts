@@ -1,11 +1,14 @@
 import {MiddlewareConsumer, Module, type NestModule} from '@nestjs/common';
 import {APP_FILTER, APP_GUARD} from '@nestjs/core';
 import {ThrottlerGuard} from '@nestjs/throttler';
+import {LoggerModule} from 'nestjs-pino';
 import {AuthModule, AuthGuard, RolesGuard} from './auth';
 import {AppLogger} from './common/app-logger';
+import {buildLoggerParams} from './common/logging';
 import {HttpExceptionFilter} from './common/http-exception.filter';
 import {RequestIdMiddleware} from './common/request-id.middleware';
 import {AppConfigModule} from './config/app-config.module';
+import {AppConfigService} from './config/app-config.service';
 import {EntitlementsModule} from './entitlements/entitlements.module';
 import {HealthModule} from './health/health.module';
 import {MeModule} from './me/me.module';
@@ -29,7 +32,12 @@ export {AuthGuard, RolesGuard};
  */
 @Module({
   imports: [
-    AppConfigModule, SupabaseModule, RateLimitModule, AuthModule, HealthModule, MeModule, EntitlementsModule,
+    AppConfigModule,
+    LoggerModule.forRootAsync({
+      inject: [AppConfigService],
+      useFactory: (config: AppConfigService) => buildLoggerParams(config.nodeEnv)
+    }),
+    SupabaseModule, RateLimitModule, AuthModule, HealthModule, MeModule, EntitlementsModule,
     PaymentsModule, TemplatesModule, CheckoutModule, OrdersModule, InvitationsModule, PointsModule
   ],
   providers: [

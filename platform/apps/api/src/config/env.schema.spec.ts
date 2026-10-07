@@ -77,4 +77,21 @@ describe('validateEnv', () => {
   it('requires a strong mock webhook secret', () => {
     expect(() => validateEnv({...validEnv(), PAYMENTS_MOCK_SECRET: 'short'})).toThrow(/PAYMENTS_MOCK_SECRET/);
   });
+
+  it('treats a blank SENTRY_DSN as unset and accepts a valid one', () => {
+    expect(validateEnv(validEnv()).SENTRY_DSN).toBeUndefined();
+    expect(validateEnv({...validEnv(), SENTRY_DSN: '   '}).SENTRY_DSN).toBeUndefined();
+    const dsn = 'https://abc123@o1.ingest.sentry.io/42';
+    expect(validateEnv({...validEnv(), SENTRY_DSN: dsn}).SENTRY_DSN).toBe(dsn);
+  });
+
+  it('rejects a malformed SENTRY_DSN', () => {
+    expect(() => validateEnv({...validEnv(), SENTRY_DSN: 'not-a-dsn'})).toThrow(/SENTRY_DSN/);
+  });
+
+  it('defaults SENTRY_ENVIRONMENT from NODE_ENV and honours an override', () => {
+    expect(validateEnv(validEnv()).SENTRY_ENVIRONMENT).toBe('test');
+    expect(validateEnv({...validEnv(), SENTRY_ENVIRONMENT: '  '}).SENTRY_ENVIRONMENT).toBe('test');
+    expect(validateEnv({...validEnv(), SENTRY_ENVIRONMENT: 'staging'}).SENTRY_ENVIRONMENT).toBe('staging');
+  });
 });

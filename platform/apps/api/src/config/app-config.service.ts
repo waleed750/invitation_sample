@@ -72,4 +72,12 @@ export class AppConfigService {
   get swaggerEnabled(): boolean {
     return this.required('SWAGGER_ENABLED');
   }
+
+  get sentryDsn(): string | undefined {
+    return this.required('SENTRY_DSN');
+  }
+
+  get sentryEnvironment(): string {
+    return this.required('SENTRY_ENVIRONMENT');
+  }
 }

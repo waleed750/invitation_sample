@@ -14,6 +14,7 @@
     "test": "npm test --workspaces --if-present",
     "lint": "npm run lint --workspace @platform/web && npm run lint --workspace @platform/api",
     "typecheck": "npm run typecheck --workspaces --if-present",
-    "check:i18n": "npm run check:i18n --workspace @platform/web"
+    "check:i18n": "npm run check:i18n --workspace @platform/web",
+    "gen:api-client": "npm run build --workspace @platform/shared && npm run openapi --workspace @platform/api && npm run generate --workspace @platform/api-client"
   }
 }

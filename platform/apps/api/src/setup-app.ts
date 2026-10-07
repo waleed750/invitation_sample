@@ -1,7 +1,7 @@
 import {RequestMethod, type INestApplication} from '@nestjs/common';
 import type {NestExpressApplication} from '@nestjs/platform-express';
 import type {Request, Response} from 'express';
-import {DocumentBuilder, SwaggerModule} from '@nestjs/swagger';
+import {DocumentBuilder, SwaggerModule, type OpenAPIObject} from '@nestjs/swagger';
 import {ZodValidationPipe} from 'nestjs-zod';
 import {version} from '../package.json';
 import {AppConfigService} from './config/app-config.service';
@@ -32,15 +32,19 @@ export function setupApp(app: INestApplication): void {
   app.setGlobalPrefix('v1', {exclude: GLOBAL_PREFIX_EXCLUDES});
   app.useGlobalPipes(new ZodValidationPipe());
   if (config.swaggerEnabled) {
-    const document = SwaggerModule.createDocument(
-      app,
-      new DocumentBuilder()
-        .setTitle('Invitation Platform API')
-        .setDescription('REST API (v1). Bearer <Supabase JWT> on every route unless marked public.')
-        .setVersion(version)
-        .addBearerAuth()
-        .build()
-    );
-    SwaggerModule.setup('docs', app, document);
+    SwaggerModule.setup('docs', app, buildOpenApiDocument(app));
   }
+}
+
+/** The OpenAPI document served at `/docs-json` and written by `npm run openapi`. */
+export function buildOpenApiDocument(app: INestApplication): OpenAPIObject {
+  return SwaggerModule.createDocument(
+    app,
+    new DocumentBuilder()
+      .setTitle('Invitation Platform API')
+      .setDescription('REST API (v1). Bearer <Supabase JWT> on every route unless marked public.')
+      .setVersion(version)
+      .addBearerAuth()
+      .build()
+  );
 }

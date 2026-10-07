@@ -33,6 +33,17 @@ const envSchema = z.object({
     .string()
     .optional()
     .transform((value) => (value === undefined || value.trim() === '' ? undefined : value)),
+  // Optional: blank/whitespace counts as unset. Sentry only initialises when a DSN is set.
+  SENTRY_DSN: z
+    .string()
+    .optional()
+    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim()))
+    .pipe(z.url('SENTRY_DSN must be a valid URL').optional()),
+  // Optional label for Sentry events; blank falls back to NODE_ENV (see the final transform).
+  SENTRY_ENVIRONMENT: z
+    .string()
+    .optional()
+    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
   THROTTLE_TTL_MS: z.coerce.number().int().positive().default(60000),
   THROTTLE_LIMIT: z.coerce.number().int().positive().default(100),
   PAYMENTS_PROVIDER: z.literal('mock').default('mock'),
@@ -42,7 +53,7 @@ const envSchema = z.object({
   if (env.NODE_ENV === 'production') {
     context.addIssue({code: 'custom', path: ['PAYMENTS_PROVIDER'], message: 'mock payments are disabled in production'});
   }
-});
+}).transform((env) => ({...env, SENTRY_ENVIRONMENT: env.SENTRY_ENVIRONMENT ?? env.NODE_ENV}));
 
 export type AppEnv = z.output<typeof envSchema>;
 

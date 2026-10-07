@@ -6,3 +6,5 @@ dist/
 *.tsbuildinfo
 .demo-data/
 apps/web/public/assets/drafts/
+supabase/.temp/
+supabase/.branches/

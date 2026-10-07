@@ -2,6 +2,7 @@ import {ArgumentsHost, Catch, ExceptionFilter, HttpException, HttpStatus, Inject
 import {randomUUID} from 'node:crypto';
 import type {Response} from 'express';
 import {AppConfigService} from '../config/app-config.service';
+import {reportServerError} from '../observability/sentry';
 import {AppLogger} from './app-logger';
 import {isRecord} from './type-guards';
 import {REQUEST_ID_HEADER, type RequestWithId} from './request-id.middleware';
@@ -72,6 +73,8 @@ export class HttpExceptionFilter implements ExceptionFilter {
     // Server-side only: full detail (including stack) stays in our logs.
     const detail = exception instanceof Error ? (exception.stack ?? exception.message) : String(exception);
     this.logger.error(`${req.method} ${req.url} -> ${String(status)} (${code}): ${detail}`);
+
+    reportServerError(exception, status, requestId);
 
     res.status(status).setHeader(REQUEST_ID_HEADER, requestId).json({error: {code, message, requestId}});
   }
