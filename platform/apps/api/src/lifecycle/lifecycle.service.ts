@@ -18,6 +18,7 @@ export interface LifecycleSummary {
   purged: number;
   archived: number;
   pointsExpired: number;
+  ordersExpired: number;
   errors: string[];
 }
 
@@ -48,7 +49,8 @@ function toCount(data: unknown, step: string): number {
 
 /**
  * Daily lifecycle job (B4, PLATFORM_PLAN §16.3). Step order is fixed:
- * reminders (notify, then mark) → end expired → purge/archive → expire points.
+ * reminders (notify, then mark) → end expired → purge/archive → expire points
+ * → expire unpaid manual orders (72 h, B7a).
  * One failing step never stops the others; failures are logged (no PII) and
  * collected in `summary.errors`. Time comes from the caller (`CLOCK`), never
  * `Date.now()`, so fixed-clock specs cover every transition.
@@ -62,11 +64,12 @@ export class LifecycleService {
   ) {}
 
   async runDaily(now: Date): Promise<LifecycleSummary> {
-    const summary: LifecycleSummary = {reminded: 0, ended: 0, purged: 0, archived: 0, pointsExpired: 0, errors: []};
+    const summary: LifecycleSummary = {reminded: 0, ended: 0, purged: 0, archived: 0, pointsExpired: 0, ordersExpired: 0, errors: []};
     await this.sendReminders(now, summary);
     await this.endExpired(now, summary);
     await this.purgeAndArchive(now, summary);
     await this.expirePoints(now, summary);
+    await this.expireStaleOrders(summary);
     return summary;
   }
 
@@ -126,6 +129,15 @@ export class LifecycleService {
     } catch {
       this.logger.error('lifecycle expire_points step failed');
       summary.errors.push('expire_points');
+    }
+  }
+
+  private async expireStaleOrders(summary: LifecycleSummary): Promise<void> {
+    try {
+      summary.ordersExpired = toCount(envelopeData(await this.repository.expireStaleManualOrdersAsServiceRole(), 'expire_orders'), 'expire_orders');
+    } catch {
+      this.logger.error('lifecycle expire_orders step failed');
+      summary.errors.push('expire_orders');
     }
   }
 }

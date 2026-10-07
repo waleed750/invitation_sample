@@ -14,6 +14,7 @@ function setup(overrides: {
   end?: unknown;
   purge?: unknown;
   expire?: unknown;
+  orders?: unknown;
   notify?: (ownerId: string, invitationId: string, onlineUntil: Date) => Promise<void>;
 } = {}) {
   const calls: string[] = [];
@@ -40,6 +41,11 @@ function setup(overrides: {
       calls.push(`expire:${now.toISOString()}`);
       if (overrides.expire instanceof Error) throw overrides.expire;
       return ok(overrides.expire ?? 0);
+    }),
+    expireStaleManualOrdersAsServiceRole: jest.fn(async () => {
+      calls.push('orders');
+      if (overrides.orders instanceof Error) throw overrides.orders;
+      return ok(overrides.orders ?? 0);
     })
   } as unknown as LifecycleRepository;
   const notifications = {
@@ -56,15 +62,24 @@ function setup(overrides: {
 const REMINDER_ROW = {invitation_id: 'inv-1', owner_id: 'owner-1', online_until: '2026-06-07T00:00:00.000Z'};
 
 describe('LifecycleService.runDaily', () => {
+  it('records a failing manual-order expiry without hiding earlier results', async () => {
+    const {service} = setup({end: 1, orders: new Error('db down')});
+    const summary = await service.runDaily(NOW);
+    expect(summary.ended).toBe(1);
+    expect(summary.ordersExpired).toBe(0);
+    expect(summary.errors).toEqual(['expire_orders']);
+  });
+
   it('runs the steps in order with the given now and aggregates the summary', async () => {
     const {service, calls} = setup({
       due: [REMINDER_ROW, {invitation_id: 'inv-2', owner_id: 'owner-2', online_until: '2026-06-07T12:00:00.000Z'}],
       end: 3,
       purge: {purged: 4, archived: 2},
-      expire: 5
+      expire: 5,
+      orders: 6
     });
     const summary = await service.runDaily(NOW);
-    expect(summary).toEqual({reminded: 2, ended: 3, purged: 4, archived: 2, pointsExpired: 5, errors: []});
+    expect(summary).toEqual({reminded: 2, ended: 3, purged: 4, archived: 2, pointsExpired: 5, ordersExpired: 6, errors: []});
     expect(calls).toEqual([
       `due:${NOW.toISOString()}`,
       'notify:inv-1',
@@ -73,7 +88,8 @@ describe('LifecycleService.runDaily', () => {
       `mark:inv-2:${NOW.toISOString()}`,
       `end:${NOW.toISOString()}`,
       `purge:${NOW.toISOString()}`,
-      `expire:${NOW.toISOString()}`
+      `expire:${NOW.toISOString()}`,
+      'orders'
     ]);
   });
 
@@ -100,7 +116,8 @@ describe('LifecycleService.runDaily', () => {
       expire: 2
     });
     const summary = await service.runDaily(NOW);
-    expect(summary).toEqual({reminded: 0, ended: 0, purged: 1, archived: 1, pointsExpired: 2, errors: ['end']});
+    expect(summary).toEqual({reminded: 0, ended: 0, purged: 1, archived: 1, pointsExpired: 2, ordersExpired: 0, errors: ['end']});
+    expect(repository.expireStaleManualOrdersAsServiceRole).toHaveBeenCalledTimes(1);
     expect(repository.purgeAndArchiveAsServiceRole).toHaveBeenCalledWith(NOW);
     expect(repository.expirePointsAsServiceRole).toHaveBeenCalledWith(NOW);
     expect(logger.error).toHaveBeenCalledWith('lifecycle end step failed');
