@@ -17,6 +17,8 @@
 --   4. refund_order() reverses points and recomputes counters
 --   5. assert_can_publish() boundary: edits_used = edits_allowed, expiry
 --   6. anon cannot select a draft invitation (but sees published ones)
+--   7. prices: EGP tier defaults seeded, public read of active rows, no client
+--      writes; a non-EGP paid order earns 0 points
 
 begin;
 
@@ -81,14 +83,14 @@ values (
 )
 on conflict (id) do update set status = 'live';
 
--- Order 1: first classic order, EGP 1299. Event 3 weeks out so the
+-- Order 1: first classic order, EGP 1299 (amount_minor 129900). Event 3 weeks out so the
 -- "now + 6 months" leg wins over the "event + 14 days" floor.
-insert into public.orders (id, user_id, template_id, tier, kind, amount_egp, provider, status)
+insert into public.orders (id, user_id, template_id, tier, kind, amount_minor, currency, provider, status)
 values (
   '33333333-3333-3333-3333-333333333333',
   '11111111-1111-1111-1111-111111111111',
   '22222222-2222-2222-2222-222222222222',
-  'classic', 'new', 1299.00, 'manual', 'pending'
+  'classic', 'new', 129900, 'EGP', 'manual', 'pending'
 )
 on conflict (id) do update set status = 'pending', paid_at = null, refunded_at = null;
 
@@ -182,12 +184,12 @@ $$;
 -- 3. Orders 2 + 3: silver at 2 purchases; silver 1.10x on the 3rd.
 -- ---------------------------------------------------------------------------
 
-insert into public.orders (id, user_id, template_id, tier, kind, amount_egp, provider, status)
+insert into public.orders (id, user_id, template_id, tier, kind, amount_minor, currency, provider, status)
 values (
   '55555555-5555-5555-5555-555555555555',
   '11111111-1111-1111-1111-111111111111',
   '22222222-2222-2222-2222-222222222222',
-  'classic', 'new', 1299.00, 'manual', 'pending'
+  'classic', 'new', 129900, 'EGP', 'manual', 'pending'
 )
 on conflict (id) do update set status = 'pending', paid_at = null, refunded_at = null;
 
@@ -203,12 +205,12 @@ values (
 )
 on conflict (id) do update set status = 'draft', published_at = null;
 
-insert into public.orders (id, user_id, template_id, tier, kind, amount_egp, provider, status)
+insert into public.orders (id, user_id, template_id, tier, kind, amount_minor, currency, provider, status)
 values (
   '77777777-7777-7777-7777-777777777777',
   '11111111-1111-1111-1111-111111111111',
   '22222222-2222-2222-2222-222222222222',
-  'classic', 'new', 1299.00, 'manual', 'pending'
+  'classic', 'new', 129900, 'EGP', 'manual', 'pending'
 )
 on conflict (id) do update set status = 'pending', paid_at = null, refunded_at = null;
 
@@ -282,6 +284,33 @@ begin
 end;
 $$;
 
+-- 4b. A non-EGP paid order earns 0 points (TODO(B14) in fulfill_paid_order).
+insert into public.orders (id, user_id, template_id, tier, kind, amount_minor, currency, provider, status)
+values (
+  '99999999-9999-9999-9999-999999999999',
+  '11111111-1111-1111-1111-111111111111',
+  '22222222-2222-2222-2222-222222222222',
+  'classic', 'addon', 500000, 'USD', 'manual', 'pending'
+);
+
+do $$
+declare
+  r jsonb;
+begin
+  r := public.fulfill_paid_order('99999999-9999-9999-9999-999999999999');
+  assert (r ->> 'ok') = 'true', 'USD order must fulfill, got: ' || r::text;
+  assert (select points_earned from public.orders
+          where id = '99999999-9999-9999-9999-999999999999') = 0,
+    'non-EGP order must earn 0 points';
+  assert not exists (select 1 from public.points_ledger
+                     where order_id = '99999999-9999-9999-9999-999999999999'),
+    'non-EGP order must write no ledger rows';
+  assert (select points_balance from public.profiles
+          where id = '11111111-1111-1111-1111-111111111111') = 179 + 141,
+    'non-EGP order must not change the points balance';
+end;
+$$;
+
 reset role;
 
 -- ---------------------------------------------------------------------------
@@ -351,6 +380,100 @@ begin
 
   select count(*) into v_all from public.invitations;
   assert v_all = 1, 'anon must see exactly the one published invitation';
+end;
+$$;
+
+reset role;
+
+-- ---------------------------------------------------------------------------
+-- 7. prices: seeded EGP tier defaults, public read, no client writes.
+-- ---------------------------------------------------------------------------
+
+do $$
+begin
+  assert (select amount_minor from public.prices
+          where template_id is null and tier = 'save_the_date' and currency = 'EGP' and active) = 49900,
+    'save_the_date EGP default must be 49900';
+  assert (select amount_minor from public.prices
+          where template_id is null and tier = 'classic' and currency = 'EGP' and active) = 129900,
+    'classic EGP default must be 129900';
+  assert (select amount_minor from public.prices
+          where template_id is null and tier = 'premium' and currency = 'EGP' and active) = 249900,
+    'premium EGP default must be 249900';
+end;
+$$;
+
+-- Only one active row per (template, tier, currency).
+do $$
+begin
+  begin
+    insert into public.prices (template_id, tier, currency, amount_minor)
+    values (null, 'classic', 'EGP', 1);
+    assert false, 'duplicate active tier default must be rejected';
+  exception when unique_violation then
+    null;
+  end;
+end;
+$$;
+
+-- A template-specific price plus an inactive one (invisible to clients).
+insert into public.prices (template_id, tier, currency, amount_minor, active)
+values
+  ('22222222-2222-2222-2222-222222222222', 'classic', 'EGP', 99900, true),
+  ('22222222-2222-2222-2222-222222222222', 'premium', 'EGP', 1000, false);
+
+set local role anon;
+
+do $$
+begin
+  assert (select count(*) from public.prices
+          where template_id = '22222222-2222-2222-2222-222222222222' and active) = 1,
+    'anon must read the active template price';
+  assert (select amount_minor from public.prices
+          where template_id = '22222222-2222-2222-2222-222222222222' and tier = 'classic') = 99900,
+    'anon must read the template classic price';
+  assert (select count(*) from public.prices where not active) = 0,
+    'anon must not see inactive prices';
+
+  begin
+    insert into public.prices (template_id, tier, currency, amount_minor)
+    values (null, 'classic', 'USD', 9900);
+    assert false, 'anon must not insert prices';
+  exception when insufficient_privilege then
+    null;
+  end;
+
+  begin
+    update public.prices set amount_minor = 1;
+    assert false, 'anon must not update prices';
+  exception when insufficient_privilege then
+    null;
+  end;
+end;
+$$;
+
+reset role;
+set local role authenticated;
+
+do $$
+begin
+  assert (select count(*) from public.prices where active) >= 4,
+    'authenticated must read active prices';
+
+  begin
+    insert into public.prices (template_id, tier, currency, amount_minor)
+    values (null, 'classic', 'USD', 9900);
+    assert false, 'authenticated must not insert prices';
+  exception when insufficient_privilege then
+    null;
+  end;
+
+  begin
+    update public.prices set amount_minor = 1;
+    assert false, 'authenticated must not update prices';
+  exception when insufficient_privilege then
+    null;
+  end;
 end;
 $$;
 

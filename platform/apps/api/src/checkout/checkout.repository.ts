@@ -9,11 +9,12 @@ export interface CreatePendingCheckoutInput {
   /** DB tier value (`save_the_date` | `classic` | `premium`). */
   tier: string;
   kind: string;
-  amountEgp: number;
+  amountMinor: number;
+  currency: string;
   provider: string;
   idempotencyKey: string | null;
   couponCode: string | null;
-  discountTotal: number;
+  discountTotalMinor: number;
   pointsRedeemed: number;
   invitationSlug: string;
   invitationData: Record<string, unknown>;
@@ -27,8 +28,20 @@ export class CheckoutRepository {
   /** Live template by slug (anonymous client, RLS applies). Raw postgrest envelope. */
   async findLiveTemplateBySlug(slug: string): Promise<unknown> {
     return this.supabase.public().from('templates')
-      .select('id,slug,name,tagline,tier,price_override_egp,status,featured')
+      .select('id,slug,name,tagline,tier,status,featured')
       .eq('slug', slug).eq('status', 'live').single();
+  }
+
+  /** Active template-specific price (anonymous client; RLS exposes active rows only). Raw postgrest envelope. */
+  async findTemplatePrice(templateId: string, tier: string, currency: string): Promise<unknown> {
+    return this.supabase.public().from('prices').select('amount_minor')
+      .eq('template_id', templateId).eq('tier', tier).eq('currency', currency).eq('active', true).maybeSingle();
+  }
+
+  /** Active tier-default price, i.e. `template_id is null` (anonymous client). Raw postgrest envelope. */
+  async findTierDefaultPrice(tier: string, currency: string): Promise<unknown> {
+    return this.supabase.public().from('prices').select('amount_minor')
+      .is('template_id', null).eq('tier', tier).eq('currency', currency).eq('active', true).maybeSingle();
   }
 
   /** Caller's points balance (user JWT, RLS applies). Raw postgrest envelope. */
@@ -39,13 +52,13 @@ export class CheckoutRepository {
   /** Coupon by (already normalised) code (service role: customers cannot read coupons). */
   async findCouponByCodeAsServiceRole(code: string): Promise<unknown> {
     return this.supabase.admin().from('coupons')
-      .select('percent_off,amount_off_egp,max_uses,used_count,expires_at,active')
+      .select('percent_off,amount_off_minor,currency,max_uses,used_count,expires_at,active')
       .eq('code', code).single();
   }
 
   /** Existing order for an idempotency key (service role). Raw postgrest envelope. */
   async findOrderByIdempotencyKeyAsServiceRole(userId: string, key: string): Promise<unknown> {
-    return this.supabase.admin().from('orders').select('id,amount_egp')
+    return this.supabase.admin().from('orders').select('id,amount_minor,currency')
       .eq('user_id', userId).eq('idempotency_key', key).maybeSingle();
   }
 
@@ -57,11 +70,12 @@ export class CheckoutRepository {
       p_template_id: input.templateId,
       p_tier: input.tier,
       p_kind: input.kind,
-      p_amount_egp: input.amountEgp,
+      p_amount_minor: input.amountMinor,
+      p_currency: input.currency,
       p_provider: input.provider,
       p_idempotency_key: input.idempotencyKey,
       p_coupon_code: input.couponCode,
-      p_discount_total: input.discountTotal,
+      p_discount_total_minor: input.discountTotalMinor,
       p_points_redeemed: input.pointsRedeemed,
       p_invitation_slug: input.invitationSlug,
       p_invitation_data: input.invitationData

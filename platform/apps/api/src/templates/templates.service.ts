@@ -1,10 +1,22 @@
 import {Injectable, ServiceUnavailableException} from '@nestjs/common';
-import {catalogEntry, fromDbTier, type CatalogEntry} from '@platform/shared';
+import {catalogEntry, fromDbTier, fromMinor, type CatalogEntry} from '@platform/shared';
 import {AppLogger} from '../common/app-logger';
 import {isRecord} from '../common/type-guards';
 import {TemplatesRepository} from './templates.repository';
 
 export type PublicCatalogEntry = Omit<CatalogEntry, 'assets'>;
+
+/** Template-specific EGP price in whole major units, if the template has one. */
+function overrideEgp(row: Record<string, unknown>): number | undefined {
+  if (!Array.isArray(row.prices)) return undefined;
+  for (const price of row.prices) {
+    if (!isRecord(price) || price.currency !== 'EGP' || price.tier !== row.tier) continue;
+    const minor = price.amount_minor;
+    // The shared catalog contract only carries whole-EGP overrides.
+    if (typeof minor === 'number' && Number.isSafeInteger(minor) && minor > 0 && minor % 100 === 0) return fromMinor(minor);
+  }
+  return undefined;
+}
 
 function toEntry(row: unknown): PublicCatalogEntry {
   if (!isRecord(row)) throw new ServiceUnavailableException('Template catalog unavailable');
@@ -13,7 +25,7 @@ function toEntry(row: unknown): PublicCatalogEntry {
     name: row.name,
     tagline: row.tagline,
     tier: typeof row.tier === 'string' ? fromDbTier(row.tier) : row.tier,
-    priceOverrideEgp: row.price_override_egp === null ? undefined : row.price_override_egp,
+    priceOverrideEgp: overrideEgp(row),
     status: row.status,
     featured: row.featured,
     assets: []

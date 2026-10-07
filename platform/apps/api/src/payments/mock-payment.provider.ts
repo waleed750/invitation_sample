@@ -7,7 +7,8 @@ import type {CheckoutOrder, PaymentProvider, PaymentStatus} from './payment-prov
 const webhookPayload = z.object({
   providerRef: z.string().min(1),
   status: z.enum(['paid', 'failed', 'pending']),
-  amountEgp: z.number().nonnegative()
+  amountMinor: z.number().int().nonnegative(),
+  currency: z.string().regex(/^[A-Z]{3}$/)
 }).strict();
 
 @Injectable()
@@ -29,7 +30,7 @@ export class MockPaymentProvider implements PaymentProvider {
   async verifyWebhook(
     rawBody: Buffer,
     headers: Record<string, string | string[] | undefined>
-  ): Promise<{providerRef: string; status: PaymentStatus; amountEgp: number}> {
+  ): Promise<{providerRef: string; status: PaymentStatus; amountMinor: number; currency: string}> {
     const supplied = headers['x-mock-signature'];
     const signature = Array.isArray(supplied) ? supplied[0] : supplied;
     if (signature === undefined || !this.isValidSignature(rawBody, signature)) {

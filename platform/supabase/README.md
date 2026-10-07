@@ -19,8 +19,9 @@ SQL only. Three migrations + one test file, applied in numeric order.
 | `affiliates` | Media buyers: lower-case `ref_code`, commission %, customer discount %, payout details |
 | `affiliate_clicks` | Aggregated `(affiliate, day, path)` counters — server-incremented only |
 | `affiliate_payouts` | Manual payouts (service/admin only) |
-| `coupons` | Lower-case PK codes; validated server-side so codes never leak publicly |
-| `orders` | Checkout record: tier, kind (new/extension/edits/addon), amount, provider (`fawry`/`kashier`/`manual`), idempotency key, affiliate attribution, points in/out |
+| `coupons` | Lower-case PK codes; `percent_off` or `amount_off_minor` + `currency`; validated server-side so codes never leak publicly |
+| `prices` | Money catalog: one active row per (template or tier default, tier, currency) in integer minor units; anon/authenticated read active rows, writes are service-role only |
+| `orders` | Checkout record: tier, kind (new/extension/edits/addon), `amount_minor` + `currency`, `discount_total_minor`, provider (`fawry`/`kashier`/`manual`/`mock`), idempotency key, affiliate attribution, points in/out |
 | `invitations` | Customer invitation: slug (lowercase-slug check, 3–60 chars), Zod-validated `data` jsonb, status (draft/published/ended/archived) |
 | `invitation_entitlements` | What the purchase bought: edits allowed/used, template switches (null = unlimited), `online_until`, `min_online_until` (event floor) |
 | `invitation_publishes` | Snapshot per publish (edit counting + undo) |
@@ -38,7 +39,8 @@ SQL only. Three migrations + one test file, applied in numeric order.
 - **Tiers** (`fulfill_paid_order`, single CASE source of truth): Save-the-Date 5 edits / 3 mo / event+7d / 1 switch · Classic 15 / 6 / +14 / 2 · Premium 40 / 12 / +30 / unlimited (null).
 - **Online window**: `greatest(now + months, event_date + grace)` on new orders (never ends before the event); extensions add the tier months to the *current* `online_until`; edits packs add +10 edits; addons touch only points.
 - **Event date** is read from `invitations.data` (`event_date`, `event.date`, or `eventDate`); a missing/unparseable date never fails fulfillment.
-- **Points**: `floor(amount_egp / 10)` × level multiplier (member 1.0, silver 1.10, gold 1.25), floored again; +50 bonus on the first paid order; spent points written as a negative `redeem` row; earned rows expire after 12 months.
+- **Money**: all amounts are integer minor units (`bigint`, 1/100 of the major unit; EGP 1299 = `129900`) with an ISO-4217 `currency` (`^[A-Z]{3}$`). Never floats. The base price is read from `prices` (template-specific active row, else the tier default with `template_id is null`). `templates.price_override_egp` no longer exists.
+- **Points**: `floor(amount_minor / 1000)` for `currency = 'EGP'` (same as `floor(EGP / 10)`; other currencies earn 0 points until B14) × level multiplier (member 1.0, silver 1.10, gold 1.25), floored again; +50 bonus on the first paid order; spent points written as a negative `redeem` row; earned rows expire after 12 months.
 - **Levels** by paid-order count: 0–1 member, 2–3 silver, 4+ gold.
 - **Idempotency**: the order row is locked (`FOR UPDATE`); any non-`pending` status returns `already_processed` with zero writes — duplicate webhooks are safe.
 - **Refunds**: `refund_order` writes an equal-and-opposite `refund` row per ledger row of the order (earned taken back, redeemed restored), flips status to `refunded`, recomputes counters. Balances may go negative when points were already spent (§16.4).

@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {SupabaseService} from '../supabase/supabase.service';
 
-const ORDER_COLUMNS = 'id,amount_egp,status,user_id';
+const ORDER_COLUMNS = 'id,amount_minor,currency,status,user_id';
 
 /**
  * Data access for payments. Webhooks carry no user JWT, so every method here

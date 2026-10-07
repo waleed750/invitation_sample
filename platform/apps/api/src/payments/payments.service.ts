@@ -13,7 +13,8 @@ import {PAYMENT_PROVIDER, type PaymentProvider, type PaymentStatus} from './paym
 
 interface OrderRow {
   id: string;
-  amountEgp: number;
+  amountMinor: number;
+  currency: string;
   status: string;
   userId: string | null;
 }
@@ -22,9 +23,10 @@ function orderRow(value: unknown): OrderRow {
   if (!isRecord(value) || typeof value.id !== 'string' || typeof value.status !== 'string') {
     throw new ServiceUnavailableException('Payment service unavailable');
   }
-  const amount = typeof value.amount_egp === 'number' ? value.amount_egp : Number(value.amount_egp);
-  if (!Number.isFinite(amount)) throw new ServiceUnavailableException('Payment service unavailable');
-  return {id: value.id, amountEgp: amount, status: value.status, userId: typeof value.user_id === 'string' ? value.user_id : null};
+  // bigint columns arrive as JSON numbers from PostgREST; tolerate numeric strings.
+  const amount = typeof value.amount_minor === 'number' ? value.amount_minor : Number(value.amount_minor);
+  if (!Number.isSafeInteger(amount) || typeof value.currency !== 'string') throw new ServiceUnavailableException('Payment service unavailable');
+  return {id: value.id, amountMinor: amount, currency: value.currency, status: value.status, userId: typeof value.user_id === 'string' ? value.user_id : null};
 }
 
 @Injectable()
@@ -44,7 +46,7 @@ export class PaymentsService {
     if (providerName !== 'mock') throw new NotFoundException('Payment provider not found');
     const event = await this.provider.verifyWebhook(rawBody, headers);
     const order = await this.findOrder(event.providerRef);
-    if (Math.abs(order.amountEgp - event.amountEgp) > 0.001) {
+    if (order.amountMinor !== event.amountMinor || order.currency !== event.currency) {
       this.logger.error(`payment amount mismatch for order ${order.id}`);
       throw new ConflictException('Payment amount mismatch');
     }
@@ -59,7 +61,8 @@ export class PaymentsService {
     const rawBody = Buffer.from(JSON.stringify({
       providerRef: `mock_${order.id}`,
       status,
-      amountEgp: order.amountEgp
+      amountMinor: order.amountMinor,
+      currency: order.currency
     }));
     return this.handleWebhook('mock', rawBody, {'x-mock-signature': this.mockProvider.sign(rawBody)});
   }

@@ -38,13 +38,40 @@ describe('TemplatesService', () => {
         tier: 'classic',
         status: 'live',
         featured: true,
-        price_override_egp: null
+        prices: []
       }],
       error: null
     });
     const result = await service.listLive();
     expect(result).toHaveLength(1);
     expect(result[0].slug).toBe('test');
+  });
+
+  const row = (prices: unknown[]) => ({
+    slug: 'test', name: {en: 'Test'}, tagline: {en: 'T'}, tier: 'classic', status: 'live', featured: false, prices
+  });
+
+  it('maps the template-specific EGP price to priceOverrideEgp', async () => {
+    supabaseClient.order.mockResolvedValue({
+      data: [row([
+        {tier: 'classic', currency: 'USD', amount_minor: 9900},
+        {tier: 'premium', currency: 'EGP', amount_minor: 300000},
+        {tier: 'classic', currency: 'EGP', amount_minor: 149900}
+      ])],
+      error: null
+    });
+    const result = await service.listLive();
+    expect(result[0].priceOverrideEgp).toBe(1499);
+  });
+
+  it('omits priceOverrideEgp when there is no EGP row or it is not whole', async () => {
+    supabaseClient.order.mockResolvedValue({
+      data: [row([]), row([{tier: 'classic', currency: 'EGP', amount_minor: 149950}])],
+      error: null
+    });
+    const result = await service.listLive();
+    expect(result[0].priceOverrideEgp).toBeUndefined();
+    expect(result[1].priceOverrideEgp).toBeUndefined();
   });
 
   it('should throw ServiceUnavailableException on DB error', async () => {

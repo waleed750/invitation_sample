@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {SupabaseService} from '../supabase/supabase.service';
 
-const COLUMNS = 'id,template_id,tier,kind,amount_egp,status,provider,provider_ref,discount_total,points_redeemed,created_at,paid_at';
+const COLUMNS = 'id,template_id,tier,kind,amount_minor,currency,status,provider,provider_ref,discount_total_minor,points_redeemed,created_at,paid_at';
 
 /** Data access for the caller's orders. The only file here that talks to Supabase. */
 @Injectable()

@@ -46,8 +46,8 @@ describe('PaymentsService', () => {
   });
 
   it('should handle successful webhook', async () => {
-    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'paid', amountEgp: 100});
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_egp: 100, status: 'pending'}, error: null});
+    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'paid', amountMinor: 10000, currency: 'EGP'});
+    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending'}, error: null});
     supabaseClient.rpc.mockResolvedValueOnce({data: null, error: null});
 
     const result = await service.handleWebhook('mock', Buffer.from(''), {});
@@ -56,8 +56,8 @@ describe('PaymentsService', () => {
   });
 
   it('should handle failed webhook', async () => {
-    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'failed', amountEgp: 100});
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_egp: 100, status: 'pending'}, error: null});
+    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'failed', amountMinor: 10000, currency: 'EGP'});
+    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending'}, error: null});
     // queryBuilder is thenable, resolves to {data: null, error: null}
 
     const result = await service.handleWebhook('mock', Buffer.from(''), {});
@@ -70,15 +70,24 @@ describe('PaymentsService', () => {
   });
 
   it('should reject amount mismatch', async () => {
-    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'paid', amountEgp: 100});
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_egp: 50, status: 'pending'}, error: null});
+    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'paid', amountMinor: 10000, currency: 'EGP'});
+    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 5000, currency: 'EGP', status: 'pending'}, error: null});
 
     await expect(service.handleWebhook('mock', Buffer.from(''), {})).rejects.toThrow(ConflictException);
   });
 
+  it('should reject currency mismatch even when the amount matches', async () => {
+    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'paid', amountMinor: 10000, currency: 'USD'});
+    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending'}, error: null});
+
+    await expect(service.handleWebhook('mock', Buffer.from(''), {})).rejects.toThrow(ConflictException);
+    expect(supabaseClient.rpc).not.toHaveBeenCalled();
+    expect(queryBuilder.update).not.toHaveBeenCalled();
+  });
+
   it('should gracefully handle already fulfilled order', async () => {
-    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'paid', amountEgp: 100});
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_egp: 100, status: 'paid'}, error: null});
+    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'paid', amountMinor: 10000, currency: 'EGP'});
+    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'paid'}, error: null});
 
     const result = await service.handleWebhook('mock', Buffer.from(''), {});
     expect(result).toEqual({ok: true});
@@ -87,9 +96,9 @@ describe('PaymentsService', () => {
   });
 
   it('should simulate webhook internally', async () => {
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_egp: 100, status: 'pending', user_id: 'user_1'}, error: null}); // findOrderById
-    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'mock_order_1', status: 'paid', amountEgp: 100});
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_egp: 100, status: 'pending'}, error: null}); // findOrder
+    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending', user_id: 'user_1'}, error: null}); // findOrderById
+    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'mock_order_1', status: 'paid', amountMinor: 10000, currency: 'EGP'});
+    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending'}, error: null}); // findOrder
     supabaseClient.rpc.mockResolvedValueOnce({data: null, error: null});
 
     const result = await service.simulate('order_1', 'paid', 'user_1');
@@ -97,7 +106,7 @@ describe('PaymentsService', () => {
   });
 
   it('should not let a user settle someone else\'s order via the dev shortcut', async () => {
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_egp: 100, status: 'pending', user_id: 'someone_else'}, error: null});
+    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending', user_id: 'someone_else'}, error: null});
 
     await expect(service.simulate('order_1', 'paid', 'user_1')).rejects.toThrow(NotFoundException);
     expect(supabaseClient.rpc).not.toHaveBeenCalled();

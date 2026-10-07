@@ -6,10 +6,14 @@ import {SupabaseService} from '../supabase/supabase.service';
 export class TemplatesRepository {
   constructor(private readonly supabase: SupabaseService) {}
 
-  /** Live templates in catalog order (anonymous client, RLS applies). Raw postgrest envelope. */
+  /**
+   * Live templates in catalog order (anonymous client, RLS applies). Each row embeds
+   * its visible (active) `prices` rows; the service picks the template-specific EGP one.
+   * Raw postgrest envelope.
+   */
   async listLive(): Promise<unknown> {
     return this.supabase.public().from('templates')
-      .select('slug,name,tagline,tier,price_override_egp,status,featured')
+      .select('slug,name,tagline,tier,status,featured,prices(tier,currency,amount_minor)')
       .eq('status', 'live')
       .order('sort_order', {ascending: true});
   }

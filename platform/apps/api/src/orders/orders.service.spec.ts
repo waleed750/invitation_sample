@@ -31,9 +31,9 @@ describe('OrdersService', () => {
   });
 
   const validOrder = {
-    id: '1', template_id: 't1', tier: 'classic', kind: 'new', amount_egp: 100,
+    id: '1', template_id: 't1', tier: 'classic', kind: 'new', amount_minor: 10000, currency: 'EGP',
     status: 'paid', provider: 'mock', provider_ref: 'mock_1',
-    discount_total: 0, points_redeemed: 0, created_at: '2026-01-01T00:00:00Z', paid_at: '2026-01-01T00:01:00Z'
+    discount_total_minor: 0, points_redeemed: 0, created_at: '2026-01-01T00:00:00Z', paid_at: '2026-01-01T00:01:00Z'
   };
 
   it('should list orders', async () => {
@@ -41,6 +41,13 @@ describe('OrdersService', () => {
     const result = await service.list({id: 'u1', jwt: 't1'} as any);
     expect(result).toHaveLength(1);
     expect(result[0].id).toBe('1');
+    expect(result[0]).toMatchObject({amountMinor: 10000, currency: 'EGP', discountTotalMinor: 0});
+    expect(Number.isInteger(result[0].amountMinor)).toBe(true);
+  });
+
+  it('should reject non-integer minor amounts', async () => {
+    supabaseClient.order.mockResolvedValueOnce({data: [{...validOrder, amount_minor: 100.5}], error: null});
+    await expect(service.list({id: 'u1', jwt: 't1'} as any)).rejects.toThrow(ServiceUnavailableException);
   });
 
   it('should get an order', async () => {

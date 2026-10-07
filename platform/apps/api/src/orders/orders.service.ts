@@ -15,28 +15,29 @@ export interface OrderResponse {
   templateId: string | null;
   tier: string;
   kind: string;
-  amountEgp: number;
+  amountMinor: number;
+  currency: string;
   status: string;
   provider: string;
   reference?: string;
-  discountEgp: number;
+  discountTotalMinor: number;
   pointsRedeemed: number;
   createdAt: string;
   paidAt?: string;
 }
 
-function numberValue(value: unknown): number | null {
+function minorValue(value: unknown): number | null {
   const parsed = typeof value === 'number' ? value : typeof value === 'string' ? Number(value) : NaN;
-  return Number.isFinite(parsed) ? parsed : null;
+  return Number.isSafeInteger(parsed) && parsed >= 0 ? parsed : null;
 }
 
 function toResponse(value: unknown): OrderResponse {
   if (!isRecord(value)) throw new ServiceUnavailableException('Orders service unavailable');
-  const amount = numberValue(value.amount_egp);
-  const discount = numberValue(value.discount_total);
+  const amount = minorValue(value.amount_minor);
+  const discount = minorValue(value.discount_total_minor);
   if (
     typeof value.id !== 'string' || !(typeof value.template_id === 'string' || value.template_id === null) ||
-    typeof value.tier !== 'string' || typeof value.kind !== 'string' || amount === null ||
+    typeof value.tier !== 'string' || typeof value.kind !== 'string' || amount === null || typeof value.currency !== 'string' ||
     typeof value.status !== 'string' || typeof value.provider !== 'string' || discount === null ||
     typeof value.points_redeemed !== 'number' || typeof value.created_at !== 'string' ||
     !(typeof value.provider_ref === 'string' || value.provider_ref === null) ||
@@ -47,11 +48,12 @@ function toResponse(value: unknown): OrderResponse {
     templateId: value.template_id,
     tier: fromDbTier(value.tier),
     kind: value.kind,
-    amountEgp: amount,
+    amountMinor: amount,
+    currency: value.currency,
     status: value.status,
     provider: value.provider,
     ...(value.provider_ref === null ? {} : {reference: value.provider_ref}),
-    discountEgp: discount,
+    discountTotalMinor: discount,
     pointsRedeemed: value.points_redeemed,
     createdAt: value.created_at,
     ...(value.paid_at === null ? {} : {paidAt: value.paid_at})

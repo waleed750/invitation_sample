@@ -5,3 +5,4 @@ export * from './entitlement';
 export * from './catalog';
 export * from './points';
 export * from './slug';
+export * from './money';
