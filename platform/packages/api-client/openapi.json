@@ -86,6 +86,73 @@
         ],
         "type": "object"
       },
+      "GuestMessageBody": {
+        "properties": {
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "text": {
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "website": {
+            "maxLength": 200,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "name",
+          "text"
+        ],
+        "type": "object"
+      },
+      "RsvpBody": {
+        "properties": {
+          "attending": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "guests": {
+            "maximum": 10,
+            "minimum": 0,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "note": {
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "phone": {
+            "maxLength": 40,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "website": {
+            "maxLength": 200,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "name",
+          "attending",
+          "guests"
+        ],
+        "type": "object"
+      },
       "UpdateInvitationBody": {
         "properties": {
           "data": {
@@ -5003,6 +5070,31 @@
         ]
       }
     },
+    "/v1/invitations/{id}/messages": {
+      "get": {
+        "operationId": "GuestsController_messages",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Guests"
+        ]
+      }
+    },
     "/v1/invitations/{id}/publish": {
       "post": {
         "operationId": "InvitationsController_publish",
@@ -5025,6 +5117,56 @@
         },
         "tags": [
           "Invitations"
+        ]
+      }
+    },
+    "/v1/invitations/{id}/rsvps": {
+      "get": {
+        "operationId": "GuestsController_rsvps",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Guests"
+        ]
+      }
+    },
+    "/v1/invitations/{id}/rsvps.csv": {
+      "get": {
+        "operationId": "GuestsController_csv",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Guests"
         ]
       }
     },
@@ -5175,6 +5317,104 @@
         },
         "tags": [
           "Points"
+        ]
+      }
+    },
+    "/v1/public/invitations/{slug}": {
+      "get": {
+        "operationId": "PublicInvitationsController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "PublicInvitations"
+        ]
+      }
+    },
+    "/v1/public/invitations/{slug}/messages": {
+      "post": {
+        "operationId": "PublicInvitationsController_message",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GuestMessageBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "PublicInvitations"
+        ]
+      }
+    },
+    "/v1/public/invitations/{slug}/rsvp": {
+      "post": {
+        "operationId": "PublicInvitationsController_rsvp",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "slug",
+            "required": true,
+            "schema": {
+              "maxLength": 160,
+              "minLength": 1,
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RsvpBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "PublicInvitations"
         ]
       }
     },

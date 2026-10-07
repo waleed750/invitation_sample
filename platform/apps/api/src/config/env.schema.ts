@@ -48,6 +48,8 @@ const envSchema = z.object({
   THROTTLE_LIMIT: z.coerce.number().int().positive().default(100),
   PAYMENTS_PROVIDER: z.literal('mock').default('mock'),
   PAYMENTS_MOCK_SECRET: z.string().min(32, 'PAYMENTS_MOCK_SECRET must be at least 32 characters'),
+  // HMAC secret for guest IP hashing (server only, never returned). Raw IPs are never stored.
+  IP_HASH_SECRET: z.string().min(32, 'IP_HASH_SECRET must be at least 32 characters'),
   SWAGGER_ENABLED: z.enum(['true', 'false']).default('false').transform((value) => value === 'true')
 }).superRefine((env, context) => {
   if (env.NODE_ENV === 'production') {

@@ -15,10 +15,12 @@ import {MeModule} from './me/me.module';
 import {RateLimitModule} from './rate-limit/rate-limit.module';
 import {SupabaseModule} from './supabase/supabase.module';
 import {CheckoutModule} from './checkout/checkout.module';
+import {GuestsModule} from './guests/guests.module';
 import {InvitationsModule} from './invitations/invitations.module';
 import {OrdersModule} from './orders/orders.module';
 import {PaymentsModule} from './payments/payments.module';
 import {PointsModule} from './points/points.module';
+import {PublicInvitationsModule} from './public-invitations/public-invitations.module';
 import {TemplatesModule} from './templates/templates.module';
 
 export {AuthModule};
@@ -38,7 +40,8 @@ export {AuthGuard, RolesGuard};
       useFactory: (config: AppConfigService) => buildLoggerParams(config.nodeEnv)
     }),
     SupabaseModule, RateLimitModule, AuthModule, HealthModule, MeModule, EntitlementsModule,
-    PaymentsModule, TemplatesModule, CheckoutModule, OrdersModule, InvitationsModule, PointsModule
+    PaymentsModule, TemplatesModule, CheckoutModule, OrdersModule, InvitationsModule, PointsModule,
+    PublicInvitationsModule, GuestsModule
   ],
   providers: [
     AppLogger,

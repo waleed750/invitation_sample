@@ -69,6 +69,10 @@ export class AppConfigService {
     return this.required('PAYMENTS_MOCK_SECRET');
   }
 
+  get ipHashSecret(): string {
+    return this.required('IP_HASH_SECRET');
+  }
+
   get swaggerEnabled(): boolean {
     return this.required('SWAGGER_ENABLED');
   }

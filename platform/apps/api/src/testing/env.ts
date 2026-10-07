@@ -16,6 +16,7 @@ export const BASE_ENV: Record<string, string> = {
   THROTTLE_LIMIT: '100',
   PAYMENTS_PROVIDER: 'mock',
   PAYMENTS_MOCK_SECRET: 'test-mock-secret-at-least-32-characters',
+  IP_HASH_SECRET: 'test-ip-hash-secret-at-least-32-chars',
   SWAGGER_ENABLED: 'false'
 };
 

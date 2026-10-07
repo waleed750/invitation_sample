@@ -6,3 +6,5 @@ export * from './catalog';
 export * from './points';
 export * from './slug';
 export * from './money';
+export * from './phone';
+export * from './csv';
