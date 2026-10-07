@@ -22,7 +22,11 @@ export function RiwaqPhone({names, dateText, line, tapHint, open, dir, lang}: Pr
   const [round, setRound] = useState(0);
 
   useEffect(() => {
-    setReduced(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    setReduced(mq.matches);
+    const onChange = (event: MediaQueryListEvent) => setReduced(event.matches);
+    mq.addEventListener?.('change', onChange);
+    return () => mq.removeEventListener?.('change', onChange);
   }, []);
 
   useEffect(() => {
@@ -50,7 +54,7 @@ export function RiwaqPhone({names, dateText, line, tapHint, open, dir, lang}: Pr
         <p className="hm-rp__names">{names}</p>
         <p className="hm-rp__date">{dateText}</p>
       </div>
-      {!open ? <p className="hm-rp__hint">{tapHint}</p> : null}
+      {(!open || introDone) && tapHint ? <p className="hm-rp__hint">{tapHint}</p> : null}
     </div>
   );
 }

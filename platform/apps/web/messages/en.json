@@ -543,11 +543,18 @@
       "title1": "Your wedding invitation..",
       "title2": "opens on every guest's phone",
       "sub": "Type your names, pick a design, send it on WhatsApp, and see who's coming in one table.",
-      "namesLabel": "Type the couple's names",
+      "namesLabel": "Couple's names",
+      "namesPlaceholder": "e.g. Ahmed & Mona",
       "dateLabel": "Wedding day",
       "cta": "Open my invitation",
       "replay": "Open it again",
-      "demo": "See a live example",
+      "replayHint": "Tap to replay",
+      "demo": "See full demo",
+      "bridge": {
+        "label": "Checkout with your names",
+        "note": "Love this design?",
+        "action": "Use this design"
+      },
       "point1": "A WhatsApp link, no app to download",
       "point2": "One payment in Egyptian pounds",
       "phone": {
