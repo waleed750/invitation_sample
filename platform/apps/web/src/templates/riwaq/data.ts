@@ -5,14 +5,16 @@ import {parseInvitationData, type InvitationData} from '@platform/shared';
 const MEDIA_READY = {introVideo: true, heroVideo: true, music: true};
 
 const art = (name: string) => `/assets/demo/riwaq/${name}`;
-const mapUrl = 'https://www.google.com/maps/search/?api=1&query=New+Cairo%2C+Cairo';
+// Default demo location: Al-Azhar Park, Cairo (a real public landmark, so the embedded map shows a real place).
+const mapUrl = 'https://www.google.com/maps/search/?api=1&query=Al-Azhar+Park%2C+Cairo%2C+Egypt';
+const mapEmbedUrl = 'https://www.google.com/maps?q=Al-Azhar+Park%2C+Cairo%2C+Egypt&output=embed';
 const date = '2027-10-15T19:00:00+03:00';
 
 const firstName = {ar: 'مالك', en: 'Malek'};
 const secondName = {ar: 'ريم', en: 'Reem'};
 const headline = {ar: 'بقلوبٍ ممتنة ندعوكم لمشاركتنا فرحتنا', en: 'With grateful hearts, we invite you to celebrate with us'};
 const displayDate = {ar: 'الجمعة · 15 أكتوبر 2027', en: 'Friday · 15 October 2027'};
-const venue = {ar: 'قصر الأعمدة · القاهرة الجديدة', en: 'The Colonnade Palace · New Cairo'};
+const venue = {ar: 'حديقة الأزهر · القاهرة', en: 'Al-Azhar Park · Cairo'};
 
 export const riwaqData: InvitationData = {
   template: {
@@ -124,9 +126,16 @@ export const riwaqData: InvitationData = {
         venue,
         startTime: {ar: '7:00 م', en: '7:00 PM'},
         endTime: {ar: '12:00 ص', en: '12:00 AM'},
-        addressLines: [{ar: 'قصر الأعمدة', en: 'The Colonnade Palace'}, {ar: 'القاهرة الجديدة', en: 'New Cairo'}],
+        addressLines: [{ar: 'حديقة الأزهر', en: 'Al-Azhar Park'}, {ar: 'شارع صلاح سالم، القاهرة', en: 'Salah Salem Street, Cairo'}],
         mapUrl,
         mapLabel: {ar: 'افتح في خرائط جوجل', en: 'Open in Google Maps'},
+      },
+    },
+    {
+      type: 'map',
+      props: {
+        title: {ar: 'الموقع على الخريطة', en: 'Find us on the map'},
+        src: mapEmbedUrl,
       },
     },
     {

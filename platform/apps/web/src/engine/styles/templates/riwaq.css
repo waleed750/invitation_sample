@@ -1039,5 +1039,35 @@
   }
 }
 
+/* ---------- Embedded map ---------- */
+.invitation-shell[data-template="riwaq"] .map-section {
+  padding-block: 0 clamp(3rem, 8vw, 5rem);
+  padding-inline: 1.25rem;
+}
+
+.invitation-shell[data-template="riwaq"] .map-frame {
+  max-inline-size: 44rem;
+  margin-inline: auto;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  background: var(--b-mist);
+  border: 1px solid var(--b-hair);
+  border-radius: 4px;
+  box-shadow: 0 8px 22px rgba(31, 42, 36, 0.07);
+}
+
+.invitation-shell[data-template="riwaq"] .map-frame iframe {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  border: 0;
+}
+
+@media (min-width: 760px) {
+  .invitation-shell[data-template="riwaq"] .map-frame {
+    aspect-ratio: 16 / 9;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
 }

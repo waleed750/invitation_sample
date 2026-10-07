@@ -165,3 +165,12 @@
 
 /* The UA [hidden] rule loses to section display rules; keep honeypots truly hidden. */
 .invitation-shell [hidden] { display: none !important; }
+
+/* RSVP field basics shared by every template: roomy tap targets and no accidental label activation */
+.invitation-shell .rsvp-field { display: grid; gap: .35rem; }
+.invitation-shell .guest-stepper { display: flex; align-items: center; gap: .5rem; }
+.invitation-shell .guest-stepper :is(button, input) { min-block-size: 44px; min-inline-size: 44px; }
+.invitation-shell .guest-stepper input { inline-size: 4.5rem; text-align: center; -moz-appearance: textfield; appearance: textfield; }
+.invitation-shell .guest-stepper input::-webkit-outer-spin-button,
+.invitation-shell .guest-stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.invitation-shell .guest-stepper button:disabled { opacity: .4; cursor: not-allowed; }

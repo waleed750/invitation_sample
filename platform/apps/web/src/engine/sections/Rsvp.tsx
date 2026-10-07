@@ -6,7 +6,7 @@ import type {SectionProps} from "../types";
 import {useInvitationText} from "../InvitationLocaleContext";
 import {useInvitationActions} from "../InvitationActionsContext";
 import {useTranslations} from "next-intl";
-import React, { useState } from "react";
+import React, { useEffect, useId, useRef, useState } from "react";
 import { Send } from "lucide-react";
 
 export default function Rsvp({
@@ -34,9 +34,17 @@ export default function Rsvp({
   const [status, setStatus] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [guestCount, setGuestCount] = useState(1);
+  const [attending, setAttending] = useState<"yes" | "no" | null>(null);
+  const stepperId = useId();
+  const statusRef = useRef<HTMLParagraphElement>(null);
+  const declining = attending === "no";
   const [selectedEvents, setSelectedEvents] = useState<string[]>([]);
   const yesLabel = attendanceOptions?.yes ?? t("attendingYes");
   const noLabel = attendanceOptions?.no ?? t("attendingNo");
+
+  useEffect(() => {
+    if (status) statusRef.current?.scrollIntoView({ block: "nearest" });
+  }, [status]);
 
   function updateGuestCount(nextValue: string | number) {
     setGuestCount(Math.min(8, Math.max(1, Number(nextValue) || 1)));
@@ -104,6 +112,7 @@ export default function Rsvp({
                 name="attending"
                 value="yes"
                 required
+                onChange={() => setAttending("yes")}
               />
               {text(yesLabel)}
             </label>
@@ -112,6 +121,7 @@ export default function Rsvp({
                 type="radio"
                 name="attending"
                 value="no"
+                onChange={() => { setAttending("no"); setGuestCount(1); }}
               />
               {text(noLabel)}
             </label>
@@ -141,26 +151,28 @@ export default function Rsvp({
             <input name="fullName" type="text" maxLength={100} placeholder={text(namePlaceholder ?? t("enterName"))} required />
           </label>
 
-          {guestCountMode === "stepper" ? (
-            <label>
-              {text(guestCountLabel ?? t("guestCount"))}
+          {declining ? null : guestCountMode === "stepper" ? (
+            <div className="rsvp-field">
+              <label htmlFor={stepperId}>{text(guestCountLabel ?? t("guestCount"))}</label>
               <div className="guest-stepper">
-                <button type="button" aria-label={t("decreaseGuests")} onClick={() => updateGuestCount(guestCount - 1)}>
-                  -
+                <button type="button" aria-label={t("decreaseGuests")} disabled={guestCount <= 1} onClick={() => updateGuestCount(guestCount - 1)}>
+                  −
                 </button>
                 <input
+                  id={stepperId}
                   name="guestCount"
                   type="number"
+                  inputMode="numeric"
                   min="1"
                   max="8"
                   value={guestCount}
                   onChange={(e) => updateGuestCount(e.target.value)}
                 />
-                <button type="button" aria-label={t("increaseGuests")} onClick={() => updateGuestCount(guestCount + 1)}>
+                <button type="button" aria-label={t("increaseGuests")} disabled={guestCount >= 8} onClick={() => updateGuestCount(guestCount + 1)}>
                   +
                 </button>
               </div>
-            </label>
+            </div>
           ) : (
             <label>
               {text(guestCountLabel ?? t("guestCount"))}
@@ -181,17 +193,17 @@ export default function Rsvp({
 
           <label>
             {text(emailLabel ?? t("email"))}
-            <Bidi><input dir="ltr" name="email" type="email" maxLength={120} placeholder={text(emailPlaceholder ?? t("emailPlaceholder"))} required /></Bidi>
+            <Bidi><input dir="ltr" name="email" type="email" maxLength={120} placeholder={text(emailPlaceholder ?? t("emailPlaceholder"))} /></Bidi>
           </label>
 
-          {showDietaryField && (
+          {showDietaryField && !declining && (
             <label>
               {text(dietaryFieldLabel ?? t("dietary"))}
               <input name="dietaryRequirements" type="text" maxLength={180} placeholder={text(dietaryPlaceholder ?? t("dietaryPlaceholder"))} />
             </label>
           )}
 
-          {childrenMode === "radios" ? (
+          {declining ? null : childrenMode === "radios" ? (
             <fieldset>
               <legend>{text(childrenLabel ?? t("children"))}</legend>
               <label className="rsvp-radio">
@@ -214,7 +226,7 @@ export default function Rsvp({
             <Send size={17} aria-hidden="true" />
             {submitting ? publicT("submitting") : text(submitLabel ?? t("sendRsvp"))}
           </button>
-          {status ? <p className="form-status" role="status">{status}</p> : null}
+          {status ? <p className="form-status" role="status" ref={statusRef}>{status}</p> : null}
         </form>
       </div>
       {bottomUrl && (
