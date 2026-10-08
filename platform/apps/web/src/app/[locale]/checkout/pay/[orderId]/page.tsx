@@ -6,9 +6,11 @@ import {CheckoutHeader} from '@/commerce/CheckoutHeader';
 import {CopyButton} from '@/commerce/CopyButton';
 import {DemoBanner} from '@/commerce/DemoBanner';
 import {PaymentControls} from '@/commerce/PaymentControls';
+import {ManualPaymentBlock} from '@/commerce/ManualPaymentBlock';
 import {IconClock, IconWhatsApp} from '@/commerce/icons';
+import {NotSignedInError} from '@/commerce/api-errors';
 import {getCommerceClient} from '@/commerce';
-import {Link} from '@/i18n/navigation';
+import {Link, redirect} from '@/i18n/navigation';
 import {routing} from '@/i18n/routing';
 import {formatDate, formatMoney} from '@/lib/format';
 
@@ -21,8 +23,15 @@ export default async function PayPage({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
-  const order = await getCommerceClient().getOrder(orderId);
+  let order;
+  try {
+    order = await getCommerceClient().getOrder(orderId);
+  } catch (error) {
+    if (error instanceof NotSignedInError) redirect({href: '/sign-in', locale});
+    throw error;
+  }
   if (!order) notFound();
+  if (order.payment && order.status !== 'pending') redirect({href: `/checkout/result/${order.id}`, locale});
 
   const t = await getTranslations('checkout.pay');
   const shortCode = `#D-${order.id.slice(0, 8).toUpperCase()}`;
@@ -30,6 +39,35 @@ export default async function PayPage({
   // Deadline for Fawry: 72 hours from creation
   const deadline = new Date(new Date(order.createdAt).getTime() + 72 * 60 * 60 * 1000);
   const deadlineText = formatDate(deadline.toISOString(), locale);
+
+  if (order.payment) {
+    const m = await getTranslations('manualPay');
+    const labels = {
+      title: m('title'), reference: m('reference'), amount: m('amount'), methods: m('methods'), noMethods: m('noMethods'),
+      deadline: m.raw('deadline') as string, hoursLeft: m.raw('hoursLeft') as string, expired: m('expired'),
+      instructions: m.raw('instructions') as string, whatsapp: m.raw('whatsapp') as string, copy: m('copy'), copied: m('copied'),
+    };
+    return (
+      <>
+        <DemoBanner />
+        <CheckoutHeader currentStep={3} maxReachedStep={3} />
+        <main className="gateway-page">
+          <div className="gateway-heading">
+            <p className="eyebrow">{t('order')} <Bidi>{shortCode}</Bidi></p>
+            <h1>{m('title')}</h1>
+          </div>
+          <section className="gateway-card">
+            <ManualPaymentBlock payment={order.payment} locale={locale} labels={labels} whatsappNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER} now={new Date()} />
+            <div className="gateway-footer-links" style={{marginTop: '2rem'}}>
+              <Link href={`/checkout/result/${order.id}`} className="btn-secondary" style={{width: '100%', justifyContent: 'center'}}>
+                {m('continue')}
+              </Link>
+            </div>
+          </section>
+        </main>
+      </>
+    );
+  }
 
   return (
     <>

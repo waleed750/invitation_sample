@@ -2,7 +2,16 @@ import type {Level, Tier} from '@platform/shared';
 
 export type OrderKind = 'new' | 'extension' | 'edits';
 export type PaymentMethod = 'card' | 'wallet' | 'fawry';
-export type OrderStatus = 'pending' | 'paid' | 'failed';
+export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'rejected';
+
+/** Manual (InstaPay / wallet / bank transfer) payment instructions, present only for API manual orders. */
+export interface ManualPayment {
+  reference: string;
+  amountMinor: number;
+  currency: string;
+  expiresAt: string;
+  methods: {id: string; label: {ar: string; en: string}; details: {ar: string; en: string}}[];
+}
 
 export interface Order {
   id: string;
@@ -18,6 +27,7 @@ export interface Order {
   fawryReference?: string;
   createdAt: string;
   paidAt?: string;
+  payment?: ManualPayment;
 }
 
 export interface DraftInvitation {

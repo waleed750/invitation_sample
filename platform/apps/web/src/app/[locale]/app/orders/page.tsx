@@ -35,10 +35,11 @@ export default async function OrdersPage({
   const {locale} = await params;
   setRequestLocale(locale);
 
-  const [orders, tDashboard, tCheckout] = await Promise.all([
+  const [orders, tDashboard, tCheckout, tManualPay] = await Promise.all([
     getCommerceClient().listOrders(),
     getTranslations('dashboard'),
     getTranslations('checkout'),
+    getTranslations('manualPay'),
   ]);
 
   // Sort orders: pending orders first, then most recent by createdAt
@@ -154,7 +155,9 @@ export default async function OrdersPage({
                   <div className="order-card-identity">
                     <div className="order-card-meta">
                       <span className={`status-badge status-badge--${order.status}`}>
-                        {tDashboard(`statuses.${order.status}`)}
+                        {order.status === 'expired' || order.status === 'rejected'
+                          ? tManualPay(`statuses.${order.status}`)
+                          : tDashboard(`statuses.${order.status}`)}
                       </span>
                       <span className="order-code-chip">
                         <Bidi>{shortCode}</Bidi>

@@ -1403,3 +1403,13 @@ input:not([type="radio"]):not([type="checkbox"]):focus {
   .commerce-main { padding-block-start: 1rem; }
   .commerce-main .checkout-heading > p:last-child { display: none; }
 }
+
+/* Manual Pay */
+.manual-pay { margin-block-start: 1.5rem; padding-block: 1.25rem; padding-inline: 1.25rem; border: 1px solid var(--border); border-radius: 1rem; background: var(--surface); display: grid; gap: 1rem; }
+.manual-pay .reference-box { gap: .4rem; }
+.manual-pay-row { display: flex; justify-content: space-between; gap: 1rem; }
+.manual-pay-methods ul { list-style: none; margin: 0; padding: 0; display: grid; gap: .75rem; }
+.manual-pay-methods li { padding-block: .6rem; padding-inline: .9rem; border-inline-start: 3px solid var(--gold); background: #f8f2e4; border-radius: .4rem; }
+.manual-pay-methods p { margin-block: .25rem 0; white-space: pre-line; }
+.manual-pay-deadline { color: var(--muted); }
+.manual-pay .whatsapp-button { justify-self: start; }

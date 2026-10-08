@@ -5,8 +5,9 @@ import {Bidi} from '@/components/Bidi';
 import {CopyButton} from '@/commerce/CopyButton';
 import {DemoBanner} from '@/commerce/DemoBanner';
 import {IconClock, IconCross, IconStar, IconWhatsApp} from '@/commerce/icons';
+import {NotSignedInError} from '@/commerce/api-errors';
 import {getCommerceClient} from '@/commerce';
-import {Link} from '@/i18n/navigation';
+import {Link, redirect} from '@/i18n/navigation';
 import {routing} from '@/i18n/routing';
 import {formatDate, formatMoney} from '@/lib/format';
 
@@ -19,11 +20,22 @@ export default async function ResultPage({
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
 
-  const order = await getCommerceClient().getOrder(orderId);
+  let order;
+  try {
+    order = await getCommerceClient().getOrder(orderId);
+  } catch (error) {
+    if (error instanceof NotSignedInError) redirect({href: '/sign-in', locale});
+    throw error;
+  }
   if (!order) notFound();
 
   const t = await getTranslations('checkout.result');
+  const m = await getTranslations('manualPay');
   const shortCode = `#D-${order.id.slice(0, 8).toUpperCase()}`;
+
+  const manualStatus = order.status === 'expired' || order.status === 'rejected' || (order.status === 'pending' && Boolean(order.payment));
+  const title = manualStatus ? m(`result.${order.status}.title`) : t(`${order.status}.title`);
+  const description = manualStatus ? m(`result.${order.status}.description`) : t(`${order.status}.description`);
 
   return (
     <>
@@ -33,13 +45,13 @@ export default async function ResultPage({
         <div className={`status-seal is-${order.status}`} aria-hidden="true">
           {order.status === 'paid' && <IconStar size={48} className="seal-mark-gold" />}
           {order.status === 'pending' && <IconClock size={40} className="seal-mark-warning" />}
-          {order.status === 'failed' && <IconCross size={40} className="seal-mark-danger" />}
+          {(order.status === 'failed' || order.status === 'expired' || order.status === 'rejected') && <IconCross size={40} className="seal-mark-danger" />}
         </div>
 
         <div className="result-heading">
           <p className="eyebrow">{t('eyebrow')}</p>
-          <h1>{t(`${order.status}.title`)}</h1>
-          <p className="result-description">{t(`${order.status}.description`)}</p>
+          <h1>{title}</h1>
+          <p className="result-description">{description}</p>
         </div>
 
         <section className="result-receipt-card" aria-label={t('order')}>
@@ -73,7 +85,7 @@ export default async function ResultPage({
           )}
         </section>
 
-        {order.status === 'pending' && order.fawryReference && (
+        {order.status === 'pending' && order.fawryReference && !order.payment && (
           <div className="pending-fawry-card">
             <p className="pending-instructions">{t('pending.instructions')}</p>
           </div>
@@ -108,9 +120,21 @@ export default async function ResultPage({
             </Link>
           )}
 
-          {order.status === 'pending' && (
+          {order.status === 'pending' && !order.payment && (
             <Link className="btn-primary btn-wide" href="/app">
               {t('dashboard')}
+            </Link>
+          )}
+
+          {order.status === 'pending' && order.payment && (
+            <Link className="btn-primary btn-wide" href={`/checkout/pay/${order.id}`}>
+              {m('title')}
+            </Link>
+          )}
+
+          {(order.status === 'expired' || order.status === 'rejected') && (
+            <Link className="btn-primary btn-wide" href="/templates">
+              {m('startAgain')}
             </Link>
           )}
 

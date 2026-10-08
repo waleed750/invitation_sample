@@ -894,5 +894,39 @@
       "generic": "Something went wrong. Please try again.",
       "callback": "We could not complete sign-in. Please try again."
     }
+  },
+  "manualPay": {
+    "title": "Pay for your order",
+    "reference": "Payment reference",
+    "amount": "Amount to pay",
+    "methods": "Ways to pay",
+    "noMethods": "Payment details will be sent to you on WhatsApp. Quote the reference above.",
+    "deadline": "Please pay before {date}",
+    "hoursLeft": "{hours} hours left",
+    "expired": "This payment window has closed.",
+    "instructions": "After you pay, send a screenshot of the transfer on WhatsApp and quote the reference {reference}. We confirm your payment by hand, then unlock your invitation.",
+    "whatsapp": "Payment proof for order {reference}",
+    "copy": "Copy reference",
+    "copied": "Copied",
+    "continue": "I have paid, check my order",
+    "startAgain": "Start again",
+    "statuses": {
+      "expired": "Expired",
+      "rejected": "Rejected"
+    },
+    "result": {
+      "pending": {
+        "title": "Waiting for your payment confirmation",
+        "description": "We have your order. Once you pay and send the proof on WhatsApp, we confirm it and unlock your invitation."
+      },
+      "expired": {
+        "title": "This order has expired",
+        "description": "The 72-hour payment window ended before we received your payment. Nothing was charged. You can start again."
+      },
+      "rejected": {
+        "title": "We could not confirm this payment",
+        "description": "The payment was not accepted. If you already paid, message us on WhatsApp with the reference. Otherwise you can start again."
+      }
+    }
   }
 }
