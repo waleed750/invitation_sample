@@ -660,3 +660,6 @@
 @keyframes hm-phone-float { 0%, 100% { transform: translateY(0) rotate(-.8deg); } 50% { transform: translateY(-8px) rotate(.8deg); } }
 @media (prefers-reduced-motion: reduce) { .hm-rp__hint, .hm-hero__phonebtn .hm-phone { animation: none; } }
 .hm-rp__line { color: var(--g950); font-weight: 600; }
+
+.hm-final__offer { max-inline-size: 40rem; margin-inline: auto; color: var(--g100); font-size: .95rem; }
+.hm-final__offer strong { color: var(--gold200); }

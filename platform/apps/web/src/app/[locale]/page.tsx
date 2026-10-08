@@ -11,9 +11,7 @@ import {HeroLive} from '@/components/home/HeroLive';
 import {Facts} from '@/components/home/Facts';
 import {HowItWorks} from '@/components/home/HowItWorks';
 import {Designs} from '@/components/home/Designs';
-import {Features} from '@/components/home/Features';
 import {Pricing} from '@/components/home/Pricing';
-import {Early} from '@/components/home/Early';
 import {Faq} from '@/components/home/Faq';
 import {FinalBanner} from '@/components/home/FinalBanner';
 import {SiteFooter} from '@/components/home/SiteFooter';
@@ -43,13 +41,11 @@ export default async function Landing({params}: Props) {
       <main id="main">
         <HeroLive featuredSlug={featuredSlug} />
         <Facts />
-        <HowItWorks editsAllowed={TIERS.classic.editsAllowed} />
         <Designs />
-        <Features />
+        <HowItWorks editsAllowed={TIERS.classic.editsAllowed} />
         <Pricing featuredSlug={featuredSlug} />
-        <Early featuredSlug={featuredSlug} />
         <Faq />
-        <FinalBanner />
+        <FinalBanner featuredSlug={featuredSlug} />
       </main>
       <SiteFooter />
       <StickyCta featuredSlug={featuredSlug} />

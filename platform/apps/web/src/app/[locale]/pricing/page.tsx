@@ -41,7 +41,7 @@ export default async function PricingPage({params}: Props) {
       <main id="main">
         <Pricing featuredSlug={featuredSlug} compareOpen headingLevel={1} />
         <Faq />
-        <FinalBanner />
+        <FinalBanner featuredSlug={featuredSlug} />
       </main>
       <SiteFooter />
       <StickyCta featuredSlug={featuredSlug} />
