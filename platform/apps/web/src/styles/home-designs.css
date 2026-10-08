@@ -21,8 +21,26 @@
 .hm-designs__art--soon { background: var(--ivory200); }
 .hm-designs__fill { position: absolute; inset: 0; background-color: var(--ivory100); background-image: var(--hm-lattice); filter: grayscale(1) opacity(.75); }
 
-@media (max-width: 599px) {
-  .hm-designs__head { flex-direction: column; align-items: flex-start; }
+@media (max-width: 639px) {
+  .hm-designs__head { flex-direction: column; align-items: flex-start; gap: .75rem; margin-block-end: 1.25rem; }
+  .hm-designs__grid {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+    gap: 1rem;
+    padding-inline: .25rem;
+    padding-block-end: .5rem;
+    justify-content: flex-start;
+  }
+  .hm-designs__grid::-webkit-scrollbar {
+    display: none;
+  }
+  .hm-designs__card {
+    flex: 0 0 min(84vw, 18.5rem);
+    scroll-snap-align: start;
+  }
   .hm-designs__actions { flex-direction: column; }
   .hm-designs__actions .hm-btn { flex: none; inline-size: 100%; }
 }

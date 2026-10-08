@@ -39,7 +39,7 @@ export default async function PricingPage({params}: Props) {
       <a className="hm-skip" href="#main">{t('skip')}</a>
       <SiteHeader featuredSlug={featuredSlug} />
       <main id="main">
-        <Pricing featuredSlug={featuredSlug} compareOpen headingLevel={1} />
+        <Pricing featuredSlug={featuredSlug} compareOpen showTrustRow headingLevel={1} />
         <Faq />
         <FinalBanner featuredSlug={featuredSlug} />
       </main>

@@ -13,8 +13,8 @@ export async function Faq() {
           <h2 id="hm-faq-title" className="hm-h2">{t('title')}</h2>
         </div>
         <div className="hm-faq__list">
-          {items.map((key) => (
-            <details key={key}>
+          {items.map((key, index) => (
+            <details key={key} open={index === 0}>
               <summary>{t(`${key}.q`)}<StarMark size={22} /></summary>
               <p>{t(`${key}.a`, {n: TIERS.classic.editsAllowed})}</p>
             </details>

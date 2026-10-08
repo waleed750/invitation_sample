@@ -695,6 +695,15 @@
         "title": "Share and track replies",
         "body": "One link on WhatsApp, and a clear table of who's coming and who declined.",
         "tag": "Export replies to a file that opens in Excel"
+      },
+      "guestList": {
+        "example": "Example preview",
+        "total": "42 attending",
+        "guest1": "Karim Mahmoud",
+        "guest2": "Sarah Ahmed",
+        "guest3": "Tarek Omar",
+        "attending": "Attending",
+        "declined": "Declined"
       }
     },
     "templates": {
@@ -763,6 +772,13 @@
       "badge": "Right for most weddings",
       "choose": "Choose {plan}",
       "refund": "Refund within 7 days, before you publish.",
+      "trust": {
+        "title": "Peace of mind",
+        "secure": "Secure payment",
+        "once": "One-time payment",
+        "refund": "Refund within 7 days, before you publish"
+      },
+      "compareMobileTitle": "Feature comparison",
       "plans": {
         "save-the-date": {
           "name": "Save the Date",

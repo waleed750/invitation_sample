@@ -1,15 +1,215 @@
-/* How it works — three hairline cards on an asymmetric grid: a wide lead step, then two narrower ones. */
-.hm-how__grid { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.25rem; }
-.hm-how__step { display: flex; flex-direction: column; gap: .85rem; background: #fff; border: 1px solid var(--hairline); border-radius: 4px; padding: clamp(1.5rem, 3vw, 2rem); }
-.hm-how__numrow { display: flex; align-items: baseline; gap: .75rem; color: var(--gold800); }
-.hm-how__num { font-family: var(--hm-head); font-size: 5rem; font-weight: 600; line-height: 1; color: transparent; -webkit-text-stroke: 1.5px var(--gold800); }
-.hm-how__numrow .hm-star { flex: none; color: var(--gold800); }
-.hm-how__title { font-size: 1.35rem; }
-.hm-how__body { color: var(--muted); font-size: .95rem; }
-.hm-how__tag { margin-block-start: auto; padding-block-start: .75rem; border-block-start: 1px solid var(--sand); color: var(--gold800); font-size: .85rem; font-weight: 600; line-height: 1.6; }
-@supports not (-webkit-text-stroke: 1px #000) { .hm-how__num { color: var(--gold800); } }
+/* How it works — compact rows on mobile, 3-column layout on desktop */
+.hm-how__grid {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: .75rem;
+}
+
+.hm-how__step {
+  display: flex;
+  flex-direction: column;
+  gap: .45rem;
+  background: #fff;
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  padding: 1rem 1.15rem;
+}
+
+.hm-how__numrow {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  color: var(--gold800);
+}
+
+.hm-how__num {
+  font-family: var(--hm-head);
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1;
+  color: var(--gold800);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 2rem;
+  block-size: 2rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--gold800);
+  background: var(--ivory50);
+  flex: none;
+}
+
+.hm-how__numrow .hm-star {
+  display: none;
+}
+
+.hm-how__title {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--g950);
+  margin-block: 0;
+}
+
+.hm-how__body {
+  color: var(--muted);
+  font-size: .9rem;
+  line-height: 1.5;
+  margin-block: 0;
+}
+
+/* Guest-list showcase card in step 3 */
+.hm-how__gl {
+  background: var(--ivory100);
+  border: 1px solid var(--hairline);
+  border-radius: 6px;
+  padding: .65rem .85rem;
+  margin-block: .45rem;
+  display: grid;
+  gap: .45rem;
+}
+
+.hm-how__gl-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: .75rem;
+  border-block-end: 1px solid var(--sand);
+  padding-block-end: .35rem;
+  color: var(--muted);
+}
+
+.hm-how__gl-tag {
+  background: var(--ivory200);
+  color: var(--gold800);
+  padding-block: .15rem;
+  padding-inline: .5rem;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.hm-how__gl-total {
+  color: var(--g800);
+  font-weight: 600;
+}
+
+.hm-how__gl-rows {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: .35rem;
+}
+
+.hm-how__gl-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: .5rem;
+  font-size: .85rem;
+}
+
+.hm-how__gl-name {
+  color: var(--g950);
+  font-weight: 500;
+}
+
+.hm-how__gl-chip {
+  padding-block: .15rem;
+  padding-inline: .55rem;
+  border-radius: 999px;
+  font-size: .75rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.hm-how__gl-chip--ok {
+  background: #e6f6ee;
+  color: #0d6832;
+  border: 1px solid #b7e4c7;
+}
+
+.hm-how__gl-chip--no {
+  background: #fdf2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+.hm-how__gl-foot {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-block-start: 1px solid var(--sand);
+  padding-block-start: .35rem;
+  font-size: .8rem;
+  font-weight: 700;
+  color: var(--g800);
+}
+
+.hm-how__tag {
+  margin-block-start: auto;
+  padding-block-start: .5rem;
+  border-block-start: 1px solid var(--sand);
+  color: var(--gold800);
+  font-size: .8rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+@media (max-width: 639px) {
+  .hm-how__grid {
+    gap: .65rem;
+  }
+  .hm-how__step {
+    padding: .85rem 1rem;
+    gap: .35rem;
+  }
+  .hm-how__step:not(:has(.hm-how__gl)) {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    column-gap: .75rem;
+    row-gap: .25rem;
+    align-items: center;
+  }
+  .hm-how__step:not(:has(.hm-how__gl)) .hm-how__numrow {
+    grid-row: 1 / 3;
+    margin-block-end: 0;
+  }
+  .hm-how__step:not(:has(.hm-how__gl)) .hm-how__title {
+    grid-column: 2;
+    font-size: 1.05rem;
+  }
+  .hm-how__step:not(:has(.hm-how__gl)) .hm-how__body {
+    grid-column: 2;
+    font-size: .85rem;
+  }
+  .hm-how__step:not(:has(.hm-how__gl)) .hm-how__tag {
+    grid-column: 2;
+    padding-block-start: .35rem;
+    margin-block-start: 0;
+  }
+}
 
 @media (min-width: 900px) {
-  .hm-how__grid { grid-template-columns: 1.5fr 1fr 1fr; align-items: start; }
-  .hm-how__step--lead { min-block-size: 28rem; padding: clamp(2.25rem, 3vw, 3rem); }
+  .hm-how__grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.25rem;
+    align-items: stretch;
+  }
+  .hm-how__step {
+    padding: clamp(1.5rem, 2.5vw, 2rem);
+    gap: .75rem;
+  }
+  .hm-how__num {
+    inline-size: 2.5rem;
+    block-size: 2.5rem;
+    font-size: 1.15rem;
+  }
+  .hm-how__title {
+    font-size: 1.25rem;
+  }
+  .hm-how__body {
+    font-size: .95rem;
+  }
 }

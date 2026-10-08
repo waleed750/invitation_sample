@@ -26,6 +26,31 @@ export async function HowItWorks({editsAllowed}: {editsAllowed: number}) {
               </p>
               <h3 className="hm-how__title">{t(`how.${key}.title`)}</h3>
               <p className="hm-how__body">{t(`how.${key}.body`)}</p>
+              {key === 's3' ? (
+                <div className="hm-how__gl" role="region" aria-label={t('how.guestList.example')}>
+                  <div className="hm-how__gl-head">
+                    <span className="hm-how__gl-tag">{t('how.guestList.example')}</span>
+                    <span className="hm-how__gl-total">{t('how.guestList.total')}</span>
+                  </div>
+                  <ul className="hm-how__gl-rows">
+                    <li className="hm-how__gl-row">
+                      <span className="hm-how__gl-name">{t('how.guestList.guest1')}</span>
+                      <span className="hm-how__gl-chip hm-how__gl-chip--ok">{t('how.guestList.attending')}</span>
+                    </li>
+                    <li className="hm-how__gl-row">
+                      <span className="hm-how__gl-name">{t('how.guestList.guest2')}</span>
+                      <span className="hm-how__gl-chip hm-how__gl-chip--ok">{t('how.guestList.attending')}</span>
+                    </li>
+                    <li className="hm-how__gl-row">
+                      <span className="hm-how__gl-name">{t('how.guestList.guest3')}</span>
+                      <span className="hm-how__gl-chip hm-how__gl-chip--no">{t('how.guestList.declined')}</span>
+                    </li>
+                  </ul>
+                  <div className="hm-how__gl-foot">
+                    <span>{t('how.guestList.total')}</span>
+                  </div>
+                </div>
+              ) : null}
               <p className="hm-how__tag">{key === 's2' ? t('how.s2.tag', {n: editsAllowed}) : t(`how.${key}.tag`)}</p>
             </li>
           ))}
