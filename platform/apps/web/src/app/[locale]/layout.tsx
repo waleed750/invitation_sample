@@ -1,14 +1,40 @@
 import type {Metadata} from 'next';
-import {Cairo, Cormorant_Garamond, Inter} from 'next/font/google';
+import localFont from 'next/font/local';
 import {hasLocale, NextIntlClientProvider} from 'next-intl';
 import {getMessages, getTranslations, setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
 import '@/styles/globals.css';
 
-const cairo = Cairo({subsets: ['arabic', 'latin'], variable: '--font-cairo', display: 'swap'});
-const display = Cormorant_Garamond({subsets: ['latin'], weight: ['500', '600'], variable: '--font-cormorant', display: 'swap'});
-const inter = Inter({subsets: ['latin'], variable: '--font-inter', display: 'swap'});
+const cairo = localFont({
+  src: [
+    { path: '../../fonts/cairo/cairo-latin.woff2', weight: '200 1000', style: 'normal' },
+    { path: '../../fonts/cairo/cairo-arabic.woff2', weight: '200 1000', style: 'normal' }
+  ],
+  variable: '--font-cairo',
+  display: 'swap',
+  adjustFontFallback: false
+});
+
+const display = localFont({
+  src: [
+    { path: '../../fonts/cormorant-garamond/cormorant-garamond-latin-500-normal.woff2', weight: '500', style: 'normal' },
+    { path: '../../fonts/cormorant-garamond/cormorant-garamond-latin-600-normal.woff2', weight: '600', style: 'normal' }
+  ],
+  variable: '--font-cormorant',
+  display: 'swap',
+  adjustFontFallback: false
+});
+
+const inter = localFont({
+  src: [
+    { path: '../../fonts/inter/inter-latin.woff2', weight: '200 1000', style: 'normal' }
+  ],
+  variable: '--font-inter',
+  display: 'swap',
+  adjustFontFallback: false
+});
+
 type Props = {children: React.ReactNode; params: Promise<{locale: string}>};
 
 export function generateStaticParams() {

@@ -1,13 +1,6 @@
 import {vi} from 'vitest';
-vi.mock('next/font/google', () => ({
-  Tajawal: () => ({variable: '--font-tajawal'}),
-  Amiri: () => ({variable: '--font-amiri'}),
-  Aref_Ruqaa: () => ({variable: '--font-aref-ruqaa'}),
-  Fraunces: () => ({variable: '--font-fraunces'}),
-  IBM_Plex_Sans_Arabic: () => ({variable: '--font-ibm-plex-sans-arabic'}),
-  IBM_Plex_Sans: () => ({variable: '--font-ibm-plex-sans'}),
-  Cormorant_Garamond: () => ({variable: "--font-cormorant-garamond"}),
-  Inter: () => ({variable: "--font-inter"}),
+vi.mock('next/font/local', () => ({
+  default: (opts: { variable?: string }) => ({variable: opts.variable || '--mock-font'}),
 }));
 import {describe, expect, it} from 'vitest';
 import {getEleganteData} from '../data';
