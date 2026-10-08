@@ -3,7 +3,9 @@ import {hasLocale} from 'next-intl';
 import {setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import {routing} from '@/i18n/routing';
-import {isPubliclyListed, resolveText} from '@platform/shared';
+import {isPubliclyListed, priceFor, resolveText} from '@platform/shared';
+import {DemoBar} from '@/components/home/DemoBar';
+import {formatMoney, type FormatLocale} from '@/lib/format';
 import {getTemplate, listLiveTemplates} from '@/templates/registry';
 import InvitationShell from '@/engine/InvitationShell';
 import '@/engine/styles/templates/mashrabiya.css';
@@ -64,6 +66,7 @@ export default async function TemplatePage({params}: Props) {
   return (
     <div className={template.fontClassName}>
       <InvitationShell data={data} locale={locale} templateSlug={slug} />
+      <DemoBar slug={slug} tier={template.entry.tier} price={formatMoney(priceFor(template.entry), locale as FormatLocale)} />
     </div>
   );
 }

@@ -8,8 +8,6 @@ import {Chevron} from './Chevron';
 import {InvitationScreen} from './InvitationScreen';
 import '../../styles/home-designs.css';
 
-const SOON_KEYS = ['a', 'b', 'c'] as const;
-
 type CardCopy = {name: string; desc: string; style: string | null};
 
 // templates.live.* describes one single live design; once more are live, the catalog carries the copy.
@@ -23,30 +21,30 @@ function cardCopy(entry: CatalogEntry, liveCount: number, locale: Locale, live: 
   };
 }
 
-export async function Designs() {
+export async function Designs({standalone = false}: {standalone?: boolean} = {}) {
   const t = await getTranslations('home');
   const locale = (await getLocale()) as FormatLocale;
   const dir = locale === 'ar' ? 'rtl' : 'ltr';
   const liveTemplates = listLiveTemplates();
   const dateText = formatDate(`${t('hero.phone.defaultDate')}T12:00:00`, locale);
   return (
-    <section id="designs" className="hm-section hm-section--alt" aria-labelledby="hm-designs-title">
+    <section id="designs" className={`hm-section hm-section--alt${standalone ? ' hm-section--tight' : ''}`} aria-labelledby="hm-designs-title">
       <div className="hm-wrap">
         <div className="hm-designs__head">
           <div className="hm-designs__titles">
             <p className="hm-eyebrow">{t('templates.eyebrow')}</p>
-            <h2 id="hm-designs-title" className="hm-h2">{t('templates.title')}</h2>
+            {standalone ? <h1 id="hm-designs-title" className="hm-h2">{t('templates.title')}</h1> : <h2 id="hm-designs-title" className="hm-h2">{t('templates.title')}</h2>}
           </div>
-          <Link className="hm-btn hm-btn--ghost" href="/templates">{t('templates.all')}<Chevron /></Link>
+          {standalone ? null : <Link className="hm-btn hm-btn--ghost" href="/templates">{t('templates.all')}<Chevron /></Link>}
         </div>
         <div className="hm-designs__grid">
-          {liveTemplates.map((template) => {
+          {liveTemplates.map((template, index) => {
             const {entry} = template;
             const copy = cardCopy(entry, liveTemplates.length, locale, (key) => t(`templates.live.${key}`));
             return (
               <article className="hm-designs__card" key={entry.slug}>
                 <div className="hm-designs__art">
-                  <InvitationScreen variant="ink" open names={t('hero.phone.defaultNames')} dateText={dateText}
+                  <InvitationScreen variant={(['ink', 'ivory', 'green'] as const)[index % 3]} open names={t('hero.phone.defaultNames')} dateText={dateText}
                     line={t('hero.phone.line')} dir={dir} lang={locale} />
                   <span className="hm-designs__badge">{t('templates.ready')}</span>
                   {copy.style ? <span className="hm-designs__style">{copy.style}</span> : null}
@@ -65,21 +63,6 @@ export async function Designs() {
               </article>
             );
           })}
-          {SOON_KEYS.slice(0, Math.max(0, 4 - liveTemplates.length)).map((key) => (
-            <article className="hm-designs__card hm-designs__card--soon" key={key} role="group" aria-disabled="true">
-              <div className="hm-designs__art hm-designs__art--soon">
-                <span className="hm-designs__fill" aria-hidden="true" />
-                <span className="hm-designs__badge">{t('templates.soon')}</span>
-                <span className="hm-designs__style">{t(`templates.soonItems.${key}.style`)}</span>
-              </div>
-              <div className="hm-designs__meta">
-                <div className="hm-designs__namerow">
-                  <h3 className="hm-designs__name">{t(`templates.soonItems.${key}.name`)}</h3>
-                </div>
-                <p className="hm-designs__desc">{t('templates.soonDesc')}</p>
-              </div>
-            </article>
-          ))}
         </div>
       </div>
     </section>

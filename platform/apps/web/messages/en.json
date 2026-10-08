@@ -536,7 +536,8 @@
       "pricing": "Pricing",
       "how": "How it works",
       "cta": "Design your invitation",
-      "account": "My account"
+      "account": "My account",
+      "menu": "Menu"
     },
     "hero": {
       "tag": "An Egyptian platform for digital wedding invitations",
@@ -765,5 +766,11 @@
       "made": "Made with love in Egypt",
       "legal": "Legal pages are being prepared."
     }
+  },
+  "demoBar": {
+    "label": "Buy this design",
+    "back": "All designs",
+    "from": "From",
+    "use": "Use this design"
   }
 }

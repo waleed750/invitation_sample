@@ -3,7 +3,7 @@ import {LanguageSwitcher} from '@/components/LanguageSwitcher';
 import {Link} from '@/i18n/navigation';
 import {StarMark} from './StarMark';
 
-export async function SiteHeader({featuredSlug}: {featuredSlug: string}) {
+export async function SiteHeader({featuredSlug, current = '/'}: {featuredSlug: string; current?: string}) {
   const t = await getTranslations('home');
   const links = [
     {href: '/', label: t('nav.home')},
@@ -21,20 +21,26 @@ export async function SiteHeader({featuredSlug}: {featuredSlug: string}) {
               <span className="hm-brand__text"><span className="hm-brand__name">{t('brand')}</span><span className="hm-brand__tag">{t('tagline')}</span></span>
             </Link>
             <nav className="hm-nav" aria-label={t('nav.label')}>
-              {links.map((item, index) => <Link key={item.href} href={item.href} aria-current={index === 0 ? 'page' : undefined}>{item.label}</Link>)}
+              {links.map((item) => <Link key={item.href} href={item.href} aria-current={item.href === current ? 'page' : undefined}>{item.label}</Link>)}
             </nav>
           </div>
           <div className="hm-header__end">
             <LanguageSwitcher />
+            <details className="hm-menu">
+              <summary className="hm-menu__btn" aria-label={t('nav.menu')}>
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16" /></svg>
+              </summary>
+              <nav className="hm-menu__sheet" aria-label={t('nav.label')}>
+              {links.map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}
+              <Link className="hm-btn hm-btn--primary" href={`/checkout/${featuredSlug}`}>{t('nav.cta')}</Link>
+              </nav>
+            </details>
             <Link className="hm-account" href="/app" aria-label={t('nav.account')}>
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 21c1-4.5 4.5-6 8-6s7 1.5 8 6" /></svg>
             </Link>
             <Link className="hm-btn hm-btn--primary hm-header__cta" href={`/checkout/${featuredSlug}`}>{t('nav.cta')}</Link>
           </div>
         </div>
-        <nav className="hm-mnav" aria-label={t('nav.label')}>
-          {links.slice(1).map((item) => <Link key={item.href} href={item.href}>{item.label}</Link>)}
-        </nav>
       </div>
     </header>
   );
