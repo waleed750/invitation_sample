@@ -14,7 +14,7 @@ const PAST = '2020-01-01T00:00:00Z';
 const IP_SECRET = 'test-ip-hash-secret-at-least-32-chars';
 
 function invitationRow(tier: string, onlineUntil: string | null) {
-  return {id: 'inv-1', slug: 'ahmed-mona', locale: 'ar', status: 'published', data: {}, entitlement: {tier, online_until: onlineUntil}};
+  return {id: 'inv-1', slug: 'ahmed-mona', locale: 'ar', status: 'published', data: {}, template: {slug: 'elegante'}, entitlement: {tier, online_until: onlineUntil}};
 }
 function publishRow(snapshot: unknown = {couple: {first: 'Ahmed', second: 'Mona'}, eventDate: '2026-06-20'}) {
   return {snapshot, published_at: '2026-01-01T00:00:00Z'};
@@ -48,6 +48,13 @@ describe('PublicInvitationsService', () => {
     await boot();
     const result = await service.getBySlug('ahmed-mona');
     expect(result).toMatchObject({state: 'live', slug: 'ahmed-mona', tier: 'classic'});
+  });
+
+  it('includes templateSlug in the live response, null when the template is missing', async () => {
+    await boot();
+    expect(await service.getBySlug('ahmed-mona')).toMatchObject({state: 'live', templateSlug: 'elegante'});
+    repository.findPublishedBySlugAsServiceRole.mockResolvedValue({data: {...invitationRow('classic', FUTURE), template: null}, error: null});
+    expect(await service.getBySlug('ahmed-mona')).toMatchObject({state: 'live', templateSlug: null});
   });
 
   it('returns the ended shell once online_until has passed', async () => {

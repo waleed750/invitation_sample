@@ -25,7 +25,7 @@ export class PublicInvitationsRepository {
   /** Published invitation + entitlement by share slug. Raw postgrest envelope. */
   async findPublishedBySlugAsServiceRole(slug: string): Promise<unknown> {
     return this.supabase.admin().from('invitations')
-      .select('id,slug,locale,status,data,entitlement:invitation_entitlements(tier,online_until)')
+      .select('id,slug,locale,status,data,template:templates(slug),entitlement:invitation_entitlements(tier,online_until)')
       .eq('slug', slug).eq('status', 'published').single();
   }
 

@@ -29,6 +29,8 @@ export interface InvitationDetail {
   slug: string;
   status: string;
   templateId: string | null;
+  templateSlug: string | null;
+  orderId: string | null;
   data: unknown;
   /** Raw Postgres `updated_at`; send it back unchanged as `If-Match`. */
   updatedAt: string;
@@ -72,14 +74,18 @@ function errorText(error: unknown): {code: string; message: string} {
 
 function toDetail(value: unknown, now: Date): InvitationDetail {
   if (!isRecord(value)) throw unavailable();
-  const {id, slug, status, template_id, updated_at, published_at} = value;
+  const {id, slug, status, template_id, updated_at, published_at, order_id} = value;
+  const template = isRecord(value.template) ? value.template : Array.isArray(value.template) && isRecord(value.template[0]) ? value.template[0] : null;
   if (
     typeof id !== 'string' || typeof slug !== 'string' || typeof status !== 'string' ||
     !(typeof template_id === 'string' || template_id === null) || typeof updated_at !== 'string' ||
-    !(typeof published_at === 'string' || published_at === null)
+    !(typeof published_at === 'string' || published_at === null) ||
+    !(typeof order_id === 'string' || order_id === null)
   ) throw unavailable();
   return {
-    id, slug, status, templateId: template_id, data: value.data, updatedAt: updated_at, publishedAt: published_at,
+    id, slug, status, templateId: template_id,
+    templateSlug: template !== null && typeof template.slug === 'string' ? template.slug : null,
+    orderId: order_id, data: value.data, updatedAt: updated_at, publishedAt: published_at,
     entitlement: toEntitlement(value.entitlement, now)
   };
 }

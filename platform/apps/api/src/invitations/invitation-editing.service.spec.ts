@@ -14,7 +14,7 @@ const U2 = '2026-10-07T10:05:00.654321+00:00';
 
 function row(over: Record<string, unknown> = {}) {
   return {
-    id: ID, slug: 'ahmed-mona', status: 'draft', template_id: 'tpl-1', data: {a: 1}, updated_at: U1, published_at: null,
+    id: ID, slug: 'ahmed-mona', status: 'draft', template_id: 'tpl-1', order_id: 'ord-1', template: {slug: 'elegante'}, data: {a: 1}, updated_at: U1, published_at: null,
     entitlement: {tier: 'classic', edits_allowed: 15, edits_used: 0, online_until: '2027-01-01T00:00:00Z'},
     ...over
   };
@@ -52,6 +52,16 @@ describe('InvitationEditingService', () => {
       expect(result).toMatchObject({id: ID, slug: 'ahmed-mona', status: 'draft', templateId: 'tpl-1', updatedAt: U1, publishedAt: null});
       expect(result.entitlement).toMatchObject({editsAllowed: 15, editsUsed: 0, remaining: 15, tier: 'classic'});
       expect(repo.findById).toHaveBeenCalledWith('jwt-1', ID);
+    });
+
+    it('exposes templateSlug and orderId (also when the relation is an array)', async () => {
+      repo.findById.mockResolvedValue(ok(row({template: [{slug: 'citystars'}]})));
+      expect(await service.get(user, ID)).toMatchObject({templateSlug: 'citystars', orderId: 'ord-1'});
+    });
+
+    it('returns null templateSlug and orderId when there is no template or order', async () => {
+      repo.findById.mockResolvedValue(ok(row({template: null, order_id: null, template_id: null})));
+      expect(await service.get(user, ID)).toMatchObject({templateSlug: null, orderId: null});
     });
 
     it("404s on someone else's invitation (RLS returns no row)", async () => {

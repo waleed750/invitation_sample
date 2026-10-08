@@ -45,6 +45,7 @@ export interface LiveInvitation {
   slug: string;
   tier: string;
   locale: string;
+  templateSlug: string | null;
   snapshot: unknown;
   publishedAt: string;
   onlineUntil: string | null;
@@ -63,6 +64,7 @@ interface ResolvedInvitation {
   snapshot: unknown;
   publishedAt: string;
   locale: string;
+  templateSlug: string | null;
 }
 
 function relation(value: unknown): Record<string, unknown> | null {
@@ -127,7 +129,7 @@ export class PublicInvitationsService {
       return {state: 'ended', ...extractEndedInfo(resolved.snapshot)};
     }
     return {
-      state: 'live', slug, tier: resolved.tier, locale: resolved.locale,
+      state: 'live', slug, tier: resolved.tier, locale: resolved.locale, templateSlug: resolved.templateSlug,
       snapshot: resolved.snapshot, publishedAt: resolved.publishedAt,
       onlineUntil: resolved.onlineUntil?.toISOString() ?? null
     };
@@ -243,8 +245,10 @@ export class PublicInvitationsService {
       this.logger.error('public publish lookup failed (malformed row)');
       throw new ServiceUnavailableException('Invitation service unavailable');
     }
+    const template = relation(row.template);
     return {
       id, tier, locale,
+      templateSlug: template === null ? null : stringField(template, 'slug'),
       onlineUntil: onlineUntilRaw === null ? null : new Date(onlineUntilRaw),
       snapshot: publish.data.snapshot, publishedAt
     };

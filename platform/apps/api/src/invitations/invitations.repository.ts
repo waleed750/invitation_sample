@@ -16,7 +16,7 @@ export class InvitationsRepository {
   /** One invitation with its entitlement (user JWT, RLS decides visibility; no row = hidden or missing). Raw envelope. */
   async findById(jwt: string, id: string): Promise<unknown> {
     return this.supabase.forUser(jwt).from('invitations')
-      .select('id,slug,status,template_id,data,updated_at,published_at,entitlement:invitation_entitlements(tier,edits_allowed,edits_used,online_until)')
+      .select('id,order_id,slug,status,template_id,data,updated_at,published_at,template:templates(slug),entitlement:invitation_entitlements(tier,edits_allowed,edits_used,online_until)')
       .eq('id', id)
       .maybeSingle();
   }

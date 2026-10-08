@@ -4,11 +4,13 @@ import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
 import {SupabaseService} from '../supabase/supabase.service';
 import {OrdersRepository} from './orders.repository';
+import {AppConfigService} from '../config/app-config.service';
 import {OrdersService} from './orders.service';
 
 describe('OrdersService', () => {
   let service: OrdersService;
   let supabaseClient: any;
+  let config: any;
 
   beforeEach(async () => {
     supabaseClient = {
@@ -19,10 +21,12 @@ describe('OrdersService', () => {
       single: jest.fn()
     };
 
+    config = {manualPaymentInstructions: undefined};
     const module = await Test.createTestingModule({
       providers: [
         OrdersService,
         OrdersRepository, {provide: SupabaseService, useValue: {forUser: () => supabaseClient}},
+        {provide: AppConfigService, useValue: config},
         {provide: AppLogger, useValue: {error: jest.fn()}}
       ]
     }).compile();
@@ -64,5 +68,45 @@ describe('OrdersService', () => {
   it('should throw ServiceUnavailableException on generic DB error', async () => {
     supabaseClient.single.mockResolvedValueOnce({data: null, error: new Error('DB error')});
     await expect(service.get({id: 'u1', jwt: 't1'} as any, '1')).rejects.toThrow(ServiceUnavailableException);
+  });
+
+  describe('templateSlug and manual payment block', () => {
+    const user = {id: 'u1', jwt: 't1'} as any;
+    const manualOrder = {
+      ...validOrder, status: 'pending', provider: 'manual', provider_ref: 'MAN-123', paid_at: null,
+      created_at: '2026-01-01T00:00:00.000Z', template: {slug: 'elegante'}
+    };
+    const methods = [{kind: 'instapay', label: 'InstaPay', value: 'x@instapay'}];
+
+    it('maps templateSlug from the embedded relation and null when absent', async () => {
+      supabaseClient.order.mockResolvedValueOnce({data: [{...validOrder, template: {slug: 'citystars'}}, {...validOrder, template: null}], error: null});
+      const result = await service.list(user);
+      expect(result[0].templateSlug).toBe('citystars');
+      expect(result[1].templateSlug).toBeNull();
+    });
+
+    it('adds the payment block for manual orders on list and get, any status', async () => {
+      config.manualPaymentInstructions = {methods};
+      supabaseClient.order.mockResolvedValueOnce({data: [manualOrder, {...manualOrder, status: 'paid'}], error: null});
+      const [pending, paid] = await service.list(user);
+      expect(pending.payment).toEqual({
+        reference: 'MAN-123', amountMinor: 10000, currency: 'EGP', expiresAt: '2026-01-04T00:00:00.000Z', methods
+      });
+      expect(paid.payment).toBeDefined();
+      supabaseClient.single.mockResolvedValueOnce({data: manualOrder, error: null});
+      expect((await service.get(user, '1')).payment).toMatchObject({reference: 'MAN-123', expiresAt: '2026-01-04T00:00:00.000Z'});
+    });
+
+    it('uses an empty methods array when instructions are unset', async () => {
+      supabaseClient.single.mockResolvedValueOnce({data: manualOrder, error: null});
+      expect((await service.get(user, '1')).payment?.methods).toEqual([]);
+    });
+
+    it('omits the payment block for non-manual orders and keeps existing fields', async () => {
+      supabaseClient.single.mockResolvedValueOnce({data: validOrder, error: null});
+      const result = await service.get(user, '1');
+      expect(result).not.toHaveProperty('payment');
+      expect(result).toMatchObject({reference: 'mock_1', templateId: 't1', templateSlug: null});
+    });
   });
 });

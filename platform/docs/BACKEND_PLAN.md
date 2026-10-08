@@ -220,6 +220,8 @@ All under `/v1/admin/*` with `@Roles('admin')`. An `AuditInterceptor` writes eve
 
 The customer pays outside the site; an admin confirms; the system does the rest.
 
+**API note:** `GET /v1/orders` and `GET /v1/orders/:id` expose `templateSlug` and, for every `provider='manual'` order (any status), the same `payment` block checkout returns (`reference`, `amountMinor`, `currency`, `expiresAt` = created + 72 h, `methods`). Both build it with the shared `buildManualPayment` (`apps/api/src/payments/manual-payment.ts`), so the order page can show how to pay after a reload.
+
 1. **Checkout** creates a `pending` order with `provider='manual'` and a short **payment reference** (for example `INV-4821`). The page and a WhatsApp/email message show the amount, the reference and how to pay:
    - InstaPay
    - Vodafone Cash / other wallets

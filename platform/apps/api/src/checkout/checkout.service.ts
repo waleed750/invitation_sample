@@ -5,10 +5,10 @@ import {createZodDto} from 'nestjs-zod';
 import {z} from 'zod';
 import {AppLogger} from '../common/app-logger';
 import {AppConfigService} from '../config/app-config.service';
-import type {ManualPaymentInstructions} from '../config/env.schema';
 import type {RequestUser} from '../common/decorators';
 import {isRecord} from '../common/type-guards';
 import {CheckoutRepository} from './checkout.repository';
+import {buildManualPayment, type ManualPaymentDetails} from '../payments/manual-payment';
 import {PAYMENT_PROVIDER, type PaymentProvider} from '../payments/payment-provider';
 
 const checkoutSchema = z.object({
@@ -34,16 +34,7 @@ export interface CheckoutResponse {
   payment?: ManualPaymentDetails;
 }
 
-export interface ManualPaymentDetails {
-  reference: string;
-  amountMinor: number;
-  currency: string;
-  /** ISO timestamp: order creation + 72 h, after which an unpaid order expires. */
-  expiresAt: string;
-  methods: ManualPaymentInstructions['methods'];
-}
-
-const MANUAL_ORDER_TTL_MS = 72 * 60 * 60 * 1000;
+export type {ManualPaymentDetails};
 
 /** Only EGP is sold today; other currencies arrive with their gateways (BACKEND_PLAN §2b). */
 const CHECKOUT_CURRENCY = 'EGP';
@@ -104,20 +95,19 @@ export class CheckoutService {
         ? {redirectUrl: `/checkout/result/${order.id}`, providerRef: order.providerRef, reference: order.providerRef}
         : await this.provider.createCheckout({id: order.id, amountMinor: order.amountMinor, currency: order.currency, method: body.method});
       if (checkout.providerRef !== order.providerRef) await this.saveProviderRef(order.id, checkout.providerRef);
-      const createdMs = order.createdAt === undefined ? Date.now() : Date.parse(order.createdAt);
       return {
         orderId: order.id,
         redirectUrl: checkout.redirectUrl,
         ...(checkout.reference === undefined ? {} : {reference: checkout.reference}),
         amountMinor: order.amountMinor,
         currency: order.currency,
-        ...(manual ? {payment: {
+        ...(manual ? {payment: buildManualPayment({
           reference: checkout.reference ?? checkout.providerRef,
           amountMinor: order.amountMinor,
           currency: order.currency,
-          expiresAt: new Date((Number.isNaN(createdMs) ? Date.now() : createdMs) + MANUAL_ORDER_TTL_MS).toISOString(),
-          methods: this.config.manualPaymentInstructions?.methods ?? []
-        }} : {})
+          ...(order.createdAt === undefined ? {} : {createdAt: order.createdAt}),
+          ...(this.config.manualPaymentInstructions === undefined ? {} : {instructions: this.config.manualPaymentInstructions})
+        })} : {})
       };
     } catch (error) {
       if (error instanceof BadRequestException || error instanceof ServiceUnavailableException || error instanceof UnprocessableEntityException) throw error;
