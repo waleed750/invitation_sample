@@ -157,50 +157,69 @@
     "secure": "Secure demo checkout",
     "eyebrow": "Your invitation starts here",
     "title": "Make it yours, then make it official.",
-    "description": "Add your details, verify your phone and choose the plan for your celebration.",
+    "description": "Add your details, choose your plan, verify your phone, and get ready to celebrate.",
     "steps": {
-      "details": "Your details",
+      "details": "Wedding details",
       "phone": "Verify phone",
-      "plan": "Plan & pay"
+      "plan": "Plan",
+      "pay": "Confirm & pay"
     },
     "details": {
       "first": "First partner's name",
       "second": "Second partner's name",
+      "partner1": "First partner's name",
+      "partner2": "Second partner's name",
       "date": "Event date",
-      "preview": "A little preview",
+      "datePlaceholder": "Select celebration date",
+      "pastDateError": "Please choose a future date",
+      "preview": "Design preview",
       "firstPlaceholder": "First name",
-      "secondPlaceholder": "Second name"
+      "secondPlaceholder": "Second name",
+      "changeTemplate": "Change design",
+      "next": "Next: Plan",
+      "edit": "Edit"
     },
     "otp": {
       "phone": "Mobile number",
       "send": "Send code",
       "code": "6-digit code",
       "verify": "Verify number",
-      "verified": "Phone verified"
+      "verified": "Phone verified successfully",
+      "resend": "Resend code",
+      "changePhone": "Change number",
+      "resendCountdown": "Resend in {seconds}s"
     },
     "plan": {
-      "choose": "Choose a plan",
+      "choose": "Choose your plan",
       "tiers": {
         "save-the-date": {
           "name": "Save the Date",
-          "feature": "{edits} edits · {months} months online"
+          "feature": "{edits} edits · {months} months online · No RSVPs"
         },
         "classic": {
           "name": "Classic",
-          "feature": "{edits} edits · {months} months online"
+          "feature": "{edits} edits · {months} months online · 300 RSVPs"
         },
         "premium": {
           "name": "Premium",
-          "feature": "{edits} edits · {months} months online"
+          "feature": "{edits} edits · {months} months online · Unlimited RSVPs"
         }
       },
       "addons": "Need more later? Add 10 edits for EGP 99 or extend by 3 months for EGP 199.",
+      "recommendedBadge": "Recommended",
+      "haveCoupon": "Have a discount code?",
       "coupon": "Coupon code",
+      "applyCoupon": "Apply",
+      "removeCoupon": "Remove",
+      "couponApplied": "Coupon code applied ({code})",
+      "invalidCoupon": "Invalid coupon code",
+      "next": "Next: Confirm & Pay",
+      "edit": "Edit",
       "method": "Payment method",
       "methods": {
-        "card": "Card",
-        "wallet": "Mobile wallet",
-        "fawry": "Fawry cash"
+        "card": "Credit/Debit Card — Visa / Mastercard / Meeza",
+        "wallet": "Mobile Wallet — Vodafone Cash / InstaPay",
+        "fawry": "Fawry — Pay cash within 72 hours"
       }
     },
     "summary": {
@@ -208,7 +227,12 @@
       "title": "Order summary",
       "subtotal": "Subtotal",
       "discount": "Discount",
-      "total": "Total"
+      "total": "Total",
+      "mobileToggle": "Order details",
+      "trustLine": "Secure payment · No auto-renewal · 14-day refund",
+      "payNow": "Pay {amount}",
+      "verifyFirst": "Verify phone to continue",
+      "helpWhatsApp": "Help via WhatsApp"
     },
     "pay": {
       "button": "Continue to payment",
@@ -223,29 +247,38 @@
       "reference": "Get Fawry reference",
       "fawryReference": "Fawry reference",
       "referenceHelp": "Use the button below to simulate paying this reference at an outlet.",
-      "cashPaid": "Simulate cash payment at outlet"
+      "cashPaid": "Simulate cash payment at outlet",
+      "changeMethod": "Back to change payment method",
+      "deadlineText": "Pay before: {date}",
+      "demoBadge": "Demo mode",
+      "copied": "Copied ✓"
     },
     "result": {
       "eyebrow": "Payment result",
       "paid": {
-        "title": "Payment complete",
-        "description": "Your draft invitation is ready for you."
+        "title": "Congratulations! Your invitation is ready",
+        "description": "Your payment is confirmed and your draft invitation is ready to customize."
       },
       "pending": {
-        "title": "Waiting for payment",
-        "description": "Your order is saved and still pending.",
-        "instructions": "Take this reference to a Fawry outlet. This demo does not create a real payable reference."
+        "title": "Waiting for payment — Fawry",
+        "description": "Your order is saved. Please pay at any Fawry outlet to activate your invitation.",
+        "instructions": "Take this reference number to any Fawry outlet and request Dawati payment."
       },
       "failed": {
         "title": "Payment failed",
-        "description": "No money was charged. You can return to the demo gateway and try again."
+        "description": "No money was charged. You can retry or choose a different payment method."
       },
-      "order": "Order",
-      "amount": "Amount",
-      "created": "Created",
+      "order": "Order code",
+      "amount": "Total amount",
+      "created": "Date created",
       "reference": "Fawry reference",
       "dashboard": "Open dashboard",
-      "tryAgain": "Try payment again"
+      "tryAgain": "Try payment again",
+      "nextStepsTitle": "Next steps",
+      "step1": "Review invitation details",
+      "step2": "Publish the final version",
+      "step3": "Share with guests on WhatsApp",
+      "copyCode": "Copy order code"
     },
     "errors": {
       "invalidPhone": "Enter a valid Egyptian mobile number.",
@@ -260,6 +293,7 @@
     "nav": {
       "label": "Dashboard navigation",
       "home": "Home",
+      "guests": "Guests",
       "orders": "Orders",
       "points": "Points",
       "account": "Account"
@@ -267,6 +301,7 @@
     "home": {
       "eyebrow": "Your celebration, in one place",
       "greeting": "Welcome back",
+      "greetingNames": "Good evening, {names}",
       "signedIn": "Signed in securely as {phone}",
       "pointsBalance": "{points} points",
       "collectionEyebrow": "Your collection",
@@ -276,6 +311,23 @@
       "emptyDescription": "Choose a design, add your details and we will keep everything ready for you here.",
       "emptyAction": "Explore templates",
       "eventCountdown": "{days, plural, =0 {The celebration is today} one {# day to the celebration} other {# days to the celebration}}",
+      "chipsCountdown": "{days, plural, =0 {Celebration is today} one {# day to celebration} other {# days to celebration}}",
+      "chipsPoints": "{points} pts — {level}",
+      "actionReview": "Review & publish",
+      "actionWhatsApp": "Share on WhatsApp",
+      "actionReplies": "View responses",
+      "actionExtend": "Extend duration",
+      "preview": "Preview",
+      "copyLink": "Copy link",
+      "copiedLink": "Copied ✓",
+      "statAttending": "Attending",
+      "statReplies": "Replies",
+      "statEdits": "Edits",
+      "statDays": "Days online",
+      "upsellEdits": "Add more edits",
+      "upsellExtend": "Extend duration",
+      "latestReplies": "Latest replies",
+      "allGuests": "All guests",
       "edits": "Edits left",
       "editsValue": "{left} of {allowed} left",
       "daysOnline": "Days online",
@@ -297,7 +349,10 @@
       "tabGuests": "Guests",
       "guestsEyebrow": "Live guest responses",
       "guestsTitle": "Guests & RSVP",
-      "guestsDescription": "{responses} responses · {attending} guests attending"
+      "guestsDescription": "{responses} responses · {attending} guests attending",
+      "journeyStep1": "Review details",
+      "journeyStep2": "Publish",
+      "journeyStep3": "Share"
     },
     "share": {
       "eyebrow": "Send it beautifully",
@@ -316,12 +371,25 @@
       "description": "Your invitation purchases and add-ons, together in one place.",
       "emptyTitle": "No orders yet",
       "emptyDescription": "Completed and pending purchases will appear here.",
+      "emptyAction": "Browse designs",
+      "pendingBadge": "Pending payment",
+      "pendingTitle": "Pending payment — Fawry cash",
+      "pendingHelp": "Pay with reference number at any Fawry outlet to activate invitation.",
+      "deadlineNotice": "Reference valid for 72 hours from order time",
+      "payNow": "Pay now",
+      "copyReference": "Copy number",
+      "titleNew": "Invitation {template} — {tier}",
+      "titleEdits": "+10 extra edits",
+      "titleExtension": "3 months duration extension",
+      "orderCode": "Order code",
+      "copied": "Copied",
       "kind": "Order type",
       "method": "Payment method",
       "date": "Created",
       "reference": "Fawry reference",
       "receipt": "Receipt",
       "receiptSoon": "Coming soon",
+      "downloadReceipt": "Download receipt",
       "kinds": {
         "new": "New invitation",
         "extension": "Online extension",
@@ -339,10 +407,19 @@
       "description": "Every celebration moves you closer to more rewards.",
       "balance": "Available balance",
       "points": "points",
+      "egpDiscount": "= {amount} discount",
+      "progress": "Progress to next level",
       "nextLevel": "{count, plural, one {# more purchase to reach {level}} other {# more purchases to reach {level}}}",
       "topLevel": "You have reached our highest level.",
       "levelProgress": "Progress to the next level",
-      "redeemTitle": "How redemption works",
+      "howItWorks": "How points work",
+      "ruleEarnTitle": "Earn points",
+      "ruleEarnDesc": "Collect points with every invitation or add-on order.",
+      "ruleRedeemTitle": "Redeem at checkout",
+      "ruleRedeemDesc": "Redeem up to 30% of any order in 50 EGP steps.",
+      "ruleExpiryTitle": "12-month validity",
+      "ruleExpiryDesc": "Points remain valid for a full year from the issue date.",
+      "redeemTitle": "Redemption conditions",
       "redeemRules": "Each complete 100 points can redeem EGP 50. Points, coupons and affiliate discounts together cannot exceed 30% of an order, and redemption is applied in EGP 50 steps.",
       "redeemExample": "With your current balance, up to {amount} can be used on an EGP 1,000 order.",
       "history": "Points history",
@@ -357,6 +434,17 @@
       "eyebrow": "Your details",
       "title": "Account",
       "description": "Manage how you access Invitely and how the dashboard speaks to you.",
+      "profile": "Profile",
+      "preferences": "Preferences",
+      "rewards": "Rewards",
+      "help": "Help & support",
+      "session": "Session",
+      "couple": "Couple",
+      "whatsapp": "Contact us via WhatsApp",
+      "faq": "Frequently asked questions",
+      "terms": "Terms & conditions",
+      "privacy": "Privacy policy",
+      "viewPoints": "View points balance & history",
       "phone": "Verified phone",
       "verified": "This number is your secure sign-in.",
       "language": "Dashboard language",
@@ -369,10 +457,13 @@
       "eyebrow": "Your private dashboard",
       "title": "Welcome back",
       "description": "Verify the phone number used at checkout to see your invitations, orders and points.",
+      "tagline": "All your celebration details and guest replies in one place",
       "phone": "Mobile number",
       "send": "Send code",
       "code": "6-digit code",
       "verify": "Open dashboard",
+      "noInvitation": "Don't have an invitation yet?",
+      "browseDesigns": "Browse designs",
       "invalidPhone": "Enter a valid Egyptian mobile number.",
       "invalidCode": "Enter the 6-digit demo code.",
       "generic": "Something went wrong. Check your details and try again."
