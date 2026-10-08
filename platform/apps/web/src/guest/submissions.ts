@@ -1,6 +1,7 @@
 import {TIERS} from '@platform/shared';
 import {z} from 'zod';
 import {normalizeEgyptPhone} from '../commerce/phone';
+import {ApiStoreError} from './api-store';
 import type {InvitationPublicStore} from './store';
 
 const slug = z.string().min(1).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/u);
@@ -45,6 +46,17 @@ export class SubmissionRateLimiter {
 function honeypotFilled(input: unknown): boolean {
   return !!input && typeof input === 'object' && typeof (input as {website?: unknown}).website === 'string'
     && (input as {website: string}).website.trim().length > 0;
+}
+
+/** Translates coded store failures (thrown by the API store) into results. */
+async function persist(operation: () => Promise<void>): Promise<GuestActionResult> {
+  try {
+    await operation();
+    return {ok: true, code: 'submitted'};
+  } catch (error) {
+    if (error instanceof ApiStoreError) return {ok: false, code: error.actionCode};
+    throw error;
+  }
 }
 
 export function createGuestSubmissionService({
@@ -96,11 +108,10 @@ export function createGuestSubmissionService({
             .reduce((sum, rsvp) => sum + rsvp.guests, 0);
           if (acceptedGuests + parsed.data.guests > limit) return {ok: false, code: 'limit_reached'};
         }
-        await store.addRsvp(parsed.data.slug, {
+        return persist(() => store.addRsvp(parsed.data.slug, {
           id: makeId(), name: parsed.data.name, phone, attending: parsed.data.attending,
           guests: parsed.data.guests, note: parsed.data.note || undefined, createdAt: gate.instant.toISOString(),
-        });
-        return {ok: true, code: 'submitted'};
+        }));
       });
     },
 
@@ -112,10 +123,9 @@ export function createGuestSubmissionService({
         const gate = await invitationGate(parsed.data.slug, identity);
         if ('result' in gate) return gate.result;
         if (!TIERS[gate.snapshot.tier].guestMessages) return {ok: false, code: 'not_allowed'};
-        await store.addMessage(parsed.data.slug, {
+        return persist(() => store.addMessage(parsed.data.slug, {
           id: makeId(), name: parsed.data.name, text: parsed.data.text, createdAt: gate.instant.toISOString(),
-        });
-        return {ok: true, code: 'submitted'};
+        }));
       });
     },
   };
