@@ -81,3 +81,10 @@
 - (2026-10-07) ShuttersIntro: the button itself has a background; set it transparent to reveal a bloom behind the panels. Avoid `transform` transitions on intro pseudo-elements (transitionend 'transform' bubbles and ends the intro early); animate `scale`/opacity instead.
 - (2026-10-07) Message section class is `.message-section` (diwan.css targets a non-existent `.messageform-section`).
 - (2026-10-07) CSS scoping tests must parse selector preludes (multi-line values and :is(a, b) commas break line-based checks).
+
+## 2026-10-08 UI plan work (Do-Not-Repeat / Learnings)
+- Do NOT run `npm run build`/`next build` while `dev:web` is running: it corrupts `.next` (vendor-chunks 404/500). Fix: kill dev, `rm -rf apps/web/.next`, restart. Tell delegates (agy/opencode) the same in every brief.
+- Percentage widths on a button inside a shrink-to-fit grid/flex item collapse (hero phone was 90px tall on mobile): give such elements an explicit width (vw/rem).
+- `.commerce-shell a {color: inherit}` beat `.btn-primary` colour (specificity): use `:where()` for shell-level link resets.
+- UI redesign source of truth: `platform/UI_DESIGN_PLAN.md` (Opus audit). Phases A-D done on web; Arabic plan names, copy register and account deletion are owner decisions.
+- agy brief pattern that works: bounded file ownership, gates listed, 'do not build / do not start servers / do not commit'.
