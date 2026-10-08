@@ -6,6 +6,7 @@ import {routing} from './i18n/routing';
 
 const intlMiddleware = createMiddleware(routing);
 const DASHBOARD_PATH = /^\/(ar|en)\/app(\/|$)/;
+const ADMIN_PATH = /^\/(ar|en)\/admin(\/|$)/;
 
 export default async function middleware(request: NextRequest) {
   const {pathname} = request.nextUrl;
@@ -17,7 +18,7 @@ export default async function middleware(request: NextRequest) {
   if (!config) return response;
 
   const hasAuthCookie = request.cookies.getAll().some((c) => c.name.startsWith('sb-'));
-  const gated = isApiCommerceMode() && DASHBOARD_PATH.test(pathname);
+  const gated = isApiCommerceMode() && (DASHBOARD_PATH.test(pathname) || ADMIN_PATH.test(pathname));
   if (!hasAuthCookie) return gated ? redirectToSignIn(request, response) : response;
 
   const supabase = createServerClient(config.url, config.anonKey, {

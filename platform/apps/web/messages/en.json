@@ -928,5 +928,56 @@
         "description": "The payment was not accepted. If you already paid, message us on WhatsApp with the reference. Otherwise you can start again."
       }
     }
+  },
+  "admin": {
+    "payments": {
+      "title": "Pending Payments",
+      "noData": "No pending payments.",
+      "customer": "Customer",
+      "reference": "Reference",
+      "amount": "Amount",
+      "age": "{hours}h ago",
+      "confirm": "Confirm",
+      "reject": "Reject",
+      "paidAmount": "Received Amount",
+      "txnRef": "Transaction Ref",
+      "note": "Note (optional)",
+      "acceptMismatch": "Accept amount mismatch",
+      "reason": "Rejection Reason",
+      "success_payment_confirmed": "Payment confirmed.",
+      "success_payment_rejected": "Payment rejected.",
+      "error_amount_mismatch": "Amount mismatch. Expected {expected}.",
+      "error_note_required": "Note is required when accepting a mismatch.",
+      "error_not_pending": "Payment is not pending.",
+      "error_not_manual": "Not a manual payment.",
+      "error_not_found": "Order not found.",
+      "error_unknown_error": "An unknown error occurred."
+    },
+    "customers": {
+      "title": "Customers",
+      "search": "Search by name, phone or email",
+      "noData": "No customers found.",
+      "purchases": "Purchases",
+      "points": "Points",
+      "level": "Level",
+      "orders": "Orders",
+      "invitations": "Invitations",
+      "pointsLedger": "Points Ledger",
+      "adjustEntitlement": "Adjust Entitlement",
+      "adjustPoints": "Adjust Points",
+      "addEdits": "Add Edits",
+      "extendDays": "Extend Days",
+      "delta": "Points (can be negative)",
+      "reason": "Reason",
+      "save": "Save",
+      "editsUsed": "Edits: {used} / {allowed}",
+      "onlineUntil": "Online until {date}",
+      "success_entitlement_adjusted": "Entitlement adjusted.",
+      "success_points_adjusted": "Points adjusted.",
+      "error_reason_required": "Reason is required.",
+      "error_invalid_adjustment": "Invalid adjustment.",
+      "error_insufficient_points": "Insufficient points.",
+      "error_unknown_error": "An unknown error occurred."
+    }
   }
 }
