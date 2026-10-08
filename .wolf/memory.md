@@ -895,3 +895,5 @@
 | 11:28 | Round 2 closed: CI fix, B7a (d94af30), B4 (7c1541d) landed; STATUS next list | .wolf/STATUS.md | done | ~4k |
 | 11:30 | Wired expire_stale_manual_orders into daily job (7b2aeee) | apps/api/src/lifecycle | done | ~3k |
 | 15:50 | Round 3: B5a+B1b+B3a (Sonnet x2, agy Gemini) stacked, 3 SQL-test harness fixes, CI green, landed d92b74e | platform/ | done | ~12k |
+| 17:50 | Task A1: Phase A hero + landing part implemented (candlelit scene, above fold on mobile, autoplay observer, conversion bridge, sticky CTA viewport observer, contrast & logical CSS) | apps/web/src/components/home/{HeroLive,RiwaqPhone,StickyCta}.tsx, apps/web/src/styles/home.css, apps/web/messages/{ar,en}.json | gates green (typecheck, lint, vitest, i18n, build) | ~15k |
+
