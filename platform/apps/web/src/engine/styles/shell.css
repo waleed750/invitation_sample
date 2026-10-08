@@ -174,3 +174,11 @@
 .invitation-shell .guest-stepper input::-webkit-outer-spin-button,
 .invitation-shell .guest-stepper input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
 .invitation-shell .guest-stepper button:disabled { opacity: .4; cursor: not-allowed; }
+
+/* RSVP: thank-you card replaces the form; status lines are distinct. */
+.rsvp-thanks { display: grid; justify-items: center; gap: .6rem; padding: 1.75rem 1.25rem; text-align: center; border: 1px solid currentColor; border-radius: 12px; background: rgb(255 255 255 / .55); }
+.rsvp-thanks h3 { margin: 0; }
+.rsvp-thanks p { margin: 0; max-inline-size: 28rem; }
+.rsvp-thanks__edit { min-block-size: 44px; padding-inline: 1.25rem; border: 1px solid currentColor; border-radius: 999px; background: transparent; color: inherit; font: inherit; cursor: pointer; }
+.form-status--error { padding: .6rem .8rem; border: 1px solid #9b1c1c; border-radius: 8px; background: #fdecec; color: #7a1010; }
+.form-status--info { padding: .6rem .8rem; border: 1px solid currentColor; border-radius: 8px; }

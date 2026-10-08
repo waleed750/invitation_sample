@@ -513,7 +513,11 @@
     "sealDate": "الموعد",
     "scratchReveal": "اخدش لإظهار الدعوة",
     "scratchSurface": "مساحة الخدش",
-    "resetScratch": "إعادة ضبط بطاقة الخدش"
+    "resetScratch": "إعادة ضبط بطاقة الخدش",
+    "thankTitle": "شكراً لك",
+    "thankYes": "وصل ردّك. مستنيينك تشاركنا الفرحة.",
+    "thankNo": "وصل ردّك. هنفتقدك، وشكراً إنك عرّفتنا.",
+    "editReply": "تعديل ردّي"
   },
   "templates": {
     "title": "قوالب دعوتي",

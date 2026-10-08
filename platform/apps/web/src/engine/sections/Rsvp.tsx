@@ -32,6 +32,9 @@ export default function Rsvp({
   const publicT = useTranslations("public.forms");
   const actions = useInvitationActions();
   const [status, setStatus] = useState("");
+  const [statusKind, setStatusKind] = useState<"info" | "error">("info");
+  const [done, setDone] = useState<"yes" | "no" | null>(null);
+  const storageKey = actions ? `rsvp:${typeof window === "undefined" ? "" : window.location.pathname}` : null;
   const [submitting, setSubmitting] = useState(false);
   const [guestCount, setGuestCount] = useState(1);
   const [attending, setAttending] = useState<"yes" | "no" | null>(null);
@@ -46,6 +49,31 @@ export default function Rsvp({
     if (status) statusRef.current?.scrollIntoView({ block: "nearest" });
   }, [status]);
 
+  // A guest who already replied on this device sees the thank-you card, not the form.
+  useEffect(() => {
+    if (!storageKey) return;
+    try {
+      const saved = window.localStorage.getItem(storageKey);
+      if (saved === "yes" || saved === "no") setDone(saved);
+    } catch { /* storage unavailable: show the form */ }
+  }, [storageKey]);
+
+  function finish(answer: "yes" | "no") {
+    setDone(answer);
+    setStatus("");
+    if (storageKey) {
+      try { window.localStorage.setItem(storageKey, answer); } catch { /* ignore */ }
+    }
+  }
+
+  function editReply() {
+    setDone(null);
+    setAttending(null);
+    if (storageKey) {
+      try { window.localStorage.removeItem(storageKey); } catch { /* ignore */ }
+    }
+  }
+
   function updateGuestCount(nextValue: string | number) {
     setGuestCount(Math.min(8, Math.max(1, Number(nextValue) || 1)));
   }
@@ -53,13 +81,16 @@ export default function Rsvp({
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     if (eventOptions?.length && selectedEvents.length === 0) {
+      setStatusKind("error");
       setStatus(text(eventError ?? t("eventError")));
       return;
     }
     if (actions) {
       const form = event.currentTarget;
       const formData = new FormData(form);
+      const answer = formData.get("attending") === "yes" ? "yes" : "no";
       setSubmitting(true);
+      setStatusKind("info");
       setStatus(publicT("submitting"));
       try {
         const result = await actions.submitRsvp({
@@ -71,21 +102,24 @@ export default function Rsvp({
           website: String(formData.get("website") ?? "") || undefined,
         });
         if (!result.ok) {
-          setStatus(publicT(result.code === "limit_reached" ? "limitReached" : "error"));
+          const limit = result.code === "limit_reached";
+          setStatusKind(limit ? "info" : "error");
+          setStatus(publicT(limit ? "limitReached" : "error"));
           return;
         }
-        setStatus(text(successMessage ?? t("rsvpSuccess")));
         form.reset();
         setGuestCount(1);
         setSelectedEvents([]);
+        finish(answer);
       } catch {
+        setStatusKind("error");
         setStatus(publicT("error"));
       } finally {
         setSubmitting(false);
       }
       return;
     }
-    setStatus(text(successMessage ?? t("rsvpSuccess")));
+    finish(attending === "no" ? "no" : "yes");
   }
 
   function toggleEvent(value: string) {
@@ -102,6 +136,14 @@ export default function Rsvp({
       <div className="section-inner narrow" data-reveal>
         <h2 id="rsvp-title">{text(title)}</h2>
         <p className="section-kicker">{text(subtitle)}</p>
+        {done ? (
+          <div className="rsvp-thanks" role="status">
+            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10" /><path d="M7.5 12.5l3 3 6-6.5" /></svg>
+            <h3>{t("thankTitle")}</h3>
+            <p>{done === "yes" ? text(successMessage ?? t("thankYes")) : t("thankNo")}</p>
+            <button type="button" className="rsvp-thanks__edit" onClick={editReply}>{t("editReply")}</button>
+          </div>
+        ) : (
         <form className="rsvp-form" onSubmit={handleSubmit}>
           <label hidden aria-hidden="true">Website<input name="website" type="text" tabIndex={-1} autoComplete="off" /></label>
           <fieldset>
@@ -226,8 +268,9 @@ export default function Rsvp({
             <Send size={17} aria-hidden="true" />
             {submitting ? publicT("submitting") : text(submitLabel ?? t("sendRsvp"))}
           </button>
-          {status ? <p className="form-status" role="status" ref={statusRef}>{status}</p> : null}
+          {status ? <p className={`form-status form-status--${statusKind}`} role={statusKind === "error" ? "alert" : "status"} ref={statusRef}>{status}</p> : null}
         </form>
+        )}
       </div>
       {bottomUrl && (
         <img className="rsvp-bottom-decoration" src={bottomUrl} alt="" aria-hidden="true" />

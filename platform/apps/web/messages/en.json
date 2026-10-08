@@ -513,7 +513,11 @@
     "sealDate": "date",
     "scratchReveal": "Scratch to reveal",
     "scratchSurface": "Scratch surface",
-    "resetScratch": "Reset scratch card"
+    "resetScratch": "Reset scratch card",
+    "thankTitle": "Thank you",
+    "thankYes": "Your reply is saved. We can't wait to celebrate with you.",
+    "thankNo": "Your reply is saved. We'll miss you and thank you for letting us know.",
+    "editReply": "Change my reply"
   },
   "templates": {
     "title": "Invitely Templates",
