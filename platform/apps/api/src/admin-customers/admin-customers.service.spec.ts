@@ -1,5 +1,5 @@
 /* eslint-disable */
-import {BadRequestException, NotFoundException, ServiceUnavailableException} from '@nestjs/common';
+import {BadRequestException, ConflictException, NotFoundException, ServiceUnavailableException} from '@nestjs/common';
 import {AdminCustomersService, escapeLike} from './admin-customers.service';
 
 const OWNER = '44444444-4444-4444-8444-444444444444';
@@ -166,6 +166,8 @@ describe('AdminCustomersService', () => {
       await expect(service.adjustPoints('a', 'u1', {delta: 0, reason: 'xxx'} as any)).rejects.toThrow(BadRequestException);
       repository.adjustPointsAsServiceRole.mockResolvedValueOnce({data: {ok: false, reason: 'not_found'}, error: null});
       await expect(service.adjustPoints('a', 'u1', {delta: 1, reason: 'xxx'} as any)).rejects.toThrow(NotFoundException);
+      repository.adjustPointsAsServiceRole.mockResolvedValueOnce({data: {ok: false, reason: 'insufficient_points'}, error: null});
+      await expect(service.adjustPoints('a', 'u1', {delta: -100, reason: 'xxx'} as any)).rejects.toThrow(ConflictException);
     });
   });
 });

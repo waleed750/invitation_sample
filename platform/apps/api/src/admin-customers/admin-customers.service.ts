@@ -1,5 +1,6 @@
 import {
   BadRequestException,
+  ConflictException,
   Injectable,
   NotFoundException,
   ServiceUnavailableException
@@ -195,6 +196,8 @@ export class AdminCustomersService {
         return new BadRequestException({code: 'invalid_adjustment', message: 'The adjustment is out of range or empty'});
       case 'not_found':
         return new NotFoundException(notFound);
+      case 'insufficient_points':
+        return new ConflictException({code: 'insufficient_points', message: 'Insufficient points for deduction'});
       default:
         this.logger.error('admin adjustment returned an unknown reason');
         return unavailable();

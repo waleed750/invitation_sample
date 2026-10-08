@@ -1028,6 +1028,71 @@ begin
     'a refused switch must leave template_id alone';
 end;
 $$;
+-- ---------------------------------------------------------------------------
+-- 11. Admin points guard (0014)
+-- ---------------------------------------------------------------------------
+
+select set_config('request.jwt.claims', '', true);
+
+insert into auth.users (id, aud, role)
+values ('14141414-1414-1414-1414-141414141414', 'authenticated', 'authenticated')
+on conflict (id) do nothing;
+
+insert into public.profiles (id, email, name, preferred_locale, signup_method)
+values ('14141414-1414-1414-1414-141414141414', 'points-guard@example.com', 'Points Guard', 'en', 'email')
+on conflict (id) do update set email = excluded.email, name = excluded.name;
+
+insert into public.points_ledger (user_id, delta, reason, expires_at)
+values ('14141414-1414-1414-1414-141414141414', 100, 'admin', null);
+
+update public.profiles set points_balance = 100 where id = '14141414-1414-1414-1414-141414141414';
+
+set local role service_role;
+
+do $$
+declare
+  r jsonb;
+  v_ledger_count integer;
+begin
+  select count(*) into v_ledger_count from public.points_ledger
+  where user_id = '14141414-1414-1414-1414-141414141414';
+
+  -- Deduct 30 -> ok balance 70
+  r := public.admin_adjust_points('11111111-1111-1111-1111-111111111111', '14141414-1414-1414-1414-141414141414', -30, 'deduct 30');
+  assert (r ->> 'ok') = 'true', 'deduct 30 must succeed, got: ' || r::text;
+  assert (r ->> 'balance')::integer = 70, 'deduct 30 must return balance 70';
+  assert (select points_balance from public.profiles where id = '14141414-1414-1414-1414-141414141414') = 70, 'profile balance must be 70';
+  assert (select count(*) from public.points_ledger where user_id = '14141414-1414-1414-1414-141414141414') = v_ledger_count + 1, 'deduct 30 must add one ledger row';
+  v_ledger_count := v_ledger_count + 1;
+  assert (select count(*) from public.audit_log where action = 'points.adjust' and target_id = '14141414-1414-1414-1414-141414141414') = 1, 'deduct 30 must add one audit row';
+
+  -- Deduct 100 -> insufficient_points, balance unchanged
+  r := public.admin_adjust_points('11111111-1111-1111-1111-111111111111', '14141414-1414-1414-1414-141414141414', -100, 'deduct 100');
+  assert (r ->> 'ok') = 'false' and (r ->> 'reason') = 'insufficient_points', 'deduct 100 must report insufficient_points, got: ' || r::text;
+  assert (r ->> 'balance')::integer = 70, 'insufficient_points must return current balance 70';
+  assert (select points_balance from public.profiles where id = '14141414-1414-1414-1414-141414141414') = 70, 'profile balance must remain 70';
+  assert (select count(*) from public.points_ledger where user_id = '14141414-1414-1414-1414-141414141414') = v_ledger_count, 'insufficient_points must not add ledger row';
+  assert (select count(*) from public.audit_log where action = 'points.adjust' and target_id = '14141414-1414-1414-1414-141414141414') = 1, 'insufficient_points must not add audit row';
+
+  -- Deduct exactly the remaining 70 -> ok balance 0
+  r := public.admin_adjust_points('11111111-1111-1111-1111-111111111111', '14141414-1414-1414-1414-141414141414', -70, 'deduct 70');
+  assert (r ->> 'ok') = 'true', 'deduct 70 must succeed, got: ' || r::text;
+  assert (r ->> 'balance')::integer = 0, 'deduct 70 must return balance 0';
+  assert (select points_balance from public.profiles where id = '14141414-1414-1414-1414-141414141414') = 0, 'profile balance must be 0';
+  assert (select count(*) from public.points_ledger where user_id = '14141414-1414-1414-1414-141414141414') = v_ledger_count + 1, 'deduct 70 must add one ledger row';
+  v_ledger_count := v_ledger_count + 1;
+  assert (select count(*) from public.audit_log where action = 'points.adjust' and target_id = '14141414-1414-1414-1414-141414141414') = 2, 'deduct 70 must add one audit row';
+
+  -- Grant still works
+  r := public.admin_adjust_points('11111111-1111-1111-1111-111111111111', '14141414-1414-1414-1414-141414141414', 50, 'grant 50');
+  assert (r ->> 'ok') = 'true', 'grant 50 must succeed, got: ' || r::text;
+  assert (r ->> 'balance')::integer = 50, 'grant 50 must return balance 50';
+  assert (select points_balance from public.profiles where id = '14141414-1414-1414-1414-141414141414') = 50, 'profile balance must be 50';
+  assert (select count(*) from public.points_ledger where user_id = '14141414-1414-1414-1414-141414141414') = v_ledger_count + 1, 'grant 50 must add one ledger row';
+end;
+$$;
+
+reset role;
 select set_config('request.jwt.claims', '', true);
 
 rollback;

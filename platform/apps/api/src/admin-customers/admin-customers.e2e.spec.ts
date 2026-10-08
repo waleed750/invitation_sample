@@ -84,6 +84,12 @@ describe('admin customers (e2e on the full app)', () => {
     expect((await http.post(url).set(auth).send({addEdits: 1, reason: 'x'})).status).toBe(400);
     expect((await http.post(url).set(auth).send({addEdits: 101, reason: 'too many'})).status).toBe(400);
     expect(rpc).not.toHaveBeenCalled();
+
+    const pointsUrl = `/v1/admin/customers/${USER}/points-adjustments`;
+    rpc.mockResolvedValue({data: {ok: false, reason: 'insufficient_points'}, error: null});
+    const insufficient = await http.post(pointsUrl).set(auth).send({delta: -100, reason: 'too much'});
+    expect(insufficient.status).toBe(409);
+    expect(insufficient.body.error.code).toBe('insufficient_points');
   });
 
   it('rejects an out-of-range search limit', async () => {
