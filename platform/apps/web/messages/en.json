@@ -867,5 +867,32 @@
     "back": "All designs",
     "from": "From",
     "use": "Use this design"
+  },
+  "auth": {
+    "eyebrow": "Your account",
+    "title": "Sign in",
+    "description": "Sign in to manage your invitations and orders in one place.",
+    "google": "Continue with Google",
+    "or": "or",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "name@example.com",
+    "sendCode": "Send sign-in code",
+    "sending": "Sending…",
+    "codeSent": "We sent a 6-digit code to {email}. Enter it below to finish signing in.",
+    "codeLabel": "Verification code",
+    "verify": "Verify and sign in",
+    "verifying": "Verifying…",
+    "resend": "Resend code",
+    "resendIn": "Resend available in {seconds}s",
+    "changeEmail": "Use a different email",
+    "notConfigured": "Sign-in is not configured on this site yet. Please try again later.",
+    "signOut": "Sign out",
+    "errors": {
+      "invalidEmail": "Enter a valid email address.",
+      "invalidCode": "The code is incorrect or has expired. Request a new one and try again.",
+      "tooMany": "Too many attempts. Please wait a moment and try again.",
+      "generic": "Something went wrong. Please try again.",
+      "callback": "We could not complete sign-in. Please try again."
+    }
   }
 }

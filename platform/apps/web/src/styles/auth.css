@@ -1,0 +1,12 @@
+.auth-root { display: grid; align-content: center; }
+.auth-form, .auth-step { display: grid; gap: 1rem; }
+.auth-form .button { inline-size: 100%; justify-content: center; text-align: center; border: 0; min-block-size: 48px; }
+.auth-google { background: white; color: var(--green); border: 1px solid var(--green) !important; }
+.auth-google:hover { background: #edf1ea; }
+.auth-divider { display: flex; align-items: center; gap: .75rem; color: var(--muted); font-size: .9rem; }
+.auth-divider::before, .auth-divider::after { content: ''; flex: 1; border-block-start: 1px solid var(--border); }
+.auth-link { min-block-size: 44px; border: 0; background: transparent; color: var(--green); font: inherit; font-weight: 700; text-decoration: underline; cursor: pointer; }
+.auth-link:disabled { color: var(--muted); text-decoration: none; cursor: not-allowed; }
+.auth-notice { padding-block: .9rem; padding-inline: 1rem; border-radius: .8rem; background: #f3ecdc; color: var(--text); }
+.auth-form button:disabled { opacity: .6; cursor: not-allowed; }
+.auth-form input:focus-visible, .auth-form button:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
