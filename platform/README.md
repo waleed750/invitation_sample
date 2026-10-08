@@ -12,10 +12,12 @@ platform/
   apps/api/               the NestJS API (@platform/api, REST under /v1, Dockerfile included)
   packages/shared/        framework-free Zod contracts + pure functions (@platform/shared, tsup-built CJS for the api)
   supabase/               SQL migrations + tests (unchanged)
-  docs/                   notes (ARABIC_ENGINE_REVIEW.md)
+  docs/                   notes (ARABIC_ENGINE_REVIEW.md, DEPLOYMENT.md)
 ```
 
 ## Run
+
+See `docs/DEPLOYMENT.md` for production deployment instructions.
 
 Use Node.js 22 LTS and npm. From `platform/` (one lockfile for the whole workspace):
 
