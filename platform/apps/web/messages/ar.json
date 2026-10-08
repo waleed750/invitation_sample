@@ -1017,5 +1017,56 @@
       "plan": "الباقة: {tier}",
       "continue": "المتابعة إلى الدفع"
     }
+  },
+  "admin": {
+    "payments": {
+      "title": "المدفوعات المعلقة",
+      "noData": "لا توجد مدفوعات معلقة.",
+      "customer": "العميل",
+      "reference": "المرجع",
+      "amount": "المبلغ",
+      "age": "منذ {hours} ساعة",
+      "confirm": "تأكيد",
+      "reject": "رفض",
+      "paidAmount": "المبلغ المستلم",
+      "txnRef": "رقم العملية",
+      "note": "ملاحظة (اختياري)",
+      "acceptMismatch": "قبول اختلاف المبلغ",
+      "reason": "سبب الرفض",
+      "success_payment_confirmed": "تم تأكيد الدفع.",
+      "success_payment_rejected": "تم رفض الدفع.",
+      "error_amount_mismatch": "اختلاف في المبلغ. المتوقع {expected}.",
+      "error_note_required": "الملاحظة مطلوبة عند قبول اختلاف المبلغ.",
+      "error_not_pending": "الدفع ليس معلقاً.",
+      "error_not_manual": "ليست عملية دفع يدوية.",
+      "error_not_found": "الطلب غير موجود.",
+      "error_unknown_error": "حدث خطأ غير معروف."
+    },
+    "customers": {
+      "title": "العملاء",
+      "search": "البحث بالاسم، الهاتف أو البريد",
+      "noData": "لم يتم العثور على عملاء.",
+      "purchases": "المشتريات",
+      "points": "النقاط",
+      "level": "المستوى",
+      "orders": "الطلبات",
+      "invitations": "الدعوات",
+      "pointsLedger": "سجل النقاط",
+      "adjustEntitlement": "تعديل الصلاحية",
+      "adjustPoints": "تعديل النقاط",
+      "addEdits": "إضافة تعديلات",
+      "extendDays": "تمديد الأيام",
+      "delta": "النقاط (يمكن أن تكون سالبة)",
+      "reason": "السبب",
+      "save": "حفظ",
+      "editsUsed": "التعديلات: {used} / {allowed}",
+      "onlineUntil": "متاحة حتى {date}",
+      "success_entitlement_adjusted": "تم تعديل الصلاحية.",
+      "success_points_adjusted": "تم تعديل النقاط.",
+      "error_reason_required": "السبب مطلوب.",
+      "error_invalid_adjustment": "تعديل غير صالح.",
+      "error_insufficient_points": "نقاط غير كافية.",
+      "error_unknown_error": "حدث خطأ غير معروف."
+    }
   }
 }
