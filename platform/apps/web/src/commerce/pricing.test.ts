@@ -1,14 +1,7 @@
 import {beforeAll, describe, expect, it, vi} from 'vitest';
 
-vi.mock('next/font/google', () => ({
-  Tajawal: () => ({variable: '--font-tajawal'}),
-  Amiri: () => ({variable: '--font-amiri'}),
-  Aref_Ruqaa: () => ({variable: ''}),
-  Fraunces: () => ({variable: ''}),
-  IBM_Plex_Sans_Arabic: () => ({variable: ''}),
-  IBM_Plex_Sans: () => ({variable: ''}),
-  Cormorant_Garamond: () => ({variable: "--font-cormorant-garamond"}),
-  Inter: () => ({variable: "--font-inter"}),
+vi.mock('next/font/local', () => ({
+  default: (opts: { variable?: string }) => ({variable: opts.variable || '--mock-font'}),
 }));
 
 describe('quote', () => {
