@@ -36,6 +36,7 @@ export default async function DashboardHome({
   ]);
 
   const t = await getTranslations('dashboard');
+  const tPick = await getTranslations('pick');
   const now = new Date();
   const level = levelForPurchases(points.purchaseCount);
 
@@ -78,6 +79,10 @@ export default async function DashboardHome({
               <span>{t('home.chipsPoints', {points: points.balance, level: t(`levels.${level}`)})}</span>
             </Link>
           </div>
+          <Link className="btn-primary" href="/app/new">
+            <span>{tPick('newInvitation')}</span>
+            <IconChevron size={18} />
+          </Link>
         </div>
       </section>
 

@@ -944,5 +944,78 @@
         "description": "The payment was not accepted. If you already paid, message us on WhatsApp with the reference. Otherwise you can start again."
       }
     }
+  },
+  "pick": {
+    "newInvitation": "New invitation",
+    "eyebrow": "New invitation",
+    "steps": {
+      "label": "Invitation steps",
+      "details": "Your details",
+      "template": "Choose a design",
+      "review": "Preview and plan"
+    },
+    "details": {
+      "title": "Start with your details",
+      "lead": "Enter both names and the event date and we will show every design with your names before you pay.",
+      "first": "First name",
+      "firstPlaceholder": "e.g. Sara",
+      "second": "Second name",
+      "secondPlaceholder": "e.g. Omar",
+      "date": "Event date",
+      "submit": "Show designs",
+      "errors": {
+        "missing": "This field is required.",
+        "invalid": "Enter a valid date.",
+        "past": "Pick a date in the future."
+      }
+    },
+    "grid": {
+      "title": "Choose your design",
+      "lead": "Every design below is shown with your names and date. Tap one to preview it in full.",
+      "summary": "{names} · {date}",
+      "edit": "Edit details",
+      "filterLabel": "Filter by plan",
+      "filterAll": "All",
+      "empty": "No designs in this plan yet.",
+      "featured": "Most popular",
+      "from": "From {price}",
+      "cta": "Preview with your names"
+    },
+    "preview": {
+      "title": "Preview of {name}",
+      "frameTitle": "Invitation preview for {names}",
+      "changeDesign": "Change design",
+      "editDetails": "Edit details",
+      "openFull": "Open the preview full page",
+      "needDetails": "Enter both names and the date first so we can show the design with them.",
+      "needDetailsAction": "Enter details",
+      "notice": "This preview uses sample content for the other sections. You edit all the text after purchase."
+    },
+    "plans": {
+      "title": "Compare plans",
+      "selected": "Selected plan",
+      "choose": "Choose this plan",
+      "edits": "Edits included",
+      "online": "Time online",
+      "months": "{count, plural, one {# month} other {# months}}",
+      "rsvp": "RSVP replies",
+      "rsvpNone": "Not included",
+      "rsvpUnlimited": "Unlimited",
+      "videoIntro": "Video intro",
+      "musicUpload": "Custom music upload",
+      "guestMessages": "Guest messages",
+      "prioritySupport": "Priority support",
+      "yes": "Yes",
+      "no": "No"
+    },
+    "tiers": {
+      "save-the-date": "Save the Date",
+      "classic": "Classic",
+      "premium": "Premium"
+    },
+    "bar": {
+      "plan": "Plan: {tier}",
+      "continue": "Continue to checkout"
+    }
   }
 }
