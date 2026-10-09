@@ -21,13 +21,13 @@ describe('AdminCustomersService', () => {
 
   beforeEach(() => {
     repository = {
-      findSlugOwnersAsServiceRole: jest.fn().mockResolvedValue({data: [], error: null}),
-      searchProfilesAsServiceRole: jest.fn().mockResolvedValue({data: [profile], error: null}),
-      listRecentProfilesAsServiceRole: jest.fn().mockResolvedValue({data: [profile], error: null}),
-      findProfileAsServiceRole: jest.fn().mockResolvedValue({data: profile, error: null}),
-      listOrdersAsServiceRole: jest.fn().mockResolvedValue({data: [], error: null}),
-      listInvitationsAsServiceRole: jest.fn().mockResolvedValue({data: [], error: null}),
-      listPointsLedgerAsServiceRole: jest.fn().mockResolvedValue({data: [], error: null}),
+      findSlugOwnersAsServiceRole: jest.fn().mockResolvedValue([]),
+      searchProfilesAsServiceRole: jest.fn().mockResolvedValue([profile]),
+      listRecentProfilesAsServiceRole: jest.fn().mockResolvedValue([profile]),
+      findProfileAsServiceRole: jest.fn().mockResolvedValue(profile),
+      listOrdersAsServiceRole: jest.fn().mockResolvedValue([]),
+      listInvitationsAsServiceRole: jest.fn().mockResolvedValue([]),
+      listPointsLedgerAsServiceRole: jest.fn().mockResolvedValue([]),
       adjustEntitlementAsServiceRole: jest.fn(),
       adjustPointsAsServiceRole: jest.fn()
     };
@@ -65,9 +65,7 @@ describe('AdminCustomersService', () => {
     });
 
     it('includes owners of invitations whose slug matched (deduped, uuid-checked)', async () => {
-      repository.findSlugOwnersAsServiceRole.mockResolvedValue({
-        data: [{owner_id: OWNER}, {owner_id: OWNER}, {owner_id: 'not-a-uuid,evil'}, {owner_id: null}], error: null
-      });
+      repository.findSlugOwnersAsServiceRole.mockResolvedValue([OWNER, OWNER, 'not-a-uuid,evil']);
       await service.search('ahmed-nour', 20);
       expect(repository.searchProfilesAsServiceRole).toHaveBeenCalledWith(
         expect.objectContaining({ownerIds: [OWNER]})
@@ -81,24 +79,24 @@ describe('AdminCustomersService', () => {
     });
 
     it('maps a query error to 503', async () => {
-      repository.searchProfilesAsServiceRole.mockResolvedValue({data: null, error: {message: 'x'}});
+      repository.searchProfilesAsServiceRole.mockRejectedValue(new Error('x'));
       await expect(service.search('mona', 20)).rejects.toThrow(ServiceUnavailableException);
     });
   });
 
   describe('detail', () => {
     it('assembles profile, orders, invitations and ledger', async () => {
-      repository.listOrdersAsServiceRole.mockResolvedValue({data: [{
+      repository.listOrdersAsServiceRole.mockResolvedValue([{
         id: 'o1', kind: 'new', tier: 'classic', status: 'paid', amount_minor: 129900, currency: 'EGP',
         provider: 'manual', created_at: '2026-02-01T00:00:00Z'
-      }], error: null});
-      repository.listInvitationsAsServiceRole.mockResolvedValue({data: [{
+      }]);
+      repository.listInvitationsAsServiceRole.mockResolvedValue([{
         id: 'i1', slug: 'a-b', status: 'published', templates: {slug: 'riwaq'},
-        invitation_entitlements: [{edits_allowed: 15, edits_used: 2, online_until: '2027-01-01T00:00:00Z'}]
-      }], error: null});
-      repository.listPointsLedgerAsServiceRole.mockResolvedValue({data: [{
+        invitation_entitlements: {edits_allowed: 15, edits_used: 2, online_until: '2027-01-01T00:00:00Z'}
+      }]);
+      repository.listPointsLedgerAsServiceRole.mockResolvedValue([{
         id: 'l1', delta: 50, reason: 'admin', order_id: null, expires_at: null, created_at: '2026-02-02T00:00:00Z'
-      }], error: null});
+      }]);
       const detail = await service.detail('u1');
       expect(detail.profile.id).toBe('u1');
       expect(detail.orders[0]).toMatchObject({id: 'o1', amountMinor: 129900, provider: 'manual'});
@@ -111,12 +109,12 @@ describe('AdminCustomersService', () => {
     });
 
     it('404s when the profile is missing', async () => {
-      repository.findProfileAsServiceRole.mockResolvedValue({data: null, error: null});
+      repository.findProfileAsServiceRole.mockResolvedValue(null);
       await expect(service.detail('u1')).rejects.toThrow(NotFoundException);
     });
 
     it('503s when a sub-query fails', async () => {
-      repository.listOrdersAsServiceRole.mockResolvedValue({data: null, error: {message: 'x'}});
+      repository.listOrdersAsServiceRole.mockRejectedValue(new Error('x'));
       await expect(service.detail('u1')).rejects.toThrow(ServiceUnavailableException);
     });
   });
@@ -125,9 +123,9 @@ describe('AdminCustomersService', () => {
     const body = (extra: object = {}) => ({addEdits: 5, reason: 'goodwill', ...extra}) as any;
 
     it('calls the RPC with the admin id and defaults', async () => {
-      repository.adjustEntitlementAsServiceRole.mockResolvedValue({
-        data: {ok: true, edits_allowed: 20, online_until: '2027-01-01T00:00:00Z', status: 'published'}, error: null
-      });
+      repository.adjustEntitlementAsServiceRole.mockResolvedValue(
+        {ok: true, edits_allowed: 20, online_until: '2027-01-01T00:00:00Z', status: 'published'}
+      );
       await expect(service.adjustEntitlement('admin-1', 'i1', body())).resolves.toEqual({
         ok: true, editsAllowed: 20, onlineUntil: '2027-01-01T00:00:00Z', status: 'published'
       });
@@ -136,7 +134,7 @@ describe('AdminCustomersService', () => {
 
     it('maps reason_required and invalid_adjustment to 400 with that code', async () => {
       for (const reason of ['reason_required', 'invalid_adjustment']) {
-        repository.adjustEntitlementAsServiceRole.mockResolvedValueOnce({data: {ok: false, reason}, error: null});
+        repository.adjustEntitlementAsServiceRole.mockResolvedValueOnce({ok: false, reason});
         const error: any = await service.adjustEntitlement('a', 'i1', body()).catch((e) => e);
         expect(error).toBeInstanceOf(BadRequestException);
         expect(error.getResponse()).toMatchObject({code: reason});
@@ -144,29 +142,29 @@ describe('AdminCustomersService', () => {
     });
 
     it('maps not_found to 404, unknown reasons and RPC errors to 503', async () => {
-      repository.adjustEntitlementAsServiceRole.mockResolvedValueOnce({data: {ok: false, reason: 'not_found'}, error: null});
+      repository.adjustEntitlementAsServiceRole.mockResolvedValueOnce({ok: false, reason: 'not_found'});
       await expect(service.adjustEntitlement('a', 'i1', body())).rejects.toThrow(NotFoundException);
-      repository.adjustEntitlementAsServiceRole.mockResolvedValueOnce({data: {ok: false, reason: 'weird'}, error: null});
+      repository.adjustEntitlementAsServiceRole.mockResolvedValueOnce({ok: false, reason: 'weird'});
       await expect(service.adjustEntitlement('a', 'i1', body())).rejects.toThrow(ServiceUnavailableException);
-      repository.adjustEntitlementAsServiceRole.mockResolvedValueOnce({data: null, error: {message: 'boom'}});
+      repository.adjustEntitlementAsServiceRole.mockResolvedValueOnce(null);
       await expect(service.adjustEntitlement('a', 'i1', body())).rejects.toThrow(ServiceUnavailableException);
     });
   });
 
   describe('adjustPoints', () => {
     it('returns the new balance', async () => {
-      repository.adjustPointsAsServiceRole.mockResolvedValue({data: {ok: true, balance: 580}, error: null});
+      repository.adjustPointsAsServiceRole.mockResolvedValue({ok: true, balance: 580});
       await expect(service.adjustPoints('admin-1', 'u1', {delta: 500, reason: 'goodwill'} as any))
         .resolves.toEqual({balance: 580});
       expect(repository.adjustPointsAsServiceRole).toHaveBeenCalledWith('admin-1', 'u1', 500, 'goodwill');
     });
 
     it('maps error reasons', async () => {
-      repository.adjustPointsAsServiceRole.mockResolvedValueOnce({data: {ok: false, reason: 'invalid_adjustment'}, error: null});
+      repository.adjustPointsAsServiceRole.mockResolvedValueOnce({ok: false, reason: 'invalid_adjustment'});
       await expect(service.adjustPoints('a', 'u1', {delta: 0, reason: 'xxx'} as any)).rejects.toThrow(BadRequestException);
-      repository.adjustPointsAsServiceRole.mockResolvedValueOnce({data: {ok: false, reason: 'not_found'}, error: null});
+      repository.adjustPointsAsServiceRole.mockResolvedValueOnce({ok: false, reason: 'not_found'});
       await expect(service.adjustPoints('a', 'u1', {delta: 1, reason: 'xxx'} as any)).rejects.toThrow(NotFoundException);
-      repository.adjustPointsAsServiceRole.mockResolvedValueOnce({data: {ok: false, reason: 'insufficient_points'}, error: null});
+      repository.adjustPointsAsServiceRole.mockResolvedValueOnce({ok: false, reason: 'insufficient_points'});
       await expect(service.adjustPoints('a', 'u1', {delta: -100, reason: 'xxx'} as any)).rejects.toThrow(ConflictException);
     });
   });

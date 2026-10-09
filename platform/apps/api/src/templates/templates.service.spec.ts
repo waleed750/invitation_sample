@@ -1,4 +1,3 @@
-/* eslint-disable */
 import {ServiceUnavailableException} from '@nestjs/common';
 import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';

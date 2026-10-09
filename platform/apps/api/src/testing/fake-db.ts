@@ -29,8 +29,10 @@ export function createFakeDb(script: (readonly unknown[] | Error)[] = []): FakeD
         .replace(/\s+/g, ' ')
         .trim();
       queries.push({text, params, role, ...(userId === undefined ? {} : {userId})});
-      const step = script[next++];
-      return step instanceof Error ? Promise.reject(step) : Promise.resolve(step ?? []);
+      const step = script.at(next++);
+      if (step instanceof Error) return Promise.reject(step);
+      if (step === undefined) return Promise.resolve([]);
+      return Promise.resolve(step);
     }) as unknown as Tx;
     return fn(tx);
   };

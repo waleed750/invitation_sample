@@ -3,8 +3,8 @@ import {Test} from '@nestjs/testing';
 import request from 'supertest';
 import {AppModule} from '../app.module';
 import {setupApp} from '../setup-app';
-import {SupabaseService} from '../supabase/supabase.service';
 import {AuthRepository} from '../auth/auth.repository';
+import {AdminPaymentsRepository} from './admin-payments.repository';
 import {setTestEnv, signTestToken, type HttpClient} from '../test-helpers';
 
 const ORDER = '33333333-3333-4333-8333-333333333333';
@@ -13,19 +13,24 @@ describe('admin payments (e2e on the full app)', () => {
   let app: INestApplication;
   let http: HttpClient;
   let role = 'customer';
-  let rpc: jest.Mock;
+  let repository: {
+    listPendingManualOrdersAsServiceRole: jest.Mock;
+    confirmManualPaymentAsServiceRole: jest.Mock;
+    rejectManualPaymentAsServiceRole: jest.Mock;
+  };
 
   beforeAll(async () => {
     setTestEnv();
-    rpc = jest.fn();
-    const admin = {
-      rpc,
-      from: () => ({select: () => ({eq: () => ({eq: () => ({order: () => Promise.resolve({data: [], error: null})})})})})
+    repository = {
+      listPendingManualOrdersAsServiceRole: jest.fn().mockResolvedValue([]),
+      confirmManualPaymentAsServiceRole: jest.fn(),
+      rejectManualPaymentAsServiceRole: jest.fn()
     };
-    const forUser = () => ({from: () => ({select: () => ({eq: () => ({single: () => Promise.resolve({data: {role}, error: null})})})})});
     const moduleRef = await Test.createTestingModule({imports: [AppModule]})
-      .overrideProvider(SupabaseService).useValue({forUser, admin: () => admin})
-      .overrideProvider(AuthRepository).useValue({findRoleByUserId: () => Promise.resolve({role})})
+      .overrideProvider(AuthRepository)
+      .useValue({findRoleByUserId: () => Promise.resolve({role})})
+      .overrideProvider(AdminPaymentsRepository)
+      .useValue(repository)
       .compile();
     app = moduleRef.createNestApplication({logger: false});
     setupApp(app);
@@ -37,35 +42,41 @@ describe('admin payments (e2e on the full app)', () => {
     await app.close();
   });
 
-  beforeEach(() => rpc.mockReset());
+  beforeEach(() => {
+    repository.confirmManualPaymentAsServiceRole.mockReset();
+    repository.rejectManualPaymentAsServiceRole.mockReset();
+  });
 
   it('returns 401 without a token', async () => {
     expect((await http.get('/v1/admin/payments/pending')).status).toBe(401);
   });
 
-  it('forbids a customer on every admin payment route and never reaches the RPC', async () => {
+  it('forbids a customer on every admin payment route and never reaches the repository', async () => {
     role = 'customer';
     const auth = {Authorization: `Bearer ${await signTestToken({subject: 'user-1'})}`};
     expect((await http.get('/v1/admin/payments/pending').set(auth)).status).toBe(403);
     const confirm = await http.post(`/v1/admin/payments/${ORDER}/confirm`).set(auth).send({paidAmountMinor: 1, txnRef: 'x'});
     expect(confirm.status).toBe(403);
     expect((await http.post(`/v1/admin/payments/${ORDER}/reject`).set(auth).send({reason: 'nope'})).status).toBe(403);
-    expect(rpc).not.toHaveBeenCalled();
+    expect(repository.confirmManualPaymentAsServiceRole).not.toHaveBeenCalled();
+    expect(repository.rejectManualPaymentAsServiceRole).not.toHaveBeenCalled();
   });
 
   it('lets an admin confirm, using the token subject as admin id', async () => {
     role = 'admin';
-    rpc.mockResolvedValue({data: {ok: true}, error: null});
+    repository.confirmManualPaymentAsServiceRole.mockResolvedValue({ok: true});
     const auth = {Authorization: `Bearer ${await signTestToken({subject: 'admin-9'})}`};
     const res = await http.post(`/v1/admin/payments/${ORDER}/confirm`).set(auth).send({paidAmountMinor: 129900, txnRef: 'T1'});
     expect(res.status).toBe(200);
     expect(res.body).toEqual({ok: true, already: false});
-    expect(rpc).toHaveBeenCalledWith('admin_confirm_manual_payment', expect.objectContaining({p_admin_id: 'admin-9', p_order_id: ORDER}));
+    expect(repository.confirmManualPaymentAsServiceRole).toHaveBeenCalledWith({
+      orderId: ORDER, adminId: 'admin-9', paidAmountMinor: 129900, txnRef: 'T1', note: null, acceptMismatch: false
+    });
   });
 
   it('answers 409 amount_mismatch and validates the body', async () => {
     role = 'admin';
-    rpc.mockResolvedValue({data: {ok: false, reason: 'amount_mismatch'}, error: null});
+    repository.confirmManualPaymentAsServiceRole.mockResolvedValue({ok: false, reason: 'amount_mismatch'});
     const auth = {Authorization: `Bearer ${await signTestToken({subject: 'admin-9'})}`};
     const mismatch = await http.post(`/v1/admin/payments/${ORDER}/confirm`).set(auth).send({paidAmountMinor: 5, txnRef: 'T1'});
     expect(mismatch.status).toBe(409);
