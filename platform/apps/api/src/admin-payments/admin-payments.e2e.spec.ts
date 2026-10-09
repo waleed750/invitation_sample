@@ -25,7 +25,7 @@ describe('admin payments (e2e on the full app)', () => {
     const forUser = () => ({from: () => ({select: () => ({eq: () => ({single: () => Promise.resolve({data: {role}, error: null})})})})});
     const moduleRef = await Test.createTestingModule({imports: [AppModule]})
       .overrideProvider(SupabaseService).useValue({forUser, admin: () => admin})
-      .overrideProvider(AuthRepository).useValue({findRoleByUserId: async () => ({role})})
+      .overrideProvider(AuthRepository).useValue({findRoleByUserId: () => Promise.resolve({role})})
       .compile();
     app = moduleRef.createNestApplication({logger: false});
     setupApp(app);

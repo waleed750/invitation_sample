@@ -83,10 +83,10 @@ export async function bootApp(
     builder.overrideProvider(SupabaseService).useValue({forUser: () => mockSupabaseClient(supabaseResult)});
     // AuthRepository no longer uses SupabaseService; override it directly so specs pass.
     builder.overrideProvider(AuthRepository).useValue({
-      findRoleByUserId: async () => {
-        if (supabaseResult.error) throw new Error('DB Error');
-        const data = supabaseResult.data as any;
-        return data && data.role ? {role: data.role} : null;
+      findRoleByUserId: () => {
+        if (supabaseResult.error) return Promise.reject(new Error('DB Error'));
+        const data = supabaseResult.data as {role?: string} | undefined | null;
+        return Promise.resolve(data?.role ? {role: data.role} : null);
       }
     });
   }
