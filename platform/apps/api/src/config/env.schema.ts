@@ -1,4 +1,5 @@
 import {z} from 'zod';
+import {parseTrustProxy} from '../security/client-ip';
 
 // Environment contract for the API. Everything is validated once at boot via
 // `validateEnv` (wired into `ConfigModule.forRoot({ validate })`) so the
@@ -93,7 +94,21 @@ const envSchema = z.object({
   SWAGGER_ENABLED: z.enum(['true', 'false']).default('false').transform((value) => value === 'true'),
   // Kill-switch for the daily lifecycle cron (B4). Off in tests via NODE_ENV,
   // but this flag also lets ops pause the job without a redeploy.
-  LIFECYCLE_CRON_ENABLED: z.enum(['true', 'false']).default('true').transform((value) => value === 'true')
+  LIFECYCLE_CRON_ENABLED: z.enum(['true', 'false']).default('true').transform((value) => value === 'true'),
+  // --- L7 security hardening -------------------------------------------------
+  // Proxy trust for the real client IP: empty/false | hop count | cloudflare | loopback,10.0.0.0/8,...
+  TRUST_PROXY: z
+    .string()
+    .default('')
+    .superRefine((value, context) => {
+      try {
+        parseTrustProxy(value);
+      } catch (error) {
+        context.addIssue({code: 'custom', message: error instanceof Error ? error.message : 'invalid TRUST_PROXY'});
+      }
+    }),
+  // JSON / urlencoded request body cap in KB.
+  BODY_LIMIT_KB: z.coerce.number().int().min(1).max(10_240).default(100)
 }).superRefine((env, context) => {
   if (env.WEB_REVALIDATE_URL !== undefined && (env.REVALIDATE_SECRET === undefined || env.REVALIDATE_SECRET.length < 32)) {
     context.addIssue({

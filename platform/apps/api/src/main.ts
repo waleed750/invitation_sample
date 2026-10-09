@@ -1,7 +1,6 @@
 import './instrument';
 import {NestFactory} from '@nestjs/core';
 import {NestExpressApplication} from '@nestjs/platform-express';
-import helmet from 'helmet';
 import {AppModule} from './app.module';
 import {Logger} from 'nestjs-pino';
 import {AppConfigService} from './config/app-config.service';
@@ -13,15 +12,6 @@ async function bootstrap(): Promise<void> {
   app.useLogger(logger);
   const config = app.get(AppConfigService);
 
-  app.use(helmet());
-  // Strict CORS: only the configured web origins, no wildcards.
-  app.enableCors({
-    origin: config.webOrigins,
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-request-id'],
-    exposedHeaders: ['x-request-id'],
-    maxAge: 600
-  });
   setupApp(app);
   app.enableShutdownHooks();
 

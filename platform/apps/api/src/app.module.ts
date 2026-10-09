@@ -1,7 +1,7 @@
 import {MiddlewareConsumer, Module, type NestModule} from '@nestjs/common';
 import {APP_FILTER, APP_GUARD} from '@nestjs/core';
 import {ScheduleModule} from '@nestjs/schedule';
-import {ThrottlerGuard} from '@nestjs/throttler';
+import {ClientIpThrottlerGuard} from './security/client-ip-throttler.guard';
 import {LoggerModule} from 'nestjs-pino';
 import {AdminCustomersModule} from './admin-customers/admin-customers.module';
 import {AdminPaymentsModule} from './admin-payments/admin-payments.module';
@@ -50,7 +50,7 @@ export {AuthGuard, RolesGuard};
   ],
   providers: [
     AppLogger,
-    {provide: APP_GUARD, useClass: ThrottlerGuard},
+    {provide: APP_GUARD, useClass: ClientIpThrottlerGuard},
     {provide: APP_GUARD, useClass: AuthGuard},
     {provide: APP_GUARD, useClass: RolesGuard},
     {provide: APP_FILTER, useClass: HttpExceptionFilter}
