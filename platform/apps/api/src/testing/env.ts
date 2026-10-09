@@ -12,10 +12,8 @@ export const BASE_ENV: Record<string, string> = {
   // Legacy (optional). Unroutable on purpose: no spec may touch the network. Any Supabase call
   // fails fast (connection refused) and services map it to 503.
   SUPABASE_URL: 'http://127.0.0.1:9',
-  SUPABASE_ANON_KEY: 'test-anon-key',
-  SUPABASE_SERVICE_ROLE_KEY: 'test-service-role-key',
-  SUPABASE_JWT_SECRET: TEST_JWT_SECRET,
-  SUPABASE_TIMEOUT_MS: '5000',
+    SUPABASE_SERVICE_ROLE_KEY: 'test-service-role-key',
+    SUPABASE_TIMEOUT_MS: '5000',
   THROTTLE_TTL_MS: '60000',
   THROTTLE_LIMIT: '100',
   PAYMENTS_PROVIDER: 'mock',

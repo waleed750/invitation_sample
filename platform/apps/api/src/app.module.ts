@@ -17,7 +17,6 @@ import {EntitlementsModule} from './entitlements/entitlements.module';
 import {HealthModule} from './health/health.module';
 import {MeModule} from './me/me.module';
 import {RateLimitModule} from './rate-limit/rate-limit.module';
-import {SupabaseModule} from './supabase/supabase.module';
 import {CheckoutModule} from './checkout/checkout.module';
 import {GuestsModule} from './guests/guests.module';
 import {InvitationsModule} from './invitations/invitations.module';
@@ -46,7 +45,7 @@ export {AuthGuard, RolesGuard};
       useFactory: (config: AppConfigService) => buildLoggerParams(config.nodeEnv)
     }),
     DatabaseModule,
-    SupabaseModule, RateLimitModule, AuthModule, HealthModule, MeModule, EntitlementsModule,
+    RateLimitModule, AuthModule, HealthModule, MeModule, EntitlementsModule,
     PaymentsModule, TemplatesModule, CheckoutModule, OrdersModule, InvitationsModule, PointsModule,
     PublicInvitationsModule, GuestsModule, AdminPaymentsModule, AdminCustomersModule, LifecycleModule
     // lanes: append module imports below
