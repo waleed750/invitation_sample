@@ -62,10 +62,10 @@ describe('next.config security headers', () => {
 
 describe('buildCsp', () => {
   it('has no wildcard source and no unsafe-eval in production', () => {
-    const csp = buildCsp({NODE_ENV: 'production', API_BASE_URL: 'https://api.example.com/x', NEXT_PUBLIC_SUPABASE_URL: 'https://p.supabase.co'}, false);
+    const csp = buildCsp({NODE_ENV: 'production', API_BASE_URL: 'https://api.example.com/x', NEXT_PUBLIC_API_URL: 'https://api.example.com'}, false);
     expect(csp).not.toMatch(/(^|[\s;])\*([\s;]|$)/);
     expect(csp).not.toContain('unsafe-eval');
-    expect(csp).toContain("connect-src 'self' https://api.example.com https://p.supabase.co wss://p.supabase.co");
+    expect(csp).toContain("connect-src 'self' https://api.example.com");
     expect(csp).toContain("object-src 'none'");
   });
   it('allows unsafe-eval only outside production', () => {

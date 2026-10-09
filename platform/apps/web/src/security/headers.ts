@@ -24,7 +24,7 @@ function origin(value: string | undefined): string | undefined {
 
 export interface CspEnv {
   API_BASE_URL?: string | undefined;
-  NEXT_PUBLIC_SUPABASE_URL?: string | undefined;
+  NEXT_PUBLIC_API_URL?: string | undefined;
   NODE_ENV?: string | undefined;
 }
 
@@ -37,17 +37,15 @@ export interface CspEnv {
  * - style-src: React `style=` attributes and next/font inline rules.
  * - font-src: next/font/google self-hosts the files at build time.
  * - img/media-src: invitation content (gallery, music, video) comes from
- *   https URLs chosen by the customer / Supabase Storage, so `https:` is the
+ *   https URLs chosen by the customer, so `https:` is the
  *   narrowest scheme that works; no `*` and no plain http.
- * - connect-src: the API and Supabase (REST + realtime websocket).
+ * - connect-src: the API.
  * - frame-src: the venue map iframe embeds Google Maps.
  */
 export function buildCsp(env: CspEnv, embeddable: boolean): string {
   const connect = ["'self'"];
-  const apiOrigin = origin(env.API_BASE_URL);
+  const apiOrigin = origin(env.API_BASE_URL) || origin(env.NEXT_PUBLIC_API_URL);
   if (apiOrigin) connect.push(apiOrigin);
-  const supabase = origin(env.NEXT_PUBLIC_SUPABASE_URL);
-  if (supabase) connect.push(supabase, supabase.replace(/^http/, 'ws'));
   const scripts = ["'self'", "'unsafe-inline'"];
   if (env.NODE_ENV !== 'production') scripts.push("'unsafe-eval'");
   return [
