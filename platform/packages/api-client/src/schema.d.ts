@@ -68,6 +68,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/payment-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminPaymentEventsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/payment-events/{id}/assign": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminPaymentEventsController_assign"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/payments/pending": {
         parameters: {
             query?: never;
@@ -404,6 +436,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/payment-events/{provider}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["PaymentEventsController_webhook"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/payments/{provider}/webhook": {
         parameters: {
             query?: never;
@@ -528,6 +576,11 @@ export interface components {
         AdjustPointsBody: {
             delta: number;
             reason: string;
+        };
+        AssignEventBody: {
+            note: string;
+            /** Format: uuid */
+            orderId: string;
         };
         CheckoutBody: {
             couple: {
@@ -1587,6 +1640,49 @@ export interface operations {
             };
         };
     };
+    AdminPaymentEventsController_list: {
+        parameters: {
+            query?: {
+                status?: "unmatched" | "ambiguous" | "matched";
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminPaymentEventsController_assign: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AssignEventBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminPaymentsController_pending: {
         parameters: {
             query?: never;
@@ -2027,6 +2123,25 @@ export interface operations {
             header?: never;
             path: {
                 id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PaymentEventsController_webhook: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                provider: "generic-hmac" | "easyconfirm";
             };
             cookie?: never;
         };
