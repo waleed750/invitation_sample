@@ -48,6 +48,27 @@
         ],
         "type": "object"
       },
+      "AssignEventBody": {
+        "properties": {
+          "note": {
+            "maxLength": 500,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "orderId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "orderId",
+          "note"
+        ],
+        "type": "object"
+      },
       "CheckoutBody": {
         "properties": {
           "couple": {
@@ -5089,6 +5110,83 @@
         ]
       }
     },
+    "/v1/admin/payment-events": {
+      "get": {
+        "operationId": "AdminPaymentEventsController_list",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "status",
+            "required": false,
+            "schema": {
+              "default": "unmatched",
+              "enum": [
+                "unmatched",
+                "ambiguous",
+                "matched"
+              ],
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminPaymentEvents"
+        ]
+      }
+    },
+    "/v1/admin/payment-events/{id}/assign": {
+      "post": {
+        "operationId": "AdminPaymentEventsController_assign",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AssignEventBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminPaymentEvents"
+        ]
+      }
+    },
     "/v1/admin/payments/pending": {
       "get": {
         "operationId": "AdminPaymentsController_pending",
@@ -5656,6 +5754,33 @@
         },
         "tags": [
           "Orders"
+        ]
+      }
+    },
+    "/v1/payment-events/{provider}": {
+      "post": {
+        "operationId": "PaymentEventsController_webhook",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "provider",
+            "required": true,
+            "schema": {
+              "enum": [
+                "generic-hmac",
+                "easyconfirm"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "PaymentEvents"
         ]
       }
     },
