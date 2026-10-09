@@ -2,7 +2,6 @@
 import {ConflictException, NotFoundException, ServiceUnavailableException} from '@nestjs/common';
 import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
-import {SupabaseService} from '../supabase/supabase.service';
 import {PaymentsRepository} from './payments.repository';
 import {MockPaymentProvider} from './mock-payment.provider';
 import {PAYMENT_PROVIDER} from './payment-provider';
@@ -10,22 +9,20 @@ import {PaymentsService} from './payments.service';
 
 describe('PaymentsService', () => {
   let service: PaymentsService;
-  let supabaseClient: any;
+  let repository: {
+    findOrderByIdAsServiceRole: jest.Mock;
+    findOrderByProviderRefAsServiceRole: jest.Mock;
+    fulfillPaidOrderAsServiceRole: jest.Mock;
+    markOrderFailedAsServiceRole: jest.Mock;
+  };
   let provider: any;
-  let queryBuilder: any;
 
   beforeEach(async () => {
-    queryBuilder = {
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      single: jest.fn(),
-      update: jest.fn().mockReturnThis(),
-      then: jest.fn((resolve) => resolve({data: null, error: null})) // For await .eq()
-    };
-
-    supabaseClient = {
-      from: jest.fn().mockReturnValue(queryBuilder),
-      rpc: jest.fn()
+    repository = {
+      findOrderByIdAsServiceRole: jest.fn(),
+      findOrderByProviderRefAsServiceRole: jest.fn(),
+      fulfillPaidOrderAsServiceRole: jest.fn().mockResolvedValue(undefined),
+      markOrderFailedAsServiceRole: jest.fn().mockResolvedValue(undefined)
     };
 
     provider = {
@@ -37,7 +34,7 @@ describe('PaymentsService', () => {
         PaymentsService,
         {provide: PAYMENT_PROVIDER, useValue: provider},
         {provide: MockPaymentProvider, useValue: {sign: jest.fn().mockReturnValue('signature')}},
-        PaymentsRepository, {provide: SupabaseService, useValue: {admin: () => supabaseClient}},
+        {provide: PaymentsRepository, useValue: repository},
         {provide: AppLogger, useValue: {error: jest.fn()}}
       ]
     }).compile();
@@ -45,70 +42,95 @@ describe('PaymentsService', () => {
     service = module.get(PaymentsService);
   });
 
+  const order = (extra: object = {}) => ({id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending', ...extra});
+  const event = (extra: object = {}) => ({providerRef: 'ref_1', status: 'paid', amountMinor: 10000, currency: 'EGP', ...extra});
+
   it('should handle successful webhook', async () => {
-    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'paid', amountMinor: 10000, currency: 'EGP'});
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending'}, error: null});
-    supabaseClient.rpc.mockResolvedValueOnce({data: null, error: null});
+    provider.verifyWebhook.mockResolvedValueOnce(event());
+    repository.findOrderByProviderRefAsServiceRole.mockResolvedValueOnce(order());
 
     const result = await service.handleWebhook('mock', Buffer.from(''), {});
     expect(result).toEqual({ok: true});
-    expect(supabaseClient.rpc).toHaveBeenCalledWith('fulfill_paid_order', {p_order_id: 'order_1'});
+    expect(repository.findOrderByProviderRefAsServiceRole).toHaveBeenCalledWith('ref_1');
+    expect(repository.fulfillPaidOrderAsServiceRole).toHaveBeenCalledWith('order_1');
   });
 
   it('should handle failed webhook', async () => {
-    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'failed', amountMinor: 10000, currency: 'EGP'});
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending'}, error: null});
-    // queryBuilder is thenable, resolves to {data: null, error: null}
+    provider.verifyWebhook.mockResolvedValueOnce(event({status: 'failed'}));
+    repository.findOrderByProviderRefAsServiceRole.mockResolvedValueOnce(order());
 
     const result = await service.handleWebhook('mock', Buffer.from(''), {});
     expect(result).toEqual({ok: true});
-    expect(queryBuilder.update).toHaveBeenCalled();
+    expect(repository.markOrderFailedAsServiceRole).toHaveBeenCalledWith('order_1');
+    expect(repository.fulfillPaidOrderAsServiceRole).not.toHaveBeenCalled();
   });
 
   it('should reject unknown provider', async () => {
     await expect(service.handleWebhook('unknown', Buffer.from(''), {})).rejects.toThrow(NotFoundException);
   });
 
+  it('should answer 404 when no order matches the provider reference', async () => {
+    provider.verifyWebhook.mockResolvedValueOnce(event());
+    repository.findOrderByProviderRefAsServiceRole.mockResolvedValueOnce(null);
+
+    await expect(service.handleWebhook('mock', Buffer.from(''), {})).rejects.toThrow(NotFoundException);
+  });
+
+  it('should answer 503 when the order lookup fails', async () => {
+    provider.verifyWebhook.mockResolvedValueOnce(event());
+    repository.findOrderByProviderRefAsServiceRole.mockRejectedValueOnce(new Error('connection refused'));
+
+    await expect(service.handleWebhook('mock', Buffer.from(''), {})).rejects.toThrow(ServiceUnavailableException);
+  });
+
+  it('should answer 503 when fulfilling the order fails', async () => {
+    provider.verifyWebhook.mockResolvedValueOnce(event());
+    repository.findOrderByProviderRefAsServiceRole.mockResolvedValueOnce(order());
+    repository.fulfillPaidOrderAsServiceRole.mockRejectedValueOnce(new Error('deadlock'));
+
+    await expect(service.handleWebhook('mock', Buffer.from(''), {})).rejects.toThrow(ServiceUnavailableException);
+  });
+
   it('should reject amount mismatch', async () => {
-    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'paid', amountMinor: 10000, currency: 'EGP'});
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 5000, currency: 'EGP', status: 'pending'}, error: null});
+    provider.verifyWebhook.mockResolvedValueOnce(event());
+    repository.findOrderByProviderRefAsServiceRole.mockResolvedValueOnce(order({amount_minor: 5000}));
 
     await expect(service.handleWebhook('mock', Buffer.from(''), {})).rejects.toThrow(ConflictException);
   });
 
   it('should reject currency mismatch even when the amount matches', async () => {
-    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'paid', amountMinor: 10000, currency: 'USD'});
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending'}, error: null});
+    provider.verifyWebhook.mockResolvedValueOnce(event({currency: 'USD'}));
+    repository.findOrderByProviderRefAsServiceRole.mockResolvedValueOnce(order());
 
     await expect(service.handleWebhook('mock', Buffer.from(''), {})).rejects.toThrow(ConflictException);
-    expect(supabaseClient.rpc).not.toHaveBeenCalled();
-    expect(queryBuilder.update).not.toHaveBeenCalled();
+    expect(repository.fulfillPaidOrderAsServiceRole).not.toHaveBeenCalled();
+    expect(repository.markOrderFailedAsServiceRole).not.toHaveBeenCalled();
   });
 
   it('should gracefully handle already fulfilled order', async () => {
-    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'ref_1', status: 'paid', amountMinor: 10000, currency: 'EGP'});
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'paid'}, error: null});
+    provider.verifyWebhook.mockResolvedValueOnce(event());
+    repository.findOrderByProviderRefAsServiceRole.mockResolvedValueOnce(order({status: 'paid'}));
 
     const result = await service.handleWebhook('mock', Buffer.from(''), {});
     expect(result).toEqual({ok: true});
-    expect(supabaseClient.rpc).not.toHaveBeenCalled();
-    expect(queryBuilder.update).not.toHaveBeenCalled();
+    expect(repository.fulfillPaidOrderAsServiceRole).not.toHaveBeenCalled();
+    expect(repository.markOrderFailedAsServiceRole).not.toHaveBeenCalled();
   });
 
   it('should simulate webhook internally', async () => {
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending', user_id: 'user_1'}, error: null}); // findOrderById
-    provider.verifyWebhook.mockResolvedValueOnce({providerRef: 'mock_order_1', status: 'paid', amountMinor: 10000, currency: 'EGP'});
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending'}, error: null}); // findOrder
-    supabaseClient.rpc.mockResolvedValueOnce({data: null, error: null});
+    repository.findOrderByIdAsServiceRole.mockResolvedValueOnce(order({user_id: 'user_1'}));
+    provider.verifyWebhook.mockResolvedValueOnce(event({providerRef: 'mock_order_1'}));
+    repository.findOrderByProviderRefAsServiceRole.mockResolvedValueOnce(order());
 
     const result = await service.simulate('order_1', 'paid', 'user_1');
     expect(result).toEqual({ok: true});
+    expect(repository.fulfillPaidOrderAsServiceRole).toHaveBeenCalledWith('order_1');
   });
 
-  it('should not let a user settle someone else\'s order via the dev shortcut', async () => {
-    queryBuilder.single.mockResolvedValueOnce({data: {id: 'order_1', amount_minor: 10000, currency: 'EGP', status: 'pending', user_id: 'someone_else'}, error: null});
+  it("should not let a user settle someone else's order via the dev shortcut", async () => {
+    repository.findOrderByIdAsServiceRole.mockResolvedValueOnce(order({user_id: 'someone_else'}));
 
     await expect(service.simulate('order_1', 'paid', 'user_1')).rejects.toThrow(NotFoundException);
-    expect(supabaseClient.rpc).not.toHaveBeenCalled();
+    expect(repository.fulfillPaidOrderAsServiceRole).not.toHaveBeenCalled();
   });
 });

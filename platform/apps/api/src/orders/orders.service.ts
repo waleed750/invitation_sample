@@ -86,9 +86,8 @@ export class OrdersService {
 
   async list(user: RequestUser): Promise<OrderResponse[]> {
     try {
-      const result: unknown = await this.repository.listByUser(user.jwt, user.id);
-      if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) throw new ServiceUnavailableException('Orders service unavailable');
-      return result.data.map((row: unknown) => toResponse(row, this.config));
+      const rows = await this.repository.listByUser(user.id);
+      return rows.map((row) => toResponse(row, this.config));
     } catch (error) {
       if (error instanceof ServiceUnavailableException) throw error;
       this.logger.error('orders lookup failed');
@@ -98,13 +97,9 @@ export class OrdersService {
 
   async get(user: RequestUser, id: string): Promise<OrderResponse> {
     try {
-      const result: unknown = await this.repository.findByIdForUser(user.jwt, user.id, id);
-      if (!isRecord(result)) throw new ServiceUnavailableException('Orders service unavailable');
-      if (result.error !== null) {
-        if (isRecord(result.error) && result.error.code === 'PGRST116') throw new NotFoundException('Order not found');
-        throw new ServiceUnavailableException('Orders service unavailable');
-      }
-      return toResponse(result.data, this.config);
+      const row = await this.repository.findByIdForUser(user.id, id);
+      if (row === null) throw new NotFoundException('Order not found');
+      return toResponse(row, this.config);
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof ServiceUnavailableException) throw error;
       this.logger.error('order lookup failed');

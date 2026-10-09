@@ -1,33 +1,53 @@
 import {Injectable} from '@nestjs/common';
-import {SupabaseService} from '../supabase/supabase.service';
+import {firstJson, type JsonRow} from '../common/db-rows';
+import {DbService} from '../database';
 
-const ORDER_COLUMNS = 'id,amount_minor,currency,status,user_id';
+export interface PaymentOrderDbRow {
+  id: string;
+  amount_minor: number;
+  currency: string;
+  status: string;
+  user_id: string | null;
+}
 
 /**
- * Data access for payments. Webhooks carry no user JWT, so every method here
- * uses the service-role client (hence the `AsServiceRole` suffix).
+ * Data access for payments. Webhooks carry no user, so every method here
+ * runs as the service role (hence the `AsServiceRole` suffix).
  */
 @Injectable()
 export class PaymentsRepository {
-  constructor(private readonly supabase: SupabaseService) {}
+  constructor(private readonly db: DbService) {}
 
-  /** Order by id (service role). Raw postgrest envelope. */
-  async findOrderByIdAsServiceRole(orderId: string): Promise<unknown> {
-    return this.supabase.admin().from('orders').select(ORDER_COLUMNS).eq('id', orderId).single();
+  /** Order by id (service role), or `null`. */
+  async findOrderByIdAsServiceRole(orderId: string): Promise<PaymentOrderDbRow | null> {
+    return this.db.asService(async (tx) =>
+      firstJson(await tx<JsonRow<PaymentOrderDbRow>[]>`
+        select to_jsonb(o) as r from (
+          select id, amount_minor, currency, status, user_id from public.orders where id = ${orderId}::uuid
+        ) o`));
   }
 
-  /** Order by provider reference (service role). Raw postgrest envelope. */
-  async findOrderByProviderRefAsServiceRole(providerRef: string): Promise<unknown> {
-    return this.supabase.admin().from('orders').select(ORDER_COLUMNS).eq('provider_ref', providerRef).single();
+  /** Order by provider reference (service role), or `null`. */
+  async findOrderByProviderRefAsServiceRole(providerRef: string): Promise<PaymentOrderDbRow | null> {
+    return this.db.asService(async (tx) =>
+      firstJson(await tx<JsonRow<PaymentOrderDbRow>[]>`
+        select to_jsonb(o) as r from (
+          select id, amount_minor, currency, status, user_id from public.orders where provider_ref = ${providerRef}::text
+          limit 1
+        ) o`));
   }
 
   /** Fulfils a paid order through the `fulfill_paid_order` RPC (service role). */
-  async fulfillPaidOrderAsServiceRole(orderId: string): Promise<unknown> {
-    return this.supabase.admin().rpc('fulfill_paid_order', {p_order_id: orderId});
+  async fulfillPaidOrderAsServiceRole(orderId: string): Promise<void> {
+    await this.db.asService(async (tx) => {
+      await tx`select public.fulfill_paid_order(${orderId}::uuid) as result`;
+    });
   }
 
   /** Marks a still-pending order as failed (service role). */
-  async markOrderFailedAsServiceRole(orderId: string): Promise<unknown> {
-    return this.supabase.admin().from('orders').update({status: 'failed'}).eq('id', orderId).eq('status', 'pending');
+  async markOrderFailedAsServiceRole(orderId: string): Promise<void> {
+    await this.db.asService(async (tx) => {
+      await tx`update public.orders set status = 'failed' where id = ${orderId}::uuid and status = 'pending'`;
+    });
   }
 }

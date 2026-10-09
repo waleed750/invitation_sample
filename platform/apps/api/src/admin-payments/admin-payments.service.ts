@@ -59,13 +59,15 @@ export class AdminPaymentsService {
   ) {}
 
   async listPending(): Promise<PendingPaymentResponse[]> {
-    const result: unknown = await this.repository.listPendingManualOrdersAsServiceRole();
-    if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) {
+    let rows: Awaited<ReturnType<AdminPaymentsRepository['listPendingManualOrdersAsServiceRole']>>;
+    try {
+      rows = await this.repository.listPendingManualOrdersAsServiceRole();
+    } catch {
       this.logger.error('admin pending payments query failed');
       throw new ServiceUnavailableException('Payments service unavailable');
     }
     const now = Date.now();
-    return result.data.map((row: unknown) => this.toPending(row, now));
+    return rows.map((row: unknown) => this.toPending(row, now));
   }
 
   async confirm(adminId: string, orderId: string, body: ConfirmPaymentBody): Promise<ConfirmPaymentResponse> {
@@ -87,19 +89,19 @@ export class AdminPaymentsService {
     throw this.failure(data);
   }
 
-  private async rpc(call: () => Promise<unknown>, label: string): Promise<Record<string, unknown>> {
-    let result: unknown;
+  private async rpc(call: () => Promise<Record<string, unknown> | null>, label: string): Promise<Record<string, unknown>> {
+    let result: Record<string, unknown> | null;
     try {
       result = await call();
     } catch {
       this.logger.error(`admin payment ${label} failed`);
       throw new ServiceUnavailableException('Payments service unavailable');
     }
-    if (!isRecord(result) || result.error !== null || !isRecord(result.data)) {
+    if (result === null) {
       this.logger.error(`admin payment ${label} rpc failed`);
       throw new ServiceUnavailableException('Payments service unavailable');
     }
-    return result.data;
+    return result;
   }
 
   /** Maps a `{ok:false, reason}` SQL result to a stable HTTP error code. */

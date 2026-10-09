@@ -59,11 +59,7 @@ export interface SlugAvailability {
 const SUGGESTION_COUNT = 3;
 const unavailable = (): ServiceUnavailableException => new ServiceUnavailableException('Invitations service unavailable');
 
-function envelope(result: unknown): {data: unknown; error: unknown} {
-  if (!isRecord(result) || !('data' in result) || !('error' in result)) throw unavailable();
-  return {data: result.data, error: result.error};
-}
-
+/** SQLSTATE + message of a postgres.js error (`PostgresError` exposes both); empty for anything else. */
 function errorText(error: unknown): {code: string; message: string} {
   if (!isRecord(error)) return {code: '', message: ''};
   return {
@@ -102,12 +98,8 @@ export class InvitationEditingService {
 
   /** `null` when RLS hides the row (or it does not exist). */
   private async find(user: RequestUser, id: string): Promise<InvitationDetail | null> {
-    const {data, error} = envelope(await this.repository.findById(user.jwt, id));
-    if (error !== null) {
-      this.logger.error('invitation lookup failed (upstream error)');
-      throw unavailable();
-    }
-    return data === null ? null : toDetail(data, this.clock.now());
+    const row = await this.repository.findById(user.id, id);
+    return row === null ? null : toDetail(row, this.clock.now());
   }
 
   async get(user: RequestUser, id: string): Promise<InvitationDetail> {
@@ -126,15 +118,10 @@ export class InvitationEditingService {
     const version = ifMatch.trim().replace(/^W\//, '').replace(/^"(.*)"$/, '$1');
     if (Number.isNaN(Date.parse(version))) throw new BadRequestException('If-Match must be an updatedAt timestamp');
     return this.guarded(async () => {
-      const {data, error} = envelope(await this.repository.updateDataIfMatch(user.jwt, id, body.data, version));
-      if (error !== null) {
-        this.logger.error('invitation update failed (upstream error)');
-        throw unavailable();
-      }
-      if (Array.isArray(data) && data.length > 0) {
-        const row: unknown = data[0];
-        if (isRecord(row) && typeof row.updated_at === 'string') return {updatedAt: row.updated_at};
-        throw unavailable();
+      const updatedAt = await this.repository.updateDataIfMatch(user.id, id, body.data, version);
+      if (updatedAt !== null) {
+        if (typeof updatedAt !== 'string') throw unavailable();
+        return {updatedAt};
       }
       // 0 rows: hidden/missing (404) or someone saved since this client loaded it (409).
       if ((await this.find(user, id)) === null) throw new NotFoundException('Invitation not found');
@@ -153,8 +140,10 @@ export class InvitationEditingService {
         throw new ConflictException({code: 'slug_locked', message: 'The link cannot change after the first publish'});
       }
       if (current.slug === rawSlug) return {slug: rawSlug};
-      const {data, error} = envelope(await this.repository.updateSlug(user.jwt, id, rawSlug));
-      if (error !== null) {
+      let updated: boolean;
+      try {
+        updated = await this.repository.updateSlug(user.id, id, rawSlug);
+      } catch (error) {
         const {code, message} = errorText(error);
         if (code === '23505') throw new ConflictException({code: 'slug_taken', message: 'This slug is already taken'});
         if (message.includes('slug cannot change after publishing')) {
@@ -164,7 +153,7 @@ export class InvitationEditingService {
         this.logger.error('invitation slug update failed (upstream error)');
         throw unavailable();
       }
-      if (!Array.isArray(data) || data.length === 0) throw new NotFoundException('Invitation not found');
+      if (!updated) throw new NotFoundException('Invitation not found');
       return {slug: rawSlug};
     });
   }
@@ -186,12 +175,8 @@ export class InvitationEditingService {
     return this.guarded(async () => {
       const current = await this.find(user, id);
       if (current === null) return {ok: false, reason: 'not_found'};
-      const {data, error} = envelope(await this.repository.publish(user.jwt, id, current.data));
-      if (error !== null) {
-        this.logger.error('publish_invitation failed (upstream error)');
-        throw unavailable();
-      }
-      if (!isRecord(data) || typeof data.ok !== 'boolean') throw unavailable();
+      const data = await this.repository.publish(user.id, id, current.data);
+      if (data === null || typeof data.ok !== 'boolean') throw unavailable();
       if (!data.ok) {
         if (data.reason === 'not_owner') return {ok: false, reason: 'not_found'};
         if (data.reason === 'no_edits_left' || data.reason === 'expired') return {ok: false, reason: data.reason};
@@ -207,12 +192,8 @@ export class InvitationEditingService {
   async undoPublish(user: RequestUser, id: string): Promise<UndoPublishResult> {
     return this.guarded(async () => {
       if ((await this.find(user, id)) === null) return {ok: false, reason: 'not_found'};
-      const {data, error} = envelope(await this.repository.undoPublish(user.jwt, id));
-      if (error !== null) {
-        this.logger.error('undo_publish failed (upstream error)');
-        throw unavailable();
-      }
-      if (!isRecord(data) || typeof data.ok !== 'boolean') throw unavailable();
+      const data = await this.repository.undoPublish(user.id, id);
+      if (data === null || typeof data.ok !== 'boolean') throw unavailable();
       if (!data.ok) {
         if (data.reason === 'not_owner') return {ok: false, reason: 'not_found'};
         if (data.reason === 'nothing_to_undo' || data.reason === 'expired') return {ok: false, reason: data.reason};
@@ -228,12 +209,8 @@ export class InvitationEditingService {
   async switchTemplate(user: RequestUser, id: string, templateSlug: string): Promise<SwitchTemplateResult> {
     return this.guarded(async () => {
       if ((await this.find(user, id)) === null) return {ok: false, reason: 'not_found'};
-      const {data, error} = envelope(await this.repository.switchTemplate(user.jwt, id, templateSlug));
-      if (error !== null) {
-        this.logger.error('switch_template failed (upstream error)');
-        throw unavailable();
-      }
-      if (!isRecord(data) || typeof data.ok !== 'boolean') throw unavailable();
+      const data = await this.repository.switchTemplate(user.id, id, templateSlug);
+      if (data === null || typeof data.ok !== 'boolean') throw unavailable();
       if (!data.ok) {
         if (data.reason === 'not_owner') return {ok: false, reason: 'not_found'};
         if (data.reason === 'no_switches_left' || data.reason === 'tier_mismatch' || data.reason === 'template_not_found') {
@@ -249,14 +226,7 @@ export class InvitationEditingService {
   }
 
   private async taken(slugs: string[]): Promise<Set<string>> {
-    const {data, error} = envelope(await this.repository.slugsTakenAsServiceRole(slugs));
-    if (error !== null || !Array.isArray(data)) {
-      this.logger.error('slug lookup failed (upstream error)');
-      throw unavailable();
-    }
-    const out = new Set<string>();
-    for (const row of data) if (isRecord(row) && typeof row.slug === 'string') out.add(row.slug);
-    return out;
+    return new Set(await this.repository.slugsTakenAsServiceRole(slugs));
   }
 
   /** Lets HTTP exceptions through; turns anything else (network, malformed) into a 503. */
@@ -265,7 +235,7 @@ export class InvitationEditingService {
       return await run();
     } catch (error) {
       if (error instanceof HttpException) throw error;
-      this.logger.error('invitation request failed (unreachable)');
+      this.logger.error('invitation request failed (upstream error)');
       throw unavailable();
     }
   }
