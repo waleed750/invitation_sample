@@ -3,8 +3,8 @@ import {Test} from '@nestjs/testing';
 import request from 'supertest';
 import {AppModule} from '../app.module';
 import {setupApp} from '../setup-app';
-import {SupabaseService} from '../supabase/supabase.service';
 import {AuthRepository} from '../auth/auth.repository';
+import {AdminCustomersRepository} from './admin-customers.repository';
 import {setTestEnv, signTestToken, type HttpClient} from '../test-helpers';
 
 const USER = '55555555-5555-4555-8555-555555555555';
@@ -14,17 +14,36 @@ describe('admin customers (e2e on the full app)', () => {
   let app: INestApplication;
   let http: HttpClient;
   let role = 'customer';
-  let rpc: jest.Mock;
-  let from: jest.Mock;
+  let repository: {
+    findSlugOwnersAsServiceRole: jest.Mock;
+    searchProfilesAsServiceRole: jest.Mock;
+    listRecentProfilesAsServiceRole: jest.Mock;
+    findProfileAsServiceRole: jest.Mock;
+    listOrdersAsServiceRole: jest.Mock;
+    listInvitationsAsServiceRole: jest.Mock;
+    listPointsLedgerAsServiceRole: jest.Mock;
+    adjustEntitlementAsServiceRole: jest.Mock;
+    adjustPointsAsServiceRole: jest.Mock;
+  };
 
   beforeAll(async () => {
     setTestEnv();
-    rpc = jest.fn();
-    from = jest.fn();
-    const forUser = () => ({from: () => ({select: () => ({eq: () => ({single: () => Promise.resolve({data: {role}, error: null})})})})});
+    repository = {
+      findSlugOwnersAsServiceRole: jest.fn().mockResolvedValue([]),
+      searchProfilesAsServiceRole: jest.fn().mockResolvedValue([]),
+      listRecentProfilesAsServiceRole: jest.fn().mockResolvedValue([]),
+      findProfileAsServiceRole: jest.fn().mockResolvedValue(null),
+      listOrdersAsServiceRole: jest.fn().mockResolvedValue([]),
+      listInvitationsAsServiceRole: jest.fn().mockResolvedValue([]),
+      listPointsLedgerAsServiceRole: jest.fn().mockResolvedValue([]),
+      adjustEntitlementAsServiceRole: jest.fn(),
+      adjustPointsAsServiceRole: jest.fn()
+    };
     const moduleRef = await Test.createTestingModule({imports: [AppModule]})
-      .overrideProvider(SupabaseService).useValue({forUser, admin: () => ({rpc, from})})
-      .overrideProvider(AuthRepository).useValue({findRoleByUserId: () => Promise.resolve({role})})
+      .overrideProvider(AuthRepository)
+      .useValue({findRoleByUserId: () => Promise.resolve({role})})
+      .overrideProvider(AdminCustomersRepository)
+      .useValue(repository)
       .compile();
     app = moduleRef.createNestApplication({logger: false});
     setupApp(app);
@@ -37,8 +56,8 @@ describe('admin customers (e2e on the full app)', () => {
   });
 
   beforeEach(() => {
-    rpc.mockReset();
-    from.mockReset();
+    repository.adjustEntitlementAsServiceRole.mockReset();
+    repository.adjustPointsAsServiceRole.mockReset();
   });
 
   it('returns 401 without a token', async () => {
@@ -56,39 +75,39 @@ describe('admin customers (e2e on the full app)', () => {
     const points = await http.post(`/v1/admin/customers/${USER}/points-adjustments`)
       .set(auth).send({delta: 1000, reason: 'sneaky'});
     expect(points.status).toBe(403);
-    expect(rpc).not.toHaveBeenCalled();
-    expect(from).not.toHaveBeenCalled();
+    expect(repository.adjustEntitlementAsServiceRole).not.toHaveBeenCalled();
+    expect(repository.adjustPointsAsServiceRole).not.toHaveBeenCalled();
   });
 
   it('lets an admin adjust points, using the token subject as admin id', async () => {
     role = 'admin';
-    rpc.mockResolvedValue({data: {ok: true, balance: 650}, error: null});
+    repository.adjustPointsAsServiceRole.mockResolvedValue({ok: true, balance: 650});
     const auth = {Authorization: `Bearer ${await signTestToken({subject: 'admin-9'})}`};
     const res = await http.post(`/v1/admin/customers/${USER}/points-adjustments`).set(auth).send({delta: 500, reason: 'goodwill'});
     expect(res.status).toBe(200);
     expect(res.body).toEqual({balance: 650});
-    expect(rpc).toHaveBeenCalledWith('admin_adjust_points', {
-      p_admin_id: 'admin-9', p_user_id: USER, p_delta: 500, p_reason: 'goodwill'
-    });
+    expect(repository.adjustPointsAsServiceRole).toHaveBeenCalledWith(
+      'admin-9', USER, 500, 'goodwill'
+    );
   });
 
   it('maps entitlement errors and validates bodies', async () => {
     role = 'admin';
     const auth = {Authorization: `Bearer ${await signTestToken({subject: 'admin-9'})}`};
     const url = `/v1/admin/invitations/${INVITATION}/entitlement-adjustments`;
-    rpc.mockResolvedValue({data: {ok: false, reason: 'invalid_adjustment'}, error: null});
+    repository.adjustEntitlementAsServiceRole.mockResolvedValue({ok: false, reason: 'invalid_adjustment'});
     const invalid = await http.post(url).set(auth).send({reason: 'nothing to do'});
     expect(invalid.status).toBe(400);
     expect(invalid.body.error.code).toBe('invalid_adjustment');
-    rpc.mockResolvedValue({data: {ok: false, reason: 'not_found'}, error: null});
+    repository.adjustEntitlementAsServiceRole.mockResolvedValue({ok: false, reason: 'not_found'});
     expect((await http.post(url).set(auth).send({addEdits: 1, reason: 'goodwill'})).status).toBe(404);
-    rpc.mockClear();
+    repository.adjustEntitlementAsServiceRole.mockClear();
     expect((await http.post(url).set(auth).send({addEdits: 1, reason: 'x'})).status).toBe(400);
     expect((await http.post(url).set(auth).send({addEdits: 101, reason: 'too many'})).status).toBe(400);
-    expect(rpc).not.toHaveBeenCalled();
+    expect(repository.adjustEntitlementAsServiceRole).not.toHaveBeenCalled();
 
     const pointsUrl = `/v1/admin/customers/${USER}/points-adjustments`;
-    rpc.mockResolvedValue({data: {ok: false, reason: 'insufficient_points'}, error: null});
+    repository.adjustPointsAsServiceRole.mockResolvedValue({ok: false, reason: 'insufficient_points'});
     const insufficient = await http.post(pointsUrl).set(auth).send({delta: -100, reason: 'too much'});
     expect(insufficient.status).toBe(409);
     expect(insufficient.body.error.code).toBe('insufficient_points');

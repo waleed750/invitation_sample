@@ -26,11 +26,11 @@ describe('PublicInvitationsService', () => {
 
   async function boot(invitation: {tier: string; online_until: string | null} = {tier: 'classic', online_until: FUTURE}, snapshot?: unknown) {
     repository = {
-      findPublishedBySlugAsServiceRole: jest.fn().mockResolvedValue({data: invitationRow(invitation.tier, invitation.online_until), error: null}),
-      findLatestPublishAsServiceRole: jest.fn().mockResolvedValue({data: publishRow(snapshot), error: null}),
-      listRsvpCountsAsServiceRole: jest.fn().mockResolvedValue({data: [], error: null}),
-      saveRsvpAsServiceRole: jest.fn().mockResolvedValue({data: [{id: 'r1'}], error: null}),
-      saveMessageAsServiceRole: jest.fn().mockResolvedValue({data: [{id: 'm1'}], error: null})
+      findPublishedBySlugAsServiceRole: jest.fn().mockResolvedValue(invitationRow(invitation.tier, invitation.online_until)),
+      findLatestPublishAsServiceRole: jest.fn().mockResolvedValue(publishRow(snapshot)),
+      listRsvpCountsAsServiceRole: jest.fn().mockResolvedValue([]),
+      saveRsvpAsServiceRole: jest.fn().mockResolvedValue(undefined),
+      saveMessageAsServiceRole: jest.fn().mockResolvedValue(undefined)
     };
     const module = await Test.createTestingModule({
       providers: [
@@ -53,7 +53,7 @@ describe('PublicInvitationsService', () => {
   it('includes templateSlug in the live response, null when the template is missing', async () => {
     await boot();
     expect(await service.getBySlug('ahmed-mona')).toMatchObject({state: 'live', templateSlug: 'elegante'});
-    repository.findPublishedBySlugAsServiceRole.mockResolvedValue({data: {...invitationRow('classic', FUTURE), template: null}, error: null});
+    repository.findPublishedBySlugAsServiceRole.mockResolvedValue({...invitationRow('classic', FUTURE), template: null});
     expect(await service.getBySlug('ahmed-mona')).toMatchObject({state: 'live', templateSlug: null});
   });
 
@@ -66,7 +66,7 @@ describe('PublicInvitationsService', () => {
 
   it('throws NotFound for an unknown slug', async () => {
     await boot();
-    repository.findPublishedBySlugAsServiceRole.mockResolvedValueOnce({data: null, error: {code: 'PGRST116'}});
+    repository.findPublishedBySlugAsServiceRole.mockResolvedValueOnce(null);
     await expect(service.getBySlug('nope')).rejects.toThrow(NotFoundException);
   });
 
@@ -95,7 +95,7 @@ describe('PublicInvitationsService', () => {
 
   it('rejects RSVPs once the tier limit is reached', async () => {
     await boot();
-    repository.listRsvpCountsAsServiceRole.mockResolvedValueOnce({data: [{attending: true, guests_count: 299}], error: null});
+    repository.listRsvpCountsAsServiceRole.mockResolvedValueOnce([{attending: true, guests_count: 299}]);
     const error = await service.submitRsvp('ahmed-mona', {name: 'A', attending: true, guests: 2} as any, '1.2.3.4').catch((e) => e);
     expect(error).toBeInstanceOf(ForbiddenException);
     expect(error.getResponse()).toMatchObject({code: 'rsvp_limit_reached'});
