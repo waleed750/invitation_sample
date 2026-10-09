@@ -9,9 +9,9 @@ export interface HeaderRule {
 }
 
 /** Pages designed to be framed by our own site (landing-page phone/preview widgets). */
-export const EMBEDDABLE_SOURCE = '/:locale(ar|en)/(preview|demo)/:path*';
+export const EMBEDDABLE_SOURCE = '/:locale(ar|en)/(preview|demo|pick-preview)/:path*';
 /** Everything except the embeddable pages (negative lookahead keeps the two rule sets disjoint). */
-const NON_EMBEDDABLE_SOURCE = '/((?!(?:ar|en)/(?:preview|demo)(?:/|$)).*)';
+const NON_EMBEDDABLE_SOURCE = '/((?!(?:ar|en)/(?:preview|demo|pick-preview)(?:/|$)).*)';
 
 function origin(value: string | undefined): string | undefined {
   if (!value) return undefined;
@@ -72,6 +72,7 @@ export const NOINDEX_SOURCES = [
   '/:locale(ar|en)/app/:path*',
   '/:locale(ar|en)/admin/:path*',
   '/:locale(ar|en)/checkout/:path*',
+  '/:locale(ar|en)/pick-preview/:path*',
   '/:locale(ar|en)/sign-in'
 ];
 
