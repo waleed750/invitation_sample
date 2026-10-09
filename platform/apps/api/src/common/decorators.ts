@@ -14,11 +14,11 @@ export const Roles = (...roles: UserRole[]): ReturnType<typeof SetMetadata> => S
 
 /** The authenticated caller, attached to the request by `AuthGuard`. */
 export interface RequestUser {
-  /** Supabase `auth.users.id` (JWT `sub`). */
+  /** Better Auth `user.id`. */
   id: string;
   email?: string;
   phone?: string;
-  /** The raw bearer token, used to build the user-scoped Supabase client (RLS applies). Never logged. */
+  /** The raw bearer token, used by L1 for now. */
   jwt: string;
 }
 

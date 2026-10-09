@@ -82,6 +82,53 @@ export class AppConfigService {
     return this.required('BODY_LIMIT_KB');
   }
 
+  get betterAuthSecret(): string {
+    return this.required('BETTER_AUTH_SECRET');
+  }
+
+  get betterAuthUrl(): string {
+    return this.required('BETTER_AUTH_URL');
+  }
+
+  get authCookieDomain(): string | undefined {
+    return this.required('AUTH_COOKIE_DOMAIN');
+  }
+
+  get phoneLoginEnabled(): boolean {
+    return this.required('PHONE_LOGIN_ENABLED');
+  }
+
+  get otpDailyCap(): number {
+    return this.required('OTP_DAILY_CAP');
+  }
+
+  get smtpHost(): string {
+    return this.required('SMTP_HOST');
+  }
+
+  get smtpPort(): number {
+    return this.required('SMTP_PORT');
+  }
+
+  get smtpUser(): string {
+    return this.required('SMTP_USER');
+  }
+
+  get smtpPass(): string {
+    return this.required('SMTP_PASS');
+  }
+
+  get smtpFrom(): string {
+    return this.required('SMTP_FROM');
+  }
+
+  get googleClientId(): string | undefined {
+    return this.required('GOOGLE_CLIENT_ID');
+  }
+
+  get googleClientSecret(): string | undefined {
+    return this.required('GOOGLE_CLIENT_SECRET');
+  }
   get throttleTtlMs(): number {
     return this.required('THROTTLE_TTL_MS');
   }

@@ -1,15 +1,14 @@
 'use client';
 
 import {useEffect, useState} from 'react';
-import {useLocale, useTranslations} from 'next-intl';
+import {useTranslations} from 'next-intl';
 import {EMAIL_PATTERN, mapAuthError, type AuthErrorKey} from './errors';
-import {createSupabaseBrowserClient} from './supabase-browser';
+import {authClient} from './client';
 
 const COOLDOWN_SECONDS = 30;
 
 export function SignInForm({next, initialError}: {next: string; initialError?: 'callback'}) {
   const t = useTranslations('auth');
-  const locale = useLocale();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
   const [step, setStep] = useState<'email' | 'code'>('email');
@@ -24,12 +23,12 @@ export function SignInForm({next, initialError}: {next: string; initialError?: '
   }, [cooldown]);
 
   async function google() {
-    const supabase = createSupabaseBrowserClient();
-    if (!supabase) return setError('generic');
     setBusy(true);
     setError(null);
-    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(next)}`;
-    const {error: failure} = await supabase.auth.signInWithOAuth({provider: 'google', options: {redirectTo}});
+    const { error: failure } = await authClient.signIn.social({
+      provider: 'google',
+      callbackURL: next
+    });
     if (failure) {
       setError(mapAuthError(failure, 'send'));
       setBusy(false);
@@ -39,11 +38,14 @@ export function SignInForm({next, initialError}: {next: string; initialError?: '
   async function sendCode() {
     const address = email.trim();
     if (!EMAIL_PATTERN.test(address)) return setError('invalidEmail');
-    const supabase = createSupabaseBrowserClient();
-    if (!supabase) return setError('generic');
     setBusy(true);
     setError(null);
-    const {error: failure} = await supabase.auth.signInWithOtp({email: address, options: {shouldCreateUser: true, data: {locale}}});
+    
+    const { error: failure } = await authClient.emailOtp.sendVerificationOtp({
+      email: address,
+      type: 'sign-in'
+    });
+    
     setBusy(false);
     if (failure) return setError(mapAuthError(failure, 'send'));
     setCode('');
@@ -54,11 +56,14 @@ export function SignInForm({next, initialError}: {next: string; initialError?: '
   async function verify() {
     const token = code.trim();
     if (!/^\d{6}$/.test(token)) return setError('invalidCode');
-    const supabase = createSupabaseBrowserClient();
-    if (!supabase) return setError('generic');
     setBusy(true);
     setError(null);
-    const {error: failure} = await supabase.auth.verifyOtp({email: email.trim(), token, type: 'email'});
+    
+    const { error: failure } = await authClient.signIn.emailOtp({
+      email: email.trim(),
+      otp: token
+    });
+    
     if (failure) {
       setBusy(false);
       return setError(mapAuthError(failure, 'verify'));
@@ -68,8 +73,12 @@ export function SignInForm({next, initialError}: {next: string; initialError?: '
 
   return (
     <div className="auth-form">
-      <button className="button auth-google" type="button" disabled={busy} onClick={() => void google()}>{t('google')}</button>
-      <p className="auth-divider" aria-hidden="true"><span>{t('or')}</span></p>
+      {process.env.NEXT_PUBLIC_GOOGLE_LOGIN === '1' && (
+        <>
+          <button className="button auth-google" type="button" disabled={busy} onClick={() => void google()}>{t('google')}</button>
+          <p className="auth-divider" aria-hidden="true"><span>{t('or')}</span></p>
+        </>
+      )}
       {step === 'email' ? (
         <form className="auth-step" noValidate onSubmit={(event) => { event.preventDefault(); void sendCode(); }}>
           <label>{t('emailLabel')}<input type="email" dir="ltr" inputMode="email" autoComplete="email" placeholder={t('emailPlaceholder')} value={email} onChange={(event) => setEmail(event.target.value)} aria-invalid={error === 'invalidEmail'} required /></label>

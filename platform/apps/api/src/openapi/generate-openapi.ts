@@ -29,7 +29,20 @@ Object.assign(process.env, {
   REVALIDATE_SECRET: '',
   SWAGGER_ENABLED: 'true',
   LIFECYCLE_CRON_ENABLED: 'false',
-  SENTRY_DSN: ''
+  SENTRY_DSN: '',
+  BODY_LIMIT_KB: '100',
+  BETTER_AUTH_SECRET: 'openapi-better-auth-secret-32-chars-min',
+  BETTER_AUTH_URL: 'http://localhost:3001',
+  AUTH_COOKIE_DOMAIN: '',
+  PHONE_LOGIN_ENABLED: 'false',
+  OTP_DAILY_CAP: '500',
+  SMTP_HOST: 'localhost',
+  SMTP_PORT: '1025',
+  SMTP_USER: 'test',
+  SMTP_PASS: 'test',
+  SMTP_FROM: 'test@example.com',
+  GOOGLE_CLIENT_ID: '',
+  GOOGLE_CLIENT_SECRET: ''
 });
 
 /** Recursively sort object keys so the output is diff-stable. Arrays keep their order. */

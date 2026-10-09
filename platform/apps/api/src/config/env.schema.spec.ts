@@ -18,7 +18,14 @@ function validEnv(): Record<string, unknown> {
     PAYMENTS_PROVIDER: 'mock',
     PAYMENTS_MOCK_SECRET: 'test-mock-secret-at-least-32-characters',
     IP_HASH_SECRET: 'test-ip-hash-secret-at-least-32-chars',
-    SWAGGER_ENABLED: 'false'
+    SWAGGER_ENABLED: 'false',
+    BETTER_AUTH_SECRET: 'test-better-auth-secret-at-least-32-characters',
+    BETTER_AUTH_URL: 'http://localhost:3001',
+    SMTP_HOST: 'smtp.example.com',
+    SMTP_PORT: '587',
+    SMTP_USER: 'user',
+    SMTP_PASS: 'pass',
+    SMTP_FROM: 'noreply@example.com'
   };
 }
 

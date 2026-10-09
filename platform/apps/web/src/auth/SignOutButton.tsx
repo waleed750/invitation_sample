@@ -1,15 +1,22 @@
 'use client';
 
 import {useTransition} from 'react';
-import {useLocale, useTranslations} from 'next-intl';
-import {signOutAuthAction} from './actions';
+import {useTranslations} from 'next-intl';
+import {authClient} from './client';
 
 export function SignOutButton() {
   const t = useTranslations('auth');
-  const locale = useLocale();
   const [pending, startTransition] = useTransition();
+
+  function handleSignOut() {
+    startTransition(async () => {
+      await authClient.signOut();
+      window.location.reload();
+    });
+  }
+
   return (
-    <button className="header-signout-btn" type="button" disabled={pending} onClick={() => startTransition(() => void signOutAuthAction(locale))}>
+    <button className="header-signout-btn" type="button" disabled={pending} onClick={handleSignOut}>
       {t('signOut')}
     </button>
   );

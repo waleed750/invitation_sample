@@ -25,7 +25,20 @@ export const BASE_ENV: Record<string, string> = {
   WEB_REVALIDATE_URL: '',
   REVALIDATE_SECRET: '',
   SWAGGER_ENABLED: 'false',
-  LIFECYCLE_CRON_ENABLED: 'true'
+  LIFECYCLE_CRON_ENABLED: 'true',
+  BODY_LIMIT_KB: '100',
+  BETTER_AUTH_SECRET: 'test-better-auth-secret-32-chars-long-min',
+  BETTER_AUTH_URL: 'http://localhost:3101',
+  AUTH_COOKIE_DOMAIN: '',
+  PHONE_LOGIN_ENABLED: 'false',
+  OTP_DAILY_CAP: '500',
+  SMTP_HOST: 'localhost',
+  SMTP_PORT: '1025',
+  SMTP_USER: 'test',
+  SMTP_PASS: 'test',
+  SMTP_FROM: 'test@example.com',
+  GOOGLE_CLIENT_ID: '',
+  GOOGLE_CLIENT_SECRET: ''
 };
 
 /** Deterministic env for specs. `jest.setup.ts` calls this before any import. */

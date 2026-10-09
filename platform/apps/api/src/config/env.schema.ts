@@ -70,6 +70,32 @@ const envSchema = z.object({
     .string()
     .optional()
     .transform((value) => (value === undefined || value.trim() === '' ? undefined : value)),
+    
+  // --- Better Auth ---
+  BETTER_AUTH_SECRET: z.string().min(32, 'BETTER_AUTH_SECRET must be at least 32 characters'),
+  // eslint-disable-next-line @typescript-eslint/no-deprecated
+  BETTER_AUTH_URL: z.string().url('BETTER_AUTH_URL must be a valid URL'),
+  AUTH_COOKIE_DOMAIN: z
+    .string()
+    .optional()
+    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
+  PHONE_LOGIN_ENABLED: z.enum(['true', 'false']).default('false').transform((value) => value === 'true'),
+  OTP_DAILY_CAP: z.coerce.number().int().min(1).default(500),
+  SMTP_HOST: z.string().min(1),
+  SMTP_PORT: z.coerce.number().int().min(1),
+  SMTP_USER: z.string().min(1),
+  SMTP_PASS: z.string().min(1),
+  // eslint-disable-next-line @typescript-eslint/no-deprecated
+  SMTP_FROM: z.string().email(),
+  GOOGLE_CLIENT_ID: z
+    .string()
+    .optional()
+    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
+  GOOGLE_CLIENT_SECRET: z
+    .string()
+    .optional()
+    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
+
   // Optional: blank/whitespace counts as unset. Sentry only initialises when a DSN is set.
   SENTRY_DSN: z
     .string()

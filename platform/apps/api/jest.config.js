@@ -11,7 +11,10 @@ module.exports = {
   // Tests consume the shared source directly — no `packages/shared` build
   // needed before `npm test`.
   moduleNameMapper: {
-    '^@platform/shared$': '<rootDir>/../../packages/shared/src/index.ts'
+    '^@platform/shared$': '<rootDir>/../../packages/shared/src/index.ts',
+    '^better-auth$': '<rootDir>/src/testing/better-auth-mock.ts',
+    '^better-auth/plugins$': '<rootDir>/src/testing/better-auth-mock.ts',
+    '^better-auth/node$': '<rootDir>/src/testing/better-auth-mock.ts'
   },
   testEnvironment: 'node',
   // Seeds valid env before any spec import (AppModule validates env at

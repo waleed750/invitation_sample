@@ -1,6 +1,6 @@
 import {RequestMethod, type INestApplication} from '@nestjs/common';
-import type {NestExpressApplication} from '@nestjs/platform-express';
 import type {Request, Response} from 'express';
+import type {NestExpressApplication} from '@nestjs/platform-express';
 import {DocumentBuilder, SwaggerModule, type OpenAPIObject} from '@nestjs/swagger';
 import {ZodValidationPipe} from 'nestjs-zod';
 import {version} from '../package.json';
@@ -14,6 +14,9 @@ export const GLOBAL_PREFIX_EXCLUDES = [
   {path: 'docs/(.*)', method: RequestMethod.ALL}
 ];
 
+import {json, urlencoded} from 'express';
+import {getBetterAuthHandler} from './auth/better-auth';
+
 /**
  * Settings shared by production (`main.ts`) and e2e tests: global `/v1`
  * prefix (minus docs), Zod body/param validation, and OpenAPI at `/docs`
@@ -23,16 +26,36 @@ export const GLOBAL_PREFIX_EXCLUDES = [
 export function setupApp(app: INestApplication): void {
   const config = app.get(AppConfigService);
   applySecurity(app as NestExpressApplication, config);
+
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+  const authHandler = getBetterAuthHandler(config);
+  
   const limit = `${String(config.bodyLimitKb)}kb`;
-  // Preserve the exact bytes used for webhook HMAC verification while still
-  // parsing JSON normally for every controller.
-  (app as NestExpressApplication).useBodyParser('json', {
+  const jsonParser = json({
     limit,
+    // Preserve the exact bytes used for webhook HMAC verification while still
+    // parsing JSON normally for every controller.
     verify: (request: Request & {rawBody?: Buffer}, _response: Response, buffer: Buffer) => {
       request.rawBody = Buffer.from(buffer);
     }
   });
-  (app as NestExpressApplication).useBodyParser('urlencoded', {extended: false, limit});
+  const urlencodedParser = urlencoded({ extended: true, limit });
+
+  app.use((req: Request, res: Response, next: import('express').NextFunction) => {
+    if (req.path.startsWith('/v1/auth')) {
+      // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+      authHandler(req, res);
+      return;
+    }
+    jsonParser(req, res, (err: unknown) => {
+      if (err) {
+        next(err);
+        return;
+      }
+      urlencodedParser(req, res, next);
+    });
+  });
+
   app.setGlobalPrefix('v1', {exclude: GLOBAL_PREFIX_EXCLUDES});
   app.useGlobalPipes(new ZodValidationPipe());
   if (config.swaggerEnabled) {
