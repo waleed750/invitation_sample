@@ -61,7 +61,7 @@ function toResponse(value: unknown, config: AppConfigService): OrderResponse {
     templateSlug: template !== null && typeof template.slug === 'string' ? template.slug : null,
     tier: fromDbTier(value.tier),
     kind: value.kind,
-    amountMinor: amount,
+    amountMinor: minorValue(value.allocated_minor) ?? amount,
     currency: value.currency,
     status: value.status,
     provider: value.provider,
@@ -72,7 +72,7 @@ function toResponse(value: unknown, config: AppConfigService): OrderResponse {
     ...(value.paid_at === null ? {} : {paidAt: value.paid_at}),
     ...(value.provider === 'manual' && value.provider_ref !== null ? {payment: buildManualPayment({
       reference: value.provider_ref,
-      amountMinor: amount,
+      amountMinor: minorValue(value.allocated_minor) ?? amount,
       currency: value.currency,
       createdAt: value.created_at,
       ...(config.manualPaymentInstructions === undefined ? {} : {instructions: config.manualPaymentInstructions})
