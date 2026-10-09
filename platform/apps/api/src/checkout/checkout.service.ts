@@ -5,6 +5,7 @@ import {createZodDto} from 'nestjs-zod';
 import {z} from 'zod';
 import {AppLogger} from '../common/app-logger';
 import {AppConfigService} from '../config/app-config.service';
+import {isRecord} from '../common/type-guards';
 import {UniqueAmountService} from '../payment-events/unique-amount.service';
 import {ConflictException} from '@nestjs/common';
 import type {RequestUser} from '../common/decorators';
@@ -99,7 +100,8 @@ export class CheckoutService {
           const allocation = await this.uniqueAmountService.allocate(order.id);
           checkoutAmountMinor = allocation.amountMinor;
         } catch (error) {
-          if (error instanceof ConflictException && (error.getResponse() as any)?.['code'] === 'no_slot') {
+          const response = error instanceof ConflictException ? error.getResponse() : null;
+          if (error instanceof ConflictException && isRecord(response) && response.code === 'no_slot') {
              this.logger.warn('no unique amount slot available, falling back to plain amount');
           } else {
              throw error;
