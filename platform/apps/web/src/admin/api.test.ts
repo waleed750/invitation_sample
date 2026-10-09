@@ -67,8 +67,10 @@ describe('AdminApi', () => {
       expect.fail('should throw');
     } catch (e: unknown) {
       expect(e).toBeInstanceOf(AdminApiError);
-      expect(e.code).toBe('amount_mismatch');
-      expect(e.status).toBe(409);
+      if (e instanceof AdminApiError) {
+        expect(e.code).toBe('amount_mismatch');
+        expect(e.status).toBe(409);
+      }
     }
   });
 
@@ -80,8 +82,10 @@ describe('AdminApi', () => {
       expect.fail('should throw');
     } catch (e: unknown) {
       expect(e).toBeInstanceOf(AdminApiError);
-      expect(e.code).toBe('insufficient_points');
-      expect(e.status).toBe(409);
+      if (e instanceof AdminApiError) {
+        expect(e.code).toBe('insufficient_points');
+        expect(e.status).toBe(409);
+      }
     }
   });
 
