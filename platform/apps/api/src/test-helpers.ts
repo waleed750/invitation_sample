@@ -9,6 +9,7 @@ import {setupApp} from './setup-app';
 import {AppConfigService} from './config/app-config.service';
 import {validateEnv} from './config/env.schema';
 import {SupabaseService} from './supabase/supabase.service';
+import {AuthRepository} from './auth/auth.repository';
 import {TEST_JWT_SECRET, setTestEnv} from './testing/env';
 
 export {TEST_JWT_SECRET, setTestEnv};
@@ -80,6 +81,14 @@ export async function bootApp(
     .useValue(freshConfig);
   if (supabaseResult !== undefined) {
     builder.overrideProvider(SupabaseService).useValue({forUser: () => mockSupabaseClient(supabaseResult)});
+    // AuthRepository no longer uses SupabaseService; override it directly so specs pass.
+    builder.overrideProvider(AuthRepository).useValue({
+      findRoleByUserId: async () => {
+        if (supabaseResult.error) throw new Error('DB Error');
+        const data = supabaseResult.data as any;
+        return data && data.role ? {role: data.role} : null;
+      }
+    });
   }
   const moduleRef = await builder.compile();
   const app = moduleRef.createNestApplication<NestExpressApplication>({logger: false});

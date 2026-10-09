@@ -4,6 +4,7 @@ import request from 'supertest';
 import {AppModule} from '../app.module';
 import {setupApp} from '../setup-app';
 import {SupabaseService} from '../supabase/supabase.service';
+import {AuthRepository} from '../auth/auth.repository';
 import {setTestEnv, signTestToken, type HttpClient} from '../test-helpers';
 
 const USER = '55555555-5555-4555-8555-555555555555';
@@ -23,6 +24,7 @@ describe('admin customers (e2e on the full app)', () => {
     const forUser = () => ({from: () => ({select: () => ({eq: () => ({single: () => Promise.resolve({data: {role}, error: null})})})})});
     const moduleRef = await Test.createTestingModule({imports: [AppModule]})
       .overrideProvider(SupabaseService).useValue({forUser, admin: () => ({rpc, from})})
+      .overrideProvider(AuthRepository).useValue({findRoleByUserId: async () => ({role})})
       .compile();
     app = moduleRef.createNestApplication({logger: false});
     setupApp(app);

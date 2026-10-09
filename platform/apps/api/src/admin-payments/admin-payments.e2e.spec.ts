@@ -4,6 +4,7 @@ import request from 'supertest';
 import {AppModule} from '../app.module';
 import {setupApp} from '../setup-app';
 import {SupabaseService} from '../supabase/supabase.service';
+import {AuthRepository} from '../auth/auth.repository';
 import {setTestEnv, signTestToken, type HttpClient} from '../test-helpers';
 
 const ORDER = '33333333-3333-4333-8333-333333333333';
@@ -24,6 +25,7 @@ describe('admin payments (e2e on the full app)', () => {
     const forUser = () => ({from: () => ({select: () => ({eq: () => ({single: () => Promise.resolve({data: {role}, error: null})})})})});
     const moduleRef = await Test.createTestingModule({imports: [AppModule]})
       .overrideProvider(SupabaseService).useValue({forUser, admin: () => admin})
+      .overrideProvider(AuthRepository).useValue({findRoleByUserId: async () => ({role})})
       .compile();
     app = moduleRef.createNestApplication({logger: false});
     setupApp(app);
