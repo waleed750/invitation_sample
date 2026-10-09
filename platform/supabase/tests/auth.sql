@@ -8,13 +8,19 @@ begin
   assert exists (select 1 from information_schema.schemata where schema_name = 'better_auth'),
     'schema better_auth must exist';
 
-  -- 2. Check better_auth."user" exists
+  -- 2. Check better_auth."user" exists with expected columns
   assert exists (select 1 from information_schema.tables where table_schema = 'better_auth' and table_name = 'user'),
     'table better_auth.user must exist';
+  assert exists (select 1 from information_schema.columns where table_schema = 'better_auth' and table_name = 'user' and column_name = 'id'), 'user.id must exist';
+  assert exists (select 1 from information_schema.columns where table_schema = 'better_auth' and table_name = 'user' and column_name = 'email'), 'user.email must exist';
+  assert exists (select 1 from information_schema.columns where table_schema = 'better_auth' and table_name = 'user' and column_name = 'phoneNumber'), 'user.phoneNumber must exist';
 
-  -- 3. Check better_auth."session" exists
+  -- 3. Check better_auth."session" exists with expected columns
   assert exists (select 1 from information_schema.tables where table_schema = 'better_auth' and table_name = 'session'),
     'table better_auth.session must exist';
+  assert exists (select 1 from information_schema.columns where table_schema = 'better_auth' and table_name = 'session' and column_name = 'id'), 'session.id must exist';
+  assert exists (select 1 from information_schema.columns where table_schema = 'better_auth' and table_name = 'session' and column_name = 'token'), 'session.token must exist';
+  assert exists (select 1 from information_schema.columns where table_schema = 'better_auth' and table_name = 'session' and column_name = 'userId'), 'session.userId must exist';
 end;
 $$;
 
@@ -44,10 +50,10 @@ do $$
 declare
   p record;
 begin
-  select email, full_name, locale into p from public.profiles where id = '00000000-0000-0000-0000-000000001234';
+  select email, name, preferred_locale into p from public.profiles where id = '00000000-0000-0000-0000-000000001234';
   assert p.email = 'test@example.com', 'email must match test@example.com';
-  assert p.full_name = 'Test User', 'full_name must match Test User';
-  assert p.locale = 'ar', 'locale must match ar';
+  assert p.name = 'Test User', 'name must match Test User';
+  assert p.preferred_locale = 'ar', 'preferred_locale must match ar';
 end;
 $$;
 reset role;
