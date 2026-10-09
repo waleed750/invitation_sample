@@ -1,5 +1,5 @@
 import {validateEnv} from './env.schema';
-import {TEST_JWT_SECRET, setTestEnv} from '../test-helpers';
+import {setTestEnv} from '../test-helpers';
 
 setTestEnv();
 
