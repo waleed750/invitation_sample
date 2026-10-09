@@ -5,6 +5,8 @@ import {createZodDto} from 'nestjs-zod';
 import {z} from 'zod';
 import {AppLogger} from '../common/app-logger';
 import {AppConfigService} from '../config/app-config.service';
+import {UniqueAmountService} from '../payment-events/unique-amount.service';
+import {ConflictException} from '@nestjs/common';
 import type {RequestUser} from '../common/decorators';
 import {CheckoutRepository} from './checkout.repository';
 import {buildManualPayment, type ManualPaymentDetails} from '../payments/manual-payment';
@@ -52,6 +54,7 @@ interface StoredOrder {
   /** Present only for orders that already existed (idempotent retry). */
   providerRef?: string;
   createdAt?: string;
+  allocatedMinor?: number;
 }
 
 function numeric(value: unknown): number | null {
@@ -80,7 +83,8 @@ export class CheckoutService {
     private readonly repository: CheckoutRepository,
     @Inject(PAYMENT_PROVIDER) private readonly provider: PaymentProvider,
     private readonly logger: AppLogger,
-    private readonly config: AppConfigService
+    private readonly config: AppConfigService,
+    private readonly uniqueAmountService: UniqueAmountService
   ) {}
 
   async start(user: RequestUser, body: CheckoutBody, idempotencyKey?: string): Promise<CheckoutResponse> {
@@ -88,21 +92,37 @@ export class CheckoutService {
     try {
       const existing = key === undefined ? null : await this.existingOrder(user.id, key);
       const order = existing ?? await this.createOrder(user, body, key);
+      let checkoutAmountMinor = order.allocatedMinor ?? order.amountMinor;
       const manual = this.config.paymentsProvider === 'manual';
+      if (manual && !existing) {
+        try {
+          const allocation = await this.uniqueAmountService.allocate(order.id);
+          checkoutAmountMinor = allocation.amountMinor;
+        } catch (error) {
+          if (error instanceof ConflictException && (error.getResponse() as any)?.['code'] === 'no_slot') {
+             this.logger.warn('no unique amount slot available, falling back to plain amount');
+          } else {
+             throw error;
+          }
+        }
+      } else if (manual && existing) {
+        // existingOrder already joined payment_amount_allocations and returns the correct total in order.allocatedMinor
+        checkoutAmountMinor = order.allocatedMinor ?? order.amountMinor;
+      }
       // A manual order keeps its reference across idempotent retries: the customer may already have quoted it.
       const checkout = manual && order.providerRef !== undefined
         ? {redirectUrl: `/checkout/result/${order.id}`, providerRef: order.providerRef, reference: order.providerRef}
-        : await this.provider.createCheckout({id: order.id, amountMinor: order.amountMinor, currency: order.currency, method: body.method});
+        : await this.provider.createCheckout({id: order.id, amountMinor: checkoutAmountMinor, currency: order.currency, method: body.method});
       if (checkout.providerRef !== order.providerRef) await this.saveProviderRef(order.id, checkout.providerRef);
       return {
         orderId: order.id,
         redirectUrl: checkout.redirectUrl,
         ...(checkout.reference === undefined ? {} : {reference: checkout.reference}),
-        amountMinor: order.amountMinor,
+        amountMinor: checkoutAmountMinor,
         currency: order.currency,
         ...(manual ? {payment: buildManualPayment({
           reference: checkout.reference ?? checkout.providerRef,
-          amountMinor: order.amountMinor,
+          amountMinor: checkoutAmountMinor,
           currency: order.currency,
           ...(order.createdAt === undefined ? {} : {createdAt: order.createdAt}),
           ...(this.config.manualPaymentInstructions === undefined ? {} : {instructions: this.config.manualPaymentInstructions})
@@ -229,7 +249,8 @@ export class CheckoutService {
     return {
       ...stored,
       ...(typeof row.provider_ref === 'string' ? {providerRef: row.provider_ref} : {}),
-      ...(typeof row.created_at === 'string' ? {createdAt: row.created_at} : {})
+      ...(typeof row.created_at === 'string' ? {createdAt: row.created_at} : {}),
+      ...(typeof row.allocated_minor === 'number' ? {allocatedMinor: row.allocated_minor} : {})
     };
   }
 

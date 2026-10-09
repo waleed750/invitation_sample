@@ -23,6 +23,7 @@ export interface CreatePendingCheckoutInput {
 
 export interface LiveTemplateDbRow {
   id: string;
+  allocated_minor: number;
   slug: string;
   name: unknown;
   tagline: unknown;
@@ -43,6 +44,7 @@ export interface CouponDbRow {
 
 export interface ExistingOrderDbRow {
   id: string;
+  allocated_minor: number;
   amount_minor: number;
   currency: string;
   provider_ref: string | null;
@@ -108,8 +110,8 @@ export class CheckoutRepository {
     return this.db.asService(async (tx) =>
       firstJson(await tx<JsonRow<ExistingOrderDbRow>[]>`
         select to_jsonb(o) as r from (
-          select id, amount_minor, currency, provider_ref, created_at
-          from public.orders where user_id = ${userId}::uuid and idempotency_key = ${key}::text
+          select ord.id, ord.amount_minor, (ord.amount_minor + coalesce(a.extra_minor, 0))::int as allocated_minor, ord.currency, ord.provider_ref, ord.created_at
+          from public.orders ord left join public.payment_amount_allocations a on a.order_id = ord.id where ord.user_id = ${userId}::uuid and ord.idempotency_key = ${key}::text
         ) o`));
   }
 

@@ -5,6 +5,8 @@ import {AppLogger} from '../common/app-logger';
 import {AppConfigService} from '../config/app-config.service';
 import {PAYMENT_PROVIDER} from '../payments/payment-provider';
 import {CheckoutRepository} from './checkout.repository';
+import {UniqueAmountService} from '../payment-events/unique-amount.service';
+import {ConflictException} from '@nestjs/common';
 import {CheckoutService} from './checkout.service';
 
 describe('CheckoutService', () => {
@@ -12,6 +14,7 @@ describe('CheckoutService', () => {
   let repository: Record<string, jest.Mock>;
   let provider: any;
   let config: any;
+  let uniqueAmountService: any;
 
   beforeEach(async () => {
     repository = {
@@ -30,14 +33,16 @@ describe('CheckoutService', () => {
     };
 
     config = {paymentsProvider: 'mock', manualPaymentInstructions: undefined};
+    uniqueAmountService = {allocate: jest.fn()};
 
     const module = await Test.createTestingModule({
       providers: [
         CheckoutService,
         {provide: CheckoutRepository, useValue: repository},
         {provide: PAYMENT_PROVIDER, useValue: provider},
-        {provide: AppLogger, useValue: {error: jest.fn()}},
-        {provide: AppConfigService, useValue: config}
+        {provide: AppLogger, useValue: {error: jest.fn(), warn: jest.fn()}},
+        {provide: AppConfigService, useValue: config},
+        {provide: UniqueAmountService, useValue: uniqueAmountService}
       ]
     }).compile();
 
@@ -200,12 +205,13 @@ describe('CheckoutService', () => {
       mockHappyPrefix();
       repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 50000});
       repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'new_order', amount_minor: 50000, currency: 'EGP'});
+      uniqueAmountService.allocate.mockResolvedValueOnce({amountMinor: 50005, extraMinor: 5});
 
       const before = Date.now();
       const result: any = await service.start(user, body(), 'idemp-1234');
       expect(rpcArgs()).toMatchObject({provider: 'manual'});
       expect(result.reference).toBe('INV-ABC234');
-      expect(result.payment).toMatchObject({reference: 'INV-ABC234', amountMinor: 50000, currency: 'EGP', methods});
+      expect(result.payment).toMatchObject({reference: 'INV-ABC234', amountMinor: 50005, currency: 'EGP', methods});
       const expires = Date.parse(result.payment.expiresAt);
       expect(expires).toBeGreaterThanOrEqual(before + 72 * 3_600_000);
       expect(expires).toBeLessThan(Date.now() + 72 * 3_600_000 + 1000);
@@ -231,6 +237,16 @@ describe('CheckoutService', () => {
       const result: any = await service.start(user, body(), 'idemp-1234');
       expect(result.payment).toBeUndefined();
       expect(rpcArgs()).toMatchObject({provider: 'mock'});
+    });
+
+    it('falls back to plain amount if allocation returns no_slot', async () => {
+      mockHappyPrefix();
+      repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 50000});
+      repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'new_order', amount_minor: 50000, currency: 'EGP'});
+      uniqueAmountService.allocate.mockRejectedValueOnce(new ConflictException({code: 'no_slot'}));
+
+      const result: any = await service.start(user, body());
+      expect(result.payment.amountMinor).toBe(50000); // plain amount
     });
   });
 });
