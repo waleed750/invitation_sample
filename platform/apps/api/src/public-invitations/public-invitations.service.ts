@@ -10,7 +10,11 @@ import {AppLogger} from '../common/app-logger';
 import {CLOCK, type Clock} from '../common/clock';
 import {isRecord} from '../common/type-guards';
 import {AppConfigService} from '../config/app-config.service';
-import {PublicInvitationsRepository} from './public-invitations.repository';
+import {
+  PublicInvitationsRepository,
+  type LatestPublishDbRow,
+  type PublishedInvitationDbRow
+} from './public-invitations.repository';
 
 const slugSchema = z.object({slug: z.string().min(1).max(160).regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/)});
 export class PublicSlugParams extends createZodDto(slugSchema) {}
@@ -149,18 +153,14 @@ export class PublicInvitationsService {
       }
     }
     try {
-      const result: unknown = await this.repository.saveRsvpAsServiceRole({
+      await this.repository.saveRsvpAsServiceRole({
         invitation_id: resolved.id, name: body.name, phone, attending: body.attending,
         guests_count: body.guests, note: body.note ?? null, ip_hash: this.hashIp(ip)
       });
-      if (!isRecord(result) || result.error !== null) {
-        this.logger.error('public rsvp save failed (upstream error)');
-        throw new ServiceUnavailableException('RSVP service unavailable');
-      }
       return {ok: true};
     } catch (error) {
       if (error instanceof ServiceUnavailableException) throw error;
-      this.logger.error('public rsvp save failed (unreachable)');
+      this.logger.error('public rsvp save failed (upstream error)');
       throw new ServiceUnavailableException('RSVP service unavailable');
     }
   }
@@ -173,41 +173,29 @@ export class PublicInvitationsService {
       throw new ForbiddenException({code: 'messages_disabled', message: 'Messages are disabled for this invitation'});
     }
     try {
-      const result: unknown = await this.repository.saveMessageAsServiceRole({
+      await this.repository.saveMessageAsServiceRole({
         invitation_id: resolved.id, name: body.name, body: body.text
       });
-      if (!isRecord(result) || result.error !== null) {
-        this.logger.error('public message save failed (upstream error)');
-        throw new ServiceUnavailableException('Guestbook service unavailable');
-      }
       return {ok: true};
     } catch (error) {
       if (error instanceof ServiceUnavailableException) throw error;
-      this.logger.error('public message save failed (unreachable)');
+      this.logger.error('public message save failed (upstream error)');
       throw new ServiceUnavailableException('Guestbook service unavailable');
     }
   }
 
   /** Public invitation + entitlement + latest snapshot; 404 when invisible. */
   private async resolve(slug: string): Promise<ResolvedInvitation> {
-    let invitation: unknown;
+    let row: PublishedInvitationDbRow | null;
     try {
-      invitation = await this.repository.findPublishedBySlugAsServiceRole(slug);
+      row = await this.repository.findPublishedBySlugAsServiceRole(slug);
     } catch {
-      this.logger.error('public invitation lookup failed (unreachable)');
-      throw new ServiceUnavailableException('Invitation service unavailable');
-    }
-    if (!isRecord(invitation) || invitation.error !== null || !isRecord(invitation.data)) {
-      if (isRecord(invitation) && isRecord(invitation.error) && invitation.error.code === 'PGRST116') {
-        throw new NotFoundException({code: 'invitation_not_found', message: 'Invitation not found'});
-      }
       this.logger.error('public invitation lookup failed (upstream error)');
       throw new ServiceUnavailableException('Invitation service unavailable');
     }
-    const row = invitation.data;
-    const id = stringField(row, 'id');
-    const locale = stringField(row, 'locale');
-    if (id === null || locale === null) {
+    if (row === null) throw new NotFoundException({code: 'invitation_not_found', message: 'Invitation not found'});
+    const {id, locale} = row;
+    if (typeof id !== 'string' || typeof locale !== 'string') {
       this.logger.error('public invitation lookup failed (malformed row)');
       throw new ServiceUnavailableException('Invitation service unavailable');
     }
@@ -229,19 +217,19 @@ export class PublicInvitationsService {
       this.logger.error('public invitation lookup failed (unknown tier)');
       throw new ServiceUnavailableException('Invitation service unavailable');
     }
-    let publish: unknown;
+    let publish: LatestPublishDbRow | null;
     try {
       publish = await this.repository.findLatestPublishAsServiceRole(id);
     } catch {
-      this.logger.error('public publish lookup failed (unreachable)');
-      throw new ServiceUnavailableException('Invitation service unavailable');
-    }
-    if (!isRecord(publish) || publish.error !== null || !isRecord(publish.data)) {
       this.logger.error('public publish lookup failed (upstream error)');
       throw new ServiceUnavailableException('Invitation service unavailable');
     }
-    const publishedAt = stringField(publish.data, 'published_at');
-    if (publishedAt === null || !('snapshot' in publish.data)) {
+    if (publish === null) {
+      this.logger.error('public publish lookup failed (upstream error)');
+      throw new ServiceUnavailableException('Invitation service unavailable');
+    }
+    const publishedAt: unknown = publish.published_at;
+    if (typeof publishedAt !== 'string' || !('snapshot' in publish)) {
       this.logger.error('public publish lookup failed (malformed row)');
       throw new ServiceUnavailableException('Invitation service unavailable');
     }
@@ -250,7 +238,7 @@ export class PublicInvitationsService {
       id, tier, locale,
       templateSlug: template === null ? null : stringField(template, 'slug'),
       onlineUntil: onlineUntilRaw === null ? null : new Date(onlineUntilRaw),
-      snapshot: publish.data.snapshot, publishedAt
+      snapshot: publish.snapshot, publishedAt
     };
   }
 
@@ -275,18 +263,14 @@ export class PublicInvitationsService {
   }
 
   private async attendingGuestCount(invitationId: string): Promise<number> {
-    let result: unknown;
+    let rows: Awaited<ReturnType<PublicInvitationsRepository['listRsvpCountsAsServiceRole']>>;
     try {
-      result = await this.repository.listRsvpCountsAsServiceRole(invitationId);
+      rows = await this.repository.listRsvpCountsAsServiceRole(invitationId);
     } catch {
-      this.logger.error('public rsvp count failed (unreachable)');
-      throw new ServiceUnavailableException('RSVP service unavailable');
-    }
-    if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) {
       this.logger.error('public rsvp count failed (upstream error)');
       throw new ServiceUnavailableException('RSVP service unavailable');
     }
-    return result.data.reduce((sum: number, row: unknown) => {
+    return rows.reduce((sum: number, row: unknown) => {
       if (!isRecord(row) || typeof row.attending !== 'boolean' || typeof row.guests_count !== 'number') return sum;
       return row.attending ? sum + row.guests_count : sum;
     }, 0);

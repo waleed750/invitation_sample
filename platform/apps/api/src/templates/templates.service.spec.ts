@@ -2,26 +2,20 @@
 import {ServiceUnavailableException} from '@nestjs/common';
 import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
-import {SupabaseService} from '../supabase/supabase.service';
 import {TemplatesRepository} from './templates.repository';
 import {TemplatesService} from './templates.service';
 
 describe('TemplatesService', () => {
   let service: TemplatesService;
-  let supabaseClient: any;
+  let repository: {listLive: jest.Mock};
 
   beforeEach(async () => {
-    supabaseClient = {
-      from: jest.fn().mockReturnThis(),
-      select: jest.fn().mockReturnThis(),
-      eq: jest.fn().mockReturnThis(),
-      order: jest.fn().mockResolvedValue({data: [], error: null})
-    };
+    repository = {listLive: jest.fn().mockResolvedValue([])};
 
     const module = await Test.createTestingModule({
       providers: [
         TemplatesService,
-        TemplatesRepository, {provide: SupabaseService, useValue: {public: () => supabaseClient}},
+        {provide: TemplatesRepository, useValue: repository},
         {provide: AppLogger, useValue: {error: jest.fn()}}
       ]
     }).compile();
@@ -30,18 +24,15 @@ describe('TemplatesService', () => {
   });
 
   it('should list live templates', async () => {
-    supabaseClient.order.mockResolvedValue({
-      data: [{
-        slug: 'test',
-        name: {en: 'Test'},
-        tagline: {en: 'Test tagline'},
-        tier: 'classic',
-        status: 'live',
-        featured: true,
-        prices: []
-      }],
-      error: null
-    });
+    repository.listLive.mockResolvedValue([{
+      slug: 'test',
+      name: {en: 'Test'},
+      tagline: {en: 'Test tagline'},
+      tier: 'classic',
+      status: 'live',
+      featured: true,
+      prices: []
+    }]);
     const result = await service.listLive();
     expect(result).toHaveLength(1);
     expect(result[0].slug).toBe('test');
@@ -52,30 +43,24 @@ describe('TemplatesService', () => {
   });
 
   it('maps the template-specific EGP price to priceOverrideEgp', async () => {
-    supabaseClient.order.mockResolvedValue({
-      data: [row([
-        {tier: 'classic', currency: 'USD', amount_minor: 9900},
-        {tier: 'premium', currency: 'EGP', amount_minor: 300000},
-        {tier: 'classic', currency: 'EGP', amount_minor: 149900}
-      ])],
-      error: null
-    });
+    repository.listLive.mockResolvedValue([row([
+      {tier: 'classic', currency: 'USD', amount_minor: 9900},
+      {tier: 'premium', currency: 'EGP', amount_minor: 300000},
+      {tier: 'classic', currency: 'EGP', amount_minor: 149900}
+    ])]);
     const result = await service.listLive();
     expect(result[0].priceOverrideEgp).toBe(1499);
   });
 
   it('omits priceOverrideEgp when there is no EGP row or it is not whole', async () => {
-    supabaseClient.order.mockResolvedValue({
-      data: [row([]), row([{tier: 'classic', currency: 'EGP', amount_minor: 149950}])],
-      error: null
-    });
+    repository.listLive.mockResolvedValue([row([]), row([{tier: 'classic', currency: 'EGP', amount_minor: 149950}])]);
     const result = await service.listLive();
     expect(result[0].priceOverrideEgp).toBeUndefined();
     expect(result[1].priceOverrideEgp).toBeUndefined();
   });
 
   it('should throw ServiceUnavailableException on DB error', async () => {
-    supabaseClient.order.mockResolvedValue({data: null, error: new Error('DB Error')});
+    repository.listLive.mockRejectedValue(new Error('DB Error'));
     await expect(service.listLive()).rejects.toThrow(ServiceUnavailableException);
   });
 });

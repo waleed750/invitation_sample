@@ -23,7 +23,7 @@ function orderRow(value: unknown): OrderRow {
   if (!isRecord(value) || typeof value.id !== 'string' || typeof value.status !== 'string') {
     throw new ServiceUnavailableException('Payment service unavailable');
   }
-  // bigint columns arrive as JSON numbers from PostgREST; tolerate numeric strings.
+  // bigint columns arrive as JSON numbers (rows are selected as jsonb); tolerate numeric strings.
   const amount = typeof value.amount_minor === 'number' ? value.amount_minor : Number(value.amount_minor);
   if (!Number.isSafeInteger(amount) || typeof value.currency !== 'string') throw new ServiceUnavailableException('Payment service unavailable');
   return {id: value.id, amountMinor: amount, currency: value.currency, status: value.status, userId: typeof value.user_id === 'string' ? value.user_id : null};
@@ -77,14 +77,9 @@ export class PaymentsService {
 
   private async lookup(query: () => Promise<unknown>): Promise<OrderRow> {
     try {
-      const result: unknown = await query();
-      if (!isRecord(result)) throw new ServiceUnavailableException('Payment service unavailable');
-      const {data, error}: {data: unknown; error: unknown} = result as {data: unknown; error: unknown};
-      if (error !== null) {
-        if (isRecord(error) && error.code === 'PGRST116') throw new NotFoundException('Order not found');
-        throw new ServiceUnavailableException('Payment service unavailable');
-      }
-      return orderRow(data);
+      const row = await query();
+      if (row === null) throw new NotFoundException('Order not found');
+      return orderRow(row);
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof ServiceUnavailableException) throw error;
       this.logger.error('payment order lookup failed');
@@ -95,10 +90,8 @@ export class PaymentsService {
   private async applyStatus(order: OrderRow, status: PaymentStatus): Promise<void> {
     if (status === 'pending' || order.status !== 'pending') return;
     try {
-      const result: unknown = status === 'paid'
-        ? await this.repository.fulfillPaidOrderAsServiceRole(order.id)
-        : await this.repository.markOrderFailedAsServiceRole(order.id);
-      if (!isRecord(result) || result.error !== null) throw new ServiceUnavailableException('Payment service unavailable');
+      if (status === 'paid') await this.repository.fulfillPaidOrderAsServiceRole(order.id);
+      else await this.repository.markOrderFailedAsServiceRole(order.id);
     } catch (error) {
       if (error instanceof ServiceUnavailableException) throw error;
       this.logger.error('payment fulfillment failed');

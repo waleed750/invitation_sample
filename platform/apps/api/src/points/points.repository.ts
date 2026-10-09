@@ -1,20 +1,43 @@
 import {Injectable} from '@nestjs/common';
-import {SupabaseService} from '../supabase/supabase.service';
+import {allJson, firstJson, type JsonRow} from '../common/db-rows';
+import {DbService} from '../database';
 
-/** Data access for points. The only file here that talks to Supabase. */
+export interface PointsBalanceRow {
+  points_balance: number;
+  purchases_count: number;
+}
+
+export interface PointsLedgerRow {
+  id: string;
+  order_id: string | null;
+  delta: number;
+  reason: string;
+  created_at: string;
+  expires_at: string | null;
+}
+
+/** Data access for points (RLS applies: `asUser`). */
 @Injectable()
 export class PointsRepository {
-  constructor(private readonly supabase: SupabaseService) {}
+  constructor(private readonly db: DbService) {}
 
-  /** Caller's balance + purchase count (user JWT, RLS applies). Raw postgrest envelope. */
-  async findBalance(jwt: string, userId: string): Promise<unknown> {
-    return this.supabase.forUser(jwt).from('profiles').select('points_balance,purchases_count').eq('id', userId).single();
+  /** Caller's balance + purchase count, or `null` when no profile is visible. */
+  async findBalance(userId: string): Promise<PointsBalanceRow | null> {
+    return this.db.asUser({id: userId}, async (tx) =>
+      firstJson(await tx<JsonRow<PointsBalanceRow>[]>`
+        select to_jsonb(p) as r from (
+          select points_balance, purchases_count from public.profiles where id = ${userId}::uuid
+        ) p`));
   }
 
-  /** Caller's 50 most recent ledger rows (user JWT, RLS applies). Raw postgrest envelope. */
-  async listLedger(jwt: string, userId: string): Promise<unknown> {
-    return this.supabase.forUser(jwt).from('points_ledger')
-      .select('id,order_id,delta,reason,created_at,expires_at').eq('user_id', userId)
-      .order('created_at', {ascending: false}).limit(50);
+  /** Caller's 50 most recent ledger rows. */
+  async listLedger(userId: string): Promise<PointsLedgerRow[]> {
+    return this.db.asUser({id: userId}, async (tx) =>
+      allJson(await tx<JsonRow<PointsLedgerRow>[]>`
+        select to_jsonb(l) as r from (
+          select id, order_id, delta, reason, created_at, expires_at
+          from public.points_ledger where user_id = ${userId}::uuid
+          order by created_at desc limit 50
+        ) l order by l.created_at desc`));
   }
 }

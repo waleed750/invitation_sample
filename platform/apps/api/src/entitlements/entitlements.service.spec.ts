@@ -3,9 +3,8 @@ import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
 import {CLOCK, type Clock} from '../common/clock';
 import type {RequestUser} from '../common/decorators';
-import {SupabaseService} from '../supabase/supabase.service';
 import {EntitlementsRepository} from './entitlements.repository';
-import {mockSupabaseClient, setTestEnv} from '../test-helpers';
+import {setTestEnv} from '../test-helpers';
 import {EntitlementsService} from './entitlements.service';
 
 setTestEnv();
@@ -17,18 +16,18 @@ const INVITATION_ID = '11111111-1111-4111-8111-111111111111';
 
 async function buildService(
   row: unknown,
-  error: {code: string} | null
-): Promise<{service: EntitlementsService; forUser: jest.Mock}> {
-  const forUser = jest.fn().mockReturnValue(mockSupabaseClient({data: row, error}));
+  failure?: Error
+): Promise<{service: EntitlementsService; findByInvitationId: jest.Mock}> {
+  const findByInvitationId = failure === undefined ? jest.fn().mockResolvedValue(row) : jest.fn().mockRejectedValue(failure);
   const moduleRef = await Test.createTestingModule({
-    providers: [EntitlementsService, AppLogger, {provide: CLOCK, useValue: fixedClock}, EntitlementsRepository, {provide: SupabaseService, useValue: {forUser}}]
+    providers: [EntitlementsService, AppLogger, {provide: CLOCK, useValue: fixedClock}, {provide: EntitlementsRepository, useValue: {findByInvitationId}}]
   }).compile();
-  return {service: moduleRef.get(EntitlementsService), forUser};
+  return {service: moduleRef.get(EntitlementsService), findByInvitationId};
 }
 
 describe('EntitlementsService', () => {
   it('returns the full entitlement when edits and time remain', async () => {
-    const {service} = await buildService({edits_allowed: 15, edits_used: 7, online_until: '2026-12-01T00:00:00.000Z'}, null);
+    const {service} = await buildService({edits_allowed: 15, edits_used: 7, online_until: '2026-12-01T00:00:00.000Z'});
     await expect(service.getEntitlement(USER, INVITATION_ID)).resolves.toEqual({
       editsAllowed: 15,
       editsUsed: 7,
@@ -40,7 +39,7 @@ describe('EntitlementsService', () => {
   });
 
   it('reports no_edits_left when edits used equals allowed (boundary)', async () => {
-    const {service} = await buildService({edits_allowed: 5, edits_used: 5, online_until: '2026-12-01T00:00:00.000Z'}, null);
+    const {service} = await buildService({edits_allowed: 5, edits_used: 5, online_until: '2026-12-01T00:00:00.000Z'});
     const result = service.toResponse(
       {edits_allowed: 5, edits_used: 5, online_until: '2026-12-01T00:00:00.000Z'},
       FIXED_NOW
@@ -50,7 +49,7 @@ describe('EntitlementsService', () => {
   });
 
   it('reports expired when now equals onlineUntil (boundary)', async () => {
-    const {service} = await buildService({edits_allowed: 5, edits_used: 1, online_until: FIXED_NOW.toISOString()}, null);
+    const {service} = await buildService({edits_allowed: 5, edits_used: 1, online_until: FIXED_NOW.toISOString()});
     const result = service.toResponse(
       {edits_allowed: 5, edits_used: 1, online_until: FIXED_NOW.toISOString()},
       FIXED_NOW
@@ -60,7 +59,7 @@ describe('EntitlementsService', () => {
   });
 
   it('prefers no_edits_left over expired when both apply (matches @platform/shared)', async () => {
-    const {service} = await buildService({edits_allowed: 5, edits_used: 9, online_until: FIXED_NOW.toISOString()}, null);
+    const {service} = await buildService({edits_allowed: 5, edits_used: 9, online_until: FIXED_NOW.toISOString()});
     const result = service.toResponse(
       {edits_allowed: 5, edits_used: 9, online_until: FIXED_NOW.toISOString()},
       FIXED_NOW
@@ -69,7 +68,7 @@ describe('EntitlementsService', () => {
   });
 
   it('treats a null online_until as expired with zero days left', async () => {
-    const {service} = await buildService({edits_allowed: 5, edits_used: 0, online_until: null}, null);
+    const {service} = await buildService({edits_allowed: 5, edits_used: 0, online_until: null});
     const result = await service.getEntitlement(USER, INVITATION_ID);
     expect(result.onlineUntil).toBeNull();
     expect(result.daysOnlineLeft).toBe(0);
@@ -77,26 +76,26 @@ describe('EntitlementsService', () => {
   });
 
   it('throws 404 when RLS hides the row', async () => {
-    const {service} = await buildService(null, {code: 'PGRST116'});
+    const {service} = await buildService(null);
     await expect(service.getEntitlement(USER, INVITATION_ID)).rejects.toBeInstanceOf(NotFoundException);
   });
 
   it('throws 503 (no internals) on upstream failure', async () => {
-    const {service} = await buildService(null, {code: 'XX000'});
+    const {service} = await buildService(null, new Error('connection refused'));
     const error: unknown = await service.getEntitlement(USER, INVITATION_ID).catch((err: unknown) => err);
     expect(error).toBeInstanceOf(ServiceUnavailableException);
     expect((error as ServiceUnavailableException).message).toBe('Entitlement service unavailable');
   });
 
   it('throws 503 on a malformed row instead of crashing', async () => {
-    const {service} = await buildService({edits_allowed: 'many', edits_used: 0, online_until: null}, null);
+    const {service} = await buildService({edits_allowed: 'many', edits_used: 0, online_until: null});
     await expect(service.getEntitlement(USER, INVITATION_ID)).rejects.toBeInstanceOf(ServiceUnavailableException);
   });
 
-  it('queries through forUser (RLS) with the caller JWT', async () => {
-    const {service, forUser} = await buildService({edits_allowed: 5, edits_used: 0, online_until: null}, null);
+  it('queries as the caller (user id only, no JWT)', async () => {
+    const {service, findByInvitationId} = await buildService({edits_allowed: 5, edits_used: 0, online_until: null});
     await service.getEntitlement(USER, INVITATION_ID);
-    expect(forUser).toHaveBeenCalledWith('test-jwt');
-    expect(forUser).toHaveBeenCalledTimes(1);
+    expect(findByInvitationId).toHaveBeenCalledWith('user-123', INVITATION_ID);
+    expect(findByInvitationId).toHaveBeenCalledTimes(1);
   });
 });

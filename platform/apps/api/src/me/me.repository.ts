@@ -1,21 +1,41 @@
 import {Injectable} from '@nestjs/common';
-import {SupabaseService} from '../supabase/supabase.service';
+import {firstJson, type JsonRow} from '../common/db-rows';
+import {DbService} from '../database';
 
-const PROFILE_COLUMNS = 'id,name,preferred_locale,role,level,purchases_count,points_balance';
+export interface ProfileRow {
+  id: string;
+  name: string | null;
+  preferred_locale: string;
+  role: string;
+  level: string;
+  purchases_count: number;
+  points_balance: number;
+}
 
-/** Data access for the caller's own profile. The only file here that talks to Supabase. */
+/** Data access for the caller's own profile (RLS applies: `asUser`). */
 @Injectable()
 export class MeRepository {
-  constructor(private readonly supabase: SupabaseService) {}
+  constructor(private readonly db: DbService) {}
 
-  /** Caller's profile row (user JWT, RLS applies). Raw postgrest envelope. */
-  async findProfile(jwt: string, userId: string): Promise<unknown> {
-    return this.supabase.forUser(jwt).from('profiles').select(PROFILE_COLUMNS).eq('id', userId).single();
+  /** Caller's profile row, or `null` when RLS hides it / it does not exist. */
+  async findProfile(userId: string): Promise<ProfileRow | null> {
+    return this.db.asUser({id: userId}, async (tx) =>
+      firstJson(await tx<JsonRow<ProfileRow>[]>`
+        select to_jsonb(p) as r from (
+          select id, name, preferred_locale, role, level, purchases_count, points_balance
+          from public.profiles where id = ${userId}::uuid
+        ) p`));
   }
 
-  /** Updates the caller's preferred locale and returns the updated row (user JWT, RLS applies). */
-  async updatePreferredLocale(jwt: string, userId: string, locale: 'ar' | 'en'): Promise<unknown> {
-    return this.supabase.forUser(jwt).from('profiles').update({preferred_locale: locale}).eq('id', userId)
-      .select(PROFILE_COLUMNS).single();
+  /** Updates the caller's preferred locale; `null` when no row was updated. */
+  async updatePreferredLocale(userId: string, locale: 'ar' | 'en'): Promise<ProfileRow | null> {
+    return this.db.asUser({id: userId}, async (tx) =>
+      firstJson(await tx<JsonRow<ProfileRow>[]>`
+        with u as (
+          update public.profiles set preferred_locale = ${locale}::text
+          where id = ${userId}::uuid
+          returning id, name, preferred_locale, role, level, purchases_count, points_balance
+        )
+        select to_jsonb(u) as r from u`));
   }
 }

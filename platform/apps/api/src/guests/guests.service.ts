@@ -68,11 +68,8 @@ export class GuestsService {
   async listRsvps(user: RequestUser, invitationId: string): Promise<OwnerRsvp[]> {
     await this.requireOwnership(user, invitationId);
     try {
-      const result: unknown = await this.repository.listRsvpsForUser(user.jwt, invitationId);
-      if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) {
-        throw new ServiceUnavailableException('Guest service unavailable');
-      }
-      return result.data.map(toRsvp);
+      const rows = await this.repository.listRsvpsForUser(user.id, invitationId);
+      return rows.map(toRsvp);
     } catch (error) {
       if (error instanceof ServiceUnavailableException) throw error;
       this.logger.error('rsvp list failed');
@@ -83,11 +80,8 @@ export class GuestsService {
   async listMessages(user: RequestUser, invitationId: string): Promise<OwnerMessage[]> {
     await this.requireOwnership(user, invitationId);
     try {
-      const result: unknown = await this.repository.listMessagesForUser(user.jwt, invitationId);
-      if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) {
-        throw new ServiceUnavailableException('Guest service unavailable');
-      }
-      return result.data.map(toMessage);
+      const rows = await this.repository.listMessagesForUser(user.id, invitationId);
+      return rows.map(toMessage);
     } catch (error) {
       if (error instanceof ServiceUnavailableException) throw error;
       this.logger.error('message list failed');
@@ -103,14 +97,8 @@ export class GuestsService {
   /** 404 unless the invitation belongs to the caller (RLS decides). */
   private async requireOwnership(user: RequestUser, invitationId: string): Promise<void> {
     try {
-      const result: unknown = await this.repository.findInvitationForUser(user.jwt, user.id, invitationId);
-      if (!isRecord(result)) throw new ServiceUnavailableException('Guest service unavailable');
-      if (result.error !== null) {
-        if (isRecord(result.error) && result.error.code === 'PGRST116') {
-          throw new NotFoundException({code: 'invitation_not_found', message: 'Invitation not found'});
-        }
-        throw new ServiceUnavailableException('Guest service unavailable');
-      }
+      const row = await this.repository.findInvitationForUser(user.id, invitationId);
+      if (row === null) throw new NotFoundException({code: 'invitation_not_found', message: 'Invitation not found'});
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof ServiceUnavailableException) throw error;
       this.logger.error('invitation ownership check failed');

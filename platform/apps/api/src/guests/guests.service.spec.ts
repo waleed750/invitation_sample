@@ -5,7 +5,7 @@ import {AppLogger} from '../common/app-logger';
 import {GuestsRepository} from './guests.repository';
 import {GuestsService} from './guests.service';
 
-const USER = {id: 'owner-1', jwt: 'token'};
+const USER = {id: 'owner-1'};
 const RSVP_ROWS = [
   {id: 'r1', name: '=cmd|calc', phone: '+201012345678', attending: true, guests_count: 2, note: null, created_at: '2026-01-01T00:00:00Z'}
 ];
@@ -17,9 +17,9 @@ describe('GuestsService', () => {
 
   beforeEach(async () => {
     repository = {
-      findInvitationForUser: jest.fn().mockResolvedValue({data: {id: 'inv-1'}, error: null}),
-      listRsvpsForUser: jest.fn().mockResolvedValue({data: RSVP_ROWS, error: null}),
-      listMessagesForUser: jest.fn().mockResolvedValue({data: MESSAGE_ROWS, error: null})
+      findInvitationForUser: jest.fn().mockResolvedValue({id: 'inv-1'}),
+      listRsvpsForUser: jest.fn().mockResolvedValue(RSVP_ROWS),
+      listMessagesForUser: jest.fn().mockResolvedValue(MESSAGE_ROWS)
     };
     const module = await Test.createTestingModule({
       providers: [GuestsService, {provide: GuestsRepository, useValue: repository}, {provide: AppLogger, useValue: {error: jest.fn()}}]
@@ -38,7 +38,7 @@ describe('GuestsService', () => {
   });
 
   it('returns 404 for someone else\'s invitation', async () => {
-    repository.findInvitationForUser.mockResolvedValueOnce({data: null, error: {code: 'PGRST116'}});
+    repository.findInvitationForUser.mockResolvedValueOnce(null);
     await expect(service.listRsvps(USER as any, 'inv-1')).rejects.toThrow(NotFoundException);
     expect(repository.listRsvpsForUser).not.toHaveBeenCalled();
   });

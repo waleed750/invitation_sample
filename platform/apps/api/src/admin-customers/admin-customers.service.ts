@@ -83,8 +83,9 @@ export interface AdjustPointsResponse {
 
 /**
  * Escapes user text for an ilike pattern: backslash, `%` and `_` become
- * literals, and the characters that would break PostgREST `or(...)` syntax
- * (comma, parentheses, double quote, asterisk) are dropped.
+ * literals. Commas, parentheses, double quotes and asterisks are still replaced
+ * by spaces (a leftover from the PostgREST `or(...)` syntax; harmless and kept
+ * so search behaviour does not change).
  */
 export function escapeLike(input: string): string {
   return input
@@ -113,41 +114,35 @@ export class AdminCustomersService {
     const likeText = escapeLike(query);
     const phone = normalizeEgyptPhone(query);
     if (query === '' || (likeText === '' && phone === null)) {
-      return this.rows(await this.repository.listRecentProfilesAsServiceRole(limit), 'list');
+      return (await this.query('list', () => this.repository.listRecentProfilesAsServiceRole(limit)))
+        .map((row) => this.toSummary(row));
     }
 
     let ownerIds: string[] = [];
     if (likeText !== '') {
-      const owners = this.data(await this.repository.findSlugOwnersAsServiceRole(likeText, limit), 'slug search');
-      ownerIds = [...new Set(owners.flatMap((row: unknown) => {
-        const id = isRecord(row) ? row.owner_id : null;
-        return typeof id === 'string' && UUID_PATTERN.test(id) ? [id] : [];
-      }))];
+      const owners = await this.query('slug search', () => this.repository.findSlugOwnersAsServiceRole(likeText, limit));
+      ownerIds = [...new Set(owners.filter((id) => UUID_PATTERN.test(id)))];
     }
 
-    const result = await this.repository.searchProfilesAsServiceRole({phone, likeText, ownerIds, limit});
-    return this.rows(result, 'search');
+    const rows = await this.query('search', () => this.repository.searchProfilesAsServiceRole({phone, likeText, ownerIds, limit}));
+    return rows.map((row) => this.toSummary(row));
   }
 
   async detail(userId: string): Promise<CustomerDetailResponse> {
-    const profileResult: unknown = await this.repository.findProfileAsServiceRole(userId);
-    if (!isRecord(profileResult) || profileResult.error !== null) {
-      this.logger.error('admin customer detail failed');
-      throw unavailable();
-    }
-    if (profileResult.data === null || profileResult.data === undefined) throw new NotFoundException('Customer not found');
+    const profile = await this.query('detail', () => this.repository.findProfileAsServiceRole(userId));
+    if (profile === null) throw new NotFoundException('Customer not found');
 
     const [orders, invitations, ledger] = await Promise.all([
-      this.repository.listOrdersAsServiceRole(userId),
-      this.repository.listInvitationsAsServiceRole(userId),
-      this.repository.listPointsLedgerAsServiceRole(userId, LEDGER_LIMIT)
+      this.query('orders', () => this.repository.listOrdersAsServiceRole(userId)),
+      this.query('invitations', () => this.repository.listInvitationsAsServiceRole(userId)),
+      this.query('ledger', () => this.repository.listPointsLedgerAsServiceRole(userId, LEDGER_LIMIT))
     ]);
 
     return {
-      profile: this.toSummary(profileResult.data),
-      orders: this.data(orders, 'orders').map((row) => this.toOrder(row)),
-      invitations: this.data(invitations, 'invitations').map((row) => this.toInvitation(row)),
-      pointsLedger: this.data(ledger, 'ledger').map((row) => this.toLedger(row))
+      profile: this.toSummary(profile),
+      orders: orders.map((row) => this.toOrder(row)),
+      invitations: invitations.map((row) => this.toInvitation(row)),
+      pointsLedger: ledger.map((row) => this.toLedger(row))
     };
   }
 
@@ -173,19 +168,19 @@ export class AdminCustomersService {
     return {balance};
   }
 
-  private async rpc(call: () => Promise<unknown>, label: string): Promise<Record<string, unknown>> {
-    let result: unknown;
+  private async rpc(call: () => Promise<Record<string, unknown> | null>, label: string): Promise<Record<string, unknown>> {
+    let result: Record<string, unknown> | null;
     try {
       result = await call();
     } catch {
       this.logger.error(`admin ${label} failed`);
       throw unavailable();
     }
-    if (!isRecord(result) || result.error !== null || !isRecord(result.data)) {
+    if (result === null) {
       this.logger.error(`admin ${label} rpc failed`);
       throw unavailable();
     }
-    return result.data;
+    return result;
   }
 
   private failure(data: Record<string, unknown>, notFound: string): Error {
@@ -204,17 +199,14 @@ export class AdminCustomersService {
     }
   }
 
-  /** Unwraps a postgrest list envelope; any error becomes 503. */
-  private data(result: unknown, label: string): unknown[] {
-    if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) {
+  /** Runs one repository query; any database error becomes 503 (detail in logs only). */
+  private async query<T>(label: string, run: () => Promise<T>): Promise<T> {
+    try {
+      return await run();
+    } catch {
       this.logger.error(`admin customers ${label} query failed`);
       throw unavailable();
     }
-    return result.data as unknown[];
-  }
-
-  private rows(result: unknown, label: string): CustomerSummaryResponse[] {
-    return this.data(result, label).map((row) => this.toSummary(row));
   }
 
   private toSummary(row: unknown): CustomerSummaryResponse {
