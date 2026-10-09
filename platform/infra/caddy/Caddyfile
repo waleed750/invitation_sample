@@ -12,6 +12,21 @@
 # WITH Cloudflare (recommended): DNS proxy ON + SSL "Full (strict)" in the
 # Cloudflare dashboard, then set CLOUDFLARE_ONLY=1 and re-run harden.sh so the
 # firewall only accepts 80/443 from the ranges below. See OPERATIONS.md.
+#
+# TLS certificate mode (CADDY_TLS_MODE in .env.prod):
+# - `auto` (default): Caddy provisions and renews PUBLIC certificates itself
+#   (ACME via ZeroSSL/Let's Encrypt, email {$ACME_EMAIL}). Use this while the
+#   firewall still allows HTTP-01 challenges to reach the origin.
+# - `cloudflare-origin`: Caddy serves YOUR Cloudflare Origin CA certificate
+#   instead of doing ACME. REQUIRED once the firewall admits only Cloudflare
+#   (HTTP-01 can no longer reach the origin). The compose entrypoint replaces
+#   each `#__CADDY_TLS_MODE_LINE__` marker below with:
+#     tls /etc/caddy/certs/origin.pem /etc/caddy/certs/origin-key.pem
+#   Place origin.pem + origin-key.pem in the host dir mounted at
+#   /etc/caddy/certs (default ./caddy/certs, read-only, chmod 600 on the host,
+#   NEVER committed to git — see caddy/certs/README.md). Validate either mode
+#   with the command at the top of this file; for origin mode, validate the
+#   RENDERED config on the server after `up -d` (see OPERATIONS.md).
 
 {
 	email {$ACME_EMAIL}
@@ -47,6 +62,9 @@
 }
 
 {$DOMAIN} {
+	# TLS mode marker: replaced with the Origin CA `tls` line when
+	# CADDY_TLS_MODE=cloudflare-origin (a comment otherwise = automatic HTTPS).
+	#__CADDY_TLS_MODE_LINE__
 	import secure-headers
 
 	encode gzip zstd
@@ -58,6 +76,9 @@
 }
 
 {$API_DOMAIN} {
+	# TLS mode marker: replaced with the Origin CA `tls` line when
+	# CADDY_TLS_MODE=cloudflare-origin (a comment otherwise = automatic HTTPS).
+	#__CADDY_TLS_MODE_LINE__
 	import secure-headers
 
 	# --- Per-IP rate limits (outer bound; the API ALSO enforces its own

@@ -42,3 +42,8 @@ out/
 coverage/
 .vercel
 .env*
+# L4c: the production env TEMPLATE must be committable; real .env.prod stays ignored.
+!.env.prod.example
+# L4c: private keys / certificates (e.g. Cloudflare Origin CA key) must never be committed.
+*.pem
+*.key

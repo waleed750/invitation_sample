@@ -122,19 +122,77 @@ with per-IP limits (100/min general, 10/min on `/v1/auth/*`, 60/min on
 **Cloudflare (both paths, strongly recommended).**
 1. Add the domain to Cloudflare free; point A records for `@` and `api` at
    `<server-ip>` with proxy ON (orange cloud).
-2. SSL/TLS -> Full (strict). Enable Bot Fight Mode. Add two free WAF/rate
+2. SSL/TLS -> **Full (strict)**. Enable Bot Fight Mode. Add two free WAF/rate
    rules: block requests with bad reputation to `/v1/auth/*`, and challenge
    > 20 requests/10s to `/v1/public/*` (names/values per current dashboard).
 3. Wait for the site to load over HTTPS through Cloudflare, then lock the
    origin: `CLOUDFLARE_ONLY=1 sudo -E bash platform/infra/server/harden.sh`
    (firewall now allows 80/443 only from Cloudflare ranges). Re-run is safe.
+   Compose path: install the Origin Certificate (6.4) BEFORE this step.
+
+### 6.4 Cloudflare Origin Certificate (compose path — do this BEFORE the lock step)
+
+Skip this on the Coolify path (Coolify provisions public TLS itself). On the
+compose path it is REQUIRED as soon as step 3 above locks the firewall: ACME
+HTTP-01 challenges come over plain HTTP from non-Cloudflare IPs, so Caddy can
+no longer renew public certificates — the Origin CA cert (which Cloudflare
+trusts) replaces ACME instead.
+
+SAFE ORDER (never lock yourself out of HTTPS):
+`auto` TLS works -> install origin cert -> switch to `cloudflare-origin` ->
+verify HTTPS still works -> ONLY THEN run harden.sh with CLOUDFLARE_ONLY=1.
+
+1. Cloudflare dashboard -> SSL/TLS -> Origin Server -> Create Certificate:
+   - Generate private key and CSR with Cloudflare; key type RSA or ECDSA
+     (either works with Caddy); validity **15 years** (maximum, fewer renewals).
+   - Hostnames: `example.com` **and** `*.example.com` (covers `api.example.com`
+     and any future subdomain; replace with your real domain).
+2. Copy the two PEM blocks into files on the SERVER (never into git):
+   `platform/infra/caddy/certs/origin.pem` (certificate) and
+   `platform/infra/caddy/certs/origin-key.pem` (private key), then
+   `chmod 600 platform/infra/caddy/certs/*.pem`.
+   (`*.pem`/`*.key` are git-ignored; `git status` must never show them.)
+3. In `platform/infra/.env.prod` set `CADDY_TLS_MODE=cloudflare-origin`
+   (keep `CADDY_ORIGIN_CERTS_DIR=./caddy/certs` unless you moved the dir).
+4. Recreate Caddy so the entrypoint renders the origin-`tls` config:
+   `docker compose -f platform/infra/docker-compose.prod.yml --env-file platform/infra/.env.prod up -d caddy`
+5. Verify (still BEFORE locking the firewall): `curl -v https://example.com`
+   and `curl https://api.example.com/v1/health` load fine, and
+   `docker compose ... logs caddy` shows no TLS errors.
+   To double-check the rendered config:
+   `docker compose -f platform/infra/docker-compose.prod.yml exec caddy caddy validate --config /tmp/Caddyfile`
+   (in origin mode the live config is the rendered `/tmp/Caddyfile`; in
+   `auto` mode validate `/etc/caddy/Caddyfile` as usual).
+6. Update the API's real-IP setting: with the Cloudflare proxy ON, Caddy now
+   sees Cloudflare edge IPs, so set `TRUST_PROXY=cloudflare` in `.env.prod`
+   and restart the api
+   (`docker compose ... up -d api`). With the proxy OFF (direct to Caddy),
+   keep `TRUST_PROXY=1`. Never `true`.
+7. NOW lock the origin (step 3 above): confirm Full (strict) is on in Cloudflare,
+   then `CLOUDFLARE_ONLY=1 sudo -E bash platform/infra/server/harden.sh`.
+   Re-verify both URLs afterwards — if anything fails, the firewall (not the
+   cert) is the first suspect; re-running harden.sh without CLOUDFLARE_ONLY
+   re-opens 80/443 while you debug.
+
+Renewal: the origin cert lasts up to 15 years — put a calendar reminder for
+year 14. If you ever switch back to `auto`, Caddy resumes ACME on its own
+(only possible while the firewall still admits HTTP-01).
 
 ## 7. Monitoring: start it, then create these 6 alerts
 
 1. Start: `docker compose -f platform/infra/monitoring/docker-compose.monitoring.yml --env-file platform/infra/.env.prod up -d`
-2. Open tunnels from your laptop (UIs listen on 127.0.0.1 ONLY):
+2. Open tunnels from your laptop. Every UI binds to 127.0.0.1 on the server
+   (see `platform/infra/monitoring/docker-compose.monitoring.yml`) — none is
+   ever reachable from the network. One command opens all three, or run just
+   the line you need:
    `ssh -L 3002:localhost:3002 -L 8090:localhost:8090 -L 8080:localhost:8080 owner@<server-ip>`
-   then browse `http://localhost:3002` (Kuma), `:8090` (Beszel hub), `:8080` (Dozzle).
+   - Uptime Kuma only: `ssh -L 3002:localhost:3002 owner@<server-ip>`
+     then browse `http://localhost:3002`
+   - Beszel hub only: `ssh -L 8090:localhost:8090 owner@<server-ip>`
+     then browse `http://localhost:8090`
+   - Dozzle only: `ssh -L 8080:localhost:8080 owner@<server-ip>`
+     then browse `http://localhost:8080`
+   Keep the ssh session open while you use the UI; closing it closes the tunnel.
 3. Beszel: add a system in the hub UI, copy its KEY into `BESZEL_KEY` in
    `.env.prod`, restart just the agent:
    `docker compose -f platform/infra/monitoring/docker-compose.monitoring.yml --env-file platform/infra/.env.prod up -d beszel-agent`

@@ -73,6 +73,11 @@ services:
         condition: service_healthy
     env_file:
       - .env.prod
+    environment:
+      # Real client IP behind the proxy chain (drives API rate limits).
+      # `1` = directly behind Caddy only; `cloudflare` = behind
+      # Cloudflare + Caddy (also honours CF-Connecting-IP). See .env.prod.example.
+      TRUST_PROXY: ${TRUST_PROXY:-1}
     # DATABASE_URL and every app key come from .env.prod (see .env.prod.example
     # for the full list + pointers to apps/api/.env.example and apps/web/.env.example).
     networks:
@@ -113,12 +118,24 @@ services:
       - api
     env_file:
       - .env.prod
+    # TLS mode toggle. `auto` (default) = Caddy provisions public ACME certs.
+    # `cloudflare-origin` = serve the Cloudflare Origin CA cert (required once
+    # the firewall admits only Cloudflare, since ACME HTTP-01 cannot reach the
+    # origin then). The entrypoint renders /tmp/Caddyfile from the marker lines
+    # (`#__CADDY_TLS_MODE_LINE__`) in ./caddy/Caddyfile; in `auto` mode the
+    # mounted Caddyfile is used unchanged (markers are plain comments).
+    entrypoint: ["/bin/sh", "-c", "set -eu; if [ \"$${CADDY_TLS_MODE:-auto}\" = cloudflare-origin ]; then sed 's|#__CADDY_TLS_MODE_LINE__|tls /etc/caddy/certs/origin.pem /etc/caddy/certs/origin-key.pem|' /etc/caddy/Caddyfile > /tmp/Caddyfile && exec caddy run --config /tmp/Caddyfile --adapter caddyfile; fi; exec caddy run --config /etc/caddy/Caddyfile --adapter caddyfile"]
     ports:
       - "80:80"
       - "443:443"
       - "443:443/udp" # HTTP/3
     volumes:
       - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      # Cloudflare Origin CA cert dir (host). Only read when
+      # CADDY_TLS_MODE=cloudflare-origin. Files must be chmod 600 on the host
+      # and are NEVER committed (see caddy/certs/README.md). In `auto` mode an
+      # empty/missing dir is harmless (compose creates an empty dir if absent).
+      - ${CADDY_ORIGIN_CERTS_DIR:-./caddy/certs}:/etc/caddy/certs:ro
       - caddy_data:/data
       - caddy_config:/config
     networks:
