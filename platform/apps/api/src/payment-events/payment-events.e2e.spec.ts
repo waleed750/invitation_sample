@@ -68,9 +68,9 @@ describe('payment events (full app HTTP integration, in-memory transport)', () =
     setTestEnv({PAYMENT_EVENTS_SECRET: SECRET});
     const moduleRef = await Test.createTestingModule({imports: [AppModule]})
       .overrideProvider(AppConfigService).useValue(new AppConfigService(new ConfigService(validateEnv(process.env))))
-      .overrideProvider(AuthRepository).useValue({findRoleByUserId: () => Promise.resolve({data: {role}, error: null})})
+      .overrideProvider(AuthRepository).useValue({findRoleByUserId: () => Promise.resolve({role})})
       .overrideProvider(PaymentEventsRepository).useValue(repository).compile();
-    app = moduleRef.createNestApplication({logger: false});
+    app = moduleRef.createNestApplication({logger: false, bodyParser: false});
     setupApp(app); await app.init();
   });
   afterAll(async () => { await app.close(); });
@@ -85,7 +85,9 @@ describe('payment events (full app HTTP integration, in-memory transport)', () =
     const timestamp = String(Math.floor(Date.now() / 1000));
     const signature = createHmac('sha256', SECRET).update(`${timestamp}.${body}`).digest('hex');
     const send = () => inject(app, 'POST', '/v1/payment-events/generic-hmac', body, {'x-signature': signature, 'x-timestamp': timestamp});
-    expect((await send()).status).toBe(200);
+    const res = await send();
+    if (res.status !== 200) console.log(res.body);
+    expect(res.status).toBe(200);
     expect(repository.ingestAsServiceRole).toHaveBeenCalledWith('generic-hmac', expect.objectContaining({amountMinor: 129937}), body);
     repository.ingestAsServiceRole.mockResolvedValue({ok: true, duplicate: true});
     const duplicate = await send(); expect(duplicate.status).toBe(200); expect(duplicate.body).toEqual({ok: true, duplicate: true});
