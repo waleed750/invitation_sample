@@ -33,9 +33,33 @@ const envSchema = z.object({
         .array(z.url('each WEB_ORIGINS entry must be a valid URL origin'))
         .min(1, 'WEB_ORIGINS must contain at least one origin')
     ),
-  SUPABASE_URL: z.url('SUPABASE_URL must be a valid URL'),
-  SUPABASE_ANON_KEY: z.string().min(1, 'SUPABASE_ANON_KEY must not be empty'),
-  SUPABASE_SERVICE_ROLE_KEY: z.string().min(1, 'SUPABASE_SERVICE_ROLE_KEY must not be empty'),
+  // PostgreSQL connection string for the `app_api` login role (self-hosted
+  // Postgres; every query then runs under `set local role ...`, see DbService).
+  DATABASE_URL: z
+    .string()
+    .min(1, 'DATABASE_URL must not be empty')
+    .regex(/^postgres(ql)?:\/\//, 'DATABASE_URL must be a postgres:// or postgresql:// connection string'),
+  DATABASE_POOL_MAX: z.coerce.number().int().min(1, 'DATABASE_POOL_MAX must be at least 1').max(200).default(10),
+  DATABASE_STATEMENT_TIMEOUT_MS: z.coerce
+    .number()
+    .int()
+    .min(100, 'DATABASE_STATEMENT_TIMEOUT_MS must be at least 100')
+    .default(5000),
+  // LEGACY (Supabase is being removed; lane L1 deletes these). Optional now so
+  // the API boots without Supabase. Blank/whitespace counts as unset.
+  SUPABASE_URL: z
+    .string()
+    .optional()
+    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim()))
+    .pipe(z.url('SUPABASE_URL must be a valid URL').optional()),
+  SUPABASE_ANON_KEY: z
+    .string()
+    .optional()
+    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
+  SUPABASE_SERVICE_ROLE_KEY: z
+    .string()
+    .optional()
+    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
   // Hard cap on any single Supabase HTTP call. Without it an outage hangs
   // every authenticated request (postgrest retries + no timeout).
   SUPABASE_TIMEOUT_MS: z.coerce.number().int().min(100, 'SUPABASE_TIMEOUT_MS must be at least 100').default(5000),

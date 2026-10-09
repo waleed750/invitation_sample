@@ -51,15 +51,29 @@ jobs:
   database:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      DATABASE_URL_ADMIN: postgresql://postgres:postgres@127.0.0.1:5432/postgres
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_PASSWORD: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 12
     steps:
       - uses: actions/checkout@v7
-      - uses: supabase/setup-cli@v1
-        with:
-          # Pinned: "latest" queries the GitHub API unauthenticated and can hit its rate limit.
-          version: 2.120.0
-      - name: Start local Supabase
-        run: supabase start
+      - name: Install psql client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y postgresql-client
       - name: Apply migrations
-        run: supabase db reset
-      - name: Run RLS and fulfillment SQL tests
-        run: psql "postgresql://postgres:postgres@127.0.0.1:54322/postgres" -v ON_ERROR_STOP=1 -f supabase/tests/rls_and_fulfillment.sql
+        run: scripts/db-apply.sh
+      - name: Re-apply migrations (must be a no-op)
+        run: scripts/db-apply.sh
+      - name: Run SQL tests
+        run: scripts/db-test.sh

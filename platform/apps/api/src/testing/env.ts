@@ -5,7 +5,11 @@ export const BASE_ENV: Record<string, string> = {
   PORT: '3101',
   NODE_ENV: 'test',
   WEB_ORIGINS: 'http://localhost:3000',
-  // Unroutable on purpose: no spec may touch the network. Any Supabase call
+  // Unroutable on purpose: postgres.js connects lazily, so no spec touches a DB.
+  DATABASE_URL: 'postgresql://app_api:test@127.0.0.1:9/test',
+  DATABASE_POOL_MAX: '10',
+  DATABASE_STATEMENT_TIMEOUT_MS: '5000',
+  // Legacy (optional). Unroutable on purpose: no spec may touch the network. Any Supabase call
   // fails fast (connection refused) and services map it to 503.
   SUPABASE_URL: 'http://127.0.0.1:9',
   SUPABASE_ANON_KEY: 'test-anon-key',

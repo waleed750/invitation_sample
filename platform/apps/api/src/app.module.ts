@@ -12,6 +12,7 @@ import {HttpExceptionFilter} from './common/http-exception.filter';
 import {RequestIdMiddleware} from './common/request-id.middleware';
 import {AppConfigModule} from './config/app-config.module';
 import {AppConfigService} from './config/app-config.service';
+import {DatabaseModule} from './database/database.module';
 import {EntitlementsModule} from './entitlements/entitlements.module';
 import {HealthModule} from './health/health.module';
 import {MeModule} from './me/me.module';
@@ -44,9 +45,11 @@ export {AuthGuard, RolesGuard};
       inject: [AppConfigService],
       useFactory: (config: AppConfigService) => buildLoggerParams(config.nodeEnv)
     }),
+    DatabaseModule,
     SupabaseModule, RateLimitModule, AuthModule, HealthModule, MeModule, EntitlementsModule,
     PaymentsModule, TemplatesModule, CheckoutModule, OrdersModule, InvitationsModule, PointsModule,
     PublicInvitationsModule, GuestsModule, AdminPaymentsModule, AdminCustomersModule, LifecycleModule
+    // lanes: append module imports below
   ],
   providers: [
     AppLogger,

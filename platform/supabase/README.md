@@ -1,6 +1,22 @@
-# Supabase migrations — invitation platform
+# Database migrations — invitation platform
 
-SQL only. Migrations + one test file, applied in numeric order.
+SQL only, for **plain PostgreSQL 17** (no Supabase). Migrations are applied in
+filename order by `scripts/db-apply.sh` (`$DATABASE_URL_ADMIN`, owner/superuser;
+tracked in `public.schema_migrations`), SQL tests are run by `scripts/db-test.sh`.
+`0000_selfhost_bootstrap.sql` recreates the Supabase pieces (roles `anon` /
+`authenticated` / `service_role`, login role `app_api`, default privileges,
+`auth.users`, `auth.uid()`); set the `app_api` password at deploy time.
+
+### Number reservations (parallel lanes)
+
+| Number | Owner |
+|---|---|
+| 0016 | L3 payment events |
+| 0017 | L2 auth / OTP |
+| 0018 | L7 security |
+| 0019 | L5 admin stats |
+
+SQL tests: one file per lane, `supabase/tests/<lane>.sql` (own `begin … rollback`).
 
 | File | Contents |
 |---|---|
@@ -14,6 +30,9 @@ SQL only. Migrations + one test file, applied in numeric order.
 | `migrations/0012_publish_history.sql` | B1 owner RPCs (`authenticated`, ownership via `auth.uid()`, like `publish_invitation`): `undo_publish()` (drops the latest `invitation_publishes` row, restores `invitations.data` from the previous snapshot, never changes `edits_used`; reasons `not_owner`/`expired`/`nothing_to_undo`) and `switch_template()` (target must be `live` and the entitlement's tier; null switches = unlimited; same template = no-op; reasons `not_owner`/`template_not_found`/`tier_mismatch`/`no_switches_left`) |
 | `migrations/0013_profile_on_signup.sql` | Trigger `handle_new_auth_user()` on `auth.users` AFTER INSERT to auto-create `profiles` (mapping email, phone, name, locale, signup_method), handles backfill |
 | `migrations/0014_admin_points_guard.sql` | Admin points guard: `admin_adjust_points()` rejects negative deltas that would drop the user's `points_balance` below zero with `insufficient_points` (no ledger or audit rows written); positive deltas unchanged |
+| `migrations/0000_selfhost_bootstrap.sql` | Self-host bootstrap: roles, `app_api`, Supabase default privileges, `auth` schema, `auth.users`, `auth.uid()`, pgcrypto |
+| `migrations/0015_guard_fix.sql` | SECURITY FIX: `invitations_guard()` / `profiles_guard()` bypass only when `current_user not in ('authenticated','anon')` (0003 compared `current_user <> session_user`, always true under role switching, and bypassed on `auth.uid() is null`) |
+| `tests/guards.sql` | Guards under a role-switching connection (direct status/role/points writes fail, allowed columns and `publish_invitation()` succeed, anon cannot write) |
 | `tests/rls_and_fulfillment.sql` | Assertions in one rolled-back transaction (fulfillment, refunds, publish gate, anon privacy) |
 
 ## Table overview
