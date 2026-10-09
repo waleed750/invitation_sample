@@ -6,7 +6,6 @@ import {z} from 'zod';
 import {AppLogger} from '../common/app-logger';
 import {AppConfigService} from '../config/app-config.service';
 import type {RequestUser} from '../common/decorators';
-import {isRecord} from '../common/type-guards';
 import {CheckoutRepository} from './checkout.repository';
 import {buildManualPayment, type ManualPaymentDetails} from '../payments/manual-payment';
 import {PAYMENT_PROVIDER, type PaymentProvider} from '../payments/payment-provider';
@@ -145,7 +144,7 @@ export class CheckoutService {
     const amountMinor = subtotalMinor - discountTotalMinor;
     const orderId = randomUUID();
     const invitationSlug = this.invitationSlug(body.couple.first, body.couple.second, orderId);
-    const result: unknown = await this.repository.createPendingCheckoutAsServiceRole({
+    const result = await this.repository.createPendingCheckoutAsServiceRole({
       orderId,
       userId: user.id,
       templateId: template.id,
@@ -161,11 +160,11 @@ export class CheckoutService {
       invitationSlug,
       invitationData: {event_date: body.eventDate, eventDate: body.eventDate, couple: body.couple}
     });
-    if (!isRecord(result) || result.error !== null || !isRecord(result.data)) {
+    if (result === null) {
       this.logger.error('checkout creation RPC failed');
       throw new ServiceUnavailableException('Checkout service unavailable');
     }
-    return storedOrder(result.data.order_id, result.data.amount_minor, result.data.currency);
+    return storedOrder(result.order_id, result.amount_minor, result.currency);
   }
 
   /** Active price for the template+tier in EGP: template-specific row wins, else the tier default. */
@@ -177,21 +176,17 @@ export class CheckoutService {
     throw new UnprocessableEntityException({code: 'price_not_found', message: 'No price is configured for this template and tier'});
   }
 
-  private async priceRow(query: Promise<unknown>): Promise<number | null> {
-    const result: unknown = await query;
-    if (!isRecord(result) || result.error !== null) throw new ServiceUnavailableException('Checkout service unavailable');
-    if (result.data === null || result.data === undefined) return null;
-    const amount = isRecord(result.data) ? minorUnits(result.data.amount_minor) : null;
+  private async priceRow(query: Promise<{amount_minor: unknown} | null>): Promise<number | null> {
+    const row = await query;
+    if (row === null) return null;
+    const amount = minorUnits(row.amount_minor);
     if (amount === null || amount <= 0) throw new ServiceUnavailableException('Checkout service unavailable');
     return amount;
   }
 
   private async template(slug: string): Promise<TemplateRow> {
-    const result: unknown = await this.repository.findLiveTemplateBySlug(slug);
-    if (!isRecord(result) || result.error !== null || !isRecord(result.data)) {
-      throw new BadRequestException('Unknown or unavailable template');
-    }
-    const row = result.data;
+    const row = await this.repository.findLiveTemplateBySlug(slug);
+    if (row === null) throw new BadRequestException('Unknown or unavailable template');
     const templateId = row.id;
     if (typeof templateId !== 'string') throw new BadRequestException('Unknown or unavailable template');
     const entry = catalogEntry.safeParse({
@@ -208,21 +203,18 @@ export class CheckoutService {
   }
 
   private async pointsBalance(user: RequestUser): Promise<number> {
-    const result: unknown = await this.repository.findPointsBalance(user.jwt, user.id);
-    if (!isRecord(result) || result.error !== null || !isRecord(result.data) || typeof result.data.points_balance !== 'number') {
-      throw new ServiceUnavailableException('Checkout service unavailable');
-    }
-    return result.data.points_balance;
+    const row = await this.repository.findPointsBalance(user.id);
+    if (row === null || typeof row.points_balance !== 'number') throw new ServiceUnavailableException('Checkout service unavailable');
+    return row.points_balance;
   }
 
   private async couponDiscountMinor(code: string | undefined, subtotalMinor: number): Promise<number> {
     if (code === undefined) return 0;
-    const result: unknown = await this.repository.findCouponByCodeAsServiceRole(code.trim().toLowerCase());
-    if (!isRecord(result) || result.error !== null || !isRecord(result.data)) throw new BadRequestException('Invalid coupon');
-    const row = result.data;
+    const row = await this.repository.findCouponByCodeAsServiceRole(code.trim().toLowerCase());
+    if (row === null) throw new BadRequestException('Invalid coupon');
     const expired = typeof row.expires_at === 'string' && Date.parse(row.expires_at) <= Date.now();
     const exhausted = typeof row.max_uses === 'number' && typeof row.used_count === 'number' && row.used_count >= row.max_uses;
-    if (row.active !== true || expired || exhausted) throw new BadRequestException('Invalid coupon');
+    if (!row.active || expired || exhausted) throw new BadRequestException('Invalid coupon');
     const amountMinor = minorUnits(row.amount_off_minor) ?? 0;
     // A fixed-amount coupon in another currency cannot be applied to an EGP order.
     if (amountMinor > 0 && row.currency !== CHECKOUT_CURRENCY) throw new BadRequestException('Invalid coupon');
@@ -231,21 +223,18 @@ export class CheckoutService {
   }
 
   private async existingOrder(userId: string, key: string): Promise<StoredOrder | null> {
-    const result: unknown = await this.repository.findOrderByIdempotencyKeyAsServiceRole(userId, key);
-    if (!isRecord(result) || result.error !== null) throw new ServiceUnavailableException('Checkout service unavailable');
-    if (result.data === null) return null;
-    if (!isRecord(result.data) || typeof result.data.id !== 'string') throw new ServiceUnavailableException('Checkout service unavailable');
-    const stored = storedOrder(result.data.id, result.data.amount_minor, result.data.currency);
+    const row = await this.repository.findOrderByIdempotencyKeyAsServiceRole(userId, key);
+    if (row === null) return null;
+    const stored = storedOrder(row.id, row.amount_minor, row.currency);
     return {
       ...stored,
-      ...(typeof result.data.provider_ref === 'string' ? {providerRef: result.data.provider_ref} : {}),
-      ...(typeof result.data.created_at === 'string' ? {createdAt: result.data.created_at} : {})
+      ...(typeof row.provider_ref === 'string' ? {providerRef: row.provider_ref} : {}),
+      ...(typeof row.created_at === 'string' ? {createdAt: row.created_at} : {})
     };
   }
 
   private async saveProviderRef(orderId: string, providerRef: string): Promise<void> {
-    const result: unknown = await this.repository.saveProviderRefAsServiceRole(orderId, providerRef);
-    if (!isRecord(result) || result.error !== null) throw new ServiceUnavailableException('Checkout service unavailable');
+    await this.repository.saveProviderRefAsServiceRole(orderId, providerRef);
   }
 
   private invitationSlug(first: string, second: string, orderId: string): string {

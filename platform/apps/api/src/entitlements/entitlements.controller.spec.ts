@@ -1,9 +1,8 @@
 import {Test} from '@nestjs/testing';
 import {AppLogger} from '../common/app-logger';
 import {CLOCK, type Clock} from '../common/clock';
-import {SupabaseService} from '../supabase/supabase.service';
 import {EntitlementsRepository} from './entitlements.repository';
-import {mockSupabaseClient, setTestEnv} from '../test-helpers';
+import {setTestEnv} from '../test-helpers';
 import {EntitlementsController} from './entitlements.controller';
 import {EntitlementsService, InvitationIdParams} from './entitlements.service';
 
@@ -11,22 +10,22 @@ setTestEnv();
 
 const fixedClock: Clock = {now: () => new Date('2026-06-01T12:00:00.000Z')};
 
-async function bootController(row: unknown, error: {code: string} | null): Promise<EntitlementsController> {
+async function bootController(row: unknown): Promise<EntitlementsController> {
   const moduleRef = await Test.createTestingModule({
     controllers: [EntitlementsController],
     providers: [
       EntitlementsService,
       AppLogger,
       {provide: CLOCK, useValue: fixedClock},
-      EntitlementsRepository, {provide: SupabaseService, useValue: {forUser: jest.fn().mockReturnValue(mockSupabaseClient({data: row, error}))}}
+      {provide: EntitlementsRepository, useValue: {findByInvitationId: jest.fn().mockResolvedValue(row)}}
     ]
   }).compile();
   return moduleRef.get(EntitlementsController);
 }
 
-describe('EntitlementsController (mocked SupabaseService)', () => {
+describe('EntitlementsController (mocked EntitlementsRepository)', () => {
   it('returns the computed entitlement for a visible row', async () => {
-    const controller = await bootController({edits_allowed: 15, edits_used: 3, online_until: '2026-12-01T00:00:00.000Z'}, null);
+    const controller = await bootController({edits_allowed: 15, edits_used: 3, online_until: '2026-12-01T00:00:00.000Z'});
     const result = await controller.getEntitlement(InvitationIdParams.create({id: '11111111-1111-4111-8111-111111111111'}), {
       id: 'user-123',
       jwt: 'test-jwt'
@@ -42,7 +41,7 @@ describe('EntitlementsController (mocked SupabaseService)', () => {
   });
 
   it('surfaces 404 when RLS hides the invitation', async () => {
-    const controller = await bootController(null, {code: 'PGRST116'});
+    const controller = await bootController(null);
     await expect(
       controller.getEntitlement(InvitationIdParams.create({id: '11111111-1111-4111-8111-111111111111'}), {
         id: 'user-123',

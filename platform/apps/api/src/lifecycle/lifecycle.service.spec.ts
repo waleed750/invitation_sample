@@ -5,10 +5,6 @@ import {LifecycleService} from './lifecycle.service';
 
 const NOW = new Date('2026-06-01T00:00:00.000Z');
 
-function ok(data: unknown) {
-  return {data, error: null};
-}
-
 function setup(overrides: {
   due?: unknown;
   end?: unknown;
@@ -21,31 +17,32 @@ function setup(overrides: {
   const repository = {
     dueRemindersAsServiceRole: jest.fn(async (now: Date) => {
       calls.push(`due:${now.toISOString()}`);
-      return ok(overrides.due ?? []);
+      if (overrides.due instanceof Error) throw overrides.due;
+      return overrides.due ?? [];
     }),
     markRemindedAsServiceRole: jest.fn(async (invitationId: string, now: Date) => {
       calls.push(`mark:${invitationId}:${now.toISOString()}`);
-      return {data: null, error: null};
+      return undefined;
     }),
     endExpiredAsServiceRole: jest.fn(async (now: Date) => {
       calls.push(`end:${now.toISOString()}`);
       if (overrides.end instanceof Error) throw overrides.end;
-      return ok(overrides.end ?? 0);
+      return overrides.end ?? 0;
     }),
     purgeAndArchiveAsServiceRole: jest.fn(async (now: Date) => {
       calls.push(`purge:${now.toISOString()}`);
       if (overrides.purge instanceof Error) throw overrides.purge;
-      return ok(overrides.purge ?? {purged: 0, archived: 0});
+      return overrides.purge ?? {purged: 0, archived: 0};
     }),
     expirePointsAsServiceRole: jest.fn(async (now: Date) => {
       calls.push(`expire:${now.toISOString()}`);
       if (overrides.expire instanceof Error) throw overrides.expire;
-      return ok(overrides.expire ?? 0);
+      return overrides.expire ?? 0;
     }),
     expireStaleManualOrdersAsServiceRole: jest.fn(async () => {
       calls.push('orders');
       if (overrides.orders instanceof Error) throw overrides.orders;
-      return ok(overrides.orders ?? 0);
+      return overrides.orders ?? 0;
     })
   } as unknown as LifecycleRepository;
   const notifications = {
@@ -123,8 +120,8 @@ describe('LifecycleService.runDaily', () => {
     expect(logger.error).toHaveBeenCalledWith('lifecycle end step failed');
   });
 
-  it('a broken reminders payload fails only that step', async () => {
-    const {service, repository} = setup({due: {data: 'not-an-array'} as any, end: 1});
+  it('a failing reminders query fails only that step', async () => {
+    const {service, repository} = setup({due: new Error('db down'), end: 1});
     const summary = await service.runDaily(NOW);
     expect(summary.ended).toBe(1);
     expect(summary.errors).toEqual(['reminders']);

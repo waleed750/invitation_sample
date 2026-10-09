@@ -22,15 +22,6 @@ export interface LifecycleSummary {
   errors: string[];
 }
 
-function envelopeData(value: unknown, step: string): unknown {
-  if (!isRecord(value) || !('data' in value) || !('error' in value)) {
-    throw new Error(`lifecycle ${step} returned an unexpected payload`);
-  }
-  const {data, error}: {data: unknown; error: unknown} = value as {data: unknown; error: unknown};
-  if (error !== null) throw new Error(`lifecycle ${step} failed`);
-  return data;
-}
-
 function toDueReminder(value: unknown): DueReminder | null {
   if (!isRecord(value)) return null;
   const invitationId = value.invitation_id;
@@ -38,13 +29,6 @@ function toDueReminder(value: unknown): DueReminder | null {
   const onlineUntil = value.online_until;
   if (typeof invitationId !== 'string' || typeof ownerId !== 'string' || typeof onlineUntil !== 'string') return null;
   return {invitationId, ownerId, onlineUntil};
-}
-
-function toCount(data: unknown, step: string): number {
-  // PostgREST returns integer RPC results as JSON numbers; tolerate numeric strings.
-  const count = typeof data === 'number' ? data : typeof data === 'string' ? Number(data) : NaN;
-  if (!Number.isSafeInteger(count) || count < 0) throw new Error(`lifecycle ${step} returned a bad count`);
-  return count;
 }
 
 /**
@@ -74,10 +58,9 @@ export class LifecycleService {
   }
 
   private async sendReminders(now: Date, summary: LifecycleSummary): Promise<void> {
-    let rows: unknown;
+    let rows: unknown[];
     try {
-      rows = envelopeData(await this.repository.dueRemindersAsServiceRole(now), 'reminders');
-      if (!Array.isArray(rows)) throw new Error('lifecycle reminders returned a bad payload');
+      rows = await this.repository.dueRemindersAsServiceRole(now);
     } catch {
       this.logger.error('lifecycle reminders step failed');
       summary.errors.push('reminders');
@@ -104,7 +87,7 @@ export class LifecycleService {
 
   private async endExpired(now: Date, summary: LifecycleSummary): Promise<void> {
     try {
-      summary.ended = toCount(envelopeData(await this.repository.endExpiredAsServiceRole(now), 'end'), 'end');
+      summary.ended = await this.repository.endExpiredAsServiceRole(now);
     } catch {
       this.logger.error('lifecycle end step failed');
       summary.errors.push('end');
@@ -113,10 +96,9 @@ export class LifecycleService {
 
   private async purgeAndArchive(now: Date, summary: LifecycleSummary): Promise<void> {
     try {
-      const data = envelopeData(await this.repository.purgeAndArchiveAsServiceRole(now), 'purge_archive');
-      if (!isRecord(data)) throw new Error('lifecycle purge_archive returned a bad payload');
-      summary.purged = toCount(data.purged, 'purge_archive');
-      summary.archived = toCount(data.archived, 'purge_archive');
+      const result = await this.repository.purgeAndArchiveAsServiceRole(now);
+      summary.purged = result.purged;
+      summary.archived = result.archived;
     } catch {
       this.logger.error('lifecycle purge_archive step failed');
       summary.errors.push('purge_archive');
@@ -125,7 +107,7 @@ export class LifecycleService {
 
   private async expirePoints(now: Date, summary: LifecycleSummary): Promise<void> {
     try {
-      summary.pointsExpired = toCount(envelopeData(await this.repository.expirePointsAsServiceRole(now), 'expire_points'), 'expire_points');
+      summary.pointsExpired = await this.repository.expirePointsAsServiceRole(now);
     } catch {
       this.logger.error('lifecycle expire_points step failed');
       summary.errors.push('expire_points');
@@ -134,7 +116,7 @@ export class LifecycleService {
 
   private async expireStaleOrders(summary: LifecycleSummary): Promise<void> {
     try {
-      summary.ordersExpired = toCount(envelopeData(await this.repository.expireStaleManualOrdersAsServiceRole(), 'expire_orders'), 'expire_orders');
+      summary.ordersExpired = await this.repository.expireStaleManualOrdersAsServiceRole();
     } catch {
       this.logger.error('lifecycle expire_orders step failed');
       summary.errors.push('expire_orders');

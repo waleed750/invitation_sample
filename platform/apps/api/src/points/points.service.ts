@@ -27,19 +27,17 @@ export class PointsService {
 
   async get(user: RequestUser): Promise<PointsResponse> {
     try {
-      const profileResult: unknown = await this.repository.findBalance(user.jwt, user.id);
-      const ledgerResult: unknown = await this.repository.listLedger(user.jwt, user.id);
-      if (!isRecord(profileResult) || profileResult.error !== null || !isRecord(profileResult.data) ||
-          typeof profileResult.data.points_balance !== 'number' || typeof profileResult.data.purchases_count !== 'number' ||
-          !isRecord(ledgerResult) || ledgerResult.error !== null || !Array.isArray(ledgerResult.data)) {
+      const profile = await this.repository.findBalance(user.id);
+      const ledger = await this.repository.listLedger(user.id);
+      if (profile === null || typeof profile.points_balance !== 'number' || typeof profile.purchases_count !== 'number') {
         throw new ServiceUnavailableException('Points service unavailable');
       }
-      const purchaseCount = profileResult.data.purchases_count;
+      const purchaseCount = profile.purchases_count;
       return {
-        balance: profileResult.data.points_balance,
+        balance: profile.points_balance,
         purchaseCount,
         level: levelForPurchases(purchaseCount),
-        ledger: ledgerResult.data.map(ledgerRow)
+        ledger: ledger.map(ledgerRow)
       };
     } catch (error) {
       if (error instanceof ServiceUnavailableException) throw error;

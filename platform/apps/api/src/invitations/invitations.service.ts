@@ -97,12 +97,9 @@ export class InvitationsService {
 
   async list(user: RequestUser): Promise<InvitationSummary[]> {
     try {
-      const result: unknown = await this.repository.listByOwner(user.jwt, user.id);
-      if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) {
-        throw new ServiceUnavailableException('Invitations service unavailable');
-      }
+      const rows = await this.repository.listByOwner(user.id);
       const now = this.clock.now();
-      return result.data.map((row) => toSummary(row, now));
+      return rows.map((row) => toSummary(row, now));
     } catch (error) {
       if (error instanceof ServiceUnavailableException) throw error;
       this.logger.error('invitations lookup failed');

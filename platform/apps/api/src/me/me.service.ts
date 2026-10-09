@@ -46,43 +46,26 @@ export class MeService {
 
   async getMe(user: RequestUser): Promise<MeResponse> {
     try {
-      const result: unknown = await this.repository.findProfile(user.jwt, user.id);
-      if (!isRecord(result)) {
-        this.logger.error('profiles lookup failed (malformed response)');
-        throw new ServiceUnavailableException('Profile service unavailable');
-      }
-      const {data, error}: {data: unknown; error: unknown} = result as {data: unknown; error: unknown};
-      if (error !== null) {
-        // No row visible under RLS = unknown profile.
-        if (isRecord(error) && error.code === 'PGRST116') throw new NotFoundException('Profile not found');
-        // Anything else (real Supabase outage): generic 503, detail in logs only.
-        this.logger.error('profiles lookup failed (upstream error)');
-        throw new ServiceUnavailableException('Profile service unavailable');
-      }
-      if (data === null) throw new NotFoundException('Profile not found');
-      return toMeResponse(data);
+      const row = await this.repository.findProfile(user.id);
+      // No row visible under RLS = unknown profile.
+      if (row === null) throw new NotFoundException('Profile not found');
+      return toMeResponse(row);
     } catch (err) {
       if (err instanceof NotFoundException || err instanceof ServiceUnavailableException) throw err;
-      // Network/DNS failure talking to Supabase: never leak the cause.
-      this.logger.error('profiles lookup failed (unreachable)');
+      // Database failure: never leak the cause.
+      this.logger.error('profiles lookup failed (upstream error)');
       throw new ServiceUnavailableException('Profile service unavailable');
     }
   }
 
   async updateLocale(user: RequestUser, locale: 'ar' | 'en'): Promise<MeResponse> {
     try {
-      const result: unknown = await this.repository.updatePreferredLocale(user.jwt, user.id, locale);
-      if (!isRecord(result)) throw new ServiceUnavailableException('Profile service unavailable');
-      const {data, error}: {data: unknown; error: unknown} = result as {data: unknown; error: unknown};
-      if (error !== null || data === null) {
-        if (isRecord(error) && error.code === 'PGRST116') throw new NotFoundException('Profile not found');
-        this.logger.error('profile locale update failed (upstream error)');
-        throw new ServiceUnavailableException('Profile service unavailable');
-      }
-      return toMeResponse(data);
+      const row = await this.repository.updatePreferredLocale(user.id, locale);
+      if (row === null) throw new NotFoundException('Profile not found');
+      return toMeResponse(row);
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof ServiceUnavailableException) throw error;
-      this.logger.error('profile locale update failed (unreachable)');
+      this.logger.error('profile locale update failed (upstream error)');
       throw new ServiceUnavailableException('Profile service unavailable');
     }
   }

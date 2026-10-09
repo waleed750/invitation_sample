@@ -51,12 +51,8 @@ export class TemplatesService {
 
   async listLive(): Promise<PublicCatalogEntry[]> {
     try {
-      const result: unknown = await this.repository.listLive();
-      if (!isRecord(result) || result.error !== null || !Array.isArray(result.data)) {
-        this.logger.error('templates catalog lookup failed');
-        throw new ServiceUnavailableException('Template catalog unavailable');
-      }
-      return result.data.map(toEntry);
+      const rows = await this.repository.listLive();
+      return rows.map(toEntry);
     } catch (error) {
       if (error instanceof ServiceUnavailableException) throw error;
       this.logger.error('templates catalog lookup failed (unreachable)');

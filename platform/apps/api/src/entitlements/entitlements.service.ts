@@ -48,8 +48,8 @@ function toRow(data: unknown): EntitlementRow {
 }
 
 /**
- * Reads the caller's `invitation_entitlements` row through the user-scoped
- * client (RLS decides access — an invisible invitation is a 404) and computes
+ * Reads the caller's `invitation_entitlements` row as the caller
+ * (`asUser`, RLS decides access — an invisible invitation is a 404) and computes
  * the dashboard meters with the pure functions from `@platform/shared`.
  * Persistence lives in `EntitlementsRepository`, so unit tests mock
  * the Supabase layer and fix the time via the `Clock` provider.
@@ -64,22 +64,12 @@ export class EntitlementsService {
 
   async getEntitlement(user: RequestUser, invitationId: string): Promise<EntitlementResponse> {
     try {
-      const result: unknown = await this.repository.findByInvitationId(user.jwt, invitationId);
-      if (!isRecord(result)) {
-        this.logger.error('invitation_entitlements lookup failed (malformed response)');
-        throw new ServiceUnavailableException('Entitlement service unavailable');
-      }
-      const {data, error}: {data: unknown; error: unknown} = result as {data: unknown; error: unknown};
-      if (error !== null) {
-        if (isRecord(error) && error.code === 'PGRST116') throw new NotFoundException('Entitlement not found');
-        this.logger.error('invitation_entitlements lookup failed (upstream error)');
-        throw new ServiceUnavailableException('Entitlement service unavailable');
-      }
+      const data = await this.repository.findByInvitationId(user.id, invitationId);
       if (data === null) throw new NotFoundException('Entitlement not found');
       return this.toResponse(toRow(data), this.clock.now());
     } catch (err) {
       if (err instanceof NotFoundException || err instanceof ServiceUnavailableException) throw err;
-      this.logger.error('invitation_entitlements lookup failed (unreachable)');
+      this.logger.error('invitation_entitlements lookup failed (upstream error)');
       throw new ServiceUnavailableException('Entitlement service unavailable');
     }
   }
