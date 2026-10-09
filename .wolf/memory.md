@@ -9,6 +9,7 @@
 | 2026-07-19 | Extracted shared InvitationShell, recomposed both sites, compressed africa media 26.6→13.2MB, added pipeline docs | src/shared/InvitationShell.jsx, both site .jsx, public/assets/africa/*, TASKS.md | build passes, 50% media reduction | ~8k |
 | 2026-10-06 23:10 | TASK T3 — built original Mashrabiya template (SVGs, fonts, data, registry, page, CSS, tests) | apps/web/src/templates/*, apps/web/src/engine/styles/templates/*, apps/web/public/assets/demo/mashrabiya/* | All gates passed offline | ~12k |
 | 2026-10-06 23:15 | DELTA T3 — styled RSVP attendance radio pills and start-aligned checkbox row | apps/web/src/engine/styles/templates/mashrabiya.css | All gates passed offline | ~3k |
+| 2026-10-08 14:45 | TASK E — finished landing & pricing polish: mobile height 7428px->5830px, guest-list showcase, plan switcher, green card, trust row, contrast | apps/web/src/components/home/*, apps/web/src/styles/home*.css, apps/web/messages/{ar,en}.json | 5830px height, 0px overflow, all 4 gates green | ~10k |
 
 ## Session: 2026-07-20 13:07
 
@@ -910,3 +911,52 @@
 |------|--------|---------|---------|--------|
 | 11:51 | User: orchestrator-only, agy does all implementation; memory + cerebrum updated | .wolf/cerebrum.md | done | ~1k |
 | 12:06 | Round 4 landed on main 3fc2670 (agy resolved conflicts, CI green after font-flake rerun); STATUS updated | .wolf/STATUS.md | done | ~3k |
+| 18:00 | OWNER DECISION no Supabase -> Postgres on VPS + own auth; recorded in cerebrum + STATUS; agy analysis re-dispatched for migration plan | .wolf | done | ~2k |
+| 18:20 | Edited .claude/worktrees/opencode-L4/platform/infra/docker-compose.prod.yml | — | ~1332 |
+| 18:20 | Edited .claude/worktrees/opencode-L4/platform/infra/web/Dockerfile | — | ~399 |
+| 18:20 | Edited .claude/worktrees/opencode-L4/platform/infra/caddy/Dockerfile | — | ~167 |
+| 18:20 | Edited .claude/worktrees/opencode-L4/platform/infra/caddy/Caddyfile | — | ~1401 |
+| 18:20 | Edited .claude/worktrees/opencode-L4/platform/infra/docker-compose.prod.yml | — | ~168 |
+| 18:20 | Edited .claude/worktrees/opencode-L4/platform/infra/caddy/Caddyfile | — | ~129 |
+| 18:20 | Edited .claude/worktrees/opencode-L4/platform/infra/monitoring/docker-compose.monitoring.yml | — | ~1007 |
+| 18:21 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/backup.sh | — | ~1072 |
+| 18:21 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/restore.sh | — | ~826 |
+| 18:21 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/restore-drill.sh | — | ~559 |
+| 18:21 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/backup.cron.example | — | ~304 |
+| 18:21 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/backup.service.example | — | ~300 |
+| 18:21 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/backup.timer.example | — | ~105 |
+| 18:21 | Edited .claude/worktrees/opencode-L4/platform/infra/server/harden.sh | — | ~2336 |
+| 18:21 | Edited .claude/worktrees/opencode-L4/platform/docs/OPERATIONS.md | — | ~3576 |
+| 18:22 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/backup.sh | — | ~8 |
+| 18:22 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/restore.sh | — | ~8 |
+| 18:22 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/restore-drill.sh | — | ~8 |
+| 18:22 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/backup.sh | — | ~76 |
+| 18:22 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/restore-drill.sh | — | ~30 |
+| 18:22 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/backup.sh | — | ~110 |
+| 18:22 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/restore-drill.sh | — | ~49 |
+| 18:22 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/restore-drill.sh | — | ~77 |
+| 18:22 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/backup.sh | — | ~19 |
+| 18:22 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/restore-drill.sh | — | ~19 |
+| 18:22 | Edited .claude/worktrees/opencode-L4/platform/infra/backup/restore.sh | — | ~19 |
+| 18:25 | Self-hosted plan v1 + Gemini debate; dispatched W0, L4, L6, L7, plan-v2 | .wolf/STATUS.md | in-flight | ~6k |
+| 18:25 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 12 reads | ~24982 tok |
+| 18:25 | Session summary: decided no-Supabase (Postgres on VPS + Better Auth + EasyConfirm); wrote self-hosted plan v1, debated with Gemini (agy, 3 attempts: read-only mode blocked shell/web), found DB guard security bug; dispatched W0/L4/L6/L7 + plan-v2; updated memory (orchestrator-only, 4 implementers) | platform/docs/SELF_HOSTED_PLAN.md, .wolf/* | in-flight | ~40k |
+| 18:26 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 12 reads | ~24982 tok |
+| 2026-10-09 18:26 | Decided no-Supabase (Postgres on VPS + Better Auth in NestJS + EasyConfirm auto-confirm); self-hosted plan v1 debated with Gemini; found + logged DB guard security bug (fix = W0 migration 0015); dispatched W0 (Sonnet), L4 infra (opencode), L6 pick&preview (Sonnet), L7 security (Sonnet), plan v2 (agy) | platform/docs/SELF_HOSTED_PLAN.md, .wolf/STATUS.md, .wolf/buglog.json | in-flight | ~45k |
+| 18:26 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 12 reads | ~24982 tok |
+| 18:27 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 12 reads | ~24982 tok |
+| 18:27 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 12 reads | ~24982 tok |
+| 18:27 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 12 reads | ~24982 tok |
+| 18:28 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |
+| 18:28 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |
+| 18:28 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |
+| 18:28 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |
+| 18:28 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |
+| 18:29 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |
+| 18:29 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |
+| 18:29 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |
+| 18:29 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |
+| 18:29 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |
+| 2026-10-09 18:43 | Landed L4 infra, plan v2, W0 Postgres foundation (CI DB green on pg17), L6 pick&preview; dispatched L1 (Sonnet), L2 auth (agy), L3 payments (Codex); L7 fix pushed | main dd2dcbf..97be562 | in-flight | ~15k |
+| 18:43 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |
+| 18:43 | Session end: 26 writes across 12 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 13 reads | ~25206 tok |

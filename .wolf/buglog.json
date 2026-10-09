@@ -843,6 +843,60 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-10-07T15:50:29.537641"
+    },
+    {
+      "id": "bug-050",
+      "timestamp": "2026-10-09T15:22:21.829Z",
+      "error_message": "Incorrect value in code",
+      "file": ".claude/worktrees/opencode-L4/platform/infra/backup/restore-drill.sh",
+      "root_cause": "Had \"$(ls -1t \"",
+      "fix": "Changed to `ls`",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "sh"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-10-09T15:22:21.829Z"
+    },
+    {
+      "id": "bug-051",
+      "timestamp": "2026-10-09T18:25:58.271318",
+      "error_message": "L4 infra lane (opencode muse-spark) edited platform/infra/backup/{backup.sh,restore.sh,restore-drill.sh} 3+ times while making its own checks pass (likely shellcheck / bash -n findings)",
+      "file": "platform/infra/backup/backup.sh, restore.sh, restore-drill.sh (lane/L4-infra worktree)",
+      "root_cause": "shellcheck findings in the agent's first drafts: a single `# shellcheck disable` directive placed over a multi-command line (not honoured), and parsing `ls` output to pick backup files (breaks on unusual filenames)",
+      "fix": "Agent moved the directive to the specific command and replaced ls-parsing with globs/find. Orchestrator re-verified before merge (e6ce455): bash -n OK on all 4 scripts, shellcheck 0.11 clean, no secrets, UIs bound to 127.0.0.1, only caddy publishes 80/443, CI green.",
+      "tags": [
+        "infra",
+        "backup",
+        "shellcheck",
+        "L4",
+        "opencode"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-10-09T18:25:58.271318"
+    },
+    {
+      "id": "bug-052",
+      "timestamp": "2026-10-09T18:25:58.271318",
+      "error_message": "Security: invitations_guard/profiles_guard (0003_rls.sql) skip all checks when current_user <> session_user, which is TRUE for every request under role-switching connections (Supabase PostgREST authenticator->authenticated; planned app_api->authenticated). DB column guards never protected in production.",
+      "file": "platform/supabase/migrations/0003_rls.sql",
+      "root_cause": "The guard assumed direct client writes have current_user = session_user; only true for psql as the table owner (which is why CI tests passed and earlier test fixtures had to work around it)",
+      "fix": "Lane W0 migration 0015: bypass only when current_user not in ('authenticated','anon'); remove the auth.uid() is null bypass; tests in supabase/tests/guards.sql. Confirmed by Gemini in the debate.",
+      "tags": [
+        "security",
+        "rls",
+        "guards",
+        "session_user",
+        "supabase"
+      ],
+      "related_bugs": [
+        "bug-049"
+      ],
+      "occurrences": 1,
+      "last_seen": "2026-10-09T18:25:58.271318"
     }
   ]
 }
