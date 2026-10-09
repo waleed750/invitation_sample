@@ -49,6 +49,7 @@ export {AuthGuard, RolesGuard};
     PaymentsModule, TemplatesModule, CheckoutModule, OrdersModule, InvitationsModule, PointsModule,
     PublicInvitationsModule, GuestsModule, AdminPaymentsModule, AdminCustomersModule, LifecycleModule
     // lanes: append module imports below
+    , import('./payment-events/payment-events.module').then((m) => ({module: m.PaymentEventsModule}))
   ],
   providers: [
     AppLogger,
