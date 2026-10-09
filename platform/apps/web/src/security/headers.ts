@@ -35,7 +35,7 @@ export interface CspEnv {
  *   run a nonce middleware yet, hence 'unsafe-inline' (dev adds 'unsafe-eval'
  *   for React refresh). Tighten with nonces before enforcing.
  * - style-src: React `style=` attributes and next/font inline rules.
- * - font-src: next/font/google self-hosts the files at build time.
+ * - font-src: next-font-google self-hosts the files at build time.
  * - img/media-src: invitation content (gallery, music, video) comes from
  *   https URLs chosen by the customer, so `https:` is the
  *   narrowest scheme that works; no `*` and no plain http.
