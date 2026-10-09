@@ -1,0 +1,13 @@
+# Pairs with backup.service.example. 02:30 in the SYSTEM timezone — harden.sh
+# sets the server clock to Africa/Cairo, so no per-timer timezone is needed
+# (systemd OnCalendar uses the system local time).
+[Unit]
+Description=Run invitation-platform backup nightly at 02:30 Africa/Cairo
+
+[Timer]
+OnCalendar=*-*-* 02:30:00
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

@@ -1,0 +1,23 @@
+# Systemd alternative to backup.cron.example (preferred: journaled logs + retry).
+# Install (paths are examples — adjust to your checkout):
+#   sudo cp backup.service.example /etc/systemd/system/invitation-backup.service
+#   sudo cp backup.timer.example  /etc/systemd/system/invitation-backup.timer
+#   # edit ExecStart= and Environment=INFRA_ENV_FILE= below first!
+#   sudo systemctl daemon-reload
+#   sudo systemctl enable --now invitation-backup.timer
+#   systemctl list-timers invitation-backup.timer   # verify next run
+#   journalctl -u invitation-backup -e              # read logs
+[Unit]
+Description=Nightly encrypted Postgres backup (invitation platform)
+Wants=docker.service
+After=docker.service
+
+[Service]
+Type=oneshot
+# The user running this must be able to run `docker exec` (root or docker group).
+User=root
+Environment=INFRA_ENV_FILE=/opt/invitation-platform/platform/infra/.env.prod
+ExecStart=/opt/invitation-platform/platform/infra/backup/backup.sh
+# If the box was asleep/off at 02:30, the timer's Persistent=true runs it late
+# rather than skipping; restart the job once if the daemon flakes.
+Restart=no
