@@ -25,6 +25,18 @@ describe('generic HMAC provider', () => {
     const {raw, headers} = signed(JSON.stringify(payload, null, 2));
     expect(adapter.verify(raw, headers)).toEqual({externalId: 'transfer-1', amountMinor: 129937, currency: 'EGP', sender: 'Sender', referenceText: 'INV-ABC123', receivedAt: payload.received_at});
   });
+  it.each([
+    ['1299.37', 129937], ['0.29', 29], ['90071992547409.91', Number.MAX_SAFE_INTEGER]
+  ])('converts numeric JSON token %s without losing precision', (token, expected) => {
+    const body = JSON.stringify(payload).replace('"1299.37"', token);
+    const {raw, headers} = signed(body);
+    expect(adapter.verify(raw, headers).amountMinor).toBe(expected);
+  });
+  it.each(['90071992547409.92', '1299.3700000000000000001'])('rejects numeric token %s before JSON rounding hides invalid precision', (token) => {
+    const body = JSON.stringify(payload).replace('"1299.37"', token);
+    const {raw, headers} = signed(body);
+    expect(() => adapter.verify(raw, headers)).toThrow();
+  });
   it('rejects a changed body', () => {
     const {headers} = signed();
     expect(() => adapter.verify(Buffer.from('{}'), headers)).toThrow();
