@@ -113,11 +113,15 @@ begin
   assert public.admin_assign_payment_event(v_user, v_admin_event, v_admin_order, 'review') ->> 'reason' = 'not_admin';
   assert public.admin_assign_payment_event(v_admin, v_admin_event, v_admin_order, 'review') ->> 'reason' = 'amount_mismatch';
   assert public.admin_assign_payment_event(v_admin, v_admin_event, v_admin_order, '') ->> 'reason' = 'note_required';
-  update public.payment_events set amount_minor = 500::bigint where id = v_admin_event;
+  update public.payment_events set amount_minor = 500::bigint, status = 'ambiguous',
+    match_reason = 'multiple_amount_matches' where id = v_admin_event;
   assert (public.admin_assign_payment_event(v_admin, v_admin_event, v_admin_order, 'Verified transfer') ->> 'ok')::boolean;
   assert exists (select 1 from public.audit_log where target_id = v_admin_order::text and actor_id = v_admin
     and action = 'order.assign_payment_event' and details ->> 'note' = 'Verified transfer');
   assert (select confirmed_by from public.orders where id = v_admin_order) = v_admin;
+  assert exists (select 1 from public.payment_events where id = v_admin_event
+    and status = 'matched' and order_id = v_admin_order and match_reason = 'admin_assignment'),
+    'admin assignment replaces the obsolete queue reason';
   select count(*) into v_audits from public.audit_log;
   assert public.admin_assign_payment_event(v_admin, v_admin_event, v_admin_order, 'Retry') = '{"ok":true,"already":true}'::jsonb;
   assert (select count(*) from public.audit_log) = v_audits;

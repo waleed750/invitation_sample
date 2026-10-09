@@ -117,7 +117,7 @@ begin
     raise exception 'fulfill_paid_order failed: %', v_fulfill::text;
   end if;
   update public.payment_events set status = 'matched', order_id = p_order_id,
-    match_reason = coalesce(match_reason, 'exact_match') where id = p_event_id;
+    match_reason = 'exact_match' where id = p_event_id;
   insert into public.audit_log(actor_id, action, target_type, target_id, details)
   values (null, 'order.auto_confirm', 'order', p_order_id::text,
     jsonb_build_object('provider', v_event.provider, 'event_id', p_event_id,
@@ -182,7 +182,7 @@ begin
     raise exception 'fulfill_paid_order failed: %', v_fulfill::text;
   end if;
   update public.payment_events set status = 'matched', order_id = p_order_id,
-    match_reason = coalesce(match_reason, 'admin_assignment') where id = p_event_id;
+    match_reason = 'admin_assignment' where id = p_event_id;
   insert into public.audit_log(actor_id, action, target_type, target_id, details)
   values (p_admin_id, 'order.assign_payment_event', 'order', p_order_id::text,
     jsonb_build_object('provider', v_event.provider, 'event_id', p_event_id,
