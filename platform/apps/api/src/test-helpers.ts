@@ -8,7 +8,7 @@ import {AppModule} from './app.module';
 import {setupApp} from './setup-app';
 import {AppConfigService} from './config/app-config.service';
 import {validateEnv} from './config/env.schema';
-import {SupabaseService} from './supabase/supabase.service';
+import {AuthRepository} from './auth/auth.repository';
 import {TEST_JWT_SECRET, setTestEnv} from './testing/env';
 
 export {TEST_JWT_SECRET, setTestEnv};
@@ -62,9 +62,12 @@ export type HttpClient = ReturnType<typeof request>;
  * `@nestjs/config` validates eagerly at import time, so per-boot `overrides`
  * would otherwise be ignored: the validated `AppConfigService` is rebuilt
  * here from the current `process.env` and overridden for every boot.
- * Pass `supabaseResult` to replace the real Supabase client with a stub that
- * resolves `{ data, error }` instantly (the real client retries unreachable
+ * Pass `supabaseResult` to stub the role lookup (`AuthRepository`) so the
+ * `RolesGuard` resolves instantly (the real client retries unreachable
  * hosts for seconds — fine in production, too slow for tests).
+ * Non-admin routes never touch it; repository data comes from the real
+ * `DbService` (unroutable `DATABASE_URL` in tests, so upstream failures
+ * surface as 503, which is what the wiring specs assert).
  */
 export async function bootApp(
   overrides: Record<string, string> = {},
@@ -79,7 +82,7 @@ export async function bootApp(
     .overrideProvider(AppConfigService)
     .useValue(freshConfig);
   if (supabaseResult !== undefined) {
-    builder.overrideProvider(SupabaseService).useValue({forUser: () => mockSupabaseClient(supabaseResult)});
+    builder.overrideProvider(AuthRepository).useValue({findRoleByUserId: () => Promise.resolve(supabaseResult)});
   }
   const moduleRef = await builder.compile();
   const app = moduleRef.createNestApplication<NestExpressApplication>({logger: false});
