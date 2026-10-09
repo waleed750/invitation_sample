@@ -33,16 +33,37 @@ export class AppConfigService {
     return this.required('WEB_ORIGINS');
   }
 
+  get databaseUrl(): string {
+    return this.required('DATABASE_URL');
+  }
+
+  get databasePoolMax(): number {
+    return this.required('DATABASE_POOL_MAX');
+  }
+
+  get databaseStatementTimeoutMs(): number {
+    return this.required('DATABASE_STATEMENT_TIMEOUT_MS');
+  }
+
+  /** LEGACY: optional now; throws only when a Supabase code path actually runs without it. */
+  private legacySupabase(key: 'SUPABASE_URL' | 'SUPABASE_ANON_KEY' | 'SUPABASE_SERVICE_ROLE_KEY'): string {
+    const value = this.config.get<string | undefined>(key);
+    if (value === undefined) {
+      throw new Error(`${key} is not configured (Supabase is being removed; this code path still needs it)`);
+    }
+    return value;
+  }
+
   get supabaseUrl(): string {
-    return this.required('SUPABASE_URL');
+    return this.legacySupabase('SUPABASE_URL');
   }
 
   get supabaseAnonKey(): string {
-    return this.required('SUPABASE_ANON_KEY');
+    return this.legacySupabase('SUPABASE_ANON_KEY');
   }
 
   get supabaseServiceRoleKey(): string {
-    return this.required('SUPABASE_SERVICE_ROLE_KEY');
+    return this.legacySupabase('SUPABASE_SERVICE_ROLE_KEY');
   }
 
   get supabaseJwtSecret(): string | undefined {

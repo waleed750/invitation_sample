@@ -33,6 +33,7 @@ export default defineConfig(
     ignores: [
       'src/**/*.repository.ts',
       'src/supabase/**',
+      'src/database/**',
       'src/**/*.spec.ts',
       'src/test-helpers.ts',
       'src/jest.setup.ts',
@@ -46,12 +47,32 @@ export default defineConfig(
             {
               group: ['**/supabase/supabase.service'],
               message: 'Only *.repository.ts files may use SupabaseService. Add a repository method instead.'
+            },
+            {
+              group: ['**/database/index', '**/database/db.service'],
+              message: 'Only *.repository.ts files (and src/database/**) may use DbService / the database module.'
+            },
+            {
+              regex: '(^|/)database$',
+              message: 'Only *.repository.ts files (and src/database/**) may use DbService / the database module.'
             }
           ],
           paths: [
-            {name: '@supabase/supabase-js', message: 'Only src/supabase/** and *.repository.ts may import the Supabase SDK.'}
+            {name: '@supabase/supabase-js', message: 'Only src/supabase/** and *.repository.ts may import the Supabase SDK.'},
+            {name: 'postgres', message: 'Only src/database/** and *.repository.ts may import postgres.js.'}
           ]
         }
+      ]
+    }
+  },
+  {
+    // Raw SQL strings bypass bind parameters: banned everywhere, repositories included.
+    files: ['src/**/*.ts'],
+    ignores: ['src/**/*.spec.ts'],
+    rules: {
+      'no-restricted-properties': [
+        'error',
+        {property: 'unsafe', message: 'sql.unsafe() is banned: use tagged templates with bind parameters.'}
       ]
     }
   },

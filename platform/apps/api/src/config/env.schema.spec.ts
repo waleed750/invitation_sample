@@ -8,6 +8,7 @@ function validEnv(): Record<string, unknown> {
     PORT: '3001',
     NODE_ENV: 'test',
     WEB_ORIGINS: 'http://localhost:3000,https://example.com',
+    DATABASE_URL: 'postgresql://app_api:pw@127.0.0.1:5432/postgres',
     SUPABASE_URL: 'https://test.supabase.co',
     SUPABASE_ANON_KEY: 'anon',
     SUPABASE_SERVICE_ROLE_KEY: 'service',
@@ -56,11 +57,29 @@ describe('validateEnv', () => {
     expect(message).toContain('PORT');
     expect(message).toContain('WEB_ORIGINS');
     expect(message).toContain('SUPABASE_URL');
-    expect(message).toContain('SUPABASE_ANON_KEY');
-    expect(message).toContain('SUPABASE_SERVICE_ROLE_KEY');
+    expect(message).toContain('DATABASE_URL');
     // … including invalid values, not just missing ones.
     expect(message).toContain('THROTTLE_TTL_MS');
     expect(message).toContain('THROTTLE_LIMIT');
+  });
+
+  it('boots without any SUPABASE_* variable and applies database defaults', () => {
+    const rest = validEnv();
+    delete rest.SUPABASE_URL;
+    delete rest.SUPABASE_ANON_KEY;
+    delete rest.SUPABASE_SERVICE_ROLE_KEY;
+    delete rest.SUPABASE_JWT_SECRET;
+    const env = validateEnv(rest);
+    expect(env.SUPABASE_URL).toBeUndefined();
+    expect(env.DATABASE_POOL_MAX).toBe(10);
+    expect(env.DATABASE_STATEMENT_TIMEOUT_MS).toBe(5000);
+  });
+
+  it('requires a postgres DATABASE_URL', () => {
+    const rest = validEnv();
+    delete rest.DATABASE_URL;
+    expect(() => validateEnv(rest)).toThrow(/DATABASE_URL/);
+    expect(() => validateEnv({...rest, DATABASE_URL: 'http://x'})).toThrow(/DATABASE_URL/);
   });
 
   it('rejects a non-URL origin entry', () => {
