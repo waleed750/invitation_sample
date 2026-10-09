@@ -42,13 +42,13 @@ describe('next.config security headers', () => {
     }
   );
 
-  it.each(['/ar/preview/riwaq', '/en/preview/x/y', '/ar/demo/video-open'])('allows same-origin framing on %s', async (path) => {
+  it.each(['/ar/preview/riwaq', '/en/preview/x/y', '/ar/demo/video-open', '/ar/pick-preview/diwan', '/en/pick-preview/x'])('allows same-origin framing on %s', async (path) => {
     const h = await headersFor(path);
     expect(h['X-Frame-Options']).toBe('SAMEORIGIN');
     expect(h['Content-Security-Policy-Report-Only']).toContain("frame-ancestors 'self'");
   });
 
-  it.each(['/ar/i/nour-omar', '/en/i/a/b', '/ar/app', '/en/app/points', '/en/admin/x', '/ar/checkout/pay/1', '/ar/sign-in'])(
+  it.each(['/ar/i/nour-omar', '/en/i/a/b', '/ar/app', '/en/app/points', '/en/admin/x', '/ar/checkout/pay/1', '/ar/sign-in', '/ar/pick-preview/diwan', '/en/pick-preview/x'])(
     'marks %s noindex',
     async (path) => {
       expect((await headersFor(path))['X-Robots-Tag']).toBe('noindex, nofollow');

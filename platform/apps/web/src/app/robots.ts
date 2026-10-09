@@ -12,7 +12,7 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: '*',
         allow: '/',
-        disallow: ['/*/i/', '/*/app', '/*/admin', '/*/checkout', '/*/sign-in', '/api/']
+        disallow: ['/*/i/', '/*/app', '/*/admin', '/*/checkout', '/*/pick-preview', '/*/sign-in', '/api/']
       }
     ],
     host: SITE_URL
