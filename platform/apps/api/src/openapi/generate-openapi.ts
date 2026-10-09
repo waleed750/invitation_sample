@@ -30,6 +30,13 @@ Object.assign(process.env, {
   SWAGGER_ENABLED: 'true',
   LIFECYCLE_CRON_ENABLED: 'false',
   SENTRY_DSN: ''
+  // L3 payment events: disabled by default in test/OpenAPI environments.
+  , PAYMENT_EVENTS_SECRET: '',
+  EASYCONFIRM_API_KEY: '',
+  EASYCONFIRM_SIGNATURE_HEADER: 'x-signature',
+  EASYCONFIRM_TIMESTAMP_HEADER: 'x-timestamp'
+  // End L3 payment events.
+
 });
 
 /** Recursively sort object keys so the output is diff-stable. Arrays keep their order. */

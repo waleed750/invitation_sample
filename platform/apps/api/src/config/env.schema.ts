@@ -118,6 +118,15 @@ const envSchema = z.object({
   // Kill-switch for the daily lifecycle cron (B4). Off in tests via NODE_ENV,
   // but this flag also lets ops pause the job without a redeploy.
   LIFECYCLE_CRON_ENABLED: z.enum(['true', 'false']).default('true').transform((value) => value === 'true')
+  // L3 payment events: optional secrets disable inbound adapters when unset.
+  , PAYMENT_EVENTS_SECRET: z.string().optional()
+    .transform((v) => v === undefined || v.trim() === '' ? undefined : v)
+    .pipe(z.string().min(32).optional()),
+  EASYCONFIRM_API_KEY: z.string().optional()
+    .transform((v) => v === undefined || v.trim() === '' ? undefined : v),
+  EASYCONFIRM_SIGNATURE_HEADER: z.string().regex(/^[a-zA-Z0-9-]+$/).default('x-signature'),
+  EASYCONFIRM_TIMESTAMP_HEADER: z.string().regex(/^[a-zA-Z0-9-]+$/).default('x-timestamp')
+  // End L3 payment events.
 }).superRefine((env, context) => {
   if (env.WEB_REVALIDATE_URL !== undefined && (env.REVALIDATE_SECRET === undefined || env.REVALIDATE_SECRET.length < 32)) {
     context.addIssue({

@@ -26,6 +26,13 @@ export const BASE_ENV: Record<string, string> = {
   REVALIDATE_SECRET: '',
   SWAGGER_ENABLED: 'false',
   LIFECYCLE_CRON_ENABLED: 'true'
+  // L3 payment events: disabled by default in test/OpenAPI environments.
+  , PAYMENT_EVENTS_SECRET: '',
+  EASYCONFIRM_API_KEY: '',
+  EASYCONFIRM_SIGNATURE_HEADER: 'x-signature',
+  EASYCONFIRM_TIMESTAMP_HEADER: 'x-timestamp'
+  // End L3 payment events.
+
 };
 
 /** Deterministic env for specs. `jest.setup.ts` calls this before any import. */

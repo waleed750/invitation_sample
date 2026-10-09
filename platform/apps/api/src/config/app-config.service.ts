@@ -123,4 +123,10 @@ export class AppConfigService {
   get sentryEnvironment(): string {
     return this.required('SENTRY_ENVIRONMENT');
   }
+  // L3 payment events: optional config must not use required().
+  get paymentEventsSecret(): string | undefined { return this.config.get<string>('PAYMENT_EVENTS_SECRET'); }
+  get easyconfirmApiKey(): string | undefined { return this.config.get<string>('EASYCONFIRM_API_KEY'); }
+  get easyconfirmSignatureHeader(): string { return this.required('EASYCONFIRM_SIGNATURE_HEADER'); }
+  get easyconfirmTimestampHeader(): string { return this.required('EASYCONFIRM_TIMESTAMP_HEADER'); }
+  // End L3 payment events.
 }
