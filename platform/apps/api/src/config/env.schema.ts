@@ -144,7 +144,7 @@ const envSchema = z.object({
   SWAGGER_ENABLED: z.enum(['true', 'false']).default('false').transform((value) => value === 'true'),
   // Kill-switch for the daily lifecycle cron (B4). Off in tests via NODE_ENV,
   // but this flag also lets ops pause the job without a redeploy.
-  LIFECYCLE_CRON_ENABLED: z.enum(['true', 'false']).default('true').transform((value) => value === 'true'),
+LIFECYCLE_CRON_ENABLED: z.enum(['true', 'false']).default('true').transform((value) => value === 'true'),
   // --- L7 security hardening -------------------------------------------------
   // Proxy trust for the real client IP: empty/false | hop count | cloudflare | loopback,10.0.0.0/8,...
   TRUST_PROXY: z
@@ -158,7 +158,16 @@ const envSchema = z.object({
       }
     }),
   // JSON / urlencoded request body cap in KB.
-  BODY_LIMIT_KB: z.coerce.number().int().min(1).max(10_240).default(100)
+  BODY_LIMIT_KB: z.coerce.number().int().min(1).max(10_240).default(100),
+  // L3 payment events: optional secrets disable inbound adapters when unset.
+  PAYMENT_EVENTS_SECRET: z.string().optional()
+    .transform((v) => v === undefined || v.trim() === '' ? undefined : v)
+    .pipe(z.string().min(32).optional()),
+  EASYCONFIRM_API_KEY: z.string().optional()
+    .transform((v) => v === undefined || v.trim() === '' ? undefined : v),
+  EASYCONFIRM_SIGNATURE_HEADER: z.string().regex(/^[a-zA-Z0-9-]+$/).default('x-signature'),
+  EASYCONFIRM_TIMESTAMP_HEADER: z.string().regex(/^[a-zA-Z0-9-]+$/).default('x-timestamp')
+  // End L3 payment events.
 }).superRefine((env, context) => {
   if (env.WEB_REVALIDATE_URL !== undefined && (env.REVALIDATE_SECRET === undefined || env.REVALIDATE_SECRET.length < 32)) {
     context.addIssue({

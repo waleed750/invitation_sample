@@ -24,7 +24,7 @@ Object.assign(process.env, {
   REVALIDATE_SECRET: '',
   SWAGGER_ENABLED: 'true',
   LIFECYCLE_CRON_ENABLED: 'false',
-  SENTRY_DSN: '',
+SENTRY_DSN: '',
   BODY_LIMIT_KB: '100',
   BETTER_AUTH_SECRET: 'openapi-better-auth-secret-32-chars-min',
   BETTER_AUTH_URL: 'http://localhost:3001',
@@ -37,7 +37,11 @@ Object.assign(process.env, {
   SMTP_PASS: 'test',
   SMTP_FROM: 'test@example.com',
   GOOGLE_CLIENT_ID: '',
-  GOOGLE_CLIENT_SECRET: ''
+  GOOGLE_CLIENT_SECRET: '',
+  PAYMENT_EVENTS_SECRET: '',
+  EASYCONFIRM_API_KEY: '',
+  EASYCONFIRM_SIGNATURE_HEADER: 'x-signature',
+  EASYCONFIRM_TIMESTAMP_HEADER: 'x-timestamp'
 });
 
 /** Recursively sort object keys so the output is diff-stable. Arrays keep their order. */
