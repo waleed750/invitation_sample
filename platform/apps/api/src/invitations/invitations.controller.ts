@@ -36,6 +36,7 @@ export class InvitationsController {
     return this.editing.updateData(user, params.id, body, ifMatch);
   }
 
+  @Throttle({default: {limit: 20, ttl: 60_000}})
   @Patch(':id/slug')
   updateSlug(
     @Param() params: InvitationIdParams,
@@ -45,18 +46,21 @@ export class InvitationsController {
     return this.editing.updateSlug(user, params.id, body.slug);
   }
 
+  @Throttle({default: {limit: 20, ttl: 60_000}})
   @Post(':id/publish')
   @HttpCode(200)
   publish(@Param() params: InvitationIdParams, @CurrentUser() user: RequestUser): Promise<PublishInvitationResult> {
     return this.editing.publish(user, params.id);
   }
 
+  @Throttle({default: {limit: 20, ttl: 60_000}})
   @Post(':id/undo-publish')
   @HttpCode(200)
   undoPublish(@Param() params: InvitationIdParams, @CurrentUser() user: RequestUser): Promise<UndoPublishResult> {
     return this.editing.undoPublish(user, params.id);
   }
 
+  @Throttle({default: {limit: 20, ttl: 60_000}})
   @Post(':id/switch-template')
   @HttpCode(200)
   switchTemplate(

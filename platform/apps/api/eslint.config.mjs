@@ -77,6 +77,31 @@ export default defineConfig(
     }
   },
   {
+    // Application security guards (L7).
+    files: ['src/**/*.ts'],
+    rules: {
+      'no-eval': 'error',
+      'no-new-func': 'error',
+      'no-implied-eval': 'error',
+      // Never build SQL by concatenation / interpolation; use bound parameters.
+      'no-restricted-syntax': [
+        'error',
+        {
+          selector: "VariableDeclarator[id.name=/^(sql|query)$/i] > TemplateLiteral[expressions.length>0]",
+          message: 'Do not interpolate values into SQL/query strings; use bound parameters.'
+        },
+        {
+          selector: "VariableDeclarator[id.name=/^(sql|query)$/i] > BinaryExpression[operator='+']",
+          message: 'Do not concatenate values into SQL/query strings; use bound parameters.'
+        },
+        {
+          selector: "AssignmentExpression[left.name=/^(sql|query)$/i][operator='+=']",
+          message: 'Do not append values to SQL/query strings; use bound parameters.'
+        }
+      ]
+    }
+  },
+  {
     files: ['**/*.spec.ts'],
     rules: {
       '@typescript-eslint/no-non-null-assertion': 'off',

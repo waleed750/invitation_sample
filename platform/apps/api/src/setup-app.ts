@@ -4,6 +4,7 @@ import type {Request, Response} from 'express';
 import {DocumentBuilder, SwaggerModule, type OpenAPIObject} from '@nestjs/swagger';
 import {ZodValidationPipe} from 'nestjs-zod';
 import {version} from '../package.json';
+import {applySecurity} from './security/apply-security';
 import {AppConfigService} from './config/app-config.service';
 
 /** Routes that stay outside the `/v1` prefix (OpenAPI only). */
@@ -21,14 +22,17 @@ export const GLOBAL_PREFIX_EXCLUDES = [
  */
 export function setupApp(app: INestApplication): void {
   const config = app.get(AppConfigService);
+  applySecurity(app as NestExpressApplication, config);
+  const limit = `${String(config.bodyLimitKb)}kb`;
   // Preserve the exact bytes used for webhook HMAC verification while still
   // parsing JSON normally for every controller.
   (app as NestExpressApplication).useBodyParser('json', {
-    limit: '100kb',
+    limit,
     verify: (request: Request & {rawBody?: Buffer}, _response: Response, buffer: Buffer) => {
       request.rawBody = Buffer.from(buffer);
     }
   });
+  (app as NestExpressApplication).useBodyParser('urlencoded', {extended: false, limit});
   app.setGlobalPrefix('v1', {exclude: GLOBAL_PREFIX_EXCLUDES});
   app.useGlobalPipes(new ZodValidationPipe());
   if (config.swaggerEnabled) {

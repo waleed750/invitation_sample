@@ -14,6 +14,7 @@ function codeForStatus(status: number): string {
     [HttpStatus.FORBIDDEN]: 'forbidden',
     [HttpStatus.NOT_FOUND]: 'not_found',
     [HttpStatus.CONFLICT]: 'conflict',
+    [HttpStatus.PAYLOAD_TOO_LARGE]: 'payload_too_large',
     [HttpStatus.UNPROCESSABLE_ENTITY]: 'unprocessable_entity',
     [HttpStatus.TOO_MANY_REQUESTS]: 'too_many_requests',
     [HttpStatus.INTERNAL_SERVER_ERROR]: 'internal_error',
@@ -68,6 +69,12 @@ export class HttpExceptionFilter implements ExceptionFilter {
             : exception.message;
         message = status >= 500 && this.config.isProduction ? 'Internal server error' : extracted;
       }
+    } else if (isRecord(exception) && typeof exception.type === 'string' && exception.type.startsWith('entity.')) {
+      // body-parser failures (oversized / malformed JSON) are client errors, not 500s.
+      const raw: unknown = exception.status;
+      status = typeof raw === 'number' && raw >= 400 && raw < 500 ? raw : HttpStatus.BAD_REQUEST;
+      code = codeForStatus(status);
+      message = status === 413 ? 'Request body too large' : 'Malformed request body';
     }
 
     // Server-side only: full detail (including stack) stays in our logs.

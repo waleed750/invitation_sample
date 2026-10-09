@@ -205,7 +205,7 @@ export default async function InvitationPage({
           <div
             className="qr-card-frame"
             aria-label={t('share.qrLabel')}
-            // This SVG is generated server-side by QRCode from our validated share URL, not user-supplied markup.
+            // eslint-disable-next-line react/no-danger -- SVG generated server-side by QRCode from our validated share URL, not user-supplied markup.
             dangerouslySetInnerHTML={{__html: svg}}
           />
         </div>

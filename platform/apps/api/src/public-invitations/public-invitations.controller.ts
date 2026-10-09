@@ -12,6 +12,7 @@ export class PublicInvitationsController {
   constructor(private readonly invitations: PublicInvitationsService) {}
 
   @Header('Cache-Control', 'public, max-age=60, stale-while-revalidate=600')
+  @Throttle({default: {limit: 60, ttl: 60_000}})
   @Get(':slug')
   get(@Param() params: PublicSlugParams): Promise<PublicInvitation> {
     return this.invitations.getBySlug(params.slug);

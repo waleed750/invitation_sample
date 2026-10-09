@@ -74,6 +74,14 @@ export class AppConfigService {
     return this.required('SUPABASE_TIMEOUT_MS');
   }
 
+  get trustProxy(): string {
+    return this.required('TRUST_PROXY');
+  }
+
+  get bodyLimitKb(): number {
+    return this.required('BODY_LIMIT_KB');
+  }
+
   get throttleTtlMs(): number {
     return this.required('THROTTLE_TTL_MS');
   }
