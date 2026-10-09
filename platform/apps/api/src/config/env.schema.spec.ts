@@ -9,11 +9,7 @@ function validEnv(): Record<string, unknown> {
     NODE_ENV: 'test',
     WEB_ORIGINS: 'http://localhost:3000,https://example.com',
     DATABASE_URL: 'postgresql://app_api:pw@127.0.0.1:5432/postgres',
-    SUPABASE_URL: 'https://test.supabase.co',
-    SUPABASE_ANON_KEY: 'anon',
-    SUPABASE_SERVICE_ROLE_KEY: 'service',
-    SUPABASE_JWT_SECRET: TEST_JWT_SECRET,
-    THROTTLE_TTL_MS: '60000',
+        THROTTLE_TTL_MS: '60000',
     THROTTLE_LIMIT: '100',
     PAYMENTS_PROVIDER: 'mock',
     PAYMENTS_MOCK_SECRET: 'test-mock-secret-at-least-32-characters',
@@ -36,24 +32,12 @@ describe('validateEnv', () => {
     expect(env.WEB_ORIGINS).toEqual(['http://localhost:3000', 'https://example.com']);
     expect(env.THROTTLE_TTL_MS).toBe(60000);
     expect(env.SWAGGER_ENABLED).toBe(false);
-    expect(env.SUPABASE_JWT_SECRET).toBe(TEST_JWT_SECRET);
-  });
-
-  it('defaults SUPABASE_TIMEOUT_MS to 5000 and rejects values under 100', () => {
-    expect(validateEnv(validEnv()).SUPABASE_TIMEOUT_MS).toBe(5000);
-    expect(validateEnv({...validEnv(), SUPABASE_TIMEOUT_MS: '100'}).SUPABASE_TIMEOUT_MS).toBe(100);
-    expect(() => validateEnv({...validEnv(), SUPABASE_TIMEOUT_MS: '50'})).toThrow(/SUPABASE_TIMEOUT_MS/);
-  });
-
-  it('treats a blank SUPABASE_JWT_SECRET as unset (JWKS mode)', () => {
-    const env = validateEnv({...validEnv(), SUPABASE_JWT_SECRET: '   '});
-    expect(env.SUPABASE_JWT_SECRET).toBeUndefined();
   });
 
   it('fails fast with a readable list of every problem', () => {
     let error: unknown;
     try {
-      validateEnv({PORT: 'not-a-port', WEB_ORIGINS: '', SUPABASE_URL: 'nope', THROTTLE_TTL_MS: '0', THROTTLE_LIMIT: '-5'});
+      validateEnv({PORT: 'not-a-port', WEB_ORIGINS: '', THROTTLE_TTL_MS: '0', THROTTLE_LIMIT: '-5'});
     } catch (err) {
       error = err;
     }
@@ -63,7 +47,6 @@ describe('validateEnv', () => {
     // Every offender is named on its own line …
     expect(message).toContain('PORT');
     expect(message).toContain('WEB_ORIGINS');
-    expect(message).toContain('SUPABASE_URL');
     expect(message).toContain('DATABASE_URL');
     // … including invalid values, not just missing ones.
     expect(message).toContain('THROTTLE_TTL_MS');
