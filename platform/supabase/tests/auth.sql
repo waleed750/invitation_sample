@@ -1,23 +1,31 @@
 begin;
 
-select plan(5);
+select set_config('request.jwt.claims', '', true);
 
--- 1. Check better_auth schema exists
-select has_schema('better_auth', 'schema better_auth exists');
+do $$
+begin
+  -- 1. Check better_auth schema exists
+  assert exists (select 1 from information_schema.schemata where schema_name = 'better_auth'),
+    'schema better_auth must exist';
 
--- 2. Check better_auth."user" exists
-select has_table('better_auth', 'user', 'table better_auth.user exists');
+  -- 2. Check better_auth."user" exists
+  assert exists (select 1 from information_schema.tables where table_schema = 'better_auth' and table_name = 'user'),
+    'table better_auth.user must exist';
 
--- 3. Check better_auth."session" exists
-select has_table('better_auth', 'session', 'table better_auth.session exists');
+  -- 3. Check better_auth."session" exists
+  assert exists (select 1 from information_schema.tables where table_schema = 'better_auth' and table_name = 'session'),
+    'table better_auth.session must exist';
+end;
+$$;
 
 -- 4. Check app_api grant on better_auth
 -- We can test if app_api can select from better_auth.user
 set local role app_api;
-select lives_ok(
-    $$ select 1 from better_auth."user" limit 1 $$,
-    'app_api can select from better_auth.user'
-);
+do $$
+begin
+  perform 1 from better_auth."user" limit 1;
+end;
+$$;
 reset role;
 
 -- 5. Test inserting into auth.users (service context) triggers profile creation
@@ -32,12 +40,16 @@ values (
   '{"provider": "email"}'::jsonb
 );
 
-select results_eq(
-  $$ select email, full_name, locale from public.profiles where id = '00000000-0000-0000-0000-000000001234' $$,
-  $$ values ('test@example.com'::text, 'Test User'::text, 'ar'::text) $$,
-  'trigger creates profile with right provider/locale'
-);
+do $$
+declare
+  p record;
+begin
+  select email, full_name, locale into p from public.profiles where id = '00000000-0000-0000-0000-000000001234';
+  assert p.email = 'test@example.com', 'email must match test@example.com';
+  assert p.full_name = 'Test User', 'full_name must match Test User';
+  assert p.locale = 'ar', 'locale must match ar';
+end;
+$$;
 reset role;
 
-select * from finish();
 rollback;
