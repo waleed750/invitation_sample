@@ -1,0 +1,436 @@
+/* New-invitation flow (details, template grid, personalised preview, plans).
+   Logical properties only; reuses dashboard tokens from dashboard.css. */
+
+.pick-page {
+  --pick-nav-h: 4.6rem;
+  display: grid;
+  gap: 1.25rem;
+  min-inline-size: 0;
+  /* room for the sticky bar plus the mobile bottom nav */
+  padding-block-end: calc(var(--pick-nav-h) + 5.5rem);
+}
+
+.pick-eyebrow {
+  margin: 0;
+  color: var(--color-secondary-strong);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.pick-section-title {
+  margin: 0;
+  font-family: var(--font-head);
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.pick-lead {
+  margin: 0.25rem 0 0;
+  color: var(--color-muted);
+  line-height: 1.7;
+}
+
+.pick-note {
+  margin: 0;
+  color: var(--color-muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+/* Steps */
+.pick-steps {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: pick-step;
+}
+
+.pick-steps li {
+  counter-increment: pick-step;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding-block: 0.3rem;
+  padding-inline: 0.7rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-muted);
+  font-size: 0.82rem;
+}
+
+.pick-steps li::before {
+  content: counter(pick-step);
+  font-weight: 700;
+}
+
+.pick-steps li.is-current {
+  border-color: var(--color-primary);
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+.pick-steps li.is-done {
+  background-color: var(--color-success-tint);
+  border-color: var(--color-success-tint);
+  color: var(--color-success);
+}
+
+/* Details form */
+.pick-details {
+  display: grid;
+  gap: 1rem;
+  max-inline-size: 36rem;
+  padding: 1.25rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.pick-details__fields {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.pick-field {
+  display: grid;
+  gap: 0.35rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--color-on-surface);
+}
+
+.pick-field input {
+  min-block-size: 44px;
+  padding-inline: 0.75rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-background);
+  color: var(--color-on-surface);
+  font: inherit;
+}
+
+.pick-field input:focus-visible {
+  outline: 2px solid var(--color-secondary);
+  outline-offset: 2px;
+}
+
+.pick-field__error {
+  margin: 0;
+  color: var(--color-error);
+  font-size: 0.82rem;
+  font-weight: 500;
+}
+
+/* Template grid */
+.pick-summary {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  margin-block: 0.75rem;
+  padding: 0.7rem 0.9rem;
+  background-color: var(--color-surface-alt);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+}
+
+.pick-filter {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-end: 1rem;
+}
+
+.pick-chip {
+  display: inline-flex;
+  align-items: center;
+  min-block-size: 40px;
+  padding-inline: 0.9rem;
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-sm);
+  background-color: var(--color-surface);
+  color: var(--color-primary);
+  font-size: 0.85rem;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pick-chip.is-active {
+  background-color: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+
+.pick-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16rem), 1fr));
+  gap: 1rem;
+}
+
+.pick-card {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  overflow: hidden;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  color: var(--color-on-surface);
+  text-decoration: none;
+  box-shadow: var(--shadow-1);
+  transition: box-shadow 150ms ease-out, border-color 150ms ease-out;
+}
+
+.pick-card:hover,
+.pick-card:focus-visible {
+  border-color: var(--color-secondary);
+  box-shadow: var(--shadow-2);
+}
+
+.pick-card__swatch {
+  display: grid;
+  place-items: center;
+  min-block-size: 8rem;
+  padding: 1rem;
+  text-align: center;
+}
+
+.pick-card__names {
+  font-family: var(--font-names);
+  font-size: 1.5rem;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+
+.pick-card__body {
+  display: grid;
+  align-content: start;
+  gap: 0.4rem;
+  padding: 0.9rem;
+}
+
+.pick-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.pick-card__name {
+  font-family: var(--font-head);
+  font-size: 1.15rem;
+  color: var(--color-primary);
+}
+
+.pick-card__badge {
+  padding-block: 0.1rem;
+  padding-inline: 0.5rem;
+  background-color: var(--color-secondary-soft);
+  color: var(--color-secondary-strong);
+  border-radius: var(--radius-sm);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.pick-card__tagline {
+  color: var(--color-muted);
+  font-size: 0.85rem;
+  line-height: 1.6;
+}
+
+.pick-card__meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--color-primary);
+}
+
+.pick-card__cta {
+  margin-block-start: 0.25rem;
+  color: var(--color-secondary-strong);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Review step: preview first, plans below (side by side on desktop) */
+.pick-review {
+  display: grid;
+  gap: 1.5rem;
+  min-inline-size: 0;
+}
+
+.pick-stage {
+  display: grid;
+  gap: 0.75rem;
+  justify-items: center;
+}
+
+.pick-frame {
+  inline-size: min(100%, 24rem);
+  block-size: min(70dvh, 40rem);
+  overflow: hidden;
+  background-color: var(--color-surface-sunken);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-2);
+}
+
+.pick-frame__iframe {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  border: 0;
+}
+
+.pick-stage__links {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem 1.25rem;
+}
+
+/* Plans */
+.pick-plans {
+  display: grid;
+  gap: 0.9rem;
+  min-inline-size: 0;
+}
+
+.pick-plans__grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.pick-plan {
+  display: grid;
+  gap: 0.75rem;
+  padding: 1rem;
+  background-color: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+}
+
+.pick-plan.is-selected {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px var(--color-primary);
+}
+
+.pick-plan__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.pick-plan__head h3 {
+  margin: 0;
+  font-family: var(--font-head);
+  font-size: 1.2rem;
+  color: var(--color-primary);
+}
+
+.pick-plan__price {
+  margin: 0;
+  font-weight: 700;
+}
+
+.pick-plan__rows {
+  display: grid;
+  gap: 0.35rem;
+  margin: 0;
+}
+
+.pick-plan__row {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block-end: 0.35rem;
+  border-block-end: 1px dashed var(--color-border);
+  font-size: 0.85rem;
+}
+
+.pick-plan__row dt {
+  color: var(--color-muted);
+}
+
+.pick-plan__row dd {
+  margin: 0;
+  font-weight: 600;
+  text-align: end;
+}
+
+.pick-plan__state {
+  color: var(--color-success);
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+/* Sticky bottom bar, sits above the dashboard mobile bottom nav */
+.pick-bar {
+  position: fixed;
+  z-index: 40;
+  inset-inline: 0;
+  inset-block-end: var(--pick-nav-h, 4.6rem);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  padding-block: 0.6rem;
+  padding-inline: 1rem;
+  background-color: var(--color-surface);
+  border-block-start: 1px solid var(--color-border);
+  box-shadow: 0 -4px 16px rgb(7 39 30 / 8%);
+}
+
+.pick-bar__info {
+  display: grid;
+  min-inline-size: 0;
+}
+
+.pick-bar__plan {
+  color: var(--color-muted);
+  font-size: 0.78rem;
+}
+
+.pick-bar__price {
+  color: var(--color-primary);
+  font-size: 1.05rem;
+}
+
+@media (min-width: 48rem) {
+  .pick-plans__grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 64rem) {
+  .pick-page {
+    padding-block-end: 6rem;
+  }
+
+  .pick-bar {
+    inset-block-end: 0;
+  }
+
+  .pick-review {
+    grid-template-columns: minmax(0, 24rem) minmax(0, 1fr);
+    align-items: start;
+  }
+
+  .pick-stage {
+    position: sticky;
+    inset-block-start: 1rem;
+  }
+
+  .pick-plans__grid {
+    grid-template-columns: 1fr;
+  }
+}
