@@ -1,0 +1,18 @@
+# Nightly backup via cron, 02:30 Africa/Cairo. Install with `crontab -e` as root
+# (or the user that owns BACKUP_DIR and can run `docker exec`):
+#
+#   CRON_TZ=Africa/Cairo
+#   30 2 * * * /opt/invitation-platform/platform/infra/backup/backup.sh >> /var/log/invitation-backup.log 2>&1
+#
+# Notes:
+# - CRON_TZ is supported by Vixie/ISC cron (default on Ubuntu 24.04). Verify
+#   with `man 5 crontab` if unsure; otherwise set the system timezone instead:
+#   `timedatectl set-timezone Africa/Cairo` (harden.sh already does this).
+# - Use the ABSOLUTE path to backup.sh wherever you checked out the repo.
+# - backup.sh auto-sources ../.env.prod relative to itself; override with
+#   INFRA_ENV_FILE=/path/to/.env.prod in the crontab line if needed:
+#   30 2 * * * INFRA_ENV_FILE=/etc/invitation-platform.env /opt/.../backup.sh >> /var/log/invitation-backup.log 2>&1
+# - Prefer the systemd timer (backup.timer.example) on this box: it logs to
+#   the journal (`journalctl -u invitation-backup`) and retries on failure.
+CRON_TZ=Africa/Cairo
+30 2 * * * /opt/invitation-platform/platform/infra/backup/backup.sh >> /var/log/invitation-backup.log 2>&1

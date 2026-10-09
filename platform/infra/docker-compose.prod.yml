@@ -1,0 +1,140 @@
+# Production reference stack for running the platform WITHOUT Coolify.
+#
+# Coolify users: do NOT use this file — follow platform/docs/OPERATIONS.md
+# instead (Coolify provisions Postgres + the app containers itself).
+#
+# Usage (from the repo root):
+#   cp platform/infra/.env.prod.example platform/infra/.env.prod
+#   $EDITOR platform/infra/.env.prod   # fill in real secrets, never commit
+#   docker compose -f platform/infra/docker-compose.prod.yml --env-file platform/infra/.env.prod up -d --build
+#
+# Notes:
+# - Build context for api/web is `platform/` (the npm-workspaces root),
+#   because the builds need packages/shared and the root lockfile.
+# - Only `caddy` publishes ports (80/443). Postgres is on an internal-only
+#   network and has NO published port. web/api have no published ports either;
+#   they are reachable only through caddy on the `frontend` network.
+
+name: invitation-platform-prod
+
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    env_file:
+      - .env.prod
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?set in .env.prod}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set in .env.prod}
+      POSTGRES_DB: ${POSTGRES_DB:?set in .env.prod}
+      # Memory tuning for ONE shared 4 vCPU / 8 GB box that also runs
+      # Node apps + Caddy + monitoring (~600 MB, see monitoring compose).
+      # Budget: OS ~0.5 GB + api ~1 GB + web ~0.5 GB + Caddy ~0.1 GB +
+      # monitoring ~0.6 GB leaves ~5 GB; Postgres gets ~1 GB shared + cache hints.
+      # - shared_buffers=1GB: the classic rule is 25% of RAM (2 GB here), but
+      #   that rule assumes a DEDICATED db server. On this shared box 1 GB
+      #   avoids starving the Node processes while still caching hot tables.
+      # - max_connections=100: Postgres default. One API instance with a small
+      #   pool needs far fewer; each spare connection costs ~2-5 MB + work_mem
+      #   when active. Raise only if you run several API replicas.
+      # - effective_cache_size=4GB: planner hint only (costs no RAM). Tells the
+      #   planner the OS page cache is large, so index scans are preferred.
+      # - work_mem=4MB: per-sort/hash workspace. 100 conns x 4 MB = 400 MB worst
+      #   case, acceptable. Raise per-query instead of globally if a report is slow.
+      # - maintenance_work_mem=256MB: speeds VACUUM/CREATE INDEX; transient use.
+    command: >
+      postgres
+      -c shared_buffers=1GB
+      -c max_connections=100
+      -c effective_cache_size=4GB
+      -c work_mem=4MB
+      -c maintenance_work_mem=256MB
+      -c log_min_duration_statement=1000
+      -c log_connections=on
+      -c log_disconnections=on
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  api:
+    build:
+      context: ..
+      dockerfile: apps/api/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+    env_file:
+      - .env.prod
+    # DATABASE_URL and every app key come from .env.prod (see .env.prod.example
+    # for the full list + pointers to apps/api/.env.example and apps/web/.env.example).
+    networks:
+      - frontend
+      - backend
+    healthcheck:
+      # NestJS exposes the deep health check (DB reachability, migration version) here.
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3001/v1/health').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  web:
+    build:
+      context: ..
+      dockerfile: infra/web/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - api
+    env_file:
+      - .env.prod
+    networks:
+      - frontend
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3000/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  caddy:
+    build:
+      context: ./caddy
+    restart: unless-stopped
+    depends_on:
+      - web
+      - api
+    env_file:
+      - .env.prod
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp" # HTTP/3
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    networks:
+      - frontend
+    # Uncomment ONLY if you enable the {$ADMIN_DOMAIN} block in the Caddyfile
+    # (monitoring UIs exposed via Caddy instead of the default SSH tunnel):
+    # extra_hosts:
+    #   - "host.docker.internal:host-gateway"
+
+networks:
+  frontend:
+  backend:
+    internal: true # no internet route; postgres lives here with api only
+
+volumes:
+  pgdata:
+    name: ${COMPOSE_PROJECT_NAME:-invitation-platform-prod}_pgdata
+  caddy_data:
+  caddy_config:

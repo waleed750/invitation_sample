@@ -1,0 +1,155 @@
+# Caddy reverse proxy: example.com (web) + api.example.com (api), HTTPS only.
+#
+# Placeholders {$DOMAIN} {$API_DOMAIN} {$ADMIN_DOMAIN} {$ACME_EMAIL} come from
+# platform/infra/.env.prod (compose passes env_file to the caddy service).
+# Validate after any edit (from the server):
+#   docker compose -f platform/infra/docker-compose.prod.yml exec caddy \
+#     caddy validate --config /etc/caddy/Caddyfile
+#
+# WITHOUT Cloudflare: nothing below needs changing — Caddy gets certificates
+# directly and trusts the direct client IP. Note `trusted_proxies` then has no
+# effect (there is no intermediate proxy) and is harmless.
+# WITH Cloudflare (recommended): DNS proxy ON + SSL "Full (strict)" in the
+# Cloudflare dashboard, then set CLOUDFLARE_ONLY=1 and re-run harden.sh so the
+# firewall only accepts 80/443 from the ranges below. See OPERATIONS.md.
+
+{
+	email {$ACME_EMAIL}
+	# Ask for leaner handshakes on a small box; keep HTTP/3 on (compose maps 443/udp).
+	servers {
+		protocols h1 h2 h3
+	}
+}
+
+# Cloudflare IPv4 + IPv6 ranges, fetched 2026-10-09 from
+# https://www.cloudflare.com/ips-v4 and .../ips-v6 (re-check occasionally;
+# harden.sh re-fetches them for the firewall).
+# Only meaningful behind Cloudflare: lets Caddy see the REAL visitor IP
+# (from X-Forwarded-For) instead of a Cloudflare edge IP, so per-IP rate
+# limits count visitors, not edge nodes.
+(cf-trusted) {
+	trusted_proxies static 173.245.48.0/20 103.21.244.0/22 103.22.200.0/22 103.31.4.0/22 141.101.64.0/18 108.162.192.0/18 190.93.240.0/20 188.114.96.0/20 197.234.240.0/22 198.41.128.0/17 162.158.0.0/15 104.16.0.0/13 104.24.0.0/14 172.64.0.0/13 131.0.72.0/22 2400:cb00::/32 2606:4700::/32 2803:f800::/32 2405:b500::/32 2405:8100::/32 2a06:98c0::/29 2c0f:f248::/32
+}
+
+# Shared security headers.
+# frame-ancestors / Content-Security-Policy are deliberately NOT set here:
+# the web app owns them (Next.js headers), because demo invitation pages allow
+# framing while the rest of the site must not. Setting them here as well would
+# either break embeds or silently override the app's finer policy.
+(secure-headers) {
+	header {
+		Strict-Transport-Security "max-age=63072000; includeSubDomains; preload"
+		X-Content-Type-Options "nosniff"
+		Referrer-Policy "strict-origin-when-cross-origin"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		-Server
+	}
+}
+
+{$DOMAIN} {
+	import secure-headers
+
+	encode gzip zstd
+	reverse_proxy web:3000 {
+		import cf-trusted
+		# Pass the real visitor IP to Next.js (used for logging/IP hashing).
+		header_up X-Real-Ip {http.request.remote.host}
+	}
+}
+
+{$API_DOMAIN} {
+	import secure-headers
+
+	# --- Per-IP rate limits (outer bound; the API ALSO enforces its own
+	# NestJS throttler + OTP send caps at the app layer) ---
+	# General API traffic: 100 req/min per IP — mirrors the app's
+	# THROTTLE_LIMIT=100 per 60s so the proxy and the app agree.
+	rate_limit {
+		zone api_general {
+			key {http.request.remote.host}
+			events 100
+			window 1m
+		}
+	}
+
+	# Login / one-time-code endpoints are the brute-force target:
+	# 10 req/min per IP. Legit users request at most a few codes; the app
+	# layer additionally caps at 3 sends per address per 10 min.
+	handle /v1/auth/* {
+		rate_limit {
+			zone api_auth {
+				key {http.request.remote.host}
+				events 10
+				window 1m
+			}
+		}
+		reverse_proxy api:3001 {
+			import cf-trusted
+			header_up X-Real-Ip {http.request.remote.host}
+		}
+	}
+
+	# Public invitation reads + RSVP: 60 req/min per IP stops enumeration
+	# scripts without bothering wedding guests.
+	handle /v1/public/* {
+		rate_limit {
+			zone api_public {
+				key {http.request.remote.host}
+				events 60
+				window 1m
+			}
+		}
+		reverse_proxy api:3001 {
+			import cf-trusted
+			header_up X-Real-Ip {http.request.remote.host}
+		}
+	}
+
+	handle {
+		reverse_proxy api:3001 {
+			import cf-trusted
+			header_up X-Real-Ip {http.request.remote.host}
+		}
+	}
+}
+
+# --- OPTIONAL: block direct-to-origin traffic (only useful WITH Cloudflare).
+# The REAL enforcement is the firewall (harden.sh with CLOUDFLARE_ONLY=1).
+# This block is defence in depth: requests that did not pass through
+# Cloudflare carry no Cf-Connecting-Ip header, so they get a 403.
+# To enable, uncomment the block AND set ADMIN_DOMAIN in .env.prod for the
+# section below. (A direct client could spoof the header — that is why the
+# firewall rule, not this, is the security boundary.)
+#{$DOMAIN}, {$API_DOMAIN} {
+#	@not_cloudflare not header Cf-Connecting-Ip *
+#	abort @not_cloudflare
+#}
+
+# --- OPTIONAL admin UIs (Uptime Kuma / Beszel / Dozzle). ---
+# Default is to keep these on 127.0.0.1 + SSH tunnel (see OPERATIONS.md).
+# To expose them instead, set ADMIN_DOMAIN in .env.prod, create the DNS record,
+# generate a password hash (see .env.prod.example), and uncomment this block.
+#{$ADMIN_DOMAIN} {
+#	import secure-headers
+#	basic_auth {
+#		{$CADDY_ADMIN_USER} {$CADDY_ADMIN_HASH}
+#	}
+#	# NOTE: these backends only exist when the monitoring compose is running,
+#	# and `host.docker.internal` needs the commented `extra_hosts` entry on
+#	# the caddy service in docker-compose.prod.yml.
+#	handle /kuma/* {
+#		uri strip_prefix /kuma
+#		reverse_proxy host.docker.internal:3002
+#	}
+#	handle /beszel/* {
+#		uri strip_prefix /beszel
+#		reverse_proxy host.docker.internal:8090
+#	}
+#	handle /dozzle/* {
+#		uri strip_prefix /dozzle
+#		reverse_proxy host.docker.internal:8080
+#	}
+#	handle {
+#		respond "admin: use /kuma/ /beszel/ /dozzle/" 404
+#	}
+#}

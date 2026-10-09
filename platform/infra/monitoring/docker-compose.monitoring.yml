@@ -1,0 +1,117 @@
+# Monitoring stack: Uptime Kuma (uptime + TLS + backup-push) + Beszel (metrics)
+# + Dozzle (logs, read-only Docker socket via a socket proxy).
+#
+# Memory budget: limits below total 256+128+64+32+64 = 544 MB, staying under
+# the ~600 MB ceiling so the 8 GB box keeps headroom for api/web/postgres.
+#
+# SECURITY: no UI port is reachable from the network. Every UI binds to
+# 127.0.0.1 — reach them over an SSH tunnel (see OPERATIONS.md), or expose
+# them behind Caddy basic-auth on {$ADMIN_DOMAIN} (see caddy/Caddyfile).
+#
+# Usage (from the repo root; reuses the same .env.prod as the main stack):
+#   docker compose -f platform/infra/monitoring/docker-compose.monitoring.yml \
+#     --env-file platform/infra/.env.prod up -d
+#   # SSH tunnels (run on your laptop):
+#   ssh -L 3002:localhost:3002 -L 8090:localhost:8090 -L 8080:localhost:8080 owner@<server-ip>
+
+name: invitation-platform-monitoring
+
+services:
+  uptime-kuma:
+    image: louislam/uptime-kuma:2
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3002:3001"
+    volumes:
+      - kuma_data:/app/data
+    deploy:
+      resources:
+        limits:
+          memory: 256M
+    healthcheck:
+      test: ["CMD-SHELL", "node -e \"fetch('http://localhost:3001/').then(r=>{if(!r.ok)process.exit(1)}).catch(()=>process.exit(1))\""]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+
+  beszel-hub:
+    image: henrygd/beszel:0.21
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:8090:8090"
+    volumes:
+      - beszel_data:/beszel_data
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+
+  beszel-agent:
+    image: henrygd/beszel-agent:0.21
+    restart: unless-stopped
+    # No published port: the agent dials OUT to the hub.
+    # First start: open the hub UI (SSH tunnel), add a system, copy its KEY
+    # into BESZEL_KEY in .env.prod, then restart just the agent.
+    env_file:
+      - ../.env.prod
+    environment:
+      KEY: ${BESZEL_KEY:?paste from the Beszel hub UI}
+      HUB_URL: ${BESZEL_HUB_URL:-http://beszel-hub:8090}
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /:/extra-filesystem/root:ro
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+
+  socket-proxy:
+    # Dozzle never touches the real Docker socket. The proxy exposes the
+    # read-only endpoints Dozzle needs and disables everything else
+    # (POST=0 blocks all mutating API calls).
+    image: tecnativa/docker-socket-proxy:latest
+    restart: unless-stopped
+    # No published port: reachable only by `dozzle` on the internal network.
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    environment:
+      CONTAINERS: "1" # list/inspect containers (read-only GET)
+      IMAGES: "1"
+      NETWORKS: "1"
+      VOLUMES: "1"
+      TASKS: "1"
+      NODES: "1"
+      SERVICES: "1"
+      POST: "0" # block every mutating (POST/PUT/DELETE) Docker API call
+    deploy:
+      resources:
+        limits:
+          memory: 32M
+    healthcheck:
+      test: ["CMD-SHELL", "wget -q -O /dev/null http://localhost:2375/version || exit 1"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  dozzle:
+    image: amir20/dozzle:v8
+    restart: unless-stopped
+    depends_on:
+      socket-proxy:
+        condition: service_started
+    ports:
+      - "127.0.0.1:8080:8080"
+    environment:
+      DOCKER_HOST: tcp://socket-proxy:2375
+    volumes:
+      - dozzle_data:/data
+    deploy:
+      resources:
+        limits:
+          memory: 64M
+
+volumes:
+  kuma_data:
+  beszel_data:
+  dozzle_data:
