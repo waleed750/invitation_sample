@@ -48,7 +48,15 @@ export class GenericHmacProvider implements PaymentEventProvider {
     }
     const expected = createHmac('sha256', this.secret).update(`${timestamp}.`).update(rawBody).digest();
     if (!timingSafeEqual(expected, Buffer.from(signature, 'hex'))) throw new Error('Invalid notification');
-    const json: unknown = JSON.parse(rawBody.toString('utf8'));
+    // Node 22+ supplies each primitive's original JSON token to the reviver.
+    // Recover numeric amount tokens BEFORE decimal conversion: JSON.parse alone
+    // would round 90071992547409.91 to 90071992547409.9 (one piastre lost).
+    const json: unknown = JSON.parse(rawBody.toString('utf8'),
+      (key: string, value: unknown, context?: {source?: string}): unknown => {
+        if (key !== this.fields.amount || typeof value !== 'number') return value;
+        if (context?.source === undefined) throw new Error('Numeric amount source unavailable');
+        return context.source;
+      });
     const record = z.record(z.string(), z.unknown()).parse(json);
     const data = parsedBody.parse(Object.fromEntries(
       Object.entries(this.fields).map(([key, field]) => [key, record[field]])
