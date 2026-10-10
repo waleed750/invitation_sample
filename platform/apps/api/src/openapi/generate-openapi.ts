@@ -1,7 +1,7 @@
 /**
  * Writes `packages/api-client/openapi.json` from the Nest app, in-process:
- * no listening socket, no network (dummy env, Supabase URL is unroutable and
- * never called at boot). Run via `npm run openapi --workspace @platform/api`.
+ * no listening socket, no network (dummy env, never called at boot).
+ * Run via `npm run openapi --workspace @platform/api`.
  */
 import {writeFileSync} from 'node:fs';
 import {resolve} from 'node:path';

@@ -52,7 +52,7 @@ function toRow(data: unknown): EntitlementRow {
  * (`asUser`, RLS decides access — an invisible invitation is a 404) and computes
  * the dashboard meters with the pure functions from `@platform/shared`.
  * Persistence lives in `EntitlementsRepository`, so unit tests mock
- * the Supabase layer and fix the time via the `Clock` provider.
+ * the persistence layer and fix the time via the `Clock` provider.
  */
 @Injectable()
 export class EntitlementsService {

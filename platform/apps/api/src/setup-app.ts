@@ -69,7 +69,7 @@ export function buildOpenApiDocument(app: INestApplication): OpenAPIObject {
     app,
     new DocumentBuilder()
       .setTitle('Invitation Platform API')
-      .setDescription('REST API (v1). Bearer <Supabase JWT> on every route unless marked public.')
+      .setDescription('REST API (v1). Authentication required on every route unless marked public.')
       .setVersion(version)
       .addBearerAuth()
       .build()

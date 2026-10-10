@@ -141,8 +141,8 @@ describe('ApiCommerceClient', () => {
 
   it('sendOtp and verifyOtp are unsupported; signOut is a no-op', async () => {
     const {client} = setup(() => ({body: null}));
-    await expect(client.sendOtp()).rejects.toThrow(/Supabase/);
-    await expect(client.verifyOtp()).rejects.toThrow(/Supabase/);
+    await expect(client.sendOtp()).rejects.toThrow(/Better Auth/);
+    await expect(client.verifyOtp()).rejects.toThrow(/Better Auth/);
     await expect(client.signOut()).resolves.toBeUndefined();
   });
 

@@ -5,7 +5,7 @@ import {setTestEnv} from './testing/env';
 // so valid env must already exist before the first import.
 setTestEnv();
 
-// The test env points Supabase at an unroutable address and no spec may touch
+// The test env points external services at an unroutable address and no spec may touch
 // the network. Fail those calls instantly instead of waiting on timeouts;
 // services map the rejection to 503.
 const originalFetch: typeof fetch = globalThis.fetch.bind(globalThis);
@@ -20,7 +20,7 @@ function fetchTargetUrl(target: unknown): string {
 }
 globalThis.fetch = (...args: Parameters<typeof fetch>): ReturnType<typeof fetch> => {
   if (fetchTargetUrl(args[0]).includes('127.0.0.1:9')) {
-    return Promise.reject(new TypeError('fetch failed (test stub: Supabase is unreachable)'));
+    return Promise.reject(new TypeError('fetch failed (test stub: external service is unreachable)'));
   }
   return originalFetch(...args);
 };

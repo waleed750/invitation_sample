@@ -4974,7 +4974,7 @@
   },
   "info": {
     "contact": {},
-    "description": "REST API (v1). Bearer <Supabase JWT> on every route unless marked public.",
+    "description": "REST API (v1). Authentication required on every route unless marked public.",
     "title": "Invitation Platform API",
     "version": "0.1.0"
   },
