@@ -157,15 +157,15 @@ export class ApiCommerceClient implements CommerceClient {
   }
 
   async signOut(): Promise<void> {
-    // Sign-out is handled by the auth layer (Supabase); nothing to do against the commerce API.
+    // Sign-out is handled by the auth layer (Better Auth); nothing to do against the commerce API.
   }
 
   async sendOtp(): Promise<{ok: true}> {
-    throw new Error('sendOtp is not used in api mode; sign in via Supabase.');
+    throw new Error('sendOtp is not used in api mode; sign in via Better Auth.');
   }
 
   async verifyOtp(): Promise<Session> {
-    throw new Error('verifyOtp is not used in api mode; sign in via Supabase.');
+    throw new Error('verifyOtp is not used in api mode; sign in via Better Auth.');
   }
 
   async startCheckout(input: StartCheckoutInput): Promise<Order> {

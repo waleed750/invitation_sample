@@ -21,7 +21,7 @@ export interface TestTokenOptions {
   secret?: string;
 }
 
-/** Signs an HS256 JWT the `AuthGuard` accepts when `SUPABASE_JWT_SECRET` matches. */
+/** Signs an HS256 JWT the `AuthGuard` accepts when `BETTER_AUTH_SECRET` matches. */
 export async function signTestToken(options: TestTokenOptions = {}): Promise<string> {
   const {subject = 'user-123', audience = 'authenticated', expiresInSeconds = 3600, secret = TEST_JWT_SECRET} = options;
   const key = new TextEncoder().encode(secret);
@@ -39,21 +39,6 @@ export interface MockSingleResult {
   error: {code: string} | null;
 }
 
-/** Minimal structural stub for the `from().select().eq().single()` chain. */
-export interface StubSupabaseClient {
-  from: (table: string) => {
-    select: (columns: string) => {eq: (column: string, value: string) => {single: () => Promise<MockSingleResult>}};
-  };
-}
-
-export function mockSupabaseClient(result: MockSingleResult): StubSupabaseClient {
-  return {from: () => ({select: () => ({eq: () => ({single: () => Promise.resolve(result)})})})};
-}
-
-export function pgNotFound(): MockSingleResult {
-  return {data: null, error: {code: 'PGRST116'}};
-}
-
 /** In-process HTTP client returned by `bootApp` (supertest agent). */
 export type HttpClient = ReturnType<typeof request>;
 
@@ -62,16 +47,15 @@ export type HttpClient = ReturnType<typeof request>;
  * `@nestjs/config` validates eagerly at import time, so per-boot `overrides`
  * would otherwise be ignored: the validated `AppConfigService` is rebuilt
  * here from the current `process.env` and overridden for every boot.
- * Pass `supabaseResult` to stub the role lookup (`AuthRepository`) so the
- * `RolesGuard` resolves instantly (the real client retries unreachable
- * hosts for seconds — fine in production, too slow for tests).
+ * Pass `roleResult` to stub the role lookup (`AuthRepository`) so the
+ * `RolesGuard` resolves instantly.
  * Non-admin routes never touch it; repository data comes from the real
  * `DbService` (unroutable `DATABASE_URL` in tests, so upstream failures
  * surface as 503, which is what the wiring specs assert).
  */
 export async function bootApp(
   overrides: Record<string, string> = {},
-  supabaseResult?: MockSingleResult
+  roleResult?: MockSingleResult
 ): Promise<{
   app: INestApplication;
   http: HttpClient;
@@ -81,11 +65,11 @@ export async function bootApp(
   const builder = Test.createTestingModule({imports: [AppModule]})
     .overrideProvider(AppConfigService)
     .useValue(freshConfig);
-  if (supabaseResult !== undefined) {
+  if (roleResult !== undefined) {
     builder.overrideProvider(AuthRepository).useValue({
       findRoleByUserId: () => {
-        if (supabaseResult.error) return Promise.reject(new Error('DB Error'));
-        const data = supabaseResult.data as {role?: string} | undefined | null;
+        if (roleResult.error) return Promise.reject(new Error('DB Error'));
+        const data = roleResult.data as {role?: string} | undefined | null;
         return Promise.resolve(data?.role ? {role: data.role} : null);
       }
     });

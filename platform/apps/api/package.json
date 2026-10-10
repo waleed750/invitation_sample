@@ -2,7 +2,7 @@
   "name": "@platform/api",
   "version": "0.1.0",
   "private": true,
-  "description": "NestJS REST API (v1) for the invitation platform — Supabase Auth guard, entitlements slice, OpenAPI.",
+  "description": "NestJS REST API (v1) for the invitation platform — Auth guard, entitlements slice, OpenAPI.",
   "license": "UNLICENSED",
   "scripts": {
     "dev": "nest start --watch",

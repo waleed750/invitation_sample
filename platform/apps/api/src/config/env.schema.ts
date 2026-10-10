@@ -46,31 +46,6 @@ const envSchema = z.object({
     .int()
     .min(100, 'DATABASE_STATEMENT_TIMEOUT_MS must be at least 100')
     .default(5000),
-  // LEGACY (Supabase is being removed; lane L1 deletes these). Optional now so
-  // the API boots without Supabase. Blank/whitespace counts as unset.
-  SUPABASE_URL: z
-    .string()
-    .optional()
-    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim()))
-    .pipe(z.url('SUPABASE_URL must be a valid URL').optional()),
-  SUPABASE_ANON_KEY: z
-    .string()
-    .optional()
-    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
-  SUPABASE_SERVICE_ROLE_KEY: z
-    .string()
-    .optional()
-    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
-  // Hard cap on any single Supabase HTTP call. Without it an outage hangs
-  // every authenticated request (postgrest retries + no timeout).
-  SUPABASE_TIMEOUT_MS: z.coerce.number().int().min(100, 'SUPABASE_TIMEOUT_MS must be at least 100').default(5000),
-  // Optional: blank/whitespace counts as unset. When set, Supabase JWTs are
-  // verified locally (HS256); otherwise the project's JWKS endpoint is used.
-  SUPABASE_JWT_SECRET: z
-    .string()
-    .optional()
-    .transform((value) => (value === undefined || value.trim() === '' ? undefined : value)),
-    
   // --- Better Auth ---
   BETTER_AUTH_SECRET: z.string().min(32, 'BETTER_AUTH_SECRET must be at least 32 characters'),
   // eslint-disable-next-line @typescript-eslint/no-deprecated

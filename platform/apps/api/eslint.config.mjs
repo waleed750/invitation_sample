@@ -17,7 +17,7 @@ export default defineConfig(
       // The brief forbids `any` in the API; the type-checked presets already
       // ban it (`no-explicit-any`), this keeps the intent explicit.
       '@typescript-eslint/no-explicit-any': 'error',
-      // Supabase errors and Nest internals are `unknown`-shaped; allow
+      // External errors and Nest internals are `unknown`-shaped; allow
       // deliberate `as unknown as T` narrowing but nothing looser.
       '@typescript-eslint/no-unsafe-assignment': 'error',
       '@typescript-eslint/no-unsafe-member-access': 'error',
@@ -27,12 +27,11 @@ export default defineConfig(
     }
   },
   {
-    // Persistence boundary: only repositories (and the Supabase wiring itself)
-    // may touch Supabase, so swapping the database only touches repositories.
+    // Persistence boundary: only repositories
+    // may touch the database, so swapping it only touches repositories.
     files: ['src/**/*.ts'],
     ignores: [
       'src/**/*.repository.ts',
-      'src/supabase/**',
       'src/database/**',
       'src/**/*.spec.ts',
       'src/test-helpers.ts',
@@ -45,10 +44,6 @@ export default defineConfig(
         {
           patterns: [
             {
-              group: ['**/supabase/supabase.service'],
-              message: 'Only *.repository.ts files may use SupabaseService. Add a repository method instead.'
-            },
-            {
               group: ['**/database/index', '**/database/db.service'],
               message: 'Only *.repository.ts files (and src/database/**) may use DbService / the database module.'
             },
@@ -58,7 +53,6 @@ export default defineConfig(
             }
           ],
           paths: [
-            {name: '@supabase/supabase-js', message: 'Only src/supabase/** and *.repository.ts may import the Supabase SDK.'},
             {name: 'postgres', message: 'Only src/database/** and *.repository.ts may import postgres.js.'}
           ]
         }

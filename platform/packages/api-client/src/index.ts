@@ -6,7 +6,7 @@ export type {paths, components, operations} from './schema';
 export interface ApiClientOptions {
   /** API origin, e.g. `https://api.example.com` (routes already include `/v1`). */
   baseUrl: string;
-  /** Returns the current Supabase access token, or null/undefined when signed out. */
+  /** Returns the current access token, or null/undefined when signed out. */
   getAccessToken?: () => string | null | undefined | Promise<string | null | undefined>;
   fetch?: typeof fetch;
 }

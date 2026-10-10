@@ -53,14 +53,8 @@ describe('validateEnv', () => {
     expect(message).toContain('THROTTLE_LIMIT');
   });
 
-  it('boots without any SUPABASE_* variable and applies database defaults', () => {
-    const rest = validEnv();
-    delete rest.SUPABASE_URL;
-    delete rest.SUPABASE_ANON_KEY;
-    delete rest.SUPABASE_SERVICE_ROLE_KEY;
-    delete rest.SUPABASE_JWT_SECRET;
-    const env = validateEnv(rest);
-    expect(env.SUPABASE_URL).toBeUndefined();
+  it('applies database defaults', () => {
+    const env = validateEnv(validEnv());
     expect(env.DATABASE_POOL_MAX).toBe(10);
     expect(env.DATABASE_STATEMENT_TIMEOUT_MS).toBe(5000);
   });
