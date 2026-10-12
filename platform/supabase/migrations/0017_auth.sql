@@ -1,7 +1,7 @@
 create schema if not exists better_auth;
 
 create table better_auth."user" (
-  id uuid primary key,
+  id uuid primary key default gen_random_uuid(),
   name text not null,
   email text not null,
   "emailVerified" boolean not null,
@@ -13,7 +13,7 @@ create table better_auth."user" (
 );
 
 create table better_auth."session" (
-  id uuid primary key,
+  id uuid primary key default gen_random_uuid(),
   "expiresAt" timestamp not null,
   token text not null unique,
   "createdAt" timestamp not null,
@@ -24,7 +24,7 @@ create table better_auth."session" (
 );
 
 create table better_auth."account" (
-  id uuid primary key,
+  id uuid primary key default gen_random_uuid(),
   "accountId" text not null,
   "providerId" text not null,
   "userId" uuid not null references better_auth."user"(id) on delete cascade,
@@ -40,7 +40,7 @@ create table better_auth."account" (
 );
 
 create table better_auth."verification" (
-  id uuid primary key,
+  id uuid primary key default gen_random_uuid(),
   identifier text not null,
   value text not null,
   "expiresAt" timestamp not null,

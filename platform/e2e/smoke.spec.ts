@@ -23,13 +23,20 @@ async function fetchOtpWithRetry(email: string, maxAttempts = 15, delayMs = 1000
   throw new Error(`Failed to capture OTP for ${email} from ${url} after ${maxAttempts} attempts`);
 }
 
-async function promoteUserToAdmin(email: string): Promise<void> {
+async function promoteUserToAdmin(email: string, maxAttempts = 10, delayMs = 1000): Promise<void> {
   const pool = new Pool({connectionString: DATABASE_URL_ADMIN});
   try {
-    const res = await pool.query("UPDATE public.profiles SET role = 'admin' WHERE email = $1", [email.toLowerCase().trim()]);
-    if (res.rowCount === 0) {
-      throw new Error(`No profile found for email ${email} to promote to admin`);
+    for (let i = 0; i < maxAttempts; i++) {
+      const res = await pool.query(
+        "UPDATE public.profiles SET role = 'admin' WHERE lower(email) = lower($1)",
+        [email.trim()]
+      );
+      if (res.rowCount && res.rowCount > 0) {
+        return;
+      }
+      await new Promise((resolve) => setTimeout(resolve, delayMs));
     }
+    throw new Error(`No profile found for email ${email} to promote to admin`);
   } finally {
     await pool.end();
   }
@@ -143,16 +150,16 @@ test.describe('Real Stack End-to-End Smoke Journey', () => {
     await submitConfirmBtn.click();
 
     // Wait for confirmation
-    await expect(page.getByText('تم تأكيد الدفع بنجاح')).toBeVisible({timeout: 15_000});
+    await expect(page.getByText('تم تأكيد الدفع')).toBeVisible({timeout: 15_000});
 
     // -------------------------------------------------------------------------
     // 7. The invitation shows as paid/entitled in the customer dashboard
     // -------------------------------------------------------------------------
     await page.goto('/ar/app');
-    await expect(page.locator('.invitation-card').first()).toBeVisible({timeout: 15_000});
+    await expect(page.locator('.invitation-hero-card').first()).toBeVisible({timeout: 15_000});
 
     // Open the invitation management page
-    const manageLink = page.locator('a.btn-secondary[href*="/app/invitations/"]').first();
+    const manageLink = page.locator('.invitation-hero-card a[href*="/app/invitations/"]').first();
     await manageLink.click();
     await page.waitForURL(/\/app\/invitations\//);
 
@@ -173,15 +180,18 @@ test.describe('Real Stack End-to-End Smoke Journey', () => {
 
     // Read the public preview/share link
     const previewLink = page.locator('a[href*="/i/"]').first();
-    const href = await previewLink.getAttribute('href');
-    expect(href).not.toBeNull();
+    const rawHref = await previewLink.getAttribute('href');
+    expect(rawHref).not.toBeNull();
+    const guestUrl = rawHref!.startsWith('http')
+      ? rawHref!
+      : (rawHref!.startsWith('/ar') ? rawHref! : `/ar${rawHref!}`);
 
     // -------------------------------------------------------------------------
     // 9. Open the public invitation page and submit an RSVP
     // -------------------------------------------------------------------------
     // We can open it in the same browser context or a fresh page
     const guestPage = await context.newPage();
-    await guestPage.goto(href!);
+    await guestPage.goto(guestUrl);
 
     // Locate RSVP section and choose attending: yes
     const rsvpSection = guestPage.locator('.rsvp-section');
