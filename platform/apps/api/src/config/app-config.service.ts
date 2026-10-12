@@ -67,7 +67,7 @@ export class AppConfigService {
   }
 
   get authCookieDomain(): string | undefined {
-    return this.required('AUTH_COOKIE_DOMAIN');
+    return this.config.get<string | undefined>('AUTH_COOKIE_DOMAIN');
   }
 
   get phoneLoginEnabled(): boolean {
@@ -99,11 +99,11 @@ export class AppConfigService {
   }
 
   get googleClientId(): string | undefined {
-    return this.required('GOOGLE_CLIENT_ID');
+    return this.config.get<string | undefined>('GOOGLE_CLIENT_ID');
   }
 
   get googleClientSecret(): string | undefined {
-    return this.required('GOOGLE_CLIENT_SECRET');
+    return this.config.get<string | undefined>('GOOGLE_CLIENT_SECRET');
   }
   get throttleTtlMs(): number {
     return this.required('THROTTLE_TTL_MS');
@@ -148,7 +148,7 @@ export class AppConfigService {
   }
 
   get sentryDsn(): string | undefined {
-    return this.required('SENTRY_DSN');
+    return this.config.get<string | undefined>('SENTRY_DSN');
   }
 
   get sentryEnvironment(): string {

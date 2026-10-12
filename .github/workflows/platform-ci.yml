@@ -90,11 +90,13 @@ jobs:
       PLAYWRIGHT_BASE_URL: http://localhost:3000
       COMMERCE_MODE: api
       GUEST_MODE: api
+      PORT: 3001
       NODE_ENV: test
       E2E_CAPTURE_EMAILS: 1
       WEB_ORIGINS: http://localhost:3000
       BETTER_AUTH_SECRET: test-better-auth-secret-at-least-32-characters
       BETTER_AUTH_URL: http://localhost:3001
+      AUTH_COOKIE_DOMAIN: ''
       IP_HASH_SECRET: test-ip-hash-secret-at-least-32-chars
       PAYMENTS_PROVIDER: manual
       PAYMENTS_MOCK_SECRET: test-payments-mock-secret-at-least-32-chars
