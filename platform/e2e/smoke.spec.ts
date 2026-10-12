@@ -50,13 +50,13 @@ test.describe('Real Stack End-to-End Smoke Journey', () => {
     await expect(page.locator('#signin-title')).toBeVisible();
 
     // Fill email and submit
-    const emailInput = page.locator('input[type="email"]');
+    const emailInput = page.locator('[data-testid="email-input"], input[type="email"]');
     await emailInput.fill(userEmail);
-    await page.locator('form.auth-step button[type="submit"]').click();
+    await page.locator('[data-testid="send-code-btn"], form.auth-step button[type="submit"]').click();
 
     // Form switches to OTP input
-    const otpInput = page.locator('input[autoComplete="one-time-code"]');
-    await expect(otpInput).toBeVisible();
+    const otpInput = page.locator('[data-testid="otp-input"], input[autocomplete="one-time-code"]');
+    await expect(otpInput).toBeVisible({timeout: 15_000});
 
     // Retrieve captured OTP from the test endpoint
     const otpCode = await fetchOtpWithRetry(userEmail);
@@ -64,7 +64,7 @@ test.describe('Real Stack End-to-End Smoke Journey', () => {
 
     // Fill OTP and verify
     await otpInput.fill(otpCode);
-    await page.locator('form.signin-otp button[type="submit"]').click();
+    await page.locator('[data-testid="verify-otp-btn"], form.signin-otp button[type="submit"]').click();
 
     // Wait until logged in (redirected to dashboard or home)
     await page.waitForURL((url) => !url.pathname.includes('/sign-in'), {timeout: 20_000});

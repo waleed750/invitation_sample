@@ -134,6 +134,7 @@ jobs:
       - name: Set app_api password
         run: |
           psql "$DATABASE_URL_ADMIN" -c "ALTER ROLE app_api WITH PASSWORD 'test_api_password';"
+          psql "$DATABASE_URL_ADMIN" -c "GRANT USAGE ON SCHEMA auth TO app_api; GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE auth.users TO app_api;"
       - name: Ensure live template is seeded
         run: |
           psql "$DATABASE_URL_ADMIN" -c "UPDATE public.templates SET status = 'live', license_complete = true WHERE slug = 'mashrabiya';"

@@ -23,6 +23,7 @@ export function getBetterAuth(config: AppConfigService): any {
     database: pool,
     secret: config.betterAuthSecret,
     baseURL: config.betterAuthUrl,
+    basePath: '/v1/auth',
     advanced: {
       defaultCookieAttributes: {
         domain: config.authCookieDomain,

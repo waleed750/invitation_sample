@@ -81,14 +81,14 @@ export function SignInForm({next, initialError}: {next: string; initialError?: '
       )}
       {step === 'email' ? (
         <form className="auth-step" noValidate onSubmit={(event) => { event.preventDefault(); void sendCode(); }}>
-          <label>{t('emailLabel')}<input type="email" dir="ltr" inputMode="email" autoComplete="email" placeholder={t('emailPlaceholder')} value={email} onChange={(event) => setEmail(event.target.value)} aria-invalid={error === 'invalidEmail'} required /></label>
-          <button className="button" type="submit" disabled={busy}>{busy ? t('sending') : t('sendCode')}</button>
+          <label>{t('emailLabel')}<input type="email" dir="ltr" inputMode="email" autoComplete="email" data-testid="email-input" placeholder={t('emailPlaceholder')} value={email} onChange={(event) => setEmail(event.target.value)} aria-invalid={error === 'invalidEmail'} required /></label>
+          <button className="button" type="submit" data-testid="send-code-btn" disabled={busy}>{busy ? t('sending') : t('sendCode')}</button>
         </form>
       ) : (
         <form className="signin-otp auth-step" noValidate onSubmit={(event) => { event.preventDefault(); void verify(); }}>
           <p>{t('codeSent', {email: email.trim()})}</p>
-          <label>{t('codeLabel')}<input dir="ltr" inputMode="numeric" autoComplete="one-time-code" pattern="[0-9]*" maxLength={6} placeholder="000000" value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, ''))} aria-invalid={error === 'invalidCode'} required /></label>
-          <button className="button" type="submit" disabled={busy}>{busy ? t('verifying') : t('verify')}</button>
+          <label>{t('codeLabel')}<input dir="ltr" inputMode="numeric" autoComplete="one-time-code" data-testid="otp-input" pattern="[0-9]*" maxLength={6} placeholder="000000" value={code} onChange={(event) => setCode(event.target.value.replace(/\D/g, ''))} aria-invalid={error === 'invalidCode'} required /></label>
+          <button className="button" type="submit" data-testid="verify-otp-btn" disabled={busy}>{busy ? t('verifying') : t('verify')}</button>
           <button className="auth-link" type="button" disabled={busy || cooldown > 0} onClick={() => void sendCode()}>{cooldown > 0 ? t('resendIn', {seconds: cooldown}) : t('resend')}</button>
           <button className="auth-link" type="button" disabled={busy} onClick={() => { setStep('email'); setError(null); }}>{t('changeEmail')}</button>
         </form>
