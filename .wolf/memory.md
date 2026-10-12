@@ -1019,3 +1019,32 @@
 | 23:34 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 24 reads | ~49732 tok |
 | 23:34 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 24 reads | ~49732 tok |
 | 2026-10-09 23:48 | W3 integration landed (main 9548f0e): repos on postgres.js, payment auto-confirm, Supabase removed, fonts, admin screens; cleanup lane dispatched | main | done | ~5k |
+| 23:48 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 24 reads | ~49732 tok |
+| 00:04 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 24 reads | ~49732 tok |
+| 00:04 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 24 reads | ~49732 tok |
+| 00:37 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 01:23 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 07:22 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 09:22 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 09:22 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 09:22 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 09:22 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 09:22 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 09:23 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 09:23 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 09:23 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 09:40 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 09:56 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 10:12 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 10:23 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 10:23 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 10:23 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 10:23 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 10:23 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 10:23 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 2026-10-12 15:42 | Resumed after pause: owner rule now agy-only implementer; self-hosted build complete on main (9548f0e, CI green); cleanup lane (Supabase leftovers) failed, being re-checked | .wolf/memory.md | resumed | ~2k |
+| 16:07 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 16:07 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 16:17 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 17:11 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
+| 2026-10-12 17:18 | Landed Supabase cleanup (759531b) + admin dashboard pages (ec2a0f9), agy, CI green; next N1 email notifications + E1 e2e CI job | main | done | ~3k |

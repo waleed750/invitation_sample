@@ -6,6 +6,8 @@
 
 ## User Preferences
 
+- **(2026-10-12) agy is the ONLY implementer** ("make all work using agy as implementer", "be only an orchestrator, don't make anything by yourself"). Claude: briefs, dispatch, diff/CI review, landing (ff/cherry-pick/push), .wolf notes. Conflicts, rebases, test/CI fixes all go to agy. agy over-reports passing gates and often runs past its timeout but commits/pushes useful work first — always verify on GitHub CI before landing.
+
 - **(2026-10-08) Claude is orchestrator ONLY.** No hand edits of code/SQL/tests/CI by Claude, no Sonnet/Claude implementation workers: ALL implementation (incl. conflict resolution, rebases, CI-driven test fixes) goes to agy (`gemini-3.1-pro-high`). Claude briefs, dispatches, reviews diffs, verifies via gates/CI, lands (ff/push), updates .wolf notes. Supersedes the 2026-10-07 'Claude may implement' and 'Sonnet subagents' preferences.
 
 - **(2026-10-07)** Owner allows `opencode/muse-spark-1.3-contributor-free` (free) as an implementer, plus Sonnet subagents (Agent tool model=sonnet) for cheap tokens. Owner wants time-boxed runs (e.g. stop at 40 min) with a done/left list.
