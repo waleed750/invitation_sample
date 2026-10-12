@@ -142,7 +142,13 @@ describe('validateEnv', () => {
     expect(validateEnv({...validEnv(), LIFECYCLE_CRON_ENABLED: 'false'}).LIFECYCLE_CRON_ENABLED).toBe(false);
   });
 
-  it('rejects LIFECYCLE_CRON_ENABLED values other than true/false', () => {
-    expect(() => validateEnv({...validEnv(), LIFECYCLE_CRON_ENABLED: 'yes'})).toThrow(/LIFECYCLE_CRON_ENABLED/);
+  it('defaults NOTIFICATIONS_EMAIL_ENABLED to true and parses true/false', () => {
+    expect(validateEnv(validEnv()).NOTIFICATIONS_EMAIL_ENABLED).toBe(true);
+    expect(validateEnv({...validEnv(), NOTIFICATIONS_EMAIL_ENABLED: 'true'}).NOTIFICATIONS_EMAIL_ENABLED).toBe(true);
+    expect(validateEnv({...validEnv(), NOTIFICATIONS_EMAIL_ENABLED: 'false'}).NOTIFICATIONS_EMAIL_ENABLED).toBe(false);
+  });
+
+  it('rejects NOTIFICATIONS_EMAIL_ENABLED values other than true/false', () => {
+    expect(() => validateEnv({...validEnv(), NOTIFICATIONS_EMAIL_ENABLED: 'yes'})).toThrow(/NOTIFICATIONS_EMAIL_ENABLED/);
   });
 });

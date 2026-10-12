@@ -93,6 +93,10 @@ export class AppConfigService {
     return this.required('SMTP_FROM');
   }
 
+  get notificationsEmailEnabled(): boolean {
+    return this.required('NOTIFICATIONS_EMAIL_ENABLED');
+  }
+
   get googleClientId(): string | undefined {
     return this.required('GOOGLE_CLIENT_ID');
   }

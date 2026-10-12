@@ -58,10 +58,13 @@ export class LifecycleRepository {
       select public.lifecycle_expire_points(${iso}::timestamptz) as result`);
   }
 
-  /** Pending manual orders older than 72 h -> `expired` (0009, service role). Returns the count. */
-  async expireStaleManualOrdersAsServiceRole(): Promise<number> {
-    return this.count(async (tx) => tx<RpcRow<unknown>[]>`
-      select public.expire_stale_manual_orders() as result`);
+  /** Pending manual orders older than 72 h -> `expired` (0009/0020, service role). Returns the expired order IDs. */
+  async expireStaleManualOrdersAsServiceRole(): Promise<string[]> {
+    return this.db.asService(async (tx) => {
+      const rows = await tx<{id: string}[]>`
+        select id::text from public.expire_stale_manual_orders_returning_ids()`;
+      return rows.map((r) => r.id);
+    });
   }
 
   private async count(query: (tx: Tx) => PromiseLike<RpcRow<unknown>[]>): Promise<number> {

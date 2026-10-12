@@ -1,6 +1,7 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, Optional} from '@nestjs/common';
 import {z} from 'zod';
 import {DbService} from '../database/db.service';
+import {NotificationsService} from '../notifications/notifications.service';
 import type {ParsedEvent} from './payment-event-provider';
 import {matchPaymentEvent} from './payment-event.matcher';
 
@@ -20,7 +21,10 @@ const candidateSchema = z.array(z.object({
 
 @Injectable()
 export class PaymentEventsRepository {
-  constructor(private readonly db: DbService) {}
+  constructor(
+    private readonly db: DbService,
+    @Optional() private readonly notifications?: NotificationsService
+  ) {}
 
   /** Insert + match + fulfillment commit together: failures remain retryable. */
   ingestAsServiceRole(provider: string, event: ParsedEvent, raw: string): Promise<{ok: true; duplicate?: true}> {
@@ -48,9 +52,17 @@ export class PaymentEventsRepository {
         const result = resultSchema.parse(confirmed.at(0)?.result);
         // A competing admin confirmation may have paid the order after the snapshot.
         // Leave this independent event in the queue; never label it matched twice.
-        const status = result.ok === true && result.already !== true ? 'matched' : 'unmatched';
+        const isConfirmed = result.ok === true && result.already !== true;
+        const status = isConfirmed ? 'matched' : 'unmatched';
         const reason = result.ok === true ? (result.already === true ? 'already_paid' : match.reason) : (result.reason ?? 'confirmation_refused');
         await tx`update public.payment_events set status = ${status}, match_reason = ${reason} where id = ${row.id}::uuid`;
+        if (isConfirmed && this.notifications) {
+          try {
+            await this.notifications.paymentConfirmed(match.orderId);
+          } catch {
+            // notification failure never breaks the transaction
+          }
+        }
       }
       return {ok: true};
     });

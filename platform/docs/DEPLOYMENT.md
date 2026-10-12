@@ -112,6 +112,7 @@ must use `PAYMENTS_PROVIDER=manual` (`mock`/`fawry` are rejected in production).
 | `SMTP_PORT` | **yes** | `587` | usually 587 (STARTTLS) |
 | `SMTP_USER` / `SMTP_PASS` | **yes** | (provider creds) | server-only secrets |
 | `SMTP_FROM` | **yes** | `noreply@example.com` | must be a sender your provider allows |
+| `NOTIFICATIONS_EMAIL_ENABLED` | no (`true`) | `true` | default true when SMTP configured; false silences transactional notifications |
 | `GOOGLE_CLIENT_ID` / `GOOGLE_CLIENT_SECRET` | no | (empty) | unset = Google login button hidden (step 8) |
 | `THROTTLE_TTL_MS` / `THROTTLE_LIMIT` | no (60000/100) | `60000` / `100` | app-layer rate limit; mirrors Caddy's 100/min |
 | `BODY_LIMIT_KB` | no (100) | `100` | max JSON/urlencoded body |
@@ -148,9 +149,9 @@ unless explicitly allowed).
 | `NEXT_PUBLIC_PHONE_LOGIN` | no (`0`) | `0` | keep `0` until an SMS/WhatsApp sender exists |
 | `NEXT_PUBLIC_WHATSAPP_NUMBER` | no, set it | `2010…` (digits only, no `+`) | support number on manual-pay pages |
 
-## 7. Email sender (one-time codes)
+## 7. Email sender (one-time codes & notifications)
 
-Sign-in emails come from `SMTP_*` (step 5). Any provider with SMTP works
+Sign-in emails and transactional notifications come from `SMTP_*` (step 5). Any provider with SMTP works
 (Resend, Postmark, Brevo free tiers are fine). You need: host, port (587),
 username, password/API-key-as-password, and a verified sender address for
 `SMTP_FROM` (usually `noreply@<your-domain>`, which needs the provider's
@@ -161,6 +162,16 @@ domain verification — a few DNS TXT records). Test before launch:
    for your own address → email arrives within a minute, code signs you in.
 3. If nothing arrives: `docker logs <api>` (Coolify: Logs tab) shows the SMTP
    error; providers also show a suppressed/bounce log in their dashboard.
+
+### Transactional email templates (AR/EN)
+
+The API renders short plain-text + HTML emails from bilingual templates (`apps/api/src/notifications/templates/{ar,en}.ts`):
+- **Lifecycle end reminder** (`endReminder`): Sent when an invitation is 7 days from expiry.
+- **Payment confirmed** (`paymentConfirmed`): Sent on admin payment confirmation or automated event match.
+- **Payment rejected** (`paymentRejected`): Sent with reason when manual payment is rejected.
+- **Order expired** (`orderExpired`): Sent when an unpaid manual order expires after 72 hours.
+
+Arabic emails render with natural Egyptian phrasing and RTL layout (`dir="rtl"`). Recipients receive emails matching their `profiles.preferred_locale`. Delivery is enabled by default (`NOTIFICATIONS_EMAIL_ENABLED=true`) whenever SMTP is configured.
 
 ## 8. Google OAuth (optional)
 

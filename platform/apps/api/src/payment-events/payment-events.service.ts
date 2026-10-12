@@ -1,6 +1,7 @@
-import {ConflictException, ForbiddenException, Injectable, NotFoundException, ServiceUnavailableException, UnauthorizedException} from '@nestjs/common';
+import {ConflictException, ForbiddenException, Injectable, NotFoundException, Optional, ServiceUnavailableException, UnauthorizedException} from '@nestjs/common';
 import type {IncomingHttpHeaders} from 'node:http';
 import {AppConfigService} from '../config/app-config.service';
+import {NotificationsService} from '../notifications/notifications.service';
 import {EasyConfirmProvider} from './easyconfirm.provider';
 import {GenericHmacProvider} from './generic-hmac.provider';
 import type {ParsedEvent} from './payment-event-provider';
@@ -23,7 +24,11 @@ export async function paymentCall<T>(call: () => Promise<T>): Promise<T> {
 
 @Injectable()
 export class PaymentEventsService {
-  constructor(private readonly repository: PaymentEventsRepository, private readonly config: AppConfigService) {}
+  constructor(
+    private readonly repository: PaymentEventsRepository,
+    private readonly config: AppConfigService,
+    @Optional() private readonly notifications?: NotificationsService
+  ) {}
 
   async receive(provider: 'generic-hmac' | 'easyconfirm', rawBody: Buffer, headers: IncomingHttpHeaders): Promise<{ok: true; duplicate?: true}> {
     let event: ParsedEvent;
@@ -37,7 +42,8 @@ export class PaymentEventsService {
       // Identical response for missing key, malformed payload, bad HMAC and replay.
       throw new UnauthorizedException('Invalid payment notification');
     }
-    return paymentCall(() => this.repository.ingestAsServiceRole(provider, event, rawBody.toString('utf8')));
+    const result = await paymentCall(() => this.repository.ingestAsServiceRole(provider, event, rawBody.toString('utf8')));
+    return result.duplicate ? {ok: true, duplicate: true} : {ok: true};
   }
 
   list(status: QueueStatus, limit: number): Promise<Record<string, unknown>[]> {

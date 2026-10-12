@@ -3,12 +3,14 @@ import {
   ConflictException,
   Injectable,
   NotFoundException,
+  Optional,
   ServiceUnavailableException
 } from '@nestjs/common';
 import {createZodDto} from 'nestjs-zod';
 import {z} from 'zod';
 import {AppLogger} from '../common/app-logger';
 import {isRecord} from '../common/type-guards';
+import {NotificationsService} from '../notifications/notifications.service';
 import {AdminPaymentsRepository} from './admin-payments.repository';
 
 const orderParams = z.object({orderId: z.uuid('order id must be a UUID')});
@@ -55,7 +57,8 @@ function text(value: unknown): string | null {
 export class AdminPaymentsService {
   constructor(
     private readonly repository: AdminPaymentsRepository,
-    private readonly logger: AppLogger
+    private readonly logger: AppLogger,
+    @Optional() private readonly notifications?: NotificationsService
   ) {}
 
   async listPending(): Promise<PendingPaymentResponse[]> {
@@ -79,13 +82,31 @@ export class AdminPaymentsService {
       note: body.note === undefined || body.note === '' ? null : body.note,
       acceptMismatch: body.acceptMismatch ?? false
     }), 'confirm');
-    if (data.ok === true) return {ok: true, already: data.already === true};
+    if (data.ok === true) {
+      if (this.notifications) {
+        try {
+          await this.notifications.paymentConfirmed(orderId);
+        } catch {
+          this.logger.error('failed to dispatch paymentConfirmed notification');
+        }
+      }
+      return {ok: true, already: data.already === true};
+    }
     throw this.failure(data);
   }
 
   async reject(adminId: string, orderId: string, body: RejectPaymentBody): Promise<RejectPaymentResponse> {
     const data = await this.rpc(() => this.repository.rejectManualPaymentAsServiceRole(orderId, adminId, body.reason), 'reject');
-    if (data.ok === true) return {ok: true};
+    if (data.ok === true) {
+      if (this.notifications) {
+        try {
+          await this.notifications.paymentRejected(orderId, body.reason);
+        } catch {
+          this.logger.error('failed to dispatch paymentRejected notification');
+        }
+      }
+      return {ok: true};
+    }
     throw this.failure(data);
   }
 

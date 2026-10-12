@@ -62,6 +62,7 @@ const envSchema = z.object({
   SMTP_PASS: z.string().min(1),
   // eslint-disable-next-line @typescript-eslint/no-deprecated
   SMTP_FROM: z.string().email(),
+  NOTIFICATIONS_EMAIL_ENABLED: z.enum(['true', 'false']).default('true').transform((value) => value === 'true'),
   GOOGLE_CLIENT_ID: z
     .string()
     .optional()

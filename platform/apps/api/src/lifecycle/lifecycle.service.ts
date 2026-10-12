@@ -1,6 +1,7 @@
-import {Inject, Injectable} from '@nestjs/common';
+import {Inject, Injectable, Optional} from '@nestjs/common';
 import {AppLogger} from '../common/app-logger';
 import {isRecord} from '../common/type-guards';
+import {NotificationsService} from '../notifications/notifications.service';
 import {LifecycleRepository} from './lifecycle.repository';
 import {NOTIFICATIONS_PORT, type NotificationsPort} from './notifications.port';
 
@@ -44,7 +45,8 @@ export class LifecycleService {
   constructor(
     private readonly repository: LifecycleRepository,
     @Inject(NOTIFICATIONS_PORT) private readonly notifications: NotificationsPort,
-    private readonly logger: AppLogger
+    private readonly logger: AppLogger,
+    @Optional() private readonly notificationsService?: NotificationsService
   ) {}
 
   async runDaily(now: Date): Promise<LifecycleSummary> {
@@ -116,7 +118,18 @@ export class LifecycleService {
 
   private async expireStaleOrders(summary: LifecycleSummary): Promise<void> {
     try {
-      summary.ordersExpired = await this.repository.expireStaleManualOrdersAsServiceRole();
+      const expired = await this.repository.expireStaleManualOrdersAsServiceRole();
+      const count = Array.isArray(expired) ? expired.length : (typeof expired === 'number' ? expired : 0);
+      summary.ordersExpired = count;
+      if (Array.isArray(expired) && this.notificationsService) {
+        for (const orderId of expired) {
+          try {
+            await this.notificationsService.orderExpired(orderId);
+          } catch {
+            this.logger.error('failed to dispatch orderExpired notification');
+          }
+        }
+      }
     } catch {
       this.logger.error('lifecycle expire_orders step failed');
       summary.errors.push('expire_orders');
