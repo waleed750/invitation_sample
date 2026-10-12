@@ -76,7 +76,8 @@ export class AdminApi {
     let result: LooseResult;
     try {
       result = await client[method](path, init);
-    } catch {
+    } catch (err) {
+      console.error(`Admin API call to ${method} ${path} failed:`, err);
       throw new AdminApiError('unavailable', 503, 'The admin API is unreachable');
     }
     const {response} = result;

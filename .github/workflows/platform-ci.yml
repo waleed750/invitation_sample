@@ -141,6 +141,7 @@ jobs:
       - name: Build shared, api, and web
         run: |
           npm run build --workspace @platform/shared
+          npm run build --workspace @platform/api-client
           npm run build --workspace @platform/api
           npm run build --workspace @platform/web
       - name: Install Playwright Chromium

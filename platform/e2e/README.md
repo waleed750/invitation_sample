@@ -72,6 +72,8 @@ node apps/api/dist/main.js
 **Terminal 2 — Web Server (`next start`):**
 ```bash
 cd platform
+npm run build --workspace @platform/shared
+npm run build --workspace @platform/api-client
 NEXT_PUBLIC_SITE_URL=http://localhost:3000 \
 npm run build --workspace @platform/web
 

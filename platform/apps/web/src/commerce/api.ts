@@ -131,7 +131,8 @@ export class ApiCommerceClient implements CommerceClient {
     let result: LooseResult;
     try {
       result = await client[method](path, init);
-    } catch {
+    } catch (err) {
+      console.error(`Commerce API call to ${method} ${path} failed:`, err);
       throw new ApiError('unavailable', 503, 'The commerce API is unreachable');
     }
     const {response} = result;
