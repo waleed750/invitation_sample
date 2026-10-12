@@ -4,6 +4,22 @@
  */
 
 export interface paths {
+    "/v1/admin/audit-log": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminAuditController_listAuditLogs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/customers": {
         parameters: {
             query?: never;
@@ -142,6 +158,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["AdminPaymentsController_reject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminStatsController_getStats"];
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
@@ -1555,6 +1587,27 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    AdminAuditController_listAuditLogs: {
+        parameters: {
+            query?: {
+                limit?: number;
+                before?: string;
+                action?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminCustomersController_search: {
         parameters: {
             query?: {
@@ -1737,6 +1790,23 @@ export interface operations {
                 "application/json": components["schemas"]["RejectPaymentBody"];
             };
         };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminStatsController_getStats: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             200: {
                 headers: {

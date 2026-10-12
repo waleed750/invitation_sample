@@ -4980,6 +4980,55 @@
   },
   "openapi": "3.0.0",
   "paths": {
+    "/v1/admin/audit-log": {
+      "get": {
+        "operationId": "AdminAuditController_listAuditLogs",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 50,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "maxLength": 200,
+              "minLength": 1,
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          {
+            "in": "query",
+            "name": "action",
+            "required": false,
+            "schema": {
+              "maxLength": 100,
+              "minLength": 1,
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAudit"
+        ]
+      }
+    },
     "/v1/admin/customers": {
       "get": {
         "operationId": "AdminCustomersController_search",
@@ -5268,6 +5317,20 @@
         },
         "tags": [
           "AdminPayments"
+        ]
+      }
+    },
+    "/v1/admin/stats": {
+      "get": {
+        "operationId": "AdminStatsController_getStats",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminStats"
         ]
       }
     },

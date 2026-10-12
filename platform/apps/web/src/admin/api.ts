@@ -10,6 +10,10 @@ import {
   adminRejectResponseSchema,
   adminEntitlementAdjustmentResponseSchema,
   adminAdjustPointsResponseSchema,
+  adminStatsSchema,
+  adminPaymentEventSchema,
+  adminAssignPaymentEventResponseSchema,
+  adminAuditLogEntrySchema,
 } from './api-schemas';
 
 export class AdminApiError extends Error {
@@ -137,5 +141,35 @@ export class AdminApi {
       body
     });
     return parse(adminAdjustPointsResponseSchema, data);
+  }
+
+  async getStats() {
+    const data = await this.call('GET', '/v1/admin/stats');
+    return parse(adminStatsSchema, data);
+  }
+
+  async getPaymentEvents(query: {status?: 'unmatched' | 'ambiguous' | 'matched'; limit?: number} = {}) {
+    const searchParams: Record<string, string | number> = {};
+    if (query.status) searchParams.status = query.status;
+    if (query.limit) searchParams.limit = query.limit;
+    const data = await this.call('GET', '/v1/admin/payment-events', {params: {query: searchParams}});
+    return parse(adminPaymentEventSchema.array(), data);
+  }
+
+  async assignPaymentEvent(id: string, body: {orderId: string; note: string}) {
+    const data = await this.call('POST', `/v1/admin/payment-events/{id}/assign`, {
+      params: {path: {id}},
+      body
+    });
+    return parse(adminAssignPaymentEventResponseSchema, data);
+  }
+
+  async getAuditLogs(query: {limit?: number; before?: string; action?: string} = {}) {
+    const searchParams: Record<string, string | number> = {};
+    if (query.limit) searchParams.limit = query.limit;
+    if (query.before) searchParams.before = query.before;
+    if (query.action) searchParams.action = query.action;
+    const data = await this.call('GET', '/v1/admin/audit-log', {params: {query: searchParams}});
+    return parse(adminAuditLogEntrySchema.array(), data);
   }
 }

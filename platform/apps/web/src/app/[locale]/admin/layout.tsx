@@ -11,11 +11,16 @@ import {requireAdmin} from '@/admin/guard';
 
 export const dynamic = 'force-dynamic';
 
-function AdminNav() {
+import {getTranslations} from 'next-intl/server';
+
+function AdminNav({t}: {t: (key: 'overview' | 'payments' | 'paymentEvents' | 'customers' | 'auditLog') => string}) {
   return (
     <nav className="dashboard-nav-list">
-      <Link href="/admin/payments" className="dashboard-nav-item">Payments</Link>
-      <Link href="/admin/customers" className="dashboard-nav-item">Customers</Link>
+      <Link href="/admin" className="dashboard-nav-item">{t('overview')}</Link>
+      <Link href="/admin/payments" className="dashboard-nav-item">{t('payments')}</Link>
+      <Link href="/admin/payment-events" className="dashboard-nav-item">{t('paymentEvents')}</Link>
+      <Link href="/admin/customers" className="dashboard-nav-item">{t('customers')}</Link>
+      <Link href="/admin/audit" className="dashboard-nav-item">{t('auditLog')}</Link>
     </nav>
   );
 }
@@ -32,6 +37,7 @@ export default async function AdminLayout({
   setRequestLocale(locale);
 
   await requireAdmin(locale);
+  const tNav = await getTranslations('admin.nav');
   
   return (
     <div className={`dashboard-root ${homeFontClassName}`}>
@@ -48,13 +54,13 @@ export default async function AdminLayout({
       </header>
       <div className="dashboard-shell">
         <aside className="dashboard-sidebar">
-          <AdminNav />
+          <AdminNav t={tNav} />
         </aside>
         <main className="dashboard-main" id="dashboard-content">
           {children}
         </main>
         <div className="dashboard-bottom">
-          <AdminNav />
+          <AdminNav t={tNav} />
         </div>
       </div>
     </div>

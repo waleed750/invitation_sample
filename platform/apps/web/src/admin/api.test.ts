@@ -99,4 +99,93 @@ describe('AdminApi', () => {
     fetchMock.mockResolvedValue(makeRes(404, {code: 'not_found'}));
     await expect(api.getPendingPayments()).rejects.toThrowError(AdminApiError);
   });
+
+  it('fetches and parses stats correctly', async () => {
+    fetchMock.mockResolvedValue(makeRes(200, {
+      revenue: {
+        todayMinor: 100000,
+        last7dMinor: 500000,
+        last30dMinor: 1500000,
+        currency: 'EGP'
+      },
+      ordersByStatus: {
+        pending: 2,
+        paid: 10,
+        failed: 1,
+        refunded: 0,
+        expired: 1,
+        rejected: 0
+      },
+      pendingManualPayments: 2,
+      unmatchedPaymentEvents: 3,
+      activeInvitations: 12,
+      newSignups7d: 8,
+      rsvps7d: 34
+    }));
+
+    const res = await api.getStats();
+    expect(res.revenue.todayMinor).toBe(100000);
+    expect(res.revenue.currency).toBe('EGP');
+    expect(res.ordersByStatus.paid).toBe(10);
+    expect(res.pendingManualPayments).toBe(2);
+    expect(res.unmatchedPaymentEvents).toBe(3);
+    expect(res.activeInvitations).toBe(12);
+  });
+
+  it('fetches and parses payment events queue correctly', async () => {
+    fetchMock.mockResolvedValue(makeRes(200, [{
+      id: 'evt-1',
+      provider: 'generic-hmac',
+      external_id: 'ext-123',
+      amount_minor: '129900',
+      currency: 'EGP',
+      sender: 'Ahmed',
+      reference_text: 'INV-123456',
+      received_at: '2026-10-12T10:00:00Z',
+      status: 'unmatched',
+      order_id: null,
+      match_reason: 'multiple_candidates',
+      created_at: '2026-10-12T10:00:00Z'
+    }]));
+
+    const res = await api.getPaymentEvents({status: 'unmatched', limit: 10});
+    expect(res).toHaveLength(1);
+    expect(res[0].id).toBe('evt-1');
+    expect(res[0].amountMinor).toBe(129900);
+    expect(res[0].status).toBe('unmatched');
+    expect(res[0].sender).toBe('Ahmed');
+  });
+
+  it('assigns payment event to order and parses response', async () => {
+    fetchMock.mockResolvedValue(makeRes(200, {
+      ok: true,
+      already: false
+    }));
+
+    const res = await api.assignPaymentEvent('evt-1', {
+      orderId: '33333333-3333-4333-8333-333333333333',
+      note: 'Verified InstaPay screenshot'
+    });
+    expect(res.ok).toBe(true);
+    expect(res.already).toBe(false);
+  });
+
+  it('fetches and parses audit logs correctly', async () => {
+    fetchMock.mockResolvedValue(makeRes(200, [{
+      id: 'log-1',
+      actorId: 'u-1',
+      actorEmail: 'admin@example.com',
+      action: 'order.mark_paid',
+      targetType: 'order',
+      targetId: 'o-1',
+      details: {amount_minor: 129900},
+      createdAt: '2026-10-12T12:00:00Z'
+    }]));
+
+    const res = await api.getAuditLogs({limit: 50, action: 'order.mark_paid'});
+    expect(res).toHaveLength(1);
+    expect(res[0].id).toBe('log-1');
+    expect(res[0].actorEmail).toBe('admin@example.com');
+    expect(res[0].action).toBe('order.mark_paid');
+  });
 });

@@ -5,6 +5,8 @@ import {ClientIpThrottlerGuard} from './security/client-ip-throttler.guard';
 import {LoggerModule} from 'nestjs-pino';
 import {AdminCustomersModule} from './admin-customers/admin-customers.module';
 import {AdminPaymentsModule} from './admin-payments/admin-payments.module';
+import {AdminStatsModule} from './admin-stats/admin-stats.module';
+import {AdminAuditModule} from './admin-audit/admin-audit.module';
 import {AuthModule, AuthGuard, RolesGuard} from './auth';
 import {AppLogger} from './common/app-logger';
 import {buildLoggerParams} from './common/logging';
@@ -49,7 +51,9 @@ export {AuthGuard, RolesGuard};
     PaymentsModule, TemplatesModule, CheckoutModule, OrdersModule, InvitationsModule, PointsModule,
     PublicInvitationsModule, GuestsModule, AdminPaymentsModule, AdminCustomersModule, LifecycleModule
     // lanes: append module imports below
-    , import('./payment-events/payment-events.module').then((m) => ({module: m.PaymentEventsModule}))
+    , import('./payment-events/payment-events.module').then((m) => ({module: m.PaymentEventsModule})),
+    AdminStatsModule,
+    AdminAuditModule
   ],
   providers: [
     AppLogger,

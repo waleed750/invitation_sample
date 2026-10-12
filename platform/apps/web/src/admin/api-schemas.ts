@@ -78,3 +78,80 @@ export const adminEntitlementAdjustmentResponseSchema = z.object({
 export const adminAdjustPointsResponseSchema = z.object({
   balance: z.number(),
 });
+
+export const adminStatsSchema = z.object({
+  revenue: z.object({
+    todayMinor: z.number(),
+    last7dMinor: z.number(),
+    last30dMinor: z.number(),
+    currency: z.literal('EGP')
+  }),
+  ordersByStatus: z.object({
+    pending: z.number(),
+    paid: z.number(),
+    failed: z.number(),
+    refunded: z.number(),
+    expired: z.number(),
+    rejected: z.number()
+  }),
+  pendingManualPayments: z.number(),
+  unmatchedPaymentEvents: z.number(),
+  activeInvitations: z.number(),
+  newSignups7d: z.number(),
+  rsvps7d: z.number()
+});
+export type AdminStats = z.infer<typeof adminStatsSchema>;
+
+export const adminPaymentEventSchema = z.preprocess((val) => {
+  if (val && typeof val === 'object') {
+    const raw = val as Record<string, unknown>;
+    return {
+      id: raw.id,
+      provider: raw.provider,
+      externalId: raw.externalId ?? raw.external_id ?? null,
+      amountMinor: Number(raw.amountMinor ?? raw.amount_minor ?? 0),
+      currency: raw.currency ?? 'EGP',
+      sender: raw.sender ?? null,
+      referenceText: raw.referenceText ?? raw.reference_text ?? null,
+      receivedAt: raw.receivedAt ?? raw.received_at,
+      status: raw.status,
+      orderId: raw.orderId ?? raw.order_id ?? null,
+      matchReason: raw.matchReason ?? raw.match_reason ?? null,
+      createdAt: raw.createdAt ?? raw.created_at
+    };
+  }
+  return val;
+}, z.object({
+  id: z.string(),
+  provider: z.string(),
+  externalId: z.string().nullable(),
+  amountMinor: z.number(),
+  currency: z.string(),
+  sender: z.string().nullable(),
+  referenceText: z.string().nullable(),
+  receivedAt: z.string(),
+  status: z.string(),
+  orderId: z.string().nullable(),
+  matchReason: z.string().nullable(),
+  createdAt: z.string()
+}));
+export type AdminPaymentEvent = z.infer<typeof adminPaymentEventSchema>;
+
+export const adminAssignPaymentEventResponseSchema = z.object({
+  ok: z.literal(true),
+  already: z.boolean()
+});
+export type AdminAssignPaymentEventResponse = z.infer<typeof adminAssignPaymentEventResponseSchema>;
+
+export const adminAuditLogEntrySchema = z.object({
+  id: z.string(),
+  actorId: z.string().nullable(),
+  actorEmail: z.string().optional(),
+  action: z.string(),
+  targetType: z.string().nullable(),
+  targetId: z.string().nullable(),
+  details: z.record(z.string(), z.unknown()),
+  createdAt: z.string()
+});
+export type AdminAuditLogEntry = z.infer<typeof adminAuditLogEntrySchema>;
+
