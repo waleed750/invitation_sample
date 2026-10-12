@@ -165,7 +165,7 @@ export default async function InvitationPage({
           )}
         </div>
         <form action={publish}>
-          <button className="btn-primary" type="submit" disabled={!gate.ok}>
+          <button className="btn-primary" type="submit" data-testid="publish-btn" disabled={!gate.ok}>
             {gate.ok ? t('invitation.publish') : t(`errors.${gate.reason}`)}
           </button>
         </form>

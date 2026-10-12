@@ -1,0 +1,17 @@
+{
+  "name": "@platform/e2e",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Playwright end-to-end smoke test for the platform real stack",
+  "scripts": {
+    "test:e2e": "playwright test",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.50.0",
+    "@types/node": "^22.15.0",
+    "@types/pg": "^8.11.11",
+    "pg": "^8.13.3",
+    "typescript": "^5.9.3"
+  }
+}

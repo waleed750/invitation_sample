@@ -29,6 +29,11 @@ export class AppConfigService {
     return this.nodeEnv === 'production';
   }
 
+  get e2eCaptureEmails(): boolean {
+    if (this.isProduction) return false;
+    return this.nodeEnv === 'test' || Boolean(this.config.get<boolean>('E2E_CAPTURE_EMAILS'));
+  }
+
   get webOrigins(): string[] {
     return this.required('WEB_ORIGINS');
   }

@@ -56,6 +56,11 @@ const envSchema = z.object({
     .transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
   PHONE_LOGIN_ENABLED: z.enum(['true', 'false']).default('false').transform((value) => value === 'true'),
   OTP_DAILY_CAP: z.coerce.number().int().min(1).default(500),
+  // Test-only: in-memory capture of one-time login codes. Strictly rejected in production.
+  E2E_CAPTURE_EMAILS: z
+    .enum(['true', 'false', '1', '0'])
+    .optional()
+    .transform((value) => value === 'true' || value === '1'),
   SMTP_HOST: z.string().min(1),
   SMTP_PORT: z.coerce.number().int().min(1),
   SMTP_USER: z.string().min(1),
@@ -151,6 +156,9 @@ LIFECYCLE_CRON_ENABLED: z.enum(['true', 'false']).default('true').transform((val
     });
   }
   if (env.NODE_ENV === 'production') {
+    if (env.E2E_CAPTURE_EMAILS) {
+      context.addIssue({code: 'custom', path: ['E2E_CAPTURE_EMAILS'], message: 'email capture is strictly forbidden in production'});
+    }
     if (env.PAYMENTS_PROVIDER === 'mock') {
       context.addIssue({code: 'custom', path: ['PAYMENTS_PROVIDER'], message: 'mock payments are disabled in production'});
     }

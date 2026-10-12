@@ -20,7 +20,7 @@ export function PaymentForms({orderId, expectedAmountMinor, locale}: {orderId: s
       <div style={{display: 'flex', gap: '0.5rem'}}>
         {!showConfirm && !showReject && (
           <>
-            <button className="dashboard-btn-primary" onClick={() => setShowConfirm(true)}>{t('confirm')}</button>
+            <button className="dashboard-btn-primary" data-testid="admin-confirm-btn" onClick={() => setShowConfirm(true)}>{t('confirm')}</button>
             <button className="dashboard-btn-secondary" onClick={() => setShowReject(true)}>{t('reject')}</button>
           </>
         )}
@@ -38,7 +38,7 @@ export function PaymentForms({orderId, expectedAmountMinor, locale}: {orderId: s
           </label>
           <label style={{display: 'flex', flexDirection: 'column', gap: '0.25rem'}}>
             <span style={{fontSize: '0.875rem', fontWeight: 600}}>{t('txnRef')}</span>
-            <input name="txnRef" type="text" required style={{padding: '0.5rem', border: '1px solid var(--color-border)', borderRadius: '4px'}} />
+            <input name="txnRef" data-testid="admin-txn-ref-input" type="text" required style={{padding: '0.5rem', border: '1px solid var(--color-border)', borderRadius: '4px'}} />
           </label>
           <label style={{display: 'flex', gap: '0.5rem', alignItems: 'center'}}>
             <input type="checkbox" name="acceptMismatch" checked={acceptMismatch} onChange={(e) => setAcceptMismatch(e.target.checked)} />
@@ -55,7 +55,7 @@ export function PaymentForms({orderId, expectedAmountMinor, locale}: {orderId: s
           {confirmState?.error && <div style={{color: 'var(--color-error)'}}>{t(`error_${confirmState.error}` as any, {expected: formatMoney(expectedAmountMinor / 100, locale)})}</div>}
           {confirmState?.success && <div style={{color: 'var(--color-success)'}}>{t('success_payment_confirmed')}</div>}
           
-          <button type="submit" disabled={confirmPending} className="dashboard-btn-primary" style={{marginTop: '0.5rem'}}>
+          <button type="submit" data-testid="admin-confirm-submit-btn" disabled={confirmPending} className="dashboard-btn-primary" style={{marginTop: '0.5rem'}}>
             {confirmPending ? '...' : t('confirm')}
           </button>
         </form>

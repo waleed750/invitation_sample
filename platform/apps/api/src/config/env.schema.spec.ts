@@ -145,4 +145,18 @@ describe('validateEnv', () => {
   it('rejects LIFECYCLE_CRON_ENABLED values other than true/false', () => {
     expect(() => validateEnv({...validEnv(), LIFECYCLE_CRON_ENABLED: 'yes'})).toThrow(/LIFECYCLE_CRON_ENABLED/);
   });
+
+  it('parses E2E_CAPTURE_EMAILS and strictly forbids it in production', () => {
+    expect(validateEnv({...validEnv(), E2E_CAPTURE_EMAILS: '1'}).E2E_CAPTURE_EMAILS).toBe(true);
+    expect(validateEnv({...validEnv(), E2E_CAPTURE_EMAILS: 'true'}).E2E_CAPTURE_EMAILS).toBe(true);
+    expect(validateEnv({...validEnv(), E2E_CAPTURE_EMAILS: '0'}).E2E_CAPTURE_EMAILS).toBe(false);
+    expect(validateEnv({...validEnv(), E2E_CAPTURE_EMAILS: 'false'}).E2E_CAPTURE_EMAILS).toBe(false);
+    expect(() => validateEnv({
+      ...validEnv(),
+      NODE_ENV: 'production',
+      PAYMENTS_PROVIDER: 'manual',
+      E2E_CAPTURE_EMAILS: '1'
+    })).toThrow(/email capture is strictly forbidden in production/);
+  });
 });
+

@@ -7,6 +7,7 @@ import {CheckoutForm} from '@/commerce/CheckoutForm';
 import {quote} from '@/commerce/pricing';
 import {routing} from '@/i18n/routing';
 import {getTemplate} from '@/templates/registry';
+import {getServerSession} from '@/auth/session';
 import type {OrderKind} from '@/commerce/types';
 
 type Props = {
@@ -75,6 +76,8 @@ export default async function CheckoutPage({params, searchParams}: Props) {
 
   const t = await getTranslations('checkout');
 
+  const session = await getServerSession();
+
   return (
     <>
       <DemoBanner />
@@ -94,6 +97,8 @@ export default async function CheckoutPage({params, searchParams}: Props) {
           initialFirst={initialFirst}
           initialSecond={initialSecond}
           initialDate={initialDate}
+          initialVerified={Boolean(session)}
+          initialPhone={session?.phone ?? session?.email ?? ''}
         />
       </main>
     </>

@@ -5,6 +5,7 @@ import { Pool } from 'pg';
 import { AppConfigService } from '../config/app-config.service';
 import crypto from 'node:crypto';
 import { toNodeHandler } from 'better-auth/node';
+import { testOtpStore } from './test-otp.store';
 
 let authInstance: any = null;
 
@@ -67,11 +68,14 @@ export function getBetterAuth(config: AppConfigService): any {
       emailOTP({
         otpLength: 6,
         expiresIn: 5 * 60,
-        async sendVerificationOTP({ email }) {
+        async sendVerificationOTP({ email, otp }: { email: string; otp: string }) {
+          if (config.e2eCaptureEmails) {
+            testOtpStore.set(email, otp);
+          }
           if (config.isProduction) {
             // SMTP
           } else {
-            console.log(`[DEV ONLY] OTP for ${email} sent`);
+            console.log(`[DEV ONLY] OTP for ${email} sent: ${otp}`);
           }
         }
       }),

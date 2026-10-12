@@ -6023,6 +6023,52 @@
           "Templates"
         ]
       }
+    },
+    "/v1/test/email-code": {
+      "get": {
+        "operationId": "TestOtpController_getEmailCode",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Testing"
+        ]
+      }
+    },
+    "/v1/test/otp": {
+      "get": {
+        "operationId": "TestOtpController_getOtp",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "email",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Testing"
+        ]
+      }
     }
   },
   "servers": [],

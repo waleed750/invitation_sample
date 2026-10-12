@@ -1,0 +1,16 @@
+{
+  "extends": "../tsconfig.base.json",
+  "compilerOptions": {
+    "incremental": false,
+    "moduleResolution": "node",
+    "target": "ES2022"
+  },
+  "include": [
+    "**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "test-results",
+    "playwright-report"
+  ]
+}

@@ -4,7 +4,8 @@
   "private": true,
   "workspaces": [
     "apps/*",
-    "packages/*"
+    "packages/*",
+    "e2e"
   ],
   "scripts": {
     "dev:web": "npm run dev --workspace @platform/web",
@@ -12,6 +13,7 @@
     "build": "npm run build --workspace @platform/web",
     "build:api": "npm run build --workspace @platform/shared && npm run build --workspace @platform/api",
     "test": "npm test --workspaces --if-present",
+    "test:e2e": "npm run test:e2e --workspace @platform/e2e",
     "lint": "npm run lint --workspace @platform/web && npm run lint --workspace @platform/api",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "check:i18n": "npm run check:i18n --workspace @platform/web",

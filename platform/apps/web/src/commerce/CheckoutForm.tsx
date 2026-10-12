@@ -33,6 +33,8 @@ interface Props {
   initialFirst?: string;
   initialSecond?: string;
   initialDate?: string;
+  initialVerified?: boolean;
+  initialPhone?: string;
 }
 
 function messageFor(error: unknown): string {
@@ -66,6 +68,8 @@ export function CheckoutForm({
   initialFirst = '',
   initialSecond = '',
   initialDate = '',
+  initialVerified = false,
+  initialPhone = '',
 }: Props) {
   const t = useTranslations('checkout');
   const demo = useTranslations('demoMode');
@@ -81,10 +85,10 @@ export function CheckoutForm({
   const [first, setFirst] = useState(initialFirst);
   const [second, setSecond] = useState(initialSecond);
   const [eventDate, setEventDate] = useState(initialDate);
-  const [phone, setPhone] = useState('');
+  const [phone, setPhone] = useState(initialPhone);
   const [code, setCode] = useState('');
   const [otpSent, setOtpSent] = useState(false);
-  const [verified, setVerified] = useState(false);
+  const [verified, setVerified] = useState(initialVerified);
   const [tier, setTier] = useState<Tier>(initialTier);
   const [method, setMethod] = useState<PaymentMethod>('card');
 
@@ -327,6 +331,7 @@ export function CheckoutForm({
                       <label htmlFor={firstInputId}>{t('details.partner1')}</label>
                       <input
                         id={firstInputId}
+                        data-testid="partner1-input"
                         value={first}
                         onChange={(e) => setFirst(e.target.value)}
                         placeholder={t('details.firstPlaceholder')}
@@ -339,6 +344,7 @@ export function CheckoutForm({
                       <label htmlFor={secondInputId}>{t('details.partner2')}</label>
                       <input
                         id={secondInputId}
+                        data-testid="partner2-input"
                         value={second}
                         onChange={(e) => setSecond(e.target.value)}
                         placeholder={t('details.secondPlaceholder')}
@@ -353,6 +359,7 @@ export function CheckoutForm({
                     <label htmlFor={dateInputId}>{t('details.date')}</label>
                     <input
                       id={dateInputId}
+                      data-testid="event-date-input"
                       type="date"
                       value={eventDate}
                       onChange={(e) => setEventDate(e.target.value)}
@@ -377,6 +384,7 @@ export function CheckoutForm({
                   <div className="step-card__actions">
                     <button
                       type="button"
+                      data-testid="step1-next-btn"
                       className="btn-primary"
                       onClick={handleGoToStep2}
                     >
@@ -527,6 +535,7 @@ export function CheckoutForm({
                   <div className="step-card__actions">
                     <button
                       type="button"
+                      data-testid="step2-next-btn"
                       className="btn-primary"
                       onClick={handleGoToStep3}
                     >
@@ -724,6 +733,7 @@ export function CheckoutForm({
 
             <button
               className="pay-cta-btn"
+              data-testid="pay-cta-btn"
               type="button"
               disabled={pending || activeStep !== 3 || !verified}
               onClick={handlePay}

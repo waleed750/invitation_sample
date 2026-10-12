@@ -264,7 +264,7 @@ export default function Rsvp({
             </label>
           )}
 
-          <button type="submit" disabled={submitting}>
+          <button type="submit" data-testid="rsvp-submit-btn" disabled={submitting}>
             <Send size={17} aria-hidden="true" />
             {submitting ? publicT("submitting") : text(submitLabel ?? t("sendRsvp"))}
           </button>

@@ -13,7 +13,8 @@ export async function getServerSession(): Promise<AuthSession | null> {
     const cookieHeader = cookieStore.getAll().map(c => `${c.name}=${c.value}`).join('; ');
     if (!cookieHeader) return null;
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/auth/get-session`, {
+    const apiUrl = (process.env.API_BASE_URL || process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001').replace(/\/+$/, '');
+    const res = await fetch(`${apiUrl}/v1/auth/get-session`, {
       headers: {
         cookie: cookieHeader
       },
