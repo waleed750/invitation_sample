@@ -25,6 +25,9 @@ export function getBetterAuth(config: AppConfigService): any {
     baseURL: config.betterAuthUrl,
     basePath: '/v1/auth',
     advanced: {
+      database: {
+        generateId: 'uuid'
+      },
       defaultCookieAttributes: {
         domain: config.authCookieDomain,
         sameSite: 'lax',
