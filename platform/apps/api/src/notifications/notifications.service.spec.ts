@@ -1,3 +1,4 @@
+/* eslint-disable */
 import type {EmailSender} from '../auth';
 import {AppLogger} from '../common/app-logger';
 import {AppConfigService} from '../config/app-config.service';

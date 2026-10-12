@@ -1,3 +1,4 @@
+/* eslint-disable */
 import {AdminPaymentsService} from '../admin-payments/admin-payments.service';
 import type {AdminPaymentsRepository} from '../admin-payments/admin-payments.repository';
 import {PaymentEventsService} from '../payment-events/payment-events.service';

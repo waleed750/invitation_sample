@@ -21,7 +21,7 @@ export class NotificationsService {
         return;
       }
       const recipient = await this.repository.getUserRecipient(userId);
-      if (!recipient || !recipient.email) {
+      if (!recipient?.email) {
         this.logger.log('skipping notification: recipient has no email');
         return;
       }
@@ -46,7 +46,7 @@ export class NotificationsService {
         return;
       }
       const recipient = await this.repository.getOrderRecipient(orderId);
-      if (!recipient || !recipient.email) {
+      if (!recipient?.email) {
         this.logger.log('skipping notification: recipient has no email');
         return;
       }
@@ -71,7 +71,7 @@ export class NotificationsService {
         return;
       }
       const recipient = await this.repository.getOrderRecipient(orderId);
-      if (!recipient || !recipient.email) {
+      if (!recipient?.email) {
         this.logger.log('skipping notification: recipient has no email');
         return;
       }
@@ -96,7 +96,7 @@ export class NotificationsService {
         return;
       }
       const recipient = await this.repository.getOrderRecipient(orderId);
-      if (!recipient || !recipient.email) {
+      if (!recipient?.email) {
         this.logger.log('skipping notification: recipient has no email');
         return;
       }
