@@ -3,18 +3,18 @@
   "created_at": "2026-07-18T16:26:25.286Z",
   "lifetime": {
     "total_tokens_estimated": 36524619,
-    "total_reads": 28281,
+    "total_reads": 28282,
     "total_writes": 39332,
-    "total_sessions": 20,
+    "total_sessions": 21,
     "anatomy_hits": 6570,
-    "anatomy_misses": 21329,
+    "anatomy_misses": 21330,
     "repeated_reads_blocked": 9257,
     "estimated_savings_vs_bare_cli": 15904540,
-    "real_input_tokens": 1026817,
-    "real_output_tokens": 120820795,
-    "real_cache_read_tokens": 94992485222,
-    "real_cache_creation_tokens": 412168610,
-    "real_api_calls": 340392
+    "real_input_tokens": 1026825,
+    "real_output_tokens": 120821764,
+    "real_cache_read_tokens": 94992763106,
+    "real_cache_creation_tokens": 412214243,
+    "real_api_calls": 340396
   },
   "sessions": [
     {
@@ -385390,6 +385390,36 @@
         "cache_read_input_tokens": 69763178,
         "cache_creation_input_tokens": 1972575,
         "api_calls": 276
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T01:03:04.321Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 8,
+        "output_tokens": 969,
+        "cache_read_input_tokens": 277884,
+        "cache_creation_input_tokens": 45633,
+        "api_calls": 4
       }
     }
   ],
