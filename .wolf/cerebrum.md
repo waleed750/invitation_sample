@@ -57,6 +57,8 @@
 
 ## Decision Log
 
+- **(2026-10-24) OWNER PAYMENT DECISIONS:** launch = MANUAL top-ups only; every account has a prepaid store-credit balance; all purchases are paid from the balance; if the balance is too low the purchase becomes an order with status `awaiting_balance` in My orders and is auto-paid (oldest first) when the admin confirms a top-up. EasyConfirm does not exist yet: keep its adapter in code but disabled (PAYMENT_EVENTS_ENABLED=false). Gateway (Paymob/Kashier) is FUTURE. New feature: 'Custom design — contact us' requests → admin quote → awaiting-balance order. Plan for cloud Sonnet: platform/docs/CLOUD_TASKS.md (not committed until owner review).
+
 - **(2026-10-09) OWNER DECISION: NO Supabase.** Owner can only buy a VPS, so the stack is plain PostgreSQL on the VPS (Coolify one-click DB + scheduled backups to S3-compatible storage off-server) + OUR OWN API/auth (library such as Better Auth with phone/email/Google; WhatsApp OTP via custom sendOTP). Supabase Auth/PostgREST/supabase-js/@supabase/ssr get replaced; tables, SQL functions, migrations stay. Nothing is live yet, so no user migration needed. Needs a migration project (agy) — see STATUS.
 
 - **(2026-10-07) Owner: payments are MANUAL at launch** (InstaPay / wallets / bank transfer, proof on WhatsApp, admin marks paid -> fulfill_paid_order). Fawry is post-launch. Plan milestone B7a.
