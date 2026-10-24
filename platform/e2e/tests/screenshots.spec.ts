@@ -9,7 +9,7 @@ const TASK = process.env.E2E_SCREENSHOT_TASK ?? 'T01';
 const WIDTHS = [390, 768, 1280] as const;
 const LOCALES = ['ar', 'en'] as const;
 
-type Route = {name: string; path: string; auth?: 'admin' | 'customer'; settle?: string};
+type Route = {name: string; path: string; auth?: 'admin' | 'customer'; status?: number};
 
 const ROUTES: Route[] = [
   {name: 'home', path: ''},
@@ -17,6 +17,11 @@ const ROUTES: Route[] = [
   {name: 'pricing', path: '/pricing'},
   {name: 'sign-in', path: '/sign-in'},
   {name: 'public-invitation', path: `/i/${SEED.publishedSlug}`},
+  {name: 'invitation-ended', path: '/i/demo-hoda-tarek'},
+  {name: 'legal-terms', path: '/terms'},
+  {name: 'legal-privacy', path: '/privacy'},
+  {name: 'legal-refund', path: '/refund'},
+  {name: 'not-found', path: '/no-such-page', status: 404},
   {name: 'pick-preview', path: '/pick-preview/mashrabiya?first=Sara&second=Ali&date=2027-06-15'},
   {name: 'customer-dashboard', path: '/app', auth: 'customer'},
   {name: 'customer-new', path: '/app/new', auth: 'customer'},
@@ -44,7 +49,8 @@ for (const route of ROUTES) {
         });
         const page = await context.newPage();
         const response = await page.goto(`/${locale}${route.path}`);
-        expect(response?.status(), `${route.path} responds`).toBeLessThan(400);
+        if (route.status === undefined) expect(response?.status(), `${route.path} responds`).toBeLessThan(400);
+        else expect(response?.status(), `${route.path} responds`).toBe(route.status);
         await page.waitForLoadState('networkidle');
 
         const overflow = await page.evaluate(() => document.documentElement.scrollWidth - document.documentElement.clientWidth);

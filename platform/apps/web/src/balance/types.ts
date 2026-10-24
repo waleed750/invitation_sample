@@ -7,6 +7,7 @@ export interface Balance {
   bonusMinTopupMinor: number;
   awaitingOrders: {id: string; tier: string; amountMinor: number; currency: string; createdAt: string; templateSlug: string | null}[];
   shortfallMinor: number;
+  paymentInstructions: {methods?: PaymentMethodInstruction[]} | null;
 }
 
 export interface LedgerItem {
@@ -33,6 +34,8 @@ export interface Topup {
 
 export interface PaymentMethodInstruction {
   id: string;
+  /** Optional https link that opens the payment app (for example InstaPay). */
+  url?: string;
   label: {ar: string; en: string};
   details: {ar: string; en: string};
 }
@@ -52,4 +55,14 @@ export interface PayResult {
 export interface PendingTopup extends Topup {
   customer: {id: string; name: string | null; phone: string | null; email: string | null} | null;
   ageHours: number;
+}
+
+export interface OrderStatus {
+  orderId: string;
+  status: string;
+  paid: boolean;
+  amountMinor: number;
+  currency: string;
+  invitationId: string | null;
+  invitationSlug: string | null;
 }

@@ -106,6 +106,11 @@ export class AppConfigService {
     return this.isProduction ? 'smtp' : 'log';
   }
 
+  /** Launch mode: purchases are paid from the credit balance (or wait as "awaiting balance"). */
+  get purchasesViaBalance(): boolean {
+    return this.required('PURCHASES_VIA_BALANCE');
+  }
+
   /** Auto-confirm from payment notifications. Off by default (manual confirmation only). */
   get paymentEventsEnabled(): boolean {
     return this.required('PAYMENT_EVENTS_ENABLED');

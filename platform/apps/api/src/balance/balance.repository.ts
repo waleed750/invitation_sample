@@ -40,6 +40,15 @@ export interface AwaitingOrderRow {
   template: {slug: string} | null;
 }
 
+export interface OrderStatusRow {
+  id: string;
+  status: string;
+  amount_minor: number;
+  currency: string;
+  invitation_id: string | null;
+  invitation_slug: string | null;
+}
+
 export interface PendingTopupRow extends TopupRow {
   profiles: {id: string; name: string | null; phone: string | null; email: string | null} | null;
 }
@@ -93,6 +102,17 @@ export class BalanceRepository {
           select o.id, o.tier, o.amount_minor, o.currency, o.created_at,
             (select jsonb_build_object('slug', t.slug) from public.templates t where t.id = o.template_id) as template
           from public.orders o where o.user_id = ${userId}::uuid and o.status = 'awaiting_balance' order by o.created_at, o.id
+        ) x`));
+  }
+
+  async orderStatus(userId: string, orderId: string): Promise<OrderStatusRow | null> {
+    return this.db.asUser({id: userId}, async (tx) =>
+      firstJson(await tx<JsonRow<OrderStatusRow>[]>`
+        select to_jsonb(x) as r from (
+          select o.id, o.status, o.amount_minor, o.currency,
+            (select i.id from public.invitations i where i.order_id = o.id order by i.created_at limit 1) as invitation_id,
+            (select i.slug from public.invitations i where i.order_id = o.id order by i.created_at limit 1) as invitation_slug
+          from public.orders o where o.id = ${orderId}::uuid and o.user_id = ${userId}::uuid
         ) x`));
   }
 

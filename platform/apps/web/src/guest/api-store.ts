@@ -66,7 +66,7 @@ const liveInvitationSchema = z.object({
 });
 
 const publicInvitationSchema = z.discriminatedUnion('state', [
-  z.object({state: z.literal('ended')}),
+  z.object({state: z.literal('ended'), couple: z.object({first: z.string(), second: z.string()}).partial().optional(), eventDate: z.string().optional()}),
   liveInvitationSchema,
 ]);
 
@@ -367,6 +367,30 @@ export class ApiInvitationPublicStore implements InvitationPublicStore {
  * Public visibility state for a slug: `live`, `ended`, or `missing`.
  * The page uses it to render the ended page instead of a 404.
  */
+export interface EndedSummary {
+  first: string;
+  second: string;
+  eventDate: string;
+}
+
+/** The couple and date of an invitation whose online period is over (for the "ended" page); `null` when live or unknown. */
+export async function getEndedSummary(shareSlug: string, deps: ApiStoreDeps = {}): Promise<EndedSummary | null> {
+  const client = createGuestApiClient(deps);
+  let data: unknown;
+  let response: Response;
+  try {
+    const result = await client.GET('/v1/public/invitations/{slug}', {params: {path: {slug: shareSlug}}});
+    data = result.data as unknown;
+    response = result.response;
+  } catch {
+    return null;
+  }
+  if (!response.ok) return null;
+  const parsed = publicInvitationSchema.safeParse(data);
+  if (!parsed.success || parsed.data.state !== 'ended') return null;
+  return {first: parsed.data.couple?.first ?? '', second: parsed.data.couple?.second ?? '', eventDate: parsed.data.eventDate ?? ''};
+}
+
 export async function getPublicState(shareSlug: string, deps: ApiStoreDeps = {}): Promise<PublicInvitationState> {
   const client = createGuestApiClient(deps);
   let data: unknown;

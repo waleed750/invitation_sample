@@ -18,6 +18,7 @@ import {
   IconWallet,
   IconWhatsApp,
 } from './icons';
+import {SignInForm} from '@/auth/SignInForm';
 import {sendOtpAction, startCheckoutAction, verifyOtpAction} from './actions';
 import type {OrderKind, PaymentMethod} from './types';
 
@@ -35,6 +36,10 @@ interface Props {
   initialDate?: string;
   /** Real account mode: the customer is already signed in, so no phone check and one manual payment method. */
   signedIn?: boolean;
+  /** Real account mode but not signed in yet: sign in right here (email code) without leaving the page. */
+  guest?: boolean;
+  /** Open directly on the pay step (used when coming back from the inline sign-in). */
+  initialStep?: 1 | 2 | 3;
 }
 
 function messageFor(error: unknown): string {
@@ -69,6 +74,8 @@ export function CheckoutForm({
   initialSecond = '',
   initialDate = '',
   signedIn = false,
+  guest = false,
+  initialStep = 1,
 }: Props) {
   const t = useTranslations('checkout');
   const demo = useTranslations('demoMode');
@@ -99,8 +106,8 @@ export function CheckoutForm({
   const [couponError, setCouponError] = useState(false);
 
   // Sequential steps: 1: Details, 2: Plan, 3: Verify & Pay
-  const [activeStep, setActiveStep] = useState<1 | 2 | 3>(1);
-  const [maxReachedStep, setMaxReachedStep] = useState<1 | 2 | 3>(1);
+  const [activeStep, setActiveStep] = useState<1 | 2 | 3>(initialStep);
+  const [maxReachedStep, setMaxReachedStep] = useState<1 | 2 | 3>(initialStep);
 
   // UI state
   const [step1Error, setStep1Error] = useState('');
@@ -264,6 +271,15 @@ export function CheckoutForm({
       }
     }
   }
+
+  // Where the inline sign-in returns to: this same page, straight on the pay step, with the details kept.
+  const signInNext = `/${locale}/checkout/${templateSlug}?${new URLSearchParams({
+    tier,
+    ...(kind === 'new' ? {} : {kind}),
+    names: `${first.trim()} & ${second.trim()}`,
+    date: eventDate,
+    step: '3',
+  }).toString()}`;
 
   const errorKey = error.includes('invalid_phone')
     ? 'invalidPhone'
@@ -561,7 +577,13 @@ export function CheckoutForm({
               {activeStep === 3 && (
                 <div className="step-card__body">
                   {/* Phone Verification */}
-                  {!signedIn && (<div className="verification-section">
+                  {guest && (
+                    <div className="checkout-inline-signin" data-testid="checkout-signin">
+                      <p>{t('guest.lead')}</p>
+                      <SignInForm next={signInNext} />
+                    </div>
+                  )}
+                  {!signedIn && !guest && (<div className="verification-section">
                     {!verified ? (
                       <div className="verification-box">
                         <label htmlFor={phoneInputId}>{t('otp.phone')}</label>
@@ -654,7 +676,7 @@ export function CheckoutForm({
                   </div>)}
 
                   {/* Payment Method Choice */}
-                  {!signedIn && (<fieldset className="payment-choices" aria-label={t('plan.method')}>
+                  {!signedIn && !guest && (<fieldset className="payment-choices" aria-label={t('plan.method')}>
                     <legend className="payment-choices__legend">{t('plan.method')}</legend>
                     {(['card', 'wallet', 'fawry'] as const).map((item) => (
                       <label
@@ -737,7 +759,7 @@ export function CheckoutForm({
               ) : activeStep !== 3 ? (
                 t('summary.payNow', {amount: formatMoney(activeQuote.total, locale)})
               ) : !verified ? (
-                t('summary.verifyFirst')
+                guest ? t('summary.signInFirst') : t('summary.verifyFirst')
               ) : (
                 t('summary.payNow', {amount: formatMoney(activeQuote.total, locale)})
               )}

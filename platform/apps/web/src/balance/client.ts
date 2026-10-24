@@ -1,5 +1,5 @@
 /** Browser-side calls (the sign-in cookie travels with them). */
-import type {Balance, PayResult, TopupWithInstructions} from './types';
+import type {Balance, OrderStatus, PayResult, TopupWithInstructions} from './types';
 
 export class BalanceClientError extends Error {
   constructor(readonly code: string, readonly status: number, readonly details: Record<string, unknown> = {}) {
@@ -41,3 +41,4 @@ export const fetchBalance = () => call<Balance>('GET', '/v1/balance');
 export const createTopup = (amountMinor: number) => call<TopupWithInstructions>('POST', '/v1/balance/topups', {amountMinor});
 export const payWithBalance = (orderId: string) => call<PayResult>('POST', `/v1/orders/${encodeURIComponent(orderId)}/pay-with-balance`, {});
 export const cancelAwaitingOrder = (orderId: string) => call<{ok: true}>('POST', `/v1/orders/${encodeURIComponent(orderId)}/cancel`, {});
+export const fetchOrderStatus = (orderId: string) => call<OrderStatus>('GET', `/v1/orders/${encodeURIComponent(orderId)}/status`);

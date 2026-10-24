@@ -31,3 +31,13 @@
 .balance-ledger .is-in > :last-child { color: #0b5a34; }
 .balance-ledger .is-out > :last-child { color: #8a1c10; }
 .awaiting-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; margin-block-start: .75rem; }
+
+/* T15 order pay */
+.orderpay-card { display: grid; gap: .8rem; padding: 1.1rem; border: 1px solid rgb(0 0 0 / 12%); border-radius: 14px; background: var(--color-surface, #fff); }
+.orderpay-card h2 { margin: 0; font-size: 1.1rem; }
+.orderpay-card p { margin: 0; }
+.orderpay-card.is-paid { border-color: #0b5a34; background: #e6f4ec; color: #0b5a34; }
+.orderpay-total { display: flex; justify-content: space-between; align-items: baseline; font-size: 1.05rem; }
+.orderpay-total strong { font-size: 1.5rem; }
+.orderpay-note { color: var(--color-muted, #6b5f50); font-size: .88rem; }
+.orderpay-whatsapp { font-size: .9rem; }

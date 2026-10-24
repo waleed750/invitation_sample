@@ -2,7 +2,8 @@ import {expect, test, type Page} from '@playwright/test';
 import {API_URL, SEED, newSignedInContext, signIn} from '../helpers';
 
 // The whole customer journey, in Arabic, as one ordered story:
-// sign in -> pick a template -> checkout (manual) -> admin confirms -> edit -> publish -> guest RSVP -> owner sees it.
+// sign in -> pick a template -> checkout (balance empty: the order waits) -> admin confirms the top-up -> the order is paid
+// automatically -> edit -> publish -> guest RSVP -> owner sees it.
 test.describe.configure({mode: 'serial'});
 
 const run = Date.now().toString(36);
@@ -51,21 +52,24 @@ test('customer signs in, picks a template and checks out', async ({page}) => {
   await expect(page).toHaveURL(/\/ar\/checkout\/mashrabiya/);
   await goThroughCheckout(page);
 
+  // The balance is empty, so the order is saved as "awaiting balance" and the top-up screen opens.
   await expect(page).toHaveURL(/\/ar\/checkout\/pay\//);
-  const text = await page.locator('main').innerText();
-  const match = /INV-[A-Z0-9]{6}/.exec(text);
-  expect(match, 'the pay page shows the payment reference').not.toBeNull();
-  reference = match?.[0] ?? '';
+  await expect(async () => {
+    await page.getByRole('button', {name: /عرض بيانات التحويل/}).click({timeout: 2_000});
+    await expect(page.getByTestId('topup-reference')).toBeVisible({timeout: 4_000});
+  }).toPass({timeout: 30_000});
+  reference = (await page.getByTestId('topup-reference').innerText()).trim();
+  expect(reference).toMatch(/^TOP-[A-Z0-9]{6}$/);
   // A real account never sees demo-mode copy.
   await expect(page.getByText('الوضع التجريبي')).toHaveCount(0);
 });
 
-test('admin sees the pending payment and confirms it', async ({browser}) => {
+test('admin sees the pending top-up and confirms it; the awaiting order is paid automatically', async ({browser}) => {
   const {context, page} = await newSignedInContext(browser, SEED.admin, '/ar/admin/payments');
-  const card = page.locator(`[data-testid="pending-payment"][data-reference="${reference}"]`);
+  const card = page.locator(`[data-testid="pending-topup"][data-reference="${reference}"]`);
   await expect(card).toBeVisible();
   await card.getByRole('button', {name: 'تأكيد'}).click();
-  await page.locator('input[name=txnRef]').fill(`E2E-${run}`);
+  await card.locator('input[name=txnRef]').fill(`E2E-${run}`);
   await card.locator('form button[type=submit]').click();
   await expect(card).toHaveCount(0);
   await context.close();

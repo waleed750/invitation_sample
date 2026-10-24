@@ -232,7 +232,8 @@
       "trustLine": "Secure payment · No auto-renewal · 14-day refund",
       "payNow": "Pay {amount}",
       "verifyFirst": "Verify phone to continue",
-      "helpWhatsApp": "Help via WhatsApp"
+      "helpWhatsApp": "Help via WhatsApp",
+      "signInFirst": "Sign in to continue"
     },
     "pay": {
       "button": "Continue to payment",
@@ -294,6 +295,9 @@
       "verifyFirst": "Verify your phone before continuing.",
       "detailsRequired": "Enter both names and the event date.",
       "generic": "Something went wrong. Check your details and try again."
+    },
+    "guest": {
+      "lead": "Sign in with your email to pay. We send you a code — no password."
     }
   },
   "dashboard": {
@@ -552,6 +556,24 @@
       "submitting": "Sending…",
       "error": "We could not save this response. Please try again.",
       "limitReached": "This response exceeds the remaining guest capacity. Please contact the hosts."
+    },
+    "ended": {
+      "eyebrow": "This invitation has ended",
+      "title": "The online period of this invitation is over.",
+      "lead": "Thank you for being part of the celebration. Want an invitation like this for your own occasion?",
+      "cta": "Create your own invitation"
+    },
+    "notFound": {
+      "title": "We can't find this page",
+      "lead": "The link may be wrong or the page may have moved.",
+      "home": "Back to home"
+    },
+    "error": {
+      "title": "Something went wrong",
+      "lead": "We are sorry. Please try again; if it keeps happening, contact us and mention the code below.",
+      "code": "Code",
+      "retry": "Try again",
+      "home": "Back to home"
     }
   },
   "demoMode": {
@@ -887,7 +909,8 @@
       "whatsapp": "Chat on WhatsApp",
       "rights": "© 2026 {brand}. All rights reserved.",
       "made": "Made with love in Egypt",
-      "legal": "Legal pages are being prepared."
+      "legal": "Legal pages are being prepared.",
+      "refund": "Refund policy"
     }
   },
   "demoBar": {
@@ -1271,6 +1294,146 @@
       "network": "Network problem. Check your connection.",
       "not_payable": "This order can no longer be paid.",
       "not_cancellable": "This order cannot be cancelled."
+    }
+  },
+  "orderPay": {
+    "eyebrow": "Last step",
+    "title": "Complete your order",
+    "total": "Total",
+    "balanceCovers": "Your balance ({balance}) covers this order.",
+    "payFromBalance": "Pay from balance",
+    "paying": "Paying…",
+    "notEnough": "Your balance is {balance}. Add {shortfall} to pay for this order.",
+    "orderSaved": "Your order is saved in My orders. It is paid automatically as soon as your top-up is confirmed.",
+    "showTransfer": "Show transfer details ({amount})",
+    "creating": "Creating…",
+    "transferTitle": "Transfer this amount",
+    "waitingTitle": "Waiting for your transfer",
+    "transferExactly": "Transfer exactly this amount and mention the reference. The piasters are how we recognise your payment.",
+    "amountToSend": "Amount to send",
+    "reference": "Reference",
+    "openApp": "Open {name}",
+    "iHavePaid": "I’ve paid",
+    "checking": "Checking for your payment… this page turns green by itself.",
+    "stillWaiting": "Still waiting?",
+    "messageUs": "Message us on WhatsApp",
+    "whatsappText": "I paid for my order and I’m waiting for confirmation",
+    "copy": "Copy",
+    "copied": "Copied",
+    "paidTitle": "Payment received — your invitation is ready",
+    "paidLead": "Taking you to your invitation…",
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "too_many_pending": "You already have pending top-ups. Use the existing transfer details or wait for them to expire.",
+      "below_minimum": "The amount is below the minimum top-up.",
+      "network": "Network problem. Check your connection.",
+      "insufficient_balance": "Your balance is too low."
+    }
+  },
+  "legal": {
+    "draftNotice": "Draft text — to be reviewed by a lawyer before launch. It describes how the service is intended to work.",
+    "updated": "Last updated: October 2026",
+    "moreLabel": "Other legal pages",
+    "home": "Back to home",
+    "terms": {
+      "title": "Terms and conditions",
+      "intro": "These terms govern your use of the service to create, publish and share digital invitations. By creating an account or placing an order you agree to them.",
+      "s1": {
+        "title": "The service",
+        "body": "We provide tools to design a digital invitation from our templates, publish it on a private link, and collect replies from your guests."
+      },
+      "s2": {
+        "title": "Your account",
+        "body": "You sign in with your email. You are responsible for the activity on your account and for keeping access to your email secure."
+      },
+      "s3": {
+        "title": "Plans, edits and online period",
+        "body": "Each plan includes a number of publishes (edits) and an online period shown before you pay. When the period ends the invitation page is no longer shown to guests."
+      },
+      "s4": {
+        "title": "Credit balance",
+        "body": "You pay from a prepaid balance that you top up by bank or wallet transfer. The balance is store credit: it cannot be withdrawn or transferred, and is spent only on the service."
+      },
+      "s5": {
+        "title": "Your content",
+        "body": "You keep the rights to the photos, text and music you upload and confirm that you may use them. You must not upload unlawful or infringing content; we may remove it."
+      },
+      "s6": {
+        "title": "Guests and replies",
+        "body": "Guests can reply without an account. You are responsible for how you use their replies and contact details."
+      },
+      "s7": {
+        "title": "Availability",
+        "body": "We work to keep the service available but do not promise uninterrupted access. Scheduled maintenance and outages may occur."
+      },
+      "s8": {
+        "title": "Changes and contact",
+        "body": "We may update these terms; the date above shows the latest version. Contact us through the channels on the website for any question."
+      }
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "intro": "This policy explains what personal data we keep and why, in line with Egypt's Personal Data Protection Law (Law 151 of 2020).",
+      "s1": {
+        "title": "What we store about you",
+        "body": "Your email (and phone if you add one), your name, your orders and balance movements, and the invitations you create, including the photos and text you add."
+      },
+      "s2": {
+        "title": "What we store about your guests",
+        "body": "When a guest replies we store the name, number of guests, the answer and, if given, a phone number and a message. We do not store the guest's raw IP address; only a one-way hash used to limit abuse."
+      },
+      "s3": {
+        "title": "Why we use it",
+        "body": "To run your account, deliver your invitation, show you your guests' replies, confirm payments, prevent abuse and meet legal duties."
+      },
+      "s4": {
+        "title": "How long we keep it",
+        "body": "Guest phone numbers are deleted automatically 30 days after the event. Invitations are archived after their online period ends. Payment records are kept as long as the law requires."
+      },
+      "s5": {
+        "title": "Who sees it",
+        "body": "Only you (and our support team when you ask) see your invitation data and replies. We use providers for hosting and email; they process data only for us. We do not sell personal data."
+      },
+      "s6": {
+        "title": "Cookies",
+        "body": "We use a sign-in cookie and a language preference. We do not use advertising cookies."
+      },
+      "s7": {
+        "title": "Your rights",
+        "body": "You can ask to see, correct, export or delete your data. From your account you can export your data and delete your account; deleting removes personal data but keeps paid-order records that the law requires."
+      },
+      "s8": {
+        "title": "Contact",
+        "body": "To exercise your rights or ask a question, contact us through the channels on the website. We answer within a reasonable time."
+      }
+    },
+    "refund": {
+      "title": "Refund policy",
+      "intro": "This policy explains when an order can be refunded.",
+      "s1": {
+        "title": "Before you publish",
+        "body": "If you have not published the invitation and ask within 14 days of paying, we refund the order."
+      },
+      "s2": {
+        "title": "After you publish",
+        "body": "Once an invitation is published the service has been delivered. We may still refund in case of a technical fault that we cannot fix."
+      },
+      "s3": {
+        "title": "How refunds are paid",
+        "body": "Refunds are returned to your credit balance as store credit, which you can spend on any service. If you need the money back instead, contact us and we will review it."
+      },
+      "s4": {
+        "title": "Top-ups",
+        "body": "A confirmed top-up becomes store credit and is not refundable as cash unless a payment was made in error."
+      },
+      "s5": {
+        "title": "Mistaken or duplicate payments",
+        "body": "If you transferred the wrong amount or paid twice, tell us with the transfer reference and we will correct it."
+      },
+      "s6": {
+        "title": "How to ask",
+        "body": "Contact us through the channels on the website with your order or transfer reference."
+      }
     }
   }
 }

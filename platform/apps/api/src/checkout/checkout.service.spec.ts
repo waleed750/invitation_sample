@@ -8,6 +8,7 @@ import {CheckoutRepository} from './checkout.repository';
 import {UniqueAmountService} from '../payment-events/unique-amount.service';
 import {ConflictException} from '@nestjs/common';
 import {CheckoutService} from './checkout.service';
+import {BalanceService} from '../balance/balance.service';
 
 describe('CheckoutService', () => {
   let service: CheckoutService;
@@ -15,6 +16,7 @@ describe('CheckoutService', () => {
   let provider: any;
   let config: any;
   let uniqueAmountService: any;
+  let balance: {payOrder: jest.Mock};
 
   beforeEach(async () => {
     repository = {
@@ -34,6 +36,7 @@ describe('CheckoutService', () => {
 
     config = {paymentsProvider: 'mock', manualPaymentInstructions: undefined};
     uniqueAmountService = {allocate: jest.fn()};
+    balance = {payOrder: jest.fn()};
 
     const module = await Test.createTestingModule({
       providers: [
@@ -42,7 +45,8 @@ describe('CheckoutService', () => {
         {provide: PAYMENT_PROVIDER, useValue: provider},
         {provide: AppLogger, useValue: {error: jest.fn(), warn: jest.fn()}},
         {provide: AppConfigService, useValue: config},
-        {provide: UniqueAmountService, useValue: uniqueAmountService}
+        {provide: UniqueAmountService, useValue: uniqueAmountService},
+        {provide: BalanceService, useValue: balance}
       ]
     }).compile();
 
@@ -77,6 +81,57 @@ describe('CheckoutService', () => {
     expect(repository.createPendingCheckoutAsServiceRole).toHaveBeenCalledWith(expect.any(Object));
     expect(repository.findPointsBalance).toHaveBeenCalledWith('u1');
     expect(provider.createCheckout).toHaveBeenCalledWith({id: 'new_order', amountMinor: 50000, currency: 'EGP', method: 'card'});
+  });
+
+  describe('PURCHASES_VIA_BALANCE', () => {
+    beforeEach(() => {
+      config.purchasesViaBalance = true;
+      config.paymentsProvider = 'manual';
+    });
+
+    it('pays from the balance in one call and skips the manual-transfer machinery', async () => {
+      mockHappyPrefix();
+      repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 129900});
+      repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'o1', amount_minor: 129900, currency: 'EGP'});
+      balance.payOrder.mockResolvedValueOnce({paid: true, orderId: 'o1', status: 'paid', balanceMinor: 500, shortfallMinor: 0});
+
+      const result = await service.start(user, body(), 'idemp-1234');
+      expect(result).toEqual({orderId: 'o1', redirectUrl: '/checkout/pay/o1', amountMinor: 129900, currency: 'EGP', status: 'paid', balanceMinor: 500, shortfallMinor: 0});
+      expect(rpcArgs()).toMatchObject({provider: 'balance'});
+      expect(balance.payOrder).toHaveBeenCalledWith(user, 'o1');
+      expect(uniqueAmountService.allocate).not.toHaveBeenCalled();
+      expect(provider.createCheckout).not.toHaveBeenCalled();
+      expect(result.payment).toBeUndefined();
+    });
+
+    it('returns awaiting_balance with the shortfall (not an error) when the balance is too low', async () => {
+      mockHappyPrefix();
+      repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 129900});
+      repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'o2', amount_minor: 129900, currency: 'EGP'});
+      balance.payOrder.mockResolvedValueOnce({paid: false, orderId: 'o2', status: 'awaiting_balance', balanceMinor: 0, shortfallMinor: 129900});
+
+      const result = await service.start(user, body(), 'idemp-1234');
+      expect(result).toMatchObject({orderId: 'o2', status: 'awaiting_balance', shortfallMinor: 129900, redirectUrl: '/checkout/pay/o2'});
+    });
+
+    it('a retry with the same idempotency key reuses the order and just tries to pay it again', async () => {
+      repository.findOrderByIdempotencyKeyAsServiceRole.mockResolvedValueOnce({id: 'o3', amount_minor: 129900, currency: 'EGP', created_at: 'x'});
+      balance.payOrder.mockResolvedValueOnce({paid: true, orderId: 'o3', status: 'paid', balanceMinor: 0, shortfallMinor: 0});
+
+      const result = await service.start(user, body(), 'idemp-1234');
+      expect(result).toMatchObject({orderId: 'o3', status: 'paid'});
+      expect(repository.createPendingCheckoutAsServiceRole).not.toHaveBeenCalled();
+    });
+
+    it('is off by default: the legacy flow never touches the balance', async () => {
+      config.purchasesViaBalance = false;
+      mockHappyPrefix();
+      repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 50000});
+      repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'o4', amount_minor: 50000, currency: 'EGP'});
+      uniqueAmountService.allocate.mockResolvedValueOnce({amountMinor: 50011});
+      await service.start(user, body(), 'idemp-1234');
+      expect(balance.payOrder).not.toHaveBeenCalled();
+    });
   });
 
   it('uses the template-specific price when one exists (override wins)', async () => {

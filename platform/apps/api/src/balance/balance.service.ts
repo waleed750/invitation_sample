@@ -40,6 +40,8 @@ export interface BalanceResponse {
   awaitingOrders: {id: string; tier: string; amountMinor: number; currency: string; createdAt: string; templateSlug: string | null}[];
   /** The smallest top-up that pays every awaiting order (0 when nothing waits). */
   shortfallMinor: number;
+  /** Where to send a transfer (the operator-configured manual payment methods). */
+  paymentInstructions: unknown;
 }
 
 export interface TopupResponse {
@@ -52,6 +54,16 @@ export interface TopupResponse {
   status: string;
   expiresAt: string;
   createdAt: string;
+}
+
+export interface OrderStatusResponse {
+  orderId: string;
+  status: string;
+  paid: boolean;
+  amountMinor: number;
+  currency: string;
+  invitationId: string | null;
+  invitationSlug: string | null;
 }
 
 export interface PayOrderResponse {
@@ -131,7 +143,8 @@ export class BalanceService {
           id: order.id, tier: order.tier, amountMinor: order.amount_minor, currency: order.currency,
           createdAt: order.created_at, templateSlug: order.template?.slug ?? null
         })),
-        shortfallMinor: Math.max(0, owed - balance)
+        shortfallMinor: Math.max(0, owed - balance),
+        paymentInstructions: this.paymentInstructions()
       };
     }, 'balance read');
   }
@@ -178,6 +191,16 @@ export class BalanceService {
       return {paid: false, orderId, status: 'awaiting_balance', balanceMinor: num(result?.balance_minor), shortfallMinor: num(result?.shortfall_minor)};
     }
     throw refusal(result, 'Order not found');
+  }
+
+  /** Light status for the waiting screen: just enough to know when to move on. */
+  async orderStatus(user: RequestUser, orderId: string): Promise<OrderStatusResponse> {
+    const row = await this.guarded(() => this.repository.orderStatus(user.id, orderId), 'order status');
+    if (row === null) throw new NotFoundException('Order not found');
+    return {
+      orderId: row.id, status: row.status, paid: row.status === 'paid', amountMinor: row.amount_minor, currency: row.currency,
+      invitationId: row.invitation_id, invitationSlug: row.invitation_slug
+    };
   }
 
   async cancelOrder(user: RequestUser, orderId: string): Promise<{ok: true}> {

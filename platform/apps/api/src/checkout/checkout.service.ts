@@ -1,4 +1,4 @@
-import {BadRequestException, Inject, Injectable, ServiceUnavailableException, UnprocessableEntityException} from '@nestjs/common';
+import {BadRequestException, Inject, Injectable, Optional, ServiceUnavailableException, UnprocessableEntityException} from '@nestjs/common';
 import {applyDiscountCap, catalogEntry, currencyCode, fromDbTier, fromMinor, maxRedeemableEgp, toDbTier, toMinor} from '@platform/shared';
 import {randomUUID} from 'node:crypto';
 import {createZodDto} from 'nestjs-zod';
@@ -12,6 +12,7 @@ import type {RequestUser} from '../common/decorators';
 import {CheckoutRepository} from './checkout.repository';
 import {buildManualPayment, type ManualPaymentDetails} from '../payments/manual-payment';
 import {PAYMENT_PROVIDER, type PaymentProvider} from '../payments/payment-provider';
+import {BalanceService} from '../balance/balance.service';
 
 const checkoutSchema = z.object({
   templateSlug: z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/),
@@ -34,6 +35,10 @@ export interface CheckoutResponse {
   currency: string;
   /** Manual payments only: what the customer must pay, quoting the reference. */
   payment?: ManualPaymentDetails;
+  /** Balance mode (PURCHASES_VIA_BALANCE): whether the order was paid from the balance or waits for it. */
+  status?: 'paid' | 'awaiting_balance';
+  balanceMinor?: number;
+  shortfallMinor?: number;
 }
 
 export type {ManualPaymentDetails};
@@ -85,7 +90,8 @@ export class CheckoutService {
     @Inject(PAYMENT_PROVIDER) private readonly provider: PaymentProvider,
     private readonly logger: AppLogger,
     private readonly config: AppConfigService,
-    private readonly uniqueAmountService: UniqueAmountService
+    private readonly uniqueAmountService: UniqueAmountService,
+    @Optional() private readonly balance?: BalanceService
   ) {}
 
   async start(user: RequestUser, body: CheckoutBody, idempotencyKey?: string): Promise<CheckoutResponse> {
@@ -93,6 +99,7 @@ export class CheckoutService {
     try {
       const existing = key === undefined ? null : await this.existingOrder(user.id, key);
       const order = existing ?? await this.createOrder(user, body, key);
+      if (this.config.purchasesViaBalance && this.balance !== undefined) return await this.payFromBalance(this.balance, user, order);
       let checkoutAmountMinor = order.allocatedMinor ?? order.amountMinor;
       const manual = this.config.paymentsProvider === 'manual';
       if (manual && !existing) {
@@ -137,6 +144,23 @@ export class CheckoutService {
     }
   }
 
+  /**
+   * Launch mode: the order is paid from the credit balance right away, or parked as "awaiting balance"
+   * (never an error) and paid automatically once a confirmed top-up covers it. Retrying is safe.
+   */
+  private async payFromBalance(balance: BalanceService, user: RequestUser, order: StoredOrder): Promise<CheckoutResponse> {
+    const result = await balance.payOrder(user, order.id);
+    return {
+      orderId: order.id,
+      redirectUrl: `/checkout/pay/${order.id}`,
+      amountMinor: order.amountMinor,
+      currency: order.currency,
+      status: result.status,
+      balanceMinor: result.balanceMinor,
+      shortfallMinor: result.shortfallMinor
+    };
+  }
+
   private idempotencyKey(value?: string): string | undefined {
     if (value === undefined || value.trim() === '') return undefined;
     const result = z.string().trim().min(8).max(200).safeParse(value);
@@ -174,7 +198,7 @@ export class CheckoutService {
       kind: body.kind,
       amountMinor,
       currency: CHECKOUT_CURRENCY,
-      provider: this.config.paymentsProvider === 'manual' ? 'manual' : 'mock',
+      provider: this.config.purchasesViaBalance ? 'balance' : this.config.paymentsProvider === 'manual' ? 'manual' : 'mock',
       idempotencyKey: key ?? null,
       couponCode: body.couponCode?.trim().toLowerCase() ?? null,
       discountTotalMinor,

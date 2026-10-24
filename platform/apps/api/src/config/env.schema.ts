@@ -11,7 +11,9 @@ export const manualPaymentInstructionsSchema = z.object({
   methods: z.array(z.object({
     id: z.enum(['instapay', 'wallet', 'bank']),
     label: localized,
-    details: localized
+    details: localized,
+    // Optional https link that opens the payment app (for example the InstaPay payment link).
+    url: z.url().refine((value) => value.startsWith('https://'), 'url must be https').optional()
   }).strict()).min(1)
 }).strict();
 export type ManualPaymentInstructions = z.output<typeof manualPaymentInstructionsSchema>;
@@ -68,6 +70,9 @@ const envSchema = z.object({
     .enum(['log', 'smtp', ''])
     .optional()
     .transform((value) => (value === undefined || value === '' ? undefined : value)),
+  // true = every purchase goes through the credit balance (launch mode): checkout pays from the balance, or parks the
+  // order as "awaiting balance" until a confirmed top-up covers it. false = the legacy manual-transfer order flow.
+  PURCHASES_VIA_BALANCE: z.enum(['true', 'false', '']).default('false').transform((value) => value === 'true'),
   // Payment-event webhook + auto-confirm (manual orders and top-ups). OFF at launch: the route answers 404.
   PAYMENT_EVENTS_ENABLED: z.enum(['true', 'false', '']).default('false').transform((value) => value === 'true'),
   // --- Media uploads (T12) ---

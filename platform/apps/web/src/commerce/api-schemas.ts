@@ -22,6 +22,9 @@ export const checkoutResponseSchema = z.object({
   amountMinor: minor,
   currency: z.string().min(1),
   payment: manualPaymentSchema.optional(),
+  status: z.enum(['paid', 'awaiting_balance']).optional(),
+  balanceMinor: z.number().optional(),
+  shortfallMinor: z.number().optional(),
 });
 
 export const orderSchema = z.object({

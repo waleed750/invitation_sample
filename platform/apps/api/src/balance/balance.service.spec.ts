@@ -83,6 +83,16 @@ describe('BalanceService', () => {
     await expect(service.cancelOrder(user, 'o1')).rejects.toBeInstanceOf(ConflictException);
   });
 
+  it('reports a light order status for the waiting screen, and 404s for orders that are not the caller\'s', async () => {
+    const {service, repo} = build();
+    repo.orderStatus = jest.fn().mockResolvedValueOnce({id: 'o1', status: 'paid', amount_minor: 129900, currency: 'EGP', invitation_id: 'i1', invitation_slug: 'sara-ali'});
+    expect(await service.orderStatus(user, 'o1')).toEqual({orderId: 'o1', status: 'paid', paid: true, amountMinor: 129900, currency: 'EGP', invitationId: 'i1', invitationSlug: 'sara-ali'});
+    repo.orderStatus.mockResolvedValueOnce({id: 'o2', status: 'awaiting_balance', amount_minor: 100, currency: 'EGP', invitation_id: null, invitation_slug: null});
+    expect((await service.orderStatus(user, 'o2')).paid).toBe(false);
+    repo.orderStatus.mockResolvedValueOnce(null);
+    await expect(service.orderStatus(user, 'o3')).rejects.toBeInstanceOf(NotFoundException);
+  });
+
   it('never leaks database errors: anything unexpected is a 503', async () => {
     const {service, repo} = build();
     repo.balance.mockRejectedValue(new Error('relation "profiles" does not exist'));

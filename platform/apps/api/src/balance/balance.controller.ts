@@ -3,7 +3,7 @@ import {Throttle} from '@nestjs/throttler';
 import {CurrentUser, Roles, type RequestUser} from '../common/decorators';
 import {
   AdjustCreditBody, BalanceService, ConfirmTopupBody, CreateTopupBody, IdParams, LedgerQuery, RefundToBalanceBody, RejectTopupBody,
-  type BalanceResponse, type PayOrderResponse, type TopupResponse
+  type BalanceResponse, type OrderStatusResponse, type PayOrderResponse, type TopupResponse
 } from './balance.service';
 
 /** The signed-in customer's store credit. */
@@ -38,6 +38,13 @@ export class BalanceController {
 @Controller('orders')
 export class OrderBalanceController {
   constructor(private readonly balance: BalanceService) {}
+
+  /** Polled every few seconds by the waiting screen. */
+  @Get(':id/status')
+  @Throttle({default: {limit: 40, ttl: 60_000}})
+  status(@CurrentUser() user: RequestUser, @Param() params: IdParams): Promise<OrderStatusResponse> {
+    return this.balance.orderStatus(user, params.id);
+  }
 
   @Post(':id/pay-with-balance')
   @HttpCode(200)

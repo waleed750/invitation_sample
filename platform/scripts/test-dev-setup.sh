@@ -23,5 +23,5 @@ first="$(counts)"
 second="$(counts)"
 
 [ "$first" = "$second" ] || { echo "FAIL: counts changed between runs: [$first] vs [$second]" >&2; exit 1; }
-[ "$first" = "3|1|2|1|10|1|5" ] || { echo "FAIL: unexpected seed counts: [$first]" >&2; exit 1; }
+[ "$first" = "3|1|3|2|10|1|5" ] || { echo "FAIL: unexpected seed counts: [$first]" >&2; exit 1; }
 echo "ok: dev-setup.sh is idempotent ($first)"

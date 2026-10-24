@@ -1,6 +1,7 @@
 import {hasLocale} from 'next-intl';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
-import {notFound, redirect} from 'next/navigation';
+import '@/styles/auth.css';
+import {notFound} from 'next/navigation';
 import {isApiCommerceMode} from '@/auth/config';
 import {getServerSession} from '@/auth/session';
 import {isPubliclyListed, TIER_ORDER, type Tier} from '@platform/shared';
@@ -18,6 +19,7 @@ type Props = {
     kind?: string | string[];
     names?: string | string[];
     date?: string | string[];
+    step?: string | string[];
   }>;
 };
 
@@ -46,14 +48,9 @@ export default async function CheckoutPage({params, searchParams}: Props) {
 
   const query = await searchParams;
   const apiMode = isApiCommerceMode();
-  if (apiMode && !(await getServerSession())) {
-    const qs = new URLSearchParams();
-    for (const [key, value] of Object.entries(query)) {
-      const single = Array.isArray(value) ? value[0] : value;
-      if (single !== undefined) qs.set(key, single);
-    }
-    redirect(`/${locale}/sign-in?next=${encodeURIComponent(`/${locale}/checkout/${slug}?${qs.toString()}`)}`);
-  }
+  // In real-account mode a visitor who is not signed in signs in inline (step 3); nothing is lost.
+  const guest = apiMode && !(await getServerSession());
+
   const requestedTier = Array.isArray(query.tier) ? query.tier[0] : query.tier;
   const initialTier: Tier = TIER_ORDER.includes(requestedTier as Tier)
     ? (requestedTier as Tier)
@@ -68,6 +65,8 @@ export default async function CheckoutPage({params, searchParams}: Props) {
 
   const {first: initialFirst, second: initialSecond} = parseNames(rawNames);
   const initialDate = rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? rawDate : '';
+  const rawStep = Array.isArray(query.step) ? query.step[0] : query.step;
+  const initialStep: 1 | 2 | 3 = rawStep === '3' && initialFirst && initialSecond && initialDate ? 3 : 1;
 
   const quotes = Object.fromEntries(
     TIER_ORDER.map((tier) => [
@@ -105,7 +104,9 @@ export default async function CheckoutPage({params, searchParams}: Props) {
           initialFirst={initialFirst}
           initialSecond={initialSecond}
           initialDate={initialDate}
-          signedIn={apiMode}
+          signedIn={apiMode && !guest}
+          guest={guest}
+          initialStep={initialStep}
         />
       </main>
     </>

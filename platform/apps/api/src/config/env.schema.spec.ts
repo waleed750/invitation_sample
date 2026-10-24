@@ -106,6 +106,13 @@ describe('validateEnv', () => {
     expect(validateEnv({...validEnv(), E2E_CAPTURE_EMAILS: '1'}).E2E_CAPTURE_EMAILS).toBe(true);
   });
 
+  it('accepts an https payment link on a manual payment method and rejects other schemes', () => {
+    const method = (url: string) => JSON.stringify({methods: [{id: 'instapay', label: {ar: 'a', en: 'a'}, details: {ar: 'b', en: 'b'}, url}]});
+    expect(validateEnv({...validEnv(), MANUAL_PAYMENT_INSTRUCTIONS_JSON: method('https://ipn.eg/S/me/instapay')}).MANUAL_PAYMENT_INSTRUCTIONS_JSON).toBeDefined();
+    expect(() => validateEnv({...validEnv(), MANUAL_PAYMENT_INSTRUCTIONS_JSON: method('http://ipn.eg/x')})).toThrow(/https/);
+    expect(() => validateEnv({...validEnv(), MANUAL_PAYMENT_INSTRUCTIONS_JSON: method('javascript:alert(1)')})).toThrow();
+  });
+
   it('allows the manual payment provider in production and refuses fawry', () => {
     expect(validateEnv({...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'manual'}).PAYMENTS_PROVIDER).toBe('manual');
     expect(() => validateEnv({...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'fawry'})).toThrow(/fawry not implemented yet/);
