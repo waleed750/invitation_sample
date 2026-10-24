@@ -205,3 +205,10 @@ Origin repo `waleed750/invitation_sample` is **PUBLIC**; 11 local commits are un
 2. Demo port batch D (agy, running): citystars, excellence, elegante as drafts. Remaining 10 demos need LOCAL section components first -> design a generic `custom` section (schema `{kind, data}` + per-template component map) before batch-porting; value is limited (drafts can never be sold, PLATFORM_PLAN §2) — consider replacing with ORIGINAL designs instead
 3. Original templates #2-#5 (the real product; legal blocker §2), admin dashboard (templates/affiliates/customers), Fawry provider behind `PaymentProvider`, Playwright e2e in repo (ad-hoc scripts only so far), Lighthouse/a11y pass
 4. Owner decisions pending: brand name/domain ("Invitely" placeholder), Fawry merchant account, push (repo is public), Supabase project
+
+
+---
+## Cloud task plan progress (branch `beta-version`, PR waleed750/invitation_sample#1) — 2026-10-24
+- ✅ **T00** full-run dev stack: `platform/scripts/dev-setup.sh|dev-full.sh|dev-reset.sh|dev-seed.sh|seed-dev.sql`, `infra/docker-compose.dev.yml`, env examples, README "Run it locally". Also fixed 3 latent auth boot bugs and production login-code email (see cerebrum 2026-10-24). Gates run: api lint/typecheck/jest (423), `npm run test:scripts` (idempotent setup + admin sign-in), SQL tests on a clean DB (6 files). code-review findings fixed; security-review: no findings.
+- 🚀 **Next: T01** finish e2e + screenshots (continue `lane/E1-e2e`), then T10, T12, T13, T15, ... per `platform/docs/CLOUD_TASKS.md`. Not yet run for T00: web `npm run build`, `check:i18n`, web tests, `/security-audit`.
+- Note: use `fuser -k <port>/tcp`, never `pkill -f` with text from your own command.

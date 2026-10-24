@@ -62,6 +62,12 @@ const envSchema = z.object({
   SMTP_PASS: z.string().min(1),
   // eslint-disable-next-line @typescript-eslint/no-deprecated
   SMTP_FROM: z.string().email(),
+  // Email channel override: `log` (nothing leaves the process) or `smtp`. Blank = smtp in
+  // production, log elsewhere. `log` is refused in production (see the refinement below).
+  EMAIL_SENDER: z
+    .enum(['log', 'smtp', ''])
+    .optional()
+    .transform((value) => (value === undefined || value === '' ? undefined : value)),
   NOTIFICATIONS_EMAIL_ENABLED: z.enum(['true', 'false']).default('true').transform((value) => value === 'true'),
   GOOGLE_CLIENT_ID: z
     .string()
@@ -150,6 +156,9 @@ LIFECYCLE_CRON_ENABLED: z.enum(['true', 'false']).default('true').transform((val
       code: 'custom', path: ['REVALIDATE_SECRET'],
       message: 'REVALIDATE_SECRET (at least 32 characters) is required when WEB_REVALIDATE_URL is set'
     });
+  }
+  if (env.NODE_ENV === 'production' && env.EMAIL_SENDER === 'log') {
+    context.addIssue({code: 'custom', path: ['EMAIL_SENDER'], message: 'the log email sender is disabled in production'});
   }
   if (env.NODE_ENV === 'production') {
     if (env.PAYMENTS_PROVIDER === 'mock') {

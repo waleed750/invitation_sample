@@ -90,6 +90,14 @@ describe('validateEnv', () => {
     expect(() => validateEnv({...validEnv(), NODE_ENV: 'production'})).toThrow(/mock payments are disabled in production/);
   });
 
+  it('refuses the log email sender in production but allows it elsewhere', () => {
+    const prod = {...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'manual'};
+    expect(() => validateEnv({...prod, EMAIL_SENDER: 'log'})).toThrow(/log email sender is disabled in production/);
+    expect(validateEnv({...prod, EMAIL_SENDER: 'smtp'}).EMAIL_SENDER).toBe('smtp');
+    expect(validateEnv({...prod, EMAIL_SENDER: ''}).EMAIL_SENDER).toBeUndefined();
+    expect(validateEnv({...validEnv(), EMAIL_SENDER: 'log'}).EMAIL_SENDER).toBe('log');
+  });
+
   it('allows the manual payment provider in production and refuses fawry', () => {
     expect(validateEnv({...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'manual'}).PAYMENTS_PROVIDER).toBe('manual');
     expect(() => validateEnv({...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'fawry'})).toThrow(/fawry not implemented yet/);

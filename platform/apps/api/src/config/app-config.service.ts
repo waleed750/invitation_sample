@@ -7,6 +7,12 @@ import type {AppEnv, ManualPaymentInstructions} from './env.schema';
 export class AppConfigService {
   constructor(private readonly config: ConfigService) {}
 
+  /** Optional string setting; unset and blank both read as `undefined`. */
+  private optional(key: keyof AppEnv): string | undefined {
+    const value = this.config.get<string | undefined>(key);
+    return typeof value === 'string' && value.trim() !== '' ? value : undefined;
+  }
+
   private required<K extends keyof AppEnv>(key: K): AppEnv[K] {
     const value = this.config.get<AppEnv[K]>(key as string);
     if (value === undefined) {
@@ -62,7 +68,7 @@ export class AppConfigService {
   }
 
   get authCookieDomain(): string | undefined {
-    return this.required('AUTH_COOKIE_DOMAIN');
+    return this.optional('AUTH_COOKIE_DOMAIN');
   }
 
   get phoneLoginEnabled(): boolean {
@@ -93,16 +99,23 @@ export class AppConfigService {
     return this.required('SMTP_FROM');
   }
 
+  /** `smtp` in production unless overridden; `log` elsewhere unless `EMAIL_SENDER=smtp`. */
+  get emailChannel(): 'smtp' | 'log' {
+    const override = this.optional('EMAIL_SENDER');
+    if (override === 'smtp' || override === 'log') return override;
+    return this.isProduction ? 'smtp' : 'log';
+  }
+
   get notificationsEmailEnabled(): boolean {
     return this.required('NOTIFICATIONS_EMAIL_ENABLED');
   }
 
   get googleClientId(): string | undefined {
-    return this.required('GOOGLE_CLIENT_ID');
+    return this.optional('GOOGLE_CLIENT_ID');
   }
 
   get googleClientSecret(): string | undefined {
-    return this.required('GOOGLE_CLIENT_SECRET');
+    return this.optional('GOOGLE_CLIENT_SECRET');
   }
   get throttleTtlMs(): number {
     return this.required('THROTTLE_TTL_MS');
@@ -147,7 +160,7 @@ export class AppConfigService {
   }
 
   get sentryDsn(): string | undefined {
-    return this.required('SENTRY_DSN');
+    return this.optional('SENTRY_DSN');
   }
 
   get sentryEnvironment(): string {

@@ -30,6 +30,10 @@
 
 ## Do-Not-Repeat
 
+- [2026-10-24] Three latent auth bugs found while booting the real API for the first time (unit tests mock Better Auth, so none were caught): (1) `AppConfigService.authCookieDomain`/`googleClient*`/`sentryDsn` used `required()` on optional values, so the API crashed at boot with the default blank `.env.example`; use `optional()`. (2) Better Auth defaulted to `/api/auth` but web + Nest middleware use `/v1/auth`; `basePath: '/v1/auth'` is now set. (3) `better_auth.*` ids are uuid columns; the id generator must be `advanced.database.generateId` (the top-level `advanced.generateId` is ignored). Always boot the built API (`scripts/test-dev-login.sh`) after touching auth config.
+- [2026-10-24] Never `pkill -f "<text that appears in your own command line>"` in Bash (it kills the shell, exit 144); use `fuser -k <port>/tcp`. Source `.env` files that contain JSON with single quotes around the value.
+- [2026-10-24] `supabase/tests/*.sql` must run on a clean migrated DB, not the seeded dev DB (payments.sql "smallest extra" assertion fails with the seed's allocated pending order).
+
 - **(2026-10-07) SQL test harness (psql as postgres, one transaction):** (1) invitations_guard/profiles_guard bypass needs current_user <> session_user, which is never true under psql — never call publish_invitation (or anything flipping invitations.status) with JWT claims set; build published state as fixtures with claims cleared. (2) Every auth.users insert now auto-creates a profile (trigger 0013) — fixtures must use `on conflict (id) do update` when also inserting a profile. (3) auth.users forbids duplicate emails itself. (4) Stack parallel agents' SQL on ONE integration branch and run CI once; their SQL test sections collide in the same file (merge by appending sections, not by resolving hunks).
 
 - **(2026-10-07)** Points expiry: balance = sum of ledger deltas with expires_at null or in the future (points_balance_v). Never add compensating 'expire' rows on top — that double-deducts. Expiry jobs only refresh the cached profiles.points_balance.
