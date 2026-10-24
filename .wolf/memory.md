@@ -1056,3 +1056,4 @@
 | Time | Action | File(s) | Outcome | ~Tokens |
 |------|--------|---------|---------|--------|
 | 09:40 | Audited admin dashboard money/affiliate features (affiliates schema-only; revenue = gross 1/7/30d only) + VPS advice (Hetzner 8GB or Contabo VPS 10 per docs) | apps/api/src/admin-stats, supabase/migrations/0001_core.sql, docs/CLOUD_TASKS.md | answered, no code change | ~25k |
+| 09:55 | Wrote money reports + affiliates task plan (T27 affiliates end to end replaces T22 item 3, T28 money reports; migrations 0032/0033) as a separate file per owner | platform/docs/MONEY_AND_AFFILIATES_TASKS.md | done | ~6k |
