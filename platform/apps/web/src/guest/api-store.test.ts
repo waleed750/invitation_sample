@@ -67,6 +67,19 @@ function apiError(code: string) {
 }
 
 describe('ApiInvitationPublicStore', () => {
+  it('uses the top-level templateSlug when the snapshot data carries none (real checkout data)', async () => {
+    const payload = {
+      ...LIVE_PAYLOAD,
+      templateSlug: 'diwan',
+      snapshot: {data: {event_date: '2027-06-15', couple: {first: 'Sara', second: 'Ali'}}},
+    };
+    const {fetch} = createFakeFetch(() => ({status: 200, payload}));
+    const store = new ApiInvitationPublicStore({baseUrl: BASE_URL, fetch, getAccessToken: () => null});
+    const snapshot = await store.getBySlug('sara-ali');
+    expect(snapshot?.templateSlug).toBe('diwan');
+    expect(snapshot?.couple).toEqual({first: 'Sara', second: 'Ali'});
+  });
+
   it('fetches and maps a live invitation', async () => {
     const {calls, fetch} = createFakeFetch(() => ({status: 200, payload: LIVE_PAYLOAD}));
     const store = new ApiInvitationPublicStore({baseUrl: BASE_URL, fetch, getAccessToken: () => null});

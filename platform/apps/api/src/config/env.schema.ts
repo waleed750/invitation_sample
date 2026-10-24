@@ -68,6 +68,12 @@ const envSchema = z.object({
     .enum(['log', 'smtp', ''])
     .optional()
     .transform((value) => (value === undefined || value === '' ? undefined : value)),
+  // Test-only: keep the latest sign-in code per address and serve it at /v1/__e2e/last-code (E2E_CAPTURE_EMAILS=1).
+  // Refused in production (see the refinement below).
+  E2E_CAPTURE_EMAILS: z
+    .enum(['1', '0', ''])
+    .optional()
+    .transform((value) => value === '1'),
   NOTIFICATIONS_EMAIL_ENABLED: z.enum(['true', 'false']).default('true').transform((value) => value === 'true'),
   GOOGLE_CLIENT_ID: z
     .string()
@@ -156,6 +162,9 @@ LIFECYCLE_CRON_ENABLED: z.enum(['true', 'false']).default('true').transform((val
       code: 'custom', path: ['REVALIDATE_SECRET'],
       message: 'REVALIDATE_SECRET (at least 32 characters) is required when WEB_REVALIDATE_URL is set'
     });
+  }
+  if (env.NODE_ENV === 'production' && env.E2E_CAPTURE_EMAILS) {
+    context.addIssue({code: 'custom', path: ['E2E_CAPTURE_EMAILS'], message: 'E2E_CAPTURE_EMAILS must be off in production'});
   }
   if (env.NODE_ENV === 'production' && env.EMAIL_SENDER === 'log') {
     context.addIssue({code: 'custom', path: ['EMAIL_SENDER'], message: 'the log email sender is disabled in production'});

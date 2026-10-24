@@ -53,7 +53,7 @@ export class AdminAuditRepository {
                     ${before ?? null}::uuid
                   )
                 else
-                  a.created_at < ${before ?? null}::timestamptz
+                  a.created_at < ${before ?? null}::text::timestamptz
               end
             )
           )

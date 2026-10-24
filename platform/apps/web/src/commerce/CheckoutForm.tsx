@@ -33,6 +33,8 @@ interface Props {
   initialFirst?: string;
   initialSecond?: string;
   initialDate?: string;
+  /** Real account mode: the customer is already signed in, so no phone check and one manual payment method. */
+  signedIn?: boolean;
 }
 
 function messageFor(error: unknown): string {
@@ -66,6 +68,7 @@ export function CheckoutForm({
   initialFirst = '',
   initialSecond = '',
   initialDate = '',
+  signedIn = false,
 }: Props) {
   const t = useTranslations('checkout');
   const demo = useTranslations('demoMode');
@@ -84,9 +87,10 @@ export function CheckoutForm({
   const [phone, setPhone] = useState('');
   const [code, setCode] = useState('');
   const [otpSent, setOtpSent] = useState(false);
-  const [verified, setVerified] = useState(false);
+  const [verified, setVerified] = useState(signedIn);
   const [tier, setTier] = useState<Tier>(initialTier);
-  const [method, setMethod] = useState<PaymentMethod>('card');
+  // Signed-in (real) checkout pays by manual transfer; the API maps this to the manual provider.
+  const [method, setMethod] = useState<PaymentMethod>(signedIn ? 'wallet' : 'card');
 
   // Coupon state: hidden by default, never pre-filled
   const [couponOpen, setCouponOpen] = useState(false);
@@ -557,7 +561,7 @@ export function CheckoutForm({
               {activeStep === 3 && (
                 <div className="step-card__body">
                   {/* Phone Verification */}
-                  <div className="verification-section">
+                  {!signedIn && (<div className="verification-section">
                     {!verified ? (
                       <div className="verification-box">
                         <label htmlFor={phoneInputId}>{t('otp.phone')}</label>
@@ -647,10 +651,10 @@ export function CheckoutForm({
                         <span>— {t('otp.verified')}</span>
                       </div>
                     )}
-                  </div>
+                  </div>)}
 
                   {/* Payment Method Choice */}
-                  <fieldset className="payment-choices" aria-label={t('plan.method')}>
+                  {!signedIn && (<fieldset className="payment-choices" aria-label={t('plan.method')}>
                     <legend className="payment-choices__legend">{t('plan.method')}</legend>
                     {(['card', 'wallet', 'fawry'] as const).map((item) => (
                       <label
@@ -674,7 +678,7 @@ export function CheckoutForm({
                         </span>
                       </label>
                     ))}
-                  </fieldset>
+                  </fieldset>)}
 
                   {/* Trust badges */}
                   <div className="checkout-trust-row">
@@ -744,7 +748,7 @@ export function CheckoutForm({
                 <IconLock size={14} />
                 <span>{t('summary.trustLine')}</span>
               </div>
-              <small className="demo-hint">{demo('noCharge')}</small>
+              {!signedIn && <small className="demo-hint">{demo('noCharge')}</small>}
               <a
                 href="https://wa.me/201000000000"
                 target="_blank"

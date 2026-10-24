@@ -72,7 +72,7 @@ export class InvitationsRepository {
   }
 
   /**
-   * Optimistic-concurrency write: updates `data` only while `updated_at` still equals `ifMatch`.
+   * Optimistic-concurrency write (the cast goes through text so the driver cannot truncate microseconds to a JS Date): updates `data` only while `updated_at` still equals `ifMatch`.
    * `ifMatch` is the raw `updated_at` string previously returned by Postgres (microsecond precision).
    * Returns the new `updated_at` (microsecond ISO text), or `null` when stale or hidden.
    */
@@ -82,7 +82,7 @@ export class InvitationsRepository {
       const rows = await tx<JsonRow<{updated_at: string}>[]>`
         with u as (
           update public.invitations set data = ${json}::text::jsonb
-          where id = ${id}::uuid and updated_at = ${ifMatch}::timestamptz
+          where id = ${id}::uuid and updated_at = ${ifMatch}::text::timestamptz
           returning updated_at
         )
         select to_jsonb(u) as r from u`;

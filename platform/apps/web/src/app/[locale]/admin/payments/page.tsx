@@ -24,7 +24,7 @@ export default async function AdminPaymentsPage({
       ) : (
         <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
           {payments.map((payment) => (
-            <div key={payment.id} style={{
+            <div key={payment.id} data-testid="pending-payment" data-reference={payment.reference ?? ''} style={{
               backgroundColor: 'var(--color-surface)',
               border: '1px solid var(--color-border)',
               borderRadius: '8px',
@@ -46,7 +46,6 @@ export default async function AdminPaymentsPage({
                   <div style={{fontSize: '0.875rem'}}>{payment.customer.phone || payment.customer.email || '-'}</div>
                 </div>
                 <div>
-                  <div style={{fontSize: '0.875rem', color: 'var(--color-muted)'}}>{t('age')}</div>
                   <div style={{fontWeight: 600}}>{t('age', {hours: payment.ageHours.toFixed(1)})}</div>
                 </div>
               </div>

@@ -33,7 +33,7 @@ export class OrdersRepository {
           select ord.id, ord.template_id, ord.tier, ord.kind, ord.amount_minor, (ord.amount_minor + coalesce(a.extra_minor, 0))::int as allocated_minor, ord.currency, ord.status,
             ord.provider, ord.provider_ref, ord.discount_total_minor, ord.points_redeemed, ord.created_at, ord.paid_at,
             (select jsonb_build_object('slug', t.slug) from public.templates t where t.id = ord.template_id) as template
-          from public.orders ord left join public.payment_amount_allocations a on a.order_id = ord.id where ord.user_id = ${userId}::uuid
+          from public.orders ord left join public.my_order_allocations() a on a.order_id = ord.id where ord.user_id = ${userId}::uuid
         ) o order by o.created_at desc`));
   }
 
@@ -45,7 +45,7 @@ export class OrdersRepository {
           select ord.id, ord.template_id, ord.tier, ord.kind, ord.amount_minor, (ord.amount_minor + coalesce(a.extra_minor, 0))::int as allocated_minor, ord.currency, ord.status,
             ord.provider, ord.provider_ref, ord.discount_total_minor, ord.points_redeemed, ord.created_at, ord.paid_at,
             (select jsonb_build_object('slug', t.slug) from public.templates t where t.id = ord.template_id) as template
-          from public.orders ord left join public.payment_amount_allocations a on a.order_id = ord.id where ord.id = ${orderId}::uuid and ord.user_id = ${userId}::uuid
+          from public.orders ord left join public.my_order_allocations() a on a.order_id = ord.id where ord.id = ${orderId}::uuid and ord.user_id = ${userId}::uuid
         ) o`));
   }
 }

@@ -98,6 +98,14 @@ describe('validateEnv', () => {
     expect(validateEnv({...validEnv(), EMAIL_SENDER: 'log'}).EMAIL_SENDER).toBe('log');
   });
 
+  it('refuses test email capture in production but allows it elsewhere', () => {
+    const prod = {...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'manual'};
+    expect(() => validateEnv({...prod, E2E_CAPTURE_EMAILS: '1'})).toThrow(/E2E_CAPTURE_EMAILS must be off in production/);
+    expect(validateEnv({...prod, E2E_CAPTURE_EMAILS: '0'}).E2E_CAPTURE_EMAILS).toBe(false);
+    expect(validateEnv(prod).E2E_CAPTURE_EMAILS).toBe(false);
+    expect(validateEnv({...validEnv(), E2E_CAPTURE_EMAILS: '1'}).E2E_CAPTURE_EMAILS).toBe(true);
+  });
+
   it('allows the manual payment provider in production and refuses fawry', () => {
     expect(validateEnv({...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'manual'}).PAYMENTS_PROVIDER).toBe('manual');
     expect(() => validateEnv({...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'fawry'})).toThrow(/fawry not implemented yet/);

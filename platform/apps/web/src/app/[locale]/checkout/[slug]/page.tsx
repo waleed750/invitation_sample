@@ -1,6 +1,8 @@
 import {hasLocale} from 'next-intl';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
-import {notFound} from 'next/navigation';
+import {notFound, redirect} from 'next/navigation';
+import {isApiCommerceMode} from '@/auth/config';
+import {getServerSession} from '@/auth/session';
 import {isPubliclyListed, TIER_ORDER, type Tier} from '@platform/shared';
 import {DemoBanner} from '@/commerce/DemoBanner';
 import {CheckoutForm} from '@/commerce/CheckoutForm';
@@ -43,6 +45,15 @@ export default async function CheckoutPage({params, searchParams}: Props) {
   if (!template || !isPubliclyListed(template.entry)) notFound();
 
   const query = await searchParams;
+  const apiMode = isApiCommerceMode();
+  if (apiMode && !(await getServerSession())) {
+    const qs = new URLSearchParams();
+    for (const [key, value] of Object.entries(query)) {
+      const single = Array.isArray(value) ? value[0] : value;
+      if (single !== undefined) qs.set(key, single);
+    }
+    redirect(`/${locale}/sign-in?next=${encodeURIComponent(`/${locale}/checkout/${slug}?${qs.toString()}`)}`);
+  }
   const requestedTier = Array.isArray(query.tier) ? query.tier[0] : query.tier;
   const initialTier: Tier = TIER_ORDER.includes(requestedTier as Tier)
     ? (requestedTier as Tier)
@@ -94,6 +105,7 @@ export default async function CheckoutPage({params, searchParams}: Props) {
           initialFirst={initialFirst}
           initialSecond={initialSecond}
           initialDate={initialDate}
+          signedIn={apiMode}
         />
       </main>
     </>

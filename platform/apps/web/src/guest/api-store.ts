@@ -56,6 +56,8 @@ function pickText(value: unknown, locale: 'ar' | 'en'): string {
 const liveInvitationSchema = z.object({
   state: z.literal('live'),
   slug: z.string(),
+  /** The API returns the template slug at the top level (the snapshot data usually carries none). */
+  templateSlug: z.string().optional(),
   tier: z.unknown(),
   locale: z.unknown(),
   snapshot: z.unknown(),
@@ -111,9 +113,8 @@ function extractTemplateSlug(data: unknown): string {
  * response is well-formed but carries no usable tier/locale — the page then
  * treats the invitation as unknown, same as a missing demo entry.
  *
- * API gap: `GET /v1/public/invitations/:slug` does not return the template
- * slug, so `templateSlug` is best-effort (empty when the snapshot `data`
- * carries none) and the page 404s until the API includes it.
+ * `templateSlug` comes from the API's top-level field; older responses fall
+ * back to a slug inside the snapshot `data`.
  */
 function toSnapshot(shareSlug: string, live: LiveInvitation): PublishedSnapshot | null {
   const tier = normalizeTier(live.tier);
@@ -122,7 +123,7 @@ function toSnapshot(shareSlug: string, live: LiveInvitation): PublishedSnapshot 
   const data = isRecord(live.snapshot) && 'data' in live.snapshot ? live.snapshot.data : live.snapshot;
   return {
     shareSlug,
-    templateSlug: extractTemplateSlug(data),
+    templateSlug: live.templateSlug ?? extractTemplateSlug(data),
     tier,
     couple: extractCouple(data, locale),
     eventDate: extractEventDate(data, locale),

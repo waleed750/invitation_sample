@@ -106,6 +106,11 @@ export class AppConfigService {
     return this.isProduction ? 'smtp' : 'log';
   }
 
+  /** Test-only sign-in code capture; the schema refuses it in production. */
+  get e2eCaptureEmails(): boolean {
+    return this.config.get<boolean | undefined>('E2E_CAPTURE_EMAILS') === true;
+  }
+
   get notificationsEmailEnabled(): boolean {
     return this.required('NOTIFICATIONS_EMAIL_ENABLED');
   }

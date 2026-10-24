@@ -12,3 +12,9 @@ supabase/.branches/
 # Local dev env written by scripts/dev-full.sh
 apps/api/.env.development
 apps/web/.env.development
+
+# Playwright e2e output (screenshots are uploaded as a CI artifact, never committed)
+e2e/test-results/
+e2e/playwright-report/
+e2e/screenshots/
+e2e/.auth/
