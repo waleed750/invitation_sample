@@ -1049,3 +1049,4 @@
 | 17:11 | Session end: 39 writes across 15 files (docker-compose.prod.yml, Dockerfile, Caddyfile, docker-compose.monitoring.yml, backup.sh) | 36 reads | ~66773 tok |
 | 2026-10-12 17:18 | Landed Supabase cleanup (759531b) + admin dashboard pages (ec2a0f9), agy, CI green; next N1 email notifications + E1 e2e CI job | main | done | ~3k |
 | 2026-10-24 03:57 | Wrote platform/docs/CLOUD_TASKS.md (cloud Sonnet task plan T00–T52); owner decisions: manual top-ups + wallet for all + awaiting-balance orders, EasyConfirm/gateway future, custom design contact-us (T26); not committed (owner review) | platform/docs/CLOUD_TASKS.md | draft | ~10k |
+| 2026-10-24 | T00 full-run dev stack on branch beta-version: dev-setup/seed/dev-full/reset scripts, docker-compose.dev.yml, env examples, README; fixed login-code delivery + 3 latent auth boot bugs; EMAIL_SENDER setting | platform/scripts, apps/api/src/auth, config | tests pass (api 422, scripts 2) | ~60k |

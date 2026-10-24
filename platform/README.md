@@ -15,6 +15,39 @@ platform/
   docs/                   notes (ARABIC_ENGINE_REVIEW.md)
 ```
 
+## Run it locally (from zero to a clicked-through invitation in 10 minutes)
+
+Needs Node 22, `psql`, and a PostgreSQL server you can log in to as a superuser. Pick one:
+
+```sh
+# A) Docker (also starts Mailpit, a fake inbox at http://localhost:8025)
+docker compose -f infra/docker-compose.dev.yml up -d
+# B) a local server (Debian/Ubuntu)
+sudo apt-get install -y postgresql && sudo service postgresql start
+sudo -u postgres psql -c "alter user postgres password 'postgres';"
+```
+
+```sh
+cd platform
+npm ci
+scripts/dev-setup.sh      # creates invitations_dev, applies migrations, loads the seed (safe to re-run)
+npm run dev:full          # API on :3001, web on :3000 (creates apps/*/.env.development on first run)
+```
+
+Open http://localhost:3000/ar. The seed gives you:
+
+| Account | Role | What it has |
+|---|---|---|
+| `admin@example.test` | admin | sees the pending payment and the unmatched payment event |
+| `customer1@example.test` | customer | a paid, published invitation (`/ar/i/demo-nour-omar`) with 10 RSVPs |
+| `customer2@example.test` | customer | one pending manual order |
+
+**Signing in:** enter the email, then read the 6-digit code from the terminal running `npm run dev:full`:
+`[DEV ONLY] sign-in code for admin@example.test: 123456`. The code is printed only when `NODE_ENV=development`; in production it is emailed through SMTP and never logged.
+To read mail in Mailpit instead, set `EMAIL_SENDER=smtp` in `apps/api/.env.development`.
+
+Other commands: `npm run seed` (reload the seed), `npm run db:reset` (drop and rebuild `invitations_dev`; refuses non-dev names), `npm run test:scripts` (checks setup is idempotent and the admin can sign in; needs `npm run build:api` first). Run the SQL tests (`scripts/db-test.sh`) against a clean migrated database, not the seeded dev one: the seed's pending order changes what some payment tests assume. Change the database name, server URL or `app_api` password with `DEV_DB_NAME`, `DEV_ADMIN_URL`, `DEV_APP_PASSWORD`.
+
 ## Run
 
 Use Node.js 22 LTS and npm. From `platform/` (one lockfile for the whole workspace):

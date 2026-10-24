@@ -19,7 +19,7 @@ import {AppLogger} from '../common/app-logger';
     {
       provide: EMAIL_SENDER,
       useFactory: (config: AppConfigService, logger: AppLogger): EmailSender => {
-        if (config.isProduction) {
+        if (config.emailChannel === 'smtp') {
           return new SmtpEmailSender(config, logger);
         }
         return new LogEmailSender(logger);

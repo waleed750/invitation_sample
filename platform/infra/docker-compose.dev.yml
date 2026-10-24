@@ -1,0 +1,37 @@
+# Local development services: PostgreSQL 17 + Mailpit (fake inbox).
+#
+#   docker compose -f platform/infra/docker-compose.dev.yml up -d
+#   cd platform && scripts/dev-setup.sh && npm run dev:full
+#
+# Mailpit UI: http://localhost:8025. To read mail there, set EMAIL_SENDER=smtp in
+# apps/api/.env.development (SMTP_HOST=127.0.0.1, SMTP_PORT=1025).
+# DEV ONLY: published ports are bound to localhost and the passwords are throwaways.
+name: invitation-platform-dev
+
+services:
+  postgres:
+    image: postgres:17
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  mailpit:
+    image: axllent/mailpit:v1.21
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:1025:1025"
+      - "127.0.0.1:8025:8025"
+
+volumes:
+  pgdata:

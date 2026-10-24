@@ -8,3 +8,7 @@ dist/
 apps/web/public/assets/drafts/
 supabase/.temp/
 supabase/.branches/
+
+# Local dev env written by scripts/dev-full.sh
+apps/api/.env.development
+apps/web/.env.development
