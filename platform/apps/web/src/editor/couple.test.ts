@@ -48,16 +48,24 @@ describe('startingDocument', () => {
   const stub = migrate({event_date: '2027-06-15', eventDate: '2027-06-15', couple: {first: 'سارة', second: 'علي'}});
   it('keeps a document that already has sections', () => {
     const full = migrate(legacy);
-    expect(startingDocument(full, null)).toBe(full);
+    expect(startingDocument(full, null, 'premium')).toBe(full);
   });
   it('starts a new order from the template design with the customer names and date', () => {
-    const doc = startingDocument(stub, legacy as never);
+    const doc = startingDocument(stub, legacy as never, 'premium');
     expect(doc?.sections.length).toBe(2);
     expect(readDetails(doc!, 'ar')).toMatchObject({first: 'سارة', second: 'علي', date: '2027-06-15'});
     expect(invitationDocument.safeParse(doc).success).toBe(true);
   });
+  it('drops sections the plan does not allow when seeding from a template', () => {
+    const tpl = JSON.parse(JSON.stringify(legacy)) as {sections: {type: string; id: string; props: unknown}[]};
+    tpl.sections.push({type: 'rsvp', id: 'rsvp', props: {title: {ar: 'a', en: 'a'}, subtitle: {ar: 'b', en: 'b'}}});
+    const free = startingDocument(stub, tpl as never, 'save-the-date');
+    expect(free?.sections.some((x) => x.type === 'rsvp')).toBe(false);
+    const paid = startingDocument(stub, tpl as never, 'classic');
+    expect(paid?.sections.some((x) => x.type === 'rsvp')).toBe(true);
+  });
   it('without template data it returns the stored document', () => {
-    expect(startingDocument(stub, null)).toBe(stub);
+    expect(startingDocument(stub, null, 'premium')).toBe(stub);
   });
 });
 

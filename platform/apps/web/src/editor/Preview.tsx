@@ -46,17 +46,26 @@ export function Preview({document: doc, templateSlug, locale, focusIndex, device
     frame.current?.contentWindow?.postMessage(message, window.location.origin);
   }, []);
 
-  // The frame announces itself; then it gets the current document.
+  // The frame announces itself (and confirms its first document); then it gets every change. The frame may hydrate
+  // before this listener exists, so until it answers the current document is offered again every 300 ms.
+  const readyRef = useRef(false);
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
       if (event.origin !== window.location.origin || event.source !== frame.current?.contentWindow) return;
-      if (isFrameMessage(event.data)) {
+      if (isFrameMessage(event.data) && !readyRef.current) {
+        readyRef.current = true;
         setReady(true);
         post({type: 'editor:doc', document: latest.current.doc, locale: latest.current.locale});
       }
     };
     window.addEventListener('message', onMessage);
-    return () => window.removeEventListener('message', onMessage);
+    const offer = window.setInterval(() => {
+      if (!readyRef.current) post({type: 'editor:doc', document: latest.current.doc, locale: latest.current.locale});
+    }, 300);
+    return () => {
+      window.removeEventListener('message', onMessage);
+      window.clearInterval(offer);
+    };
   }, [post]);
 
   useEffect(() => {
@@ -67,7 +76,10 @@ export function Preview({document: doc, templateSlug, locale, focusIndex, device
     if (ready && focusIndex !== null) post({type: 'editor:focus', index: focusIndex});
   }, [focusIndex, ready, post]);
 
-  useEffect(() => setReady(false), [locale, templateSlug]);
+  useEffect(() => {
+    readyRef.current = false;
+    setReady(false);
+  }, [locale, templateSlug]);
 
   useEffect(() => {
     const element = stage.current;

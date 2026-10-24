@@ -1,6 +1,6 @@
 'use client';
 
-import {useEffect, useMemo, useState} from 'react';
+import {useEffect, useMemo, useRef, useState} from 'react';
 import {NextIntlClientProvider, type AbstractIntlMessages} from 'next-intl';
 import {parseInvitationData, toInvitationData, type InvitationData, type InvitationDocument} from '@platform/shared';
 import InvitationShell from '@/engine/InvitationShell';
@@ -20,6 +20,7 @@ const PREVIEW_ACTIONS = {
  */
 export function PreviewFrameHost({templateSlug, locale, messages}: {templateSlug: string; locale: 'ar' | 'en'; messages: AbstractIntlMessages}) {
   const [document, setDocument] = useState<InvitationDocument | null>(null);
+  const confirmed = useRef(false);
 
   useEffect(() => {
     const onMessage = (event: MessageEvent) => {
@@ -27,6 +28,10 @@ export function PreviewFrameHost({templateSlug, locale, messages}: {templateSlug
       if (!isParentMessage(event.data)) return;
       if (event.data.type === 'editor:doc') {
         setDocument(event.data.document);
+        if (!confirmed.current) {
+          confirmed.current = true;
+          window.parent.postMessage({type: 'editor:frame-ready'}, window.location.origin);
+        }
       } else {
         const content = window.document.querySelector('.invitation-content');
         const target = content?.children.item(event.data.index);
@@ -49,7 +54,7 @@ export function PreviewFrameHost({templateSlug, locale, messages}: {templateSlug
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
       <InvitationActionsContext.Provider value={PREVIEW_ACTIONS}>
-        <InvitationShell data={data} locale={locale} templateSlug={templateSlug} />
+        <InvitationShell data={data} locale={locale} templateSlug={templateSlug} autoOpen />
       </InvitationActionsContext.Provider>
     </NextIntlClientProvider>
   );

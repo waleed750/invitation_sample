@@ -40,7 +40,7 @@ export interface CspEnv {
  *   https URLs chosen by the customer, so `https:` is the
  *   narrowest scheme that works; no `*` and no plain http.
  * - connect-src: the API.
- * - frame-src: the venue map iframe embeds Google Maps.
+ * - frame-src: the venue map iframe embeds Google Maps; the editor previews its own /editor-frame page.
  */
 export function buildCsp(env: CspEnv, embeddable: boolean): string {
   const connect = ["'self'"];
@@ -56,7 +56,7 @@ export function buildCsp(env: CspEnv, embeddable: boolean): string {
     "img-src 'self' data: blob: https:",
     "media-src 'self' blob: https:",
     `connect-src ${connect.join(' ')}`,
-    'frame-src https://www.google.com https://maps.google.com',
+    "frame-src 'self' https://www.google.com https://maps.google.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",

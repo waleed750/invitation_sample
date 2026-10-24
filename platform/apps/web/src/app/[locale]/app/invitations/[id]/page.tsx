@@ -84,6 +84,9 @@ export default async function InvitationPage({
         <Link className="tab-pill is-active" aria-current="page" href={`/app/invitations/${id}`}>
           {t('invitation.tabOverview')}
         </Link>
+        <Link className="tab-pill" href={`/app/invitations/${id}/edit`}>
+          {t('invitation.tabEdit')}
+        </Link>
         <Link className="tab-pill" href={`/app/invitations/${id}/guests`}>
           {t('invitation.tabGuests')}
         </Link>

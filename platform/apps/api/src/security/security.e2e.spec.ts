@@ -43,6 +43,20 @@ describe('API security hardening (e2e)', () => {
     }
   });
 
+  it('lets the editor autosave send If-Match in a cross-origin PATCH', async () => {
+    const {app, http} = await bootApp();
+    try {
+      const preflight = await http.options('/v1/invitations/x')
+        .set('Origin', 'http://localhost:3000')
+        .set('Access-Control-Request-Method', 'PATCH')
+        .set('Access-Control-Request-Headers', 'content-type,if-match');
+      expect(preflight.headers['access-control-allow-headers'].toLowerCase()).toContain('if-match');
+      expect(preflight.headers['access-control-allow-methods']).toContain('PATCH');
+    } finally {
+      await app.close();
+    }
+  });
+
   it('returns the consistent 429 envelope with Retry-After', async () => {
     const {app, http} = await bootApp({THROTTLE_LIMIT: '1'});
     try {

@@ -16,11 +16,12 @@ import ShuttersIntro from './intros/ShuttersIntro';
 import EnvelopeIntro from './intros/EnvelopeIntro';
 import './styles/shell.css';
 
-export default function InvitationShell({data, locale, templateSlug}: {data: InvitationData; locale: Locale; templateSlug?: string}) {
+/** `autoOpen` skips the tap-to-open gate (the editor preview shows the content straight away and never plays audio). */
+export default function InvitationShell({data, locale, templateSlug, autoOpen = false}: {data: InvitationData; locale: Locale; templateSlug?: string; autoOpen?: boolean}) {
   const {theme, media, copy, sections, template} = data;
   const audioRef = useRef<HTMLAudioElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
-  const [opened, setOpened] = useState(false);
+  const [opened, setOpened] = useState(autoOpen);
   const [introDone, setIntroDone] = useState(template.introType === 'none');
   const [musicPlaying, setMusicPlaying] = useState(false);
   const t = useTranslations('engine');

@@ -41,10 +41,10 @@ export default async function EditPage({params}: {params: Promise<{locale: strin
   const template = detail.templateSlug === null ? null : getTemplateAny(detail.templateSlug);
   if (!template) notFound();
   const stored = invitationDocument.safeParse(detail.document);
-  const document: InvitationDocument | null = startingDocument(stored.success ? stored.data : null, template.getData());
+  const tier = fromDbTier(detail.tier ?? 'save_the_date');
+  const document: InvitationDocument | null = startingDocument(stored.success ? stored.data : null, template.getData(), tier);
   if (document === null) notFound();
 
-  const tier = fromDbTier(detail.tier ?? 'save_the_date');
   const rules = planRules(tier);
   const plan = TIERS[tier];
   const verdict = detail.entitlement.canPublish;

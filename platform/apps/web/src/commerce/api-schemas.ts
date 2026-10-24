@@ -177,7 +177,9 @@ function localizedText(value: unknown): string {
 
 /** Reads couple names and event date from checkout-seeded data or the full editor data. */
 export function extractCoupleAndDate(data: unknown): {couple: {first: string; second: string}; eventDate: string} {
-  const record = (data && typeof data === 'object' ? data : {}) as Record<string, unknown>;
+  const raw = (data && typeof data === 'object' ? data : {}) as Record<string, unknown>;
+  // An editor document keeps the couple and the event under `meta`.
+  const record = (raw.schemaVersion === 1 && raw.meta && typeof raw.meta === 'object' ? raw.meta : raw) as Record<string, unknown>;
   const couple = (record.couple && typeof record.couple === 'object' ? record.couple : {}) as Record<string, unknown>;
   const event = (record.event && typeof record.event === 'object' ? record.event : {}) as Record<string, unknown>;
   const rawDate = localizedText(record.eventDate ?? record.event_date ?? event.date);

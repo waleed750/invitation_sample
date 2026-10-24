@@ -1,5 +1,5 @@
 /* T11 site editor. Logical properties only; the layout adapts to the viewport, not the device name. */
-.ed-shell { --ed-line: rgb(0 0 0 / 12%); --ed-muted: #6b5f50; --ed-primary: var(--color-primary, #0b3b2e); --ed-surface: #fff; display: grid; grid-template-rows: auto auto 1fr; min-block-size: 100dvh; background: #f6f2ea; color: #2a2118; }
+.ed-shell { --ed-line: rgb(0 0 0 / 12%); --ed-muted: #6b5f50; --ed-primary: var(--color-primary, #0b3b2e); --ed-surface: #fff; display: grid; grid-template-rows: auto auto 1fr; position: fixed; inset: 0; z-index: 60; overflow: auto; overscroll-behavior: contain; background: #f6f2ea; color: #2a2118; }
 .sr-only { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 
 /* header */
