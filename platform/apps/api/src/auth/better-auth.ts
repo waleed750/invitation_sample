@@ -8,8 +8,14 @@ import { toNodeHandler } from 'better-auth/node';
 import type { LoginCodeDelivery } from './login-code';
 
 let authInstance: any = null;
+// Set once at boot (setupApp); read lazily so it does not matter who builds the instance first.
+let loginCodeDelivery: LoginCodeDelivery | undefined;
 
-export function getBetterAuth(config: AppConfigService, deliverLoginCode?: LoginCodeDelivery): any {
+export function setLoginCodeDelivery(deliver: LoginCodeDelivery): void {
+  loginCodeDelivery = deliver;
+}
+
+export function getBetterAuth(config: AppConfigService): any {
   if (authInstance) return authInstance;
 
   const pool = new Pool({
@@ -72,10 +78,10 @@ export function getBetterAuth(config: AppConfigService, deliverLoginCode?: Login
         otpLength: 6,
         expiresIn: 5 * 60,
         async sendVerificationOTP({ email, otp }) {
-          if (!deliverLoginCode) {
+          if (!loginCodeDelivery) {
             throw new Error('login code delivery is not configured');
           }
-          await deliverLoginCode(email, otp);
+          await loginCodeDelivery(email, otp);
         }
       }),
       config.phoneLoginEnabled ? phoneNumber({
@@ -90,6 +96,6 @@ export function getBetterAuth(config: AppConfigService, deliverLoginCode?: Login
   return authInstance;
 }
 
-export function getBetterAuthHandler(config: AppConfigService, deliverLoginCode?: LoginCodeDelivery): any {
-  return toNodeHandler(getBetterAuth(config, deliverLoginCode));
+export function getBetterAuthHandler(config: AppConfigService): any {
+  return toNodeHandler(getBetterAuth(config));
 }

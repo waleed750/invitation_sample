@@ -16,7 +16,7 @@ function setup(config: LoginCodeConfig) {
 
 describe('createLoginCodeDelivery', () => {
   it('emails the code in Arabic and English', async () => {
-    const {deliver, sent} = setup({isProduction: true, nodeEnv: 'production'});
+    const {deliver, sent} = setup({isProduction: true, nodeEnv: 'production', emailChannel: 'smtp'});
     await deliver('a@example.test', '123456');
     expect(sent).toHaveLength(1);
     expect(sent[0]?.to).toBe('a@example.test');
@@ -26,19 +26,25 @@ describe('createLoginCodeDelivery', () => {
   });
 
   it('prints the code in development only', async () => {
-    const dev = setup({isProduction: false, nodeEnv: 'development'});
+    const dev = setup({isProduction: false, nodeEnv: 'development', emailChannel: 'log'});
     await dev.deliver('a@example.test', '654321');
     expect(dev.printed).toEqual(['[DEV ONLY] sign-in code for a@example.test: 654321']);
   });
 
+  it('never prints the code when real mail is on, even in development', async () => {
+    const smtp = setup({isProduction: false, nodeEnv: 'development', emailChannel: 'smtp'});
+    await smtp.deliver('a@example.test', '654321');
+    expect(smtp.printed).toEqual([]);
+  });
+
   it('never prints the code in production', async () => {
-    const prod = setup({isProduction: true, nodeEnv: 'production'});
+    const prod = setup({isProduction: true, nodeEnv: 'production', emailChannel: 'smtp'});
     await prod.deliver('a@example.test', '654321');
     expect(prod.printed).toEqual([]);
   });
 
   it('never prints the code under test', async () => {
-    const test = setup({isProduction: false, nodeEnv: 'test'});
+    const test = setup({isProduction: false, nodeEnv: 'test', emailChannel: 'log'});
     await test.deliver('a@example.test', '654321');
     expect(test.printed).toEqual([]);
   });

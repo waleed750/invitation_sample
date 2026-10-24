@@ -15,7 +15,7 @@ export const GLOBAL_PREFIX_EXCLUDES = [
 ];
 
 import {json, urlencoded} from 'express';
-import {getBetterAuthHandler} from './auth/better-auth';
+import {getBetterAuthHandler, setLoginCodeDelivery} from './auth/better-auth';
 import {EMAIL_SENDER, type EmailSender} from './auth/email-sender';
 import {createLoginCodeDelivery} from './auth/login-code';
 
@@ -29,11 +29,9 @@ export function setupApp(app: INestApplication): void {
   const config = app.get(AppConfigService);
   applySecurity(app as NestExpressApplication, config);
 
+  setLoginCodeDelivery(createLoginCodeDelivery(config, app.get<EmailSender>(EMAIL_SENDER, {strict: false})));
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-  const authHandler = getBetterAuthHandler(
-    config,
-    createLoginCodeDelivery(config, app.get<EmailSender>(EMAIL_SENDER, {strict: false}))
-  );
+  const authHandler = getBetterAuthHandler(config);
   
   const limit = `${String(config.bodyLimitKb)}kb`;
   const jsonParser = json({

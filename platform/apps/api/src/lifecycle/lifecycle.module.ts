@@ -25,7 +25,7 @@ import {NOTIFICATIONS_PORT, type NotificationsPort} from './notifications.port';
         notifications: NotificationsService,
         logAdapter: LoggingNotificationsService
       ): NotificationsPort => {
-        if (config.isProduction && config.notificationsEmailEnabled) {
+        if (config.emailChannel === 'smtp' && config.notificationsEmailEnabled) {
           return {
             sendEndReminder: (ownerId: string, invitationId: string, onlineUntil: Date) =>
               notifications.endReminder(ownerId, invitationId, onlineUntil)

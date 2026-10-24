@@ -4,6 +4,7 @@ import type {EmailSender} from './email-sender';
 export interface LoginCodeConfig {
   readonly isProduction: boolean;
   readonly nodeEnv: 'development' | 'production' | 'test';
+  readonly emailChannel: 'smtp' | 'log';
 }
 
 export type LoginCodeSink = (line: string) => void;
@@ -15,8 +16,9 @@ export type LoginCodeDelivery = (email: string, code: string) => Promise<void>;
  *
  * - Always sends through the shared `EmailSender` (SMTP in production, the
  *   logging adapter elsewhere), so the production path is the real one.
- * - Prints the code to the API console only when `NODE_ENV=development`, so a
- *   developer can sign in without a mailbox. It is never printed in
+ * - Prints the code to the API console only when `NODE_ENV=development` AND the
+ *   email channel is `log` (nothing is really mailed), so a developer can sign in
+ *   without a mailbox and real OTPs never reach logs when SMTP is on. It is never printed in
  *   production or test.
  */
 export function createLoginCodeDelivery(
@@ -38,7 +40,7 @@ export function createLoginCodeDelivery(
         'It expires in 5 minutes. Do not share it with anyone.'
       ].join('\n')
     });
-    if (config.nodeEnv === 'development') {
+    if (config.nodeEnv === 'development' && config.emailChannel === 'log') {
       printLine(`[DEV ONLY] sign-in code for ${email}: ${code}`);
     }
   };
