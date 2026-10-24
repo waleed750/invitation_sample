@@ -3,18 +3,18 @@
   "created_at": "2026-07-18T16:26:25.286Z",
   "lifetime": {
     "total_tokens_estimated": 36524619,
-    "total_reads": 28283,
+    "total_reads": 28285,
     "total_writes": 39332,
     "total_sessions": 22,
     "anatomy_hits": 6570,
-    "anatomy_misses": 21331,
+    "anatomy_misses": 21333,
     "repeated_reads_blocked": 9257,
     "estimated_savings_vs_bare_cli": 15904540,
-    "real_input_tokens": 1027111,
-    "real_output_tokens": 120909305,
-    "real_cache_read_tokens": 95013345643,
-    "real_cache_creation_tokens": 412627412,
-    "real_api_calls": 340537
+    "real_input_tokens": 1027425,
+    "real_output_tokens": 121001317,
+    "real_cache_read_tokens": 95035673932,
+    "real_cache_creation_tokens": 413244746,
+    "real_api_calls": 340690
   },
   "sessions": [
     {
@@ -385450,6 +385450,66 @@
         "cache_read_input_tokens": 10655602,
         "cache_creation_input_tokens": 307331,
         "api_calls": 74
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T09:18:25.354Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 156,
+        "output_tokens": 45497,
+        "cache_read_input_tokens": 11062106,
+        "cache_creation_input_tokens": 308646,
+        "api_calls": 76
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T09:19:00.350Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 158,
+        "output_tokens": 46515,
+        "cache_read_input_tokens": 11266183,
+        "cache_creation_input_tokens": 308688,
+        "api_calls": 77
       }
     }
   ],
