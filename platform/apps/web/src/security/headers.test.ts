@@ -79,4 +79,12 @@ describe('robots', () => {
     expect(rule.allow).toBe('/');
     expect(rule.disallow).toEqual(expect.arrayContaining(['/*/i/', '/*/app', '/*/admin', '/*/checkout', '/api/']));
   });
+
+  it('private edit links are never cached, never leaked as a referrer, never indexed', async () => {
+    const headers = await headersFor('/ar/edit/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+    expect(headers['Referrer-Policy']).toBe('no-referrer');
+    expect(headers['Cache-Control']).toBe('no-store');
+    expect(headers['X-Robots-Tag']).toContain('noindex');
+    expect(headers['X-Frame-Options']).toBe('DENY');
+  });
 });

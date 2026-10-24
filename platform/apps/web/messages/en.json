@@ -1695,6 +1695,13 @@
       "sealWords": "Seal words",
       "tapLabel": "Tap label",
       "scratchLabel": "Scratch label"
+    },
+    "privateLink": {
+      "claim": "Save to my account",
+      "noMedia": "Uploading photos is not available through a private link. Save the invitation to your account to add photos.",
+      "invalidTitle": "This link is not valid",
+      "invalidBody": "It may have expired or been cancelled. Ask whoever sent it for a new one.",
+      "home": "Home"
     }
   },
   "customer": {
@@ -1997,6 +2004,29 @@
       "note": "Note",
       "manual": "Record manual refund",
       "manualNote": "How was the money returned?"
+    },
+    "editLinks": {
+      "title": "Private edit links",
+      "help": "A secret link that opens this invitation's editor only, with no sign-in. It is shown once when created and can be revoked any time. It lasts 90 days.",
+      "label": "Note (who is this link for?)",
+      "issue": "Create a link",
+      "showOnce": "Copy the link now: it will not be shown again.",
+      "copy": "Copy link",
+      "copied": "Copied",
+      "existing": "Links",
+      "none": "No links yet.",
+      "revoke": "Revoke",
+      "confirmRevoke": "Revoke this link right now?",
+      "states": {
+        "active": "Active",
+        "revoked": "Revoked",
+        "expired": "Expired",
+        "claimed": "Saved to an account"
+      },
+      "created": "Created {date}",
+      "expires": "Expires {date}",
+      "lastUsed": "Last used {date}",
+      "manage": "Edit links"
     }
   }
 }

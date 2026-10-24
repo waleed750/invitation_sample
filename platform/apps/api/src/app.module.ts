@@ -12,6 +12,7 @@ import {AdminCouponsModule} from './admin-coupons/admin-coupons.module';
 import {AdminTemplatesModule} from './admin-templates/admin-templates.module';
 import {AdminAffiliatesModule} from './admin-affiliates/admin-affiliates.module';
 import {AdminRefundsModule} from './admin-refunds/admin-refunds.module';
+import {EditLinksModule} from './edit-links/edit-links.module';
 import {AuthModule, AuthGuard, RolesGuard} from './auth';
 import {AppLogger} from './common/app-logger';
 import {buildLoggerParams} from './common/logging';
@@ -65,7 +66,8 @@ export {AuthGuard, RolesGuard};
     AdminAuditModule,
     MediaModule,
     BalanceModule,
-    AdminSettingsModule, AdminCouponsModule, AdminTemplatesModule, AdminAffiliatesModule, AdminRefundsModule
+    AdminSettingsModule, AdminCouponsModule, AdminTemplatesModule, AdminAffiliatesModule, AdminRefundsModule,
+    EditLinksModule
   ],
   providers: [
     AppLogger,

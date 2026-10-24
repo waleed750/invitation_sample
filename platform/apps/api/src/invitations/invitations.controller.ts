@@ -1,6 +1,6 @@
 import {Body, Controller, Get, Headers, HttpCode, Param, Patch, Post} from '@nestjs/common';
 import {Throttle} from '@nestjs/throttler';
-import {CurrentUser, type RequestUser} from '../common/decorators';
+import {CurrentUser, EditTokenRoute, type RequestUser} from '../common/decorators';
 import {
   InvitationEditingService, InvitationIdParams, SlugParams, SwitchTemplateBody, UpdateInvitationBody, UpdateSlugBody,
   type InvitationDetail, type PublishInvitationResult, type SlugAvailability, type SwitchTemplateResult,
@@ -21,11 +21,13 @@ export class InvitationsController {
   }
 
   @Get(':id')
+  @EditTokenRoute()
   get(@Param() params: InvitationIdParams, @CurrentUser() user: RequestUser): Promise<InvitationDetail> {
     return this.editing.get(user, params.id);
   }
 
   @Patch(':id')
+  @EditTokenRoute()
   @Throttle({default: {limit: 60, ttl: 60_000}})
   update(
     @Param() params: InvitationIdParams,
@@ -47,6 +49,7 @@ export class InvitationsController {
   }
 
   @Throttle({default: {limit: 20, ttl: 60_000}})
+  @EditTokenRoute()
   @Post(':id/publish')
   @HttpCode(200)
   publish(@Param() params: InvitationIdParams, @CurrentUser() user: RequestUser): Promise<PublishInvitationResult> {

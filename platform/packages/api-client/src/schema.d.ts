@@ -228,6 +228,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/edit-links/{linkId}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminEditLinksController_revoke"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/invitations/{id}/edit-links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminEditLinksController_list"];
+        put?: never;
+        post: operations["AdminEditLinksController_issue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/invitations/{id}/entitlement-adjustments": {
         parameters: {
             query?: never;
@@ -660,6 +692,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/edit-links/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EditLinksController_resolve"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/health": {
         parameters: {
             query?: never;
@@ -722,6 +770,22 @@ export interface paths {
         options?: never;
         head?: never;
         patch: operations["InvitationsController_update"];
+        trace?: never;
+    };
+    "/v1/invitations/{id}/claim": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EditLinksController_claim"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/invitations/{id}/entitlement": {
@@ -1205,6 +1269,9 @@ export interface components {
             /** @enum {string} */
             tier: "save-the-date" | "classic" | "premium";
         };
+        ClaimBody: {
+            token: string;
+        };
         ClickBody: {
             path?: string;
             ref: string;
@@ -1283,6 +1350,9 @@ export interface components {
             text: string;
             website?: string;
         };
+        IssueBody: {
+            label?: string;
+        };
         ManualRefundBody: {
             note: string;
         };
@@ -1303,6 +1373,9 @@ export interface components {
         };
         RejectTopupBody: {
             reason: string;
+        };
+        ResolveBody: {
+            token: string;
         };
         RsvpBody: {
             attending: boolean;
@@ -2786,6 +2859,67 @@ export interface operations {
             };
         };
     };
+    AdminEditLinksController_revoke: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminEditLinksController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminEditLinksController_issue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IssueBody"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminCustomersController_adjustEntitlement: {
         parameters: {
             query?: never;
@@ -3427,6 +3561,27 @@ export interface operations {
             };
         };
     };
+    EditLinksController_resolve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResolveBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     HealthController_check: {
         parameters: {
             query?: never;
@@ -3511,6 +3666,29 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["UpdateInvitationBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EditLinksController_claim: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClaimBody"];
             };
         };
         responses: {

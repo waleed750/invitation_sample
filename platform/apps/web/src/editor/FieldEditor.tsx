@@ -6,6 +6,7 @@ import type {LocalizedText} from '@platform/shared';
 import {MediaPicker} from '@/media/MediaPicker';
 import type {MediaItem} from '@/media/api';
 import {readLocalized, setLocalized} from './couple';
+import {inTokenMode} from './api';
 import {emptyFor, setAt, type Field, type ListItem, type MediaKind} from './schema-fields';
 import {suggestionsFor} from './suggestions';
 
@@ -199,7 +200,9 @@ function StringField({field, title, value, onChange, canUse}: RowProps & {field:
         )}
         {text !== '' && field.media !== 'image' && <p className="ed-media__file" dir="ltr">{text.split('/').pop()}</p>}
         <div className="ed-media__actions">
-          {allowed ? (
+          {inTokenMode() ? (
+            <span className="ed-note" data-testid="token-media-note">{t('privateLink.noMedia')}</span>
+          ) : allowed ? (
             <button type="button" className="ed-btn" onClick={() => setPicking(true)}>{text === '' ? t('chooseFile') : t('changeFile')}</button>
           ) : (
             <span className="ed-note">{t('notInPlan')}</span>

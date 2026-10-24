@@ -151,3 +151,6 @@
 .ed-onboarding__actions { display: flex; justify-content: space-between; align-items: center; margin-block-start: .5rem; }
 .ed-back { position: fixed; inset-block-end: .6rem; inset-inline-start: 1rem; font-size: .85rem; color: var(--ed-muted); }
 .editor-frame-empty { min-block-size: 100vh; background: #fff; }
+
+.ed-claim { font-weight: 700; }
+.ed-private-invalid { max-inline-size: 30rem; margin: 20vh auto 0; padding: 1rem; text-align: center; display: grid; gap: .75rem; }

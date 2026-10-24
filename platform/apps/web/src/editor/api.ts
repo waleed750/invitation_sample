@@ -8,6 +8,15 @@ export class EditorApiError extends Error {
   }
 }
 
+/** Set when the editor was opened through a private edit link: it then replaces the sign-in on every call. */
+let editToken: string | null = null;
+export function setEditToken(token: string | null): void {
+  editToken = token;
+}
+export function inTokenMode(): boolean {
+  return editToken !== null;
+}
+
 function base(): string {
   return (process.env.NEXT_PUBLIC_API_URL ?? '').replace(/\/+$/, '');
 }
@@ -22,8 +31,8 @@ async function request(method: 'PATCH' | 'POST', path: string, init: {body?: unk
   try {
     response = await fetch(`${base()}${path}`, {
       method,
-      credentials: 'include',
-      headers: {'content-type': 'application/json', ...(init.headers ?? {})},
+      credentials: editToken === null ? 'include' : 'omit',
+      headers: {'content-type': 'application/json', ...(editToken === null ? {} : {'x-edit-token': editToken}), ...(init.headers ?? {})},
       body: init.body === undefined ? undefined : JSON.stringify(init.body),
     });
   } catch {

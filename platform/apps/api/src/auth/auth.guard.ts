@@ -2,22 +2,34 @@
 import {CanActivate, ExecutionContext, Injectable, UnauthorizedException} from '@nestjs/common';
 import {Reflector} from '@nestjs/core';
 import {AppConfigService} from '../config/app-config.service';
-import {IS_PUBLIC_KEY, type AuthenticatedRequest, type RequestUser} from '../common/decorators';
+import {createHash} from 'node:crypto';
+import {EDIT_TOKEN_ROUTE_KEY, IS_PUBLIC_KEY, type AuthenticatedRequest, type RequestUser} from '../common/decorators';
+import {AuthRepository} from './auth.repository';
 import {getBetterAuth} from './better-auth';
 
 @Injectable()
 export class AuthGuard implements CanActivate {
   constructor(
     private readonly reflector: Reflector,
-    private readonly config: AppConfigService
+    private readonly config: AppConfigService,
+    private readonly repository: AuthRepository
   ) {}
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const isPublic = this.reflector.getAllAndOverride<boolean>(IS_PUBLIC_KEY, [context.getHandler(), context.getClass()]);
     if (isPublic) return true;
 
-    const req = context.switchToHttp().getRequest<AuthenticatedRequest & {headers: Record<string, string | string[] | undefined>}>();
-    
+    const req = context.switchToHttp().getRequest<AuthenticatedRequest & {headers: Record<string, string | string[] | undefined>; params?: Record<string, string | undefined>}>();
+
+    const rawToken = req.headers['x-edit-token'];
+    if (rawToken !== undefined) {
+      const allowed = this.reflector.getAllAndOverride<boolean>(EDIT_TOKEN_ROUTE_KEY, [context.getHandler(), context.getClass()]);
+      // A link only works on the editor routes; anywhere else it is as good as no credentials at all.
+      if (!allowed || typeof rawToken !== 'string') throw new UnauthorizedException('Invalid or expired token');
+      req.user = await this.userFromEditToken(rawToken, req.params?.id);
+      return true;
+    }
+
     try {
       const auth = getBetterAuth(this.config);
       // Construct a minimal Web Request or Headers object from Express headers
@@ -52,5 +64,20 @@ export class AuthGuard implements CanActivate {
       if (e instanceof UnauthorizedException) throw e;
       throw new UnauthorizedException('Invalid or expired token');
     }
+  }
+
+  /** The token is a 32-byte secret; only its SHA-256 is stored, so that is what is looked up. */
+  private async userFromEditToken(token: string, invitationId: string | undefined): Promise<RequestUser> {
+    if (!/^[A-Za-z0-9_-]{43}$/.test(token)) throw new UnauthorizedException('Invalid or expired token');
+    const hash = createHash('sha256').update(token).digest('hex');
+    let link: Awaited<ReturnType<AuthRepository['resolveEditLink']>>;
+    try {
+      link = await this.repository.resolveEditLink(hash);
+    } catch {
+      throw new UnauthorizedException('Invalid or expired token');
+    }
+    // Scoped to one invitation: the link never opens another one, whatever the URL says.
+    if (link === null || invitationId !== link.invitationId) throw new UnauthorizedException('Invalid or expired token');
+    return {id: link.ownerId, jwt: '', editToken: {invitationId: link.invitationId, linkId: link.linkId}};
   }
 }

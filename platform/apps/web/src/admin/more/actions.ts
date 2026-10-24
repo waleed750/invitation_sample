@@ -152,3 +152,14 @@ export async function refundToBalanceAction(_previous: unknown, form: FormData):
   const result = await adminCall('POST', `/v1/admin/orders/${encodeURIComponent(str(form, 'orderId'))}/refund-to-balance`, {note: str(form, 'note')});
   return done(result, '/[locale]/admin/refunds');
 }
+
+// ---- private edit links
+export async function issueEditLinkAction(invitationId: string, label: string): Promise<ActionResult> {
+  const trimmed = label.trim();
+  // The secret comes back once, in `data`, and is never stored on the web side.
+  return adminCall('POST', `/v1/admin/invitations/${encodeURIComponent(invitationId)}/edit-links`, trimmed === '' ? {} : {label: trimmed});
+}
+
+export async function revokeEditLinkAction(linkId: string): Promise<ActionResult> {
+  return done(await adminCall('POST', `/v1/admin/edit-links/${encodeURIComponent(linkId)}/revoke`, {}), '/[locale]/admin/invitations/[id]');
+}

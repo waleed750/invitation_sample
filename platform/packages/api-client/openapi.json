@@ -214,6 +214,19 @@
         ],
         "type": "object"
       },
+      "ClaimBody": {
+        "properties": {
+          "token": {
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "type": "object"
+      },
       "ClickBody": {
         "properties": {
           "path": {
@@ -610,6 +623,16 @@
         ],
         "type": "object"
       },
+      "IssueBody": {
+        "properties": {
+          "label": {
+            "maxLength": 80,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "type": "object"
+      },
       "ManualRefundBody": {
         "properties": {
           "note": {
@@ -704,6 +727,19 @@
         },
         "required": [
           "reason"
+        ],
+        "type": "object"
+      },
+      "ResolveBody": {
+        "properties": {
+          "token": {
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "token"
         ],
         "type": "object"
       },
@@ -6981,6 +7017,89 @@
         ]
       }
     },
+    "/v1/admin/edit-links/{linkId}/revoke": {
+      "post": {
+        "operationId": "AdminEditLinksController_revoke",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "linkId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminEditLinks"
+        ]
+      }
+    },
+    "/v1/admin/invitations/{id}/edit-links": {
+      "get": {
+        "operationId": "AdminEditLinksController_list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminEditLinks"
+        ]
+      },
+      "post": {
+        "operationId": "AdminEditLinksController_issue",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IssueBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminEditLinks"
+        ]
+      }
+    },
     "/v1/admin/invitations/{id}/entitlement-adjustments": {
       "post": {
         "operationId": "AdminCustomersController_adjustEntitlement",
@@ -7860,6 +7979,30 @@
         ]
       }
     },
+    "/v1/edit-links/resolve": {
+      "post": {
+        "operationId": "EditLinksController_resolve",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "EditLinks"
+        ]
+      }
+    },
     "/v1/health": {
       "get": {
         "operationId": "HealthController_check",
@@ -7965,6 +8108,41 @@
         },
         "tags": [
           "Invitations"
+        ]
+      }
+    },
+    "/v1/invitations/{id}/claim": {
+      "post": {
+        "operationId": "EditLinksController_claim",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "EditLinks"
         ]
       }
     },

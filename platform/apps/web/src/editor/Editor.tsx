@@ -1,9 +1,10 @@
 'use client';
 
 import {useCallback, useEffect, useMemo, useReducer, useState} from 'react';
-import {useTranslations} from 'next-intl';
+import {useLocale, useTranslations} from 'next-intl';
 import {findThemePreset, type InvitationDocument, type SectionType} from '@platform/shared';
 import {Link} from '@/i18n/navigation';
+import {setEditToken} from './api';
 import {useAutosave} from './autosave';
 import {AddSectionDialog} from './AddSectionDialog';
 import {DetailsPanel, ThemePanel} from './DetailsPanel';
@@ -31,6 +32,8 @@ export interface EditorProps {
   slug: string;
   canMusic: boolean;
   canVideo: boolean;
+  /** Opened through a private edit link (no sign-in): the secret that authorises every call. */
+  editToken?: string;
 }
 
 type Panel = 'details' | 'theme' | null;
@@ -38,6 +41,11 @@ type Panel = 'details' | 'theme' | null;
 export function Editor(props: EditorProps) {
   const {invitationId, templateSlug, locale, initialDocument, version, allowedTypes, maxSections, expired, canMusic, canVideo} = props;
   const t = useTranslations('editor');
+  // Before anything saves: calls carry the link's secret instead of a sign-in.
+  useState(() => {
+    setEditToken(props.editToken ?? null);
+    return null;
+  });
   const [state, dispatch] = useReducer(reducer, undefined, () => initialState(initialDocument, version));
   const {saveNow} = useAutosave(state, dispatch, invitationId);
   const [mode, setMode] = useState<'easy' | 'advanced'>('easy');
@@ -139,7 +147,7 @@ export function Editor(props: EditorProps) {
     return (
       <div className="ed-shell" data-mode="easy" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
         <Onboarding />
-        <EditorHeader {...{t, statusLabel, state, dispatch, mode, setMode, locale, previewLocale, setPreviewLocale}} />
+        <EditorHeader {...{t, statusLabel, state, dispatch, mode, setMode, locale, previewLocale, setPreviewLocale}} editToken={props.editToken} />
         <ConflictBanner status={state.status} />
         <div className="ed-body ed-body--easy">
           <div className="ed-easy-col">
@@ -156,7 +164,7 @@ export function Editor(props: EditorProps) {
   return (
     <div className="ed-shell" data-mode="advanced" dir={locale === 'ar' ? 'rtl' : 'ltr'}>
       <Onboarding />
-      <EditorHeader {...{t, statusLabel, state, dispatch, mode, setMode, locale, previewLocale, setPreviewLocale}} publish={publishBar} />
+      <EditorHeader {...{t, statusLabel, state, dispatch, mode, setMode, locale, previewLocale, setPreviewLocale}} publish={publishBar} editToken={props.editToken} />
       <ConflictBanner status={state.status} />
       {state.errorCode && <p className="ed-error" role="alert">{t.has(`errors.${state.errorCode}`) ? t(`errors.${state.errorCode}`) : t('errors.invalid')}</p>}
       <nav className="ed-tabs" aria-label={t('views')}>
@@ -205,7 +213,7 @@ export function Editor(props: EditorProps) {
         atLimit={atLimit}
         locale={locale}
       />
-      <Link className="ed-back" href="/app">{t('back')}</Link>
+      <BackOrClaim token={props.editToken} />
     </div>
   );
 }
@@ -221,15 +229,16 @@ function ConflictBanner({status}: {status: string}) {
   );
 }
 
-function EditorHeader({t, statusLabel, state, dispatch, mode, setMode, publish, previewLocale, setPreviewLocale}: {
+function EditorHeader({t, statusLabel, state, dispatch, mode, setMode, publish, previewLocale, setPreviewLocale, editToken}: {
   t: ReturnType<typeof useTranslations>; statusLabel: string; state: ReturnType<typeof initialState>; dispatch: React.Dispatch<Parameters<typeof reducer>[1]>;
   mode: 'easy' | 'advanced'; setMode: (mode: 'easy' | 'advanced') => void; locale: 'ar' | 'en'; previewLocale: 'ar' | 'en'; setPreviewLocale: (l: 'ar' | 'en') => void;
   publish?: React.ReactNode;
+  editToken?: string;
 }) {
   return (
     <header className="ed-header">
       <div className="ed-header__left">
-        <Link className="ed-link" href="/app">{t('back')}</Link>
+        <BackOrClaim token={editToken} header />
         <span className={`ed-status is-${state.status}`} role="status" aria-live="polite" data-testid="save-status" data-status={state.status}>{statusLabel}</span>
       </div>
       <div className="ed-header__tools">
@@ -246,5 +255,15 @@ function EditorHeader({t, statusLabel, state, dispatch, mode, setMode, publish, 
       </div>
       {publish}
     </header>
+  );
+}
+
+/** A signed-in customer goes back to their invitations; someone with a private link is offered "Save to my account". */
+function BackOrClaim({token, header = false}: {token: string | undefined; header?: boolean}) {
+  const t = useTranslations('editor');
+  const locale = useLocale();
+  if (token === undefined) return <Link className={header ? 'ed-link' : 'ed-back'} href="/app">{t('back')}</Link>;
+  return (
+    <a className={header ? 'ed-link ed-claim' : 'ed-back ed-claim'} href={`/${locale}/edit/${token}?claim=1`} data-testid="claim-link">{t('privateLink.claim')}</a>
   );
 }

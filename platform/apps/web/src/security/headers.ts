@@ -72,8 +72,12 @@ export const NOINDEX_SOURCES = [
   '/:locale(ar|en)/checkout/:path*',
   '/:locale(ar|en)/pick-preview/:path*',
   '/:locale(ar|en)/editor-frame/:path*',
-  '/:locale(ar|en)/sign-in'
+  '/:locale(ar|en)/sign-in',
+  '/:locale(ar|en)/edit/:path*'
 ];
+
+/** Private edit links carry a secret in the URL: never send it on as a referrer, never cache the page. */
+export const PRIVATE_LINK_SOURCE = '/:locale(ar|en)/edit/:path*';
 
 export function securityHeaders(env: CspEnv = process.env): HeaderRule[] {
   return [
@@ -100,6 +104,13 @@ export function securityHeaders(env: CspEnv = process.env): HeaderRule[] {
         {key: 'Content-Security-Policy-Report-Only', value: buildCsp(env, true)}
       ]
     },
-    ...NOINDEX_SOURCES.map((source) => ({source, headers: [NOINDEX]}))
+    ...NOINDEX_SOURCES.map((source) => ({source, headers: [NOINDEX]})),
+    {
+      source: PRIVATE_LINK_SOURCE,
+      headers: [
+        {key: 'Referrer-Policy', value: 'no-referrer'},
+        {key: 'Cache-Control', value: 'no-store'}
+      ]
+    }
   ];
 }
