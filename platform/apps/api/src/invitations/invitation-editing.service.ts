@@ -2,7 +2,10 @@ import {
   BadRequestException, ConflictException, HttpException, HttpStatus, Inject, Injectable, NotFoundException,
   ServiceUnavailableException
 } from '@nestjs/common';
-import {invitationData, slugCandidates, slugProblem} from '@platform/shared';
+import {
+  DocumentError, checkDocumentAgainstPlan, checkLockedSections, fromDbTier, invitationData, invitationDocument, migrate,
+  slugCandidates, slugProblem, type InvitationDocument, type Tier
+} from '@platform/shared';
 import {randomInt} from 'node:crypto';
 import {createZodDto} from 'nestjs-zod';
 import {z} from 'zod';
@@ -17,7 +20,13 @@ import {toEntitlement, type InvitationEntitlement} from './invitations.service';
 export const invitationIdSchema = z.object({id: z.uuid('invitation id must be a UUID')});
 export class InvitationIdParams extends createZodDto(invitationIdSchema) {}
 
-export class UpdateInvitationBody extends createZodDto(z.object({data: invitationData}).strict()) {}
+/** Exactly one of: the legacy flat `data`, or the editor `document` (T10). */
+export class UpdateInvitationBody extends createZodDto(
+  z
+    .object({data: invitationData.optional(), document: invitationDocument.optional()})
+    .strict()
+    .refine((body) => (body.data === undefined) !== (body.document === undefined), {message: 'Send exactly one of "data" or "document"'})
+) {}
 
 const slugField = z.string().min(1).max(120);
 export class SwitchTemplateBody extends createZodDto(z.object({templateSlug: z.string().min(1).max(120)}).strict()) {}
@@ -32,6 +41,12 @@ export interface InvitationDetail {
   templateSlug: string | null;
   orderId: string | null;
   data: unknown;
+  /** The stored data upgraded to the editor document model (`null` when the stored shape is unrecognised). */
+  document: InvitationDocument | null;
+  /** 0 = stored as legacy data, 1 = stored as a document. */
+  documentVersion: number;
+  /** Plan the editor rules follow: the paid entitlement's tier, else the order's tier. */
+  tier: string | null;
   /** Raw Postgres `updated_at`; send it back unchanged as `If-Match`. */
   updatedAt: string;
   publishedAt: string | null;
@@ -68,6 +83,30 @@ function errorText(error: unknown): {code: string; message: string} {
   };
 }
 
+function safeMigrate(data: unknown): InvitationDocument | null {
+  try {
+    return migrate(data);
+  } catch (error) {
+    if (error instanceof DocumentError) return null;
+    throw error;
+  }
+}
+
+function tierOf(row: Record<string, unknown>): string | null {
+  const entitlement = isRecord(row.entitlement) ? row.entitlement : null;
+  if (entitlement !== null && typeof entitlement.tier === 'string') return entitlement.tier;
+  return typeof row.order_tier === 'string' ? row.order_tier : null;
+}
+
+function planTier(detail: InvitationDetail): Tier {
+  try {
+    // An invitation with no paid entitlement or order yet gets the most restrictive plan.
+    return detail.tier === null ? 'save-the-date' : fromDbTier(detail.tier);
+  } catch {
+    return 'save-the-date';
+  }
+}
+
 function toDetail(value: unknown, now: Date): InvitationDetail {
   if (!isRecord(value)) throw unavailable();
   const {id, slug, status, template_id, updated_at, published_at, order_id} = value;
@@ -82,6 +121,9 @@ function toDetail(value: unknown, now: Date): InvitationDetail {
     id, slug, status, templateId: template_id,
     templateSlug: template !== null && typeof template.slug === 'string' ? template.slug : null,
     orderId: order_id, data: value.data, updatedAt: updated_at, publishedAt: published_at,
+    document: safeMigrate(value.data),
+    documentVersion: value.document_version === 1 ? 1 : 0,
+    tier: tierOf(value),
     entitlement: toEntitlement(value.entitlement, now)
   };
 }
@@ -118,13 +160,34 @@ export class InvitationEditingService {
     const version = ifMatch.trim().replace(/^W\//, '').replace(/^"(.*)"$/, '$1');
     if (Number.isNaN(Date.parse(version))) throw new BadRequestException('If-Match must be an updatedAt timestamp');
     return this.guarded(async () => {
-      const updatedAt = await this.repository.updateDataIfMatch(user.id, id, body.data, version);
+      const current = await this.find(user, id);
+      if (current === null) throw new NotFoundException('Invitation not found');
+      // Everything is judged as a document, whichever shape the client sent.
+      const next = body.document ?? migrate(body.data);
+      if (body.data !== undefined && current.documentVersion === 1) {
+        throw new ConflictException({code: 'document_required', message: 'This invitation is stored as an editor document; send "document"'});
+      }
+      const plan = checkDocumentAgainstPlan(next, planTier(current));
+      if (plan.length > 0) {
+        const tooMany = plan.some((violation) => violation.code === 'too_many_sections');
+        throw new ConflictException({
+          code: tooMany ? 'too_many_sections' : 'section_not_allowed',
+          message: tooMany ? 'The plan allows fewer sections' : 'A section type is not part of the plan',
+          violations: plan
+        });
+      }
+      if (current.document !== null) {
+        const locked = checkLockedSections(current.document, next);
+        if (locked.length > 0) {
+          throw new ConflictException({code: 'section_locked', message: 'A section locked by the template was changed', violations: locked});
+        }
+      }
+      const updatedAt = await this.repository.updateDataIfMatch(user.id, id, body.document ?? body.data, version, body.document === undefined ? 0 : 1);
       if (updatedAt !== null) {
         if (typeof updatedAt !== 'string') throw unavailable();
         return {updatedAt};
       }
-      // 0 rows: hidden/missing (404) or someone saved since this client loaded it (409).
-      if ((await this.find(user, id)) === null) throw new NotFoundException('Invitation not found');
+      // 0 rows: someone saved since this client loaded it (the row exists: it was just read).
       throw new ConflictException({code: 'edit_conflict', message: 'The invitation was changed elsewhere; reload and retry'});
     });
   }

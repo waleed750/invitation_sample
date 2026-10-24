@@ -657,7 +657,7 @@ export interface components {
             templateSlug: string;
         };
         UpdateInvitationBody: {
-            data: {
+            data?: {
                 copy: {
                     detailsSubtitle?: string | {
                         ar?: string;
@@ -1568,6 +1568,148 @@ export interface components {
                     foreground: string;
                     ivory: string;
                     muted: string;
+                };
+            };
+            document?: {
+                locales: {
+                    enabled: ("ar" | "en")[];
+                    /** @enum {string} */
+                    primary: "ar" | "en";
+                };
+                meta: {
+                    copy: {
+                        detailsSubtitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        detailsTitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        messageSubtitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        messageTitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        scheduleSubtitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        scheduleTitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        tapLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        welcome?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        welcomeTitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    couple: {
+                        firstName: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        headline?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        secondName: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    event: {
+                        date: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        displayDate?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        endTime?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        label?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        location?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        mapUrl?: string;
+                        startTime?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        venue?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    media: {
+                        coupleDancingUrl?: string;
+                        footerOrnamentUrl?: string;
+                        heroVideoUrl?: string;
+                        introPosterUrl?: string;
+                        introVideoUrl?: string;
+                        musicUrl?: string;
+                        ornamentUrl?: string;
+                        ornateBadgeUrl?: string;
+                        photoUrl?: string;
+                        stringLightsUrl?: string;
+                    };
+                    schedule?: unknown[];
+                    template: {
+                        /** @enum {string} */
+                        eventType: "engagement" | "save-the-date" | "wedding" | "birthday";
+                        /** @enum {string} */
+                        experienceType: "cinematic-story" | "interactive-reveal" | "slideshow" | "scroll-only";
+                        /** @enum {string} */
+                        introType: "video-open" | "scratch-reveal" | "tap-to-open" | "envelope" | "none";
+                        /** @enum {string} */
+                        layoutFamily: "ornate" | "minimal-interactive" | "modern" | "classic" | "safari-editorial" | "boho" | "luxury-floral" | "floral-romantic" | "finca-rustic" | "sweetlove-romantic" | "dolce-vita-lake" | "daynight-dual" | "bridgerton-regency" | "bloom-garden" | "mashrabiya";
+                        /** @enum {string} */
+                        siteType: "full-invitation" | "save-the-date" | "rsvp-only";
+                    };
+                };
+                /** @constant */
+                schemaVersion: 1;
+                sections: {
+                    hidden: boolean;
+                    id: string;
+                    locked: boolean;
+                    props: {
+                        [key: string]: unknown;
+                    };
+                    /** @enum {string} */
+                    type: "hero" | "countdown" | "welcome" | "schedule" | "details" | "map" | "messageForm" | "imageDivider" | "footer" | "scratchReveal" | "story" | "dressCode" | "gifts" | "rsvp" | "faq" | "weddingWeekend" | "travelInfo" | "bohoFooter" | "credit" | "hotelList" | "gallery" | "locationTransport";
+                    variant: string | null;
+                }[];
+                theme: {
+                    colors: {
+                        background: string;
+                        foreground: string;
+                        ivory: string;
+                        muted: string;
+                    };
+                    fonts: {
+                        [key: string]: string;
+                    };
+                    presetId: string | null;
                 };
             };
         };

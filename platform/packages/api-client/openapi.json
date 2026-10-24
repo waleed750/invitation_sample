@@ -4924,13 +4924,784 @@
             ],
             "type": "object",
             "x-nestjs_zod-parent-additional-properties": false,
-            "x-nestjs_zod-self-required": true,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "document": {
+            "additionalProperties": false,
+            "properties": {
+              "locales": {
+                "additionalProperties": false,
+                "properties": {
+                  "enabled": {
+                    "items": {
+                      "enum": [
+                        "ar",
+                        "en"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 2,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "primary": {
+                    "enum": [
+                      "ar",
+                      "en"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "primary",
+                  "enabled"
+                ],
+                "type": "object"
+              },
+              "meta": {
+                "additionalProperties": false,
+                "properties": {
+                  "copy": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "detailsSubtitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "detailsTitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "messageSubtitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "messageTitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "scheduleSubtitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "scheduleTitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "tapLabel": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "welcome": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "welcomeTitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "couple": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "firstName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "headline": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "secondName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "firstName",
+                      "secondName"
+                    ],
+                    "type": "object"
+                  },
+                  "event": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "date": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "displayDate": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "endTime": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "label": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "location": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "mapUrl": {
+                        "type": "string"
+                      },
+                      "startTime": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "venue": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "date"
+                    ],
+                    "type": "object"
+                  },
+                  "media": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "coupleDancingUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "footerOrnamentUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "heroVideoUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "introPosterUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "introVideoUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "musicUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "ornamentUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "ornateBadgeUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "photoUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "stringLightsUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "schedule": {
+                    "items": {},
+                    "type": "array"
+                  },
+                  "template": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "eventType": {
+                        "enum": [
+                          "engagement",
+                          "save-the-date",
+                          "wedding",
+                          "birthday"
+                        ],
+                        "type": "string"
+                      },
+                      "experienceType": {
+                        "enum": [
+                          "cinematic-story",
+                          "interactive-reveal",
+                          "slideshow",
+                          "scroll-only"
+                        ],
+                        "type": "string"
+                      },
+                      "introType": {
+                        "enum": [
+                          "video-open",
+                          "scratch-reveal",
+                          "tap-to-open",
+                          "envelope",
+                          "none"
+                        ],
+                        "type": "string"
+                      },
+                      "layoutFamily": {
+                        "enum": [
+                          "ornate",
+                          "minimal-interactive",
+                          "modern",
+                          "classic",
+                          "safari-editorial",
+                          "boho",
+                          "luxury-floral",
+                          "floral-romantic",
+                          "finca-rustic",
+                          "sweetlove-romantic",
+                          "dolce-vita-lake",
+                          "daynight-dual",
+                          "bridgerton-regency",
+                          "bloom-garden",
+                          "mashrabiya"
+                        ],
+                        "type": "string"
+                      },
+                      "siteType": {
+                        "enum": [
+                          "full-invitation",
+                          "save-the-date",
+                          "rsvp-only"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "eventType",
+                      "siteType",
+                      "experienceType",
+                      "introType",
+                      "layoutFamily"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "template",
+                  "couple",
+                  "event",
+                  "media",
+                  "copy"
+                ],
+                "type": "object"
+              },
+              "schemaVersion": {
+                "const": 1,
+                "type": "number"
+              },
+              "sections": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "hidden": {
+                      "type": "boolean"
+                    },
+                    "id": {
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$",
+                      "type": "string"
+                    },
+                    "locked": {
+                      "type": "boolean"
+                    },
+                    "props": {
+                      "additionalProperties": {},
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "type": "object"
+                    },
+                    "type": {
+                      "enum": [
+                        "hero",
+                        "countdown",
+                        "welcome",
+                        "schedule",
+                        "details",
+                        "map",
+                        "messageForm",
+                        "imageDivider",
+                        "footer",
+                        "scratchReveal",
+                        "story",
+                        "dressCode",
+                        "gifts",
+                        "rsvp",
+                        "faq",
+                        "weddingWeekend",
+                        "travelInfo",
+                        "bohoFooter",
+                        "credit",
+                        "hotelList",
+                        "gallery",
+                        "locationTransport"
+                      ],
+                      "type": "string"
+                    },
+                    "variant": {
+                      "anyOf": [
+                        {
+                          "maxLength": 40,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type",
+                    "variant",
+                    "hidden",
+                    "locked",
+                    "props"
+                  ],
+                  "type": "object"
+                },
+                "maxItems": 60,
+                "type": "array"
+              },
+              "theme": {
+                "additionalProperties": false,
+                "properties": {
+                  "colors": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "background": {
+                        "type": "string"
+                      },
+                      "foreground": {
+                        "type": "string"
+                      },
+                      "ivory": {
+                        "type": "string"
+                      },
+                      "muted": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "background",
+                      "foreground",
+                      "muted",
+                      "ivory"
+                    ],
+                    "type": "object"
+                  },
+                  "fonts": {
+                    "additionalProperties": {
+                      "maxLength": 80,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "propertyNames": {
+                      "maxLength": 40,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "presetId": {
+                    "anyOf": [
+                      {
+                        "maxLength": 40,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "presetId",
+                  "colors",
+                  "fonts"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "theme",
+              "locales",
+              "meta",
+              "sections"
+            ],
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
             "x-nestjs_zod-uses-3-point-1-syntax": true
           }
         },
-        "required": [
-          "data"
-        ],
         "type": "object"
       },
       "UpdateMeBody": {

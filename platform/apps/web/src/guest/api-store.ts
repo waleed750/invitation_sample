@@ -101,6 +101,12 @@ function extractEventDate(data: unknown, locale: 'ar' | 'en'): string {
   return '';
 }
 
+/** An editor document (T10) keeps the couple/event under `meta`; the readers below expect the flat legacy shape. */
+function flattenDocument(data: unknown): unknown {
+  if (isRecord(data) && data.schemaVersion === 1 && isRecord(data.meta)) return {...data.meta, sections: data.sections};
+  return data;
+}
+
 function extractTemplateSlug(data: unknown): string {
   const root = isRecord(data) ? data : {};
   return stringField(root, 'templateSlug')
@@ -120,7 +126,7 @@ function toSnapshot(shareSlug: string, live: LiveInvitation): PublishedSnapshot 
   const tier = normalizeTier(live.tier);
   const locale = live.locale === 'ar' || live.locale === 'en' ? live.locale : null;
   if (tier === null || locale === null) return null;
-  const data = isRecord(live.snapshot) && 'data' in live.snapshot ? live.snapshot.data : live.snapshot;
+  const data = flattenDocument(isRecord(live.snapshot) && 'data' in live.snapshot ? live.snapshot.data : live.snapshot);
   return {
     shareSlug,
     templateSlug: live.templateSlug ?? extractTemplateSlug(data),
