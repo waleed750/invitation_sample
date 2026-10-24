@@ -14,7 +14,8 @@ export const GLOBAL_PREFIX_EXCLUDES = [
   {path: 'docs/(.*)', method: RequestMethod.ALL}
 ];
 
-import {json, urlencoded} from 'express';
+import {json, static as serveStatic, urlencoded} from 'express';
+import {resolve as resolvePath} from 'node:path';
 import {getBetterAuthHandler, setLoginCodeDelivery} from './auth/better-auth';
 import {EMAIL_SENDER, type EmailSender} from './auth/email-sender';
 import {createLoginCodeDelivery} from './auth/login-code';
@@ -42,6 +43,14 @@ export function setupApp(app: INestApplication): void {
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const authHandler = getBetterAuthHandler(config);
   
+  if (config.mediaServeFromApi && config.mediaStorage === 'local') {
+    // Dev/e2e only: production serves the same directory through Caddy at /media/*.
+    app.use('/media', (_request: Request, response: Response, next: import('express').NextFunction) => {
+      response.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+      next();
+    }, serveStatic(resolvePath(config.mediaDir), {index: false, dotfiles: 'deny', maxAge: '1y', immutable: true}));
+  }
+
   const limit = `${String(config.bodyLimitKb)}kb`;
   const jsonParser = json({
     limit,

@@ -93,6 +93,20 @@
 		}
 	}
 
+	# Customer uploads (T12): the API container writes to the shared `media_data` volume, which is
+	# mounted read-only here. Stored keys look like media/<user>/<id>/w480.webp, so
+	# https://<API_DOMAIN>/media/media/<user>/<id>/w480.webp maps to /srv/media-root/media/<user>/...
+	# Files are immutable (a new upload gets a new id), so they are cached for a year.
+	handle_path /media/* {
+		root * /srv/media-root
+		header {
+			Cache-Control "public, max-age=31536000, immutable"
+			Cross-Origin-Resource-Policy "cross-origin"
+			Content-Security-Policy "default-src 'none'; sandbox"
+		}
+		file_server
+	}
+
 	# Login / one-time-code endpoints are the brute-force target:
 	# 10 req/min per IP. Legit users request at most a few codes; the app
 	# layer additionally caps at 3 sends per address per 10 min.

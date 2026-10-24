@@ -23,6 +23,7 @@ const ROUTES: Route[] = [
   {name: 'customer-orders', path: '/app/orders', auth: 'customer'},
   {name: 'customer-points', path: '/app/points', auth: 'customer'},
   {name: 'customer-account', path: '/app/account', auth: 'customer'},
+  {name: 'customer-media', path: '/app/media', auth: 'customer'},
   {name: 'checkout', path: '/checkout/mashrabiya?tier=classic&names=Sara+%26+Ali&date=2027-06-15', auth: 'customer'},
   {name: 'admin-overview', path: '/admin', auth: 'admin'},
   {name: 'admin-payments', path: '/admin/payments', auth: 'admin'},

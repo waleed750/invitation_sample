@@ -29,6 +29,7 @@ import {PaymentsModule} from './payments/payments.module';
 import {PointsModule} from './points/points.module';
 import {PublicInvitationsModule} from './public-invitations/public-invitations.module';
 import {TemplatesModule} from './templates/templates.module';
+import {MediaModule} from './media/media.module';
 
 export {AuthModule};
 export {AuthGuard, RolesGuard};
@@ -55,7 +56,8 @@ export {AuthGuard, RolesGuard};
     // lanes: append module imports below
     , import('./payment-events/payment-events.module').then((m) => ({module: m.PaymentEventsModule})),
     AdminStatsModule,
-    AdminAuditModule
+    AdminAuditModule,
+    MediaModule
   ],
   providers: [
     AppLogger,

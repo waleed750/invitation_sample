@@ -18,3 +18,9 @@ e2e/test-results/
 e2e/playwright-report/
 e2e/screenshots/
 e2e/.auth/
+
+# Uploaded media (T12 local storage)
+.media-data/
+.media-data-test/
+apps/api/.media-data/
+apps/api/.media-data-test/

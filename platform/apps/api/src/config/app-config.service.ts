@@ -106,6 +106,33 @@ export class AppConfigService {
     return this.isProduction ? 'smtp' : 'log';
   }
 
+  get mediaStorage(): 'local' | 's3' {
+    return this.required('MEDIA_STORAGE');
+  }
+
+  get mediaDir(): string {
+    return this.required('MEDIA_DIR');
+  }
+
+  /** Base URL files are served from; defaults to the API's own /media route. */
+  get mediaPublicBaseUrl(): string {
+    return this.optional('MEDIA_PUBLIC_BASE_URL') ?? `${this.betterAuthUrl.replace(/\/+$/, '')}/media`;
+  }
+
+  get mediaServeFromApi(): boolean {
+    return this.required('MEDIA_SERVE_FROM_API');
+  }
+
+  get mediaS3(): {endpoint?: string; region: string; bucket: string; accessKeyId: string; secretAccessKey: string; forcePathStyle: boolean} | null {
+    const bucket = this.optional('MEDIA_S3_BUCKET');
+    const region = this.optional('MEDIA_S3_REGION');
+    const accessKeyId = this.optional('MEDIA_S3_ACCESS_KEY');
+    const secretAccessKey = this.optional('MEDIA_S3_SECRET_KEY');
+    if (bucket === undefined || region === undefined || accessKeyId === undefined || secretAccessKey === undefined) return null;
+    const endpoint = this.optional('MEDIA_S3_ENDPOINT');
+    return {...(endpoint === undefined ? {} : {endpoint}), region, bucket, accessKeyId, secretAccessKey, forcePathStyle: this.required('MEDIA_S3_FORCE_PATH_STYLE')};
+  }
+
   /** Test-only sign-in code capture; the schema refuses it in production. */
   get e2eCaptureEmails(): boolean {
     return this.config.get<boolean | undefined>('E2E_CAPTURE_EMAILS') === true;
