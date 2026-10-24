@@ -1,4 +1,4 @@
-import {BadRequestException, Inject, Injectable, Optional, ServiceUnavailableException, UnprocessableEntityException} from '@nestjs/common';
+import {BadRequestException, HttpException, Inject, Injectable, Optional, ServiceUnavailableException, UnprocessableEntityException} from '@nestjs/common';
 import {applyDiscountCap, catalogEntry, currencyCode, fromDbTier, fromMinor, maxRedeemableEgp, toDbTier, toMinor} from '@platform/shared';
 import {randomUUID} from 'node:crypto';
 import {createZodDto} from 'nestjs-zod';
@@ -27,6 +27,8 @@ const checkoutSchema = z.object({
   invitationId: z.uuid().optional(),
   /** A partner code the buyer typed (beats a link). */
   affiliateCode: z.string().trim().toLowerCase().regex(/^[a-z0-9_-]{3,32}$/).optional(),
+  /** The personal code of the friend who invited this buyer (a 30-day cookie on the web). */
+  friendCode: z.string().trim().toLowerCase().regex(/^f-[a-hj-np-z2-9]{8}$/).optional(),
   /** The partner link the buyer arrived through, and when they clicked it (counts for 30 days). */
   ref: z.object({code: z.string().trim().toLowerCase().regex(/^[a-z0-9_-]{3,32}$/), at: z.iso.datetime({offset: true})}).strict().optional()
 }).strict().refine((body) => (body.kind === 'new') === (body.invitationId === undefined), {
@@ -147,7 +149,8 @@ export class CheckoutService {
         })} : {})
       };
     } catch (error) {
-      if (error instanceof BadRequestException || error instanceof ServiceUnavailableException || error instanceof UnprocessableEntityException) throw error;
+      // Every deliberate HTTP answer (bad input, a conflict, an unavailable service) reaches the caller as it is.
+      if (error instanceof HttpException) throw error;
       this.logger.error('checkout failed');
       throw new ServiceUnavailableException('Checkout service unavailable');
     }
@@ -222,10 +225,26 @@ export class CheckoutService {
       throw new ServiceUnavailableException('Checkout service unavailable');
     }
     if (result.ok === false) {
+      if (result.reason === 'insufficient_points') {
+        throw new ConflictException({code: 'insufficient_points', message: 'Those points are already used on another open order'});
+      }
       throw new UnprocessableEntityException({code: 'invitation_not_found', message: 'That invitation cannot be upgraded'});
     }
-    if (body.kind === 'new' && !(result.existing === true)) await this.attachAffiliate(String(result.order_id), body);
+    if (body.kind === 'new' && !(result.existing === true)) {
+      await this.attachAffiliate(String(result.order_id), body);
+      await this.attachReferrer(user.id, body);
+    }
     return storedOrder(result.order_id, result.amount_minor, result.currency);
+  }
+
+  /** Remembers the friend who invited a new customer, so their first paid order rewards the friend. Never blocks the purchase. */
+  private async attachReferrer(userId: string, body: CheckoutBody): Promise<void> {
+    if (body.friendCode === undefined) return;
+    try {
+      await this.repository.attachReferrerAsServiceRole(userId, body.friendCode);
+    } catch {
+      this.logger.error('referral attribution failed (upstream error)');
+    }
   }
 
   private affiliateInputs(body: CheckoutBody): {code: string | null; ref: string | null; refAt: string | null} {

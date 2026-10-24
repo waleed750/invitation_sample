@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {firstJson, rpcObject, type JsonRow, type RpcObject, type RpcRow} from '../common/db-rows';
+import {firstJson, rpcObject, rpcValue, type JsonRow, type RpcObject, type RpcRow} from '../common/db-rows';
 import {DbService} from '../database';
 
 /** Arguments of the `create_pending_checkout` RPC, in camelCase. */
@@ -88,13 +88,17 @@ export class CheckoutRepository {
         ) p`));
   }
 
-  /** Caller's points balance (RLS applies), or `null` when no profile is visible. */
+  /**
+   * Points the customer can spend on a new order: the non-expired balance minus what their other open orders already hold.
+   * (Service role: `spendable_points` is not callable by customers; the id comes from the signed-in session.)
+   */
   async findPointsBalance(userId: string): Promise<{points_balance: number} | null> {
-    return this.db.asUser({id: userId}, async (tx) =>
-      firstJson(await tx<JsonRow<{points_balance: number}>[]>`
-        select to_jsonb(p) as r from (
-          select points_balance from public.profiles where id = ${userId}::uuid
-        ) p`));
+    return this.db.asService(async (tx) => {
+      const value = rpcValue(await tx<RpcRow<unknown>[]>`
+        select case when exists (select 1 from public.profiles where id = ${userId}::uuid)
+                    then public.spendable_points(${userId}::uuid) end as result`);
+      return typeof value === 'number' ? {points_balance: value} : null;
+    });
   }
 
   /** Coupon by (already normalised) code (service role: customers cannot read coupons), or `null`. */
@@ -157,6 +161,13 @@ export class CheckoutRepository {
   async attachAffiliateAsServiceRole(orderId: string, code: string | null, ref: string | null, refAt: string | null): Promise<void> {
     await this.db.asService(async (tx) => {
       await tx`select public.attach_order_affiliate(${orderId}::uuid, ${code}::text, ${ref}::text, ${refAt}::timestamptz)`;
+    });
+  }
+
+  /** Remembers who invited a new customer (best effort; the database refuses self, repeats and customers who already bought). */
+  async attachReferrerAsServiceRole(userId: string, code: string): Promise<void> {
+    await this.db.asService(async (tx) => {
+      await tx`select public.attach_referrer(${userId}::uuid, ${code}::text)`;
     });
   }
 }

@@ -47,11 +47,16 @@ describe('CheckoutRepository', () => {
     })).resolves.toBeNull();
   });
 
-  it('reads the points balance as the caller (authenticated role)', async () => {
-    const {db, queries} = createFakeDb([[{r: {points_balance: 80}}]]);
+  it('reads the SPENDABLE points (balance minus open orders) through the service role', async () => {
+    const {db, queries} = createFakeDb([[{result: 80}]]);
     const repo = new CheckoutRepository(db);
     await expect(repo.findPointsBalance('u1')).resolves.toEqual({points_balance: 80});
-    expect(queries[0]?.role).toBe('authenticated');
-    expect(queries[0]?.userId).toBe('u1');
+    expect(queries[0]?.role).toBe('service_role');
+    expect(queries[0]?.text).toContain('public.spendable_points');
+  });
+
+  it('has no balance for an unknown profile', async () => {
+    const {db} = createFakeDb([[{result: null}]]);
+    await expect(new CheckoutRepository(db).findPointsBalance('nobody')).resolves.toBeNull();
   });
 });

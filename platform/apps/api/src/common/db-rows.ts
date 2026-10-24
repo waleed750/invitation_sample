@@ -29,3 +29,8 @@ export function rpcObject(rows: readonly RpcRow<unknown>[]): RpcObject | null {
   const value = rows[0]?.result;
   return typeof value === 'object' && value !== null && !Array.isArray(value) ? (value as RpcObject) : null;
 }
+
+/** The payload of a `select fn(...) as result` call that returns a scalar (number, text...), or `undefined` for no row. */
+export function rpcValue(rows: readonly RpcRow<unknown>[]): unknown {
+  return rows[0]?.result;
+}

@@ -29,7 +29,8 @@ describe('CheckoutService', () => {
       createPendingCheckoutAsServiceRole: jest.fn(),
       saveProviderRefAsServiceRole: jest.fn().mockResolvedValue(undefined),
       resolveAffiliateAsServiceRole: jest.fn().mockResolvedValue({found: false}),
-      attachAffiliateAsServiceRole: jest.fn().mockResolvedValue(undefined)
+      attachAffiliateAsServiceRole: jest.fn().mockResolvedValue(undefined),
+      attachReferrerAsServiceRole: jest.fn().mockResolvedValue(undefined)
     };
 
     provider = {
@@ -255,6 +256,41 @@ describe('CheckoutService', () => {
     expect(CheckoutBody.schema.safeParse({...base, kind: 'extension'}).success).toBe(false);
     expect(CheckoutBody.schema.safeParse({...base, kind: 'edits', invitationId: id}).success).toBe(true);
     expect(CheckoutBody.schema.safeParse({...base, kind: 'edits', invitationId: 'nope'}).success).toBe(false);
+  });
+
+  describe('points and referral', () => {
+    const friendCode = 'f-abcd2345';
+
+    it('records the friend who invited a new customer, and never blocks the purchase on it', async () => {
+      mockHappyPrefix();
+      repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 99900});
+      repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'o1', amount_minor: 99900, currency: 'EGP'});
+      repository.attachReferrerAsServiceRole.mockRejectedValueOnce(new Error('db down'));
+      await expect(service.start(user, body({friendCode}), 'idemp-1234')).resolves.toMatchObject({orderId: 'o1'});
+      expect(repository.attachReferrerAsServiceRole).toHaveBeenCalledWith('u1', friendCode);
+    });
+
+    it('accepts only the personal-code shape', () => {
+      const base = {templateSlug: 't1', tier: 'classic', kind: 'new', method: 'card', couple: {first: 'A', second: 'B'}, eventDate: '2026-06-20T00:00:00Z'};
+      expect(CheckoutBody.schema.safeParse({...base, friendCode}).success).toBe(true);
+      expect(CheckoutBody.schema.safeParse({...base, friendCode: 'mona10'}).success).toBe(false);
+    });
+
+    it('reports points already held by another open order as a conflict', async () => {
+      mockHappyPrefix(500);
+      repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 99900});
+      repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({ok: false, reason: 'insufficient_points', spendable: 100});
+      await expect(service.start(user, body({pointsToRedeem: 400}), 'idemp-1234')).rejects.toMatchObject({response: {code: 'insufficient_points'}});
+    });
+
+    it('redeems 100 points as EGP 50, capped at 30% of the order', async () => {
+      mockHappyPrefix(10_000);
+      repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 100000});
+      repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'o1', amount_minor: 70000, currency: 'EGP'});
+      await service.start(user, body({pointsToRedeem: 10_000}), 'idemp-1234');
+      // 30% of EGP 1000 = EGP 300 = 600 points at most, in whole 100-point blocks
+      expect(rpcArgs()).toMatchObject({pointsRedeemed: 600, discountTotalMinor: 30000, amountMinor: 70000});
+    });
   });
 
   describe('partner (affiliate) attribution', () => {
