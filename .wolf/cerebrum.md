@@ -102,3 +102,11 @@
 - `.commerce-shell a {color: inherit}` beat `.btn-primary` colour (specificity): use `:where()` for shell-level link resets.
 - UI redesign source of truth: `platform/UI_DESIGN_PLAN.md` (Opus audit). Phases A-D done on web; Arabic plan names, copy register and account deletion are owner decisions.
 - agy brief pattern that works: bounded file ownership, gates listed, 'do not build / do not start servers / do not commit'.
+
+## 2026-10-24 beta-version (cloud tasks T00-T23) learnings
+- After changing the API, run `npm run build:api` and restart `scripts/e2e-serve.sh api` before e2e; after changing next.config/security headers restart the web dev server (headers are read once). Rebuild `packages/shared` before the API when shared changes.
+- SQL pattern for admin/business logic: service-role-only plpgsql functions taking the acting user id, re-checking role, writing audit_log, returning jsonb {ok, reason}; API maps reasons with `common/rpc-result.ts` (`unwrapRpc`). One `supabase/tests/Txx.sql` per task (plain `assert`, begin..rollback). Run on a CLEAN db: create db, `DATABASE_URL_ADMIN=... bash scripts/db-apply.sh`, `bash scripts/db-test.sh`.
+- e2e: clicks before hydration are ignored: wrap first interaction in `expect(async()=>{click; expect(result)}).toPass()`. Never `pkill -f` (kills your shell): use `fuser -k PORT/tcp`. Never leave a bare `cat >> file` in a chain (it hangs on stdin).
+- Private edit link = header `x-edit-token` honoured only on routes marked `@EditTokenRoute()` and only for the :id of that link; acts as the invitation's owner. Don't add the decorator to anything outside the editor routes.
+- Money: orders amounts are minor units (piasters) in API/DB, web `Order.amountEgp` is major units; receipts use `formatEgp` (2 decimals).
+- Extension/edits packs need `invitationId` (checkout body) -> `orders.target_invitation_id`.
