@@ -68,6 +68,8 @@ const envSchema = z.object({
     .enum(['log', 'smtp', ''])
     .optional()
     .transform((value) => (value === undefined || value === '' ? undefined : value)),
+  // Payment-event webhook + auto-confirm (manual orders and top-ups). OFF at launch: the route answers 404.
+  PAYMENT_EVENTS_ENABLED: z.enum(['true', 'false', '']).default('false').transform((value) => value === 'true'),
   // --- Media uploads (T12) ---
   // local = a directory on the server (Caddy serves it at /media/*); s3 = any S3-compatible bucket.
   MEDIA_STORAGE: z.enum(['local', 's3']).default('local'),

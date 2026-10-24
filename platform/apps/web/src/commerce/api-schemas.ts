@@ -32,7 +32,7 @@ export const orderSchema = z.object({
   kind: z.enum(['new', 'extension', 'edits']),
   amountMinor: minor,
   currency: z.string().min(1),
-  status: z.enum(['pending', 'paid', 'failed', 'refunded', 'expired', 'rejected']),
+  status: z.enum(['pending', 'paid', 'failed', 'refunded', 'expired', 'rejected', 'awaiting_balance', 'cancelled']),
   provider: z.string(),
   reference: z.string().optional(),
   discountTotalMinor: minor,

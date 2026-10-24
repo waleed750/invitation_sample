@@ -20,7 +20,7 @@
     "dev:full": "bash scripts/dev-full.sh",
     "db:reset": "bash scripts/dev-reset.sh",
     "seed": "bash scripts/dev-seed.sh",
-    "test:scripts": "bash scripts/test-dev-setup.sh && bash scripts/test-dev-login.sh",
+    "test:scripts": "bash scripts/test-dev-setup.sh && bash scripts/test-dev-login.sh && bash scripts/test-credit-concurrency.sh",
     "e2e": "cd e2e && npx playwright test",
     "e2e:screenshots": "cd e2e && npx playwright test tests/screenshots.spec.ts"
   },

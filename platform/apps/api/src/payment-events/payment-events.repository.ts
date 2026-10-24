@@ -38,6 +38,39 @@ export class PaymentEventsRepository {
         on conflict (provider, external_id) do nothing returning id`;
       const row = inserted.at(0);
       if (row === undefined) return {ok: true, duplicate: true};
+      // Top-ups share the unique-amount slots with orders: an event that exactly matches one pending top-up
+      // (and no order) confirms it; anything else falls through to the order matcher or the admin queue.
+      const topupMatches = await tx<{id: string}[]>`
+        select t.id from public.credit_topups t
+        where t.status = 'pending' and t.expires_at > now() and t.currency = ${event.currency}
+          and t.amount_minor + t.extra_minor = ${event.amountMinor}::bigint
+          and t.created_at <= ${event.receivedAt}::timestamptz and ${event.receivedAt}::timestamptz < t.expires_at`;
+      if (topupMatches.length > 0) {
+        const orderClash = await tx<{id: string}[]>`
+          select o.id from public.orders o left join public.payment_amount_allocations a on a.order_id = o.id
+          where o.provider = 'manual' and o.status = 'pending' and o.currency = ${event.currency}
+            and o.created_at > now() - interval '72 hours' and o.amount_minor + coalesce(a.extra_minor, 0) = ${event.amountMinor}::bigint`;
+        const only = topupMatches.at(0);
+        if (topupMatches.length > 1 || orderClash.length > 0 || only === undefined) {
+          await tx`update public.payment_events set status = 'ambiguous', match_reason = 'topup_amount_clash' where id = ${row.id}::uuid`;
+          return {ok: true};
+        }
+        const confirmed = await tx<{result: unknown}[]>`
+          select public.system_confirm_topup(${row.id}::uuid, ${only.id}::uuid, ${provider}::text) as result`;
+        const outcome = z.object({ok: z.boolean().optional(), already: z.boolean().optional(), reason: z.string().optional(), paid_order_ids: z.array(z.string()).optional()}).parse(confirmed.at(0)?.result);
+        if (outcome.ok !== true) {
+          await tx`update public.payment_events set status = 'unmatched', match_reason = ${outcome.reason ?? 'confirmation_refused'} where id = ${row.id}::uuid`;
+        } else if (this.notifications) {
+          for (const orderId of outcome.paid_order_ids ?? []) {
+            try {
+              await this.notifications.paymentConfirmed(orderId);
+            } catch {
+              // notification failure never breaks the transaction
+            }
+          }
+        }
+        return {ok: true};
+      }
       const candidates = candidateSchema.parse(await tx`
         select o.id, o.provider_ref as reference, o.amount_minor::text as "amountMinor",
           a.extra_minor as "extraMinor", o.currency, o.created_at::text as "createdAt", o.provider, o.status

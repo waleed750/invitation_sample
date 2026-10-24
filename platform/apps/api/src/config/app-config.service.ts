@@ -106,6 +106,11 @@ export class AppConfigService {
     return this.isProduction ? 'smtp' : 'log';
   }
 
+  /** Auto-confirm from payment notifications. Off by default (manual confirmation only). */
+  get paymentEventsEnabled(): boolean {
+    return this.required('PAYMENT_EVENTS_ENABLED');
+  }
+
   get mediaStorage(): 'local' | 's3' {
     return this.required('MEDIA_STORAGE');
   }

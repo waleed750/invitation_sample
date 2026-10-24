@@ -1,6 +1,34 @@
 {
   "components": {
     "schemas": {
+      "AdjustCreditBody": {
+        "properties": {
+          "deltaMinor": {
+            "maximum": 9007199254740991,
+            "minimum": -9007199254740991,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "note": {
+            "maxLength": 300,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "userId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "userId",
+          "deltaMinor",
+          "note"
+        ],
+        "type": "object"
+      },
       "AdjustEntitlementBody": {
         "properties": {
           "addEdits": {
@@ -184,6 +212,50 @@
         ],
         "type": "object"
       },
+      "ConfirmTopupBody": {
+        "properties": {
+          "acceptMismatch": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "note": {
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "paidAmountMinor": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "txnRef": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "paidAmountMinor",
+          "txnRef"
+        ],
+        "type": "object"
+      },
+      "CreateTopupBody": {
+        "properties": {
+          "amountMinor": {
+            "maximum": 100000000,
+            "minimum": 1,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "amountMinor"
+        ],
+        "type": "object"
+      },
       "GuestMessageBody": {
         "properties": {
           "name": {
@@ -210,7 +282,35 @@
         ],
         "type": "object"
       },
+      "RefundToBalanceBody": {
+        "properties": {
+          "note": {
+            "maxLength": 300,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "note"
+        ],
+        "type": "object"
+      },
       "RejectPaymentBody": {
+        "properties": {
+          "reason": {
+            "maxLength": 500,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "reason"
+        ],
+        "type": "object"
+      },
+      "RejectTopupBody": {
         "properties": {
           "reason": {
             "maxLength": 500,
@@ -5800,6 +5900,30 @@
         ]
       }
     },
+    "/v1/admin/credit/adjust": {
+      "post": {
+        "operationId": "AdminBalanceController_adjust",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustCreditBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminBalance"
+        ]
+      }
+    },
     "/v1/admin/customers": {
       "get": {
         "operationId": "AdminCustomersController_search",
@@ -5927,6 +6051,41 @@
         },
         "tags": [
           "AdminCustomers"
+        ]
+      }
+    },
+    "/v1/admin/orders/{id}/refund-to-balance": {
+      "post": {
+        "operationId": "AdminBalanceController_refund",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefundToBalanceBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminBalance"
         ]
       }
     },
@@ -6102,6 +6261,178 @@
         },
         "tags": [
           "AdminStats"
+        ]
+      }
+    },
+    "/v1/admin/topups/pending": {
+      "get": {
+        "operationId": "AdminBalanceController_pending",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminBalance"
+        ]
+      }
+    },
+    "/v1/admin/topups/{id}/confirm": {
+      "post": {
+        "operationId": "AdminBalanceController_confirm",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmTopupBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminBalance"
+        ]
+      }
+    },
+    "/v1/admin/topups/{id}/reject": {
+      "post": {
+        "operationId": "AdminBalanceController_reject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectTopupBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminBalance"
+        ]
+      }
+    },
+    "/v1/balance": {
+      "get": {
+        "operationId": "BalanceController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Balance"
+        ]
+      }
+    },
+    "/v1/balance/ledger": {
+      "get": {
+        "operationId": "BalanceController_ledger",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 30,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Balance"
+        ]
+      }
+    },
+    "/v1/balance/topups": {
+      "get": {
+        "operationId": "BalanceController_topups",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Balance"
+        ]
+      },
+      "post": {
+        "operationId": "BalanceController_createTopup",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTopupBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Balance"
         ]
       }
     },
@@ -6639,6 +6970,56 @@
         },
         "tags": [
           "Orders"
+        ]
+      }
+    },
+    "/v1/orders/{id}/cancel": {
+      "post": {
+        "operationId": "OrderBalanceController_cancel",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "OrderBalance"
+        ]
+      }
+    },
+    "/v1/orders/{id}/pay-with-balance": {
+      "post": {
+        "operationId": "OrderBalanceController_pay",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "OrderBalance"
         ]
       }
     },

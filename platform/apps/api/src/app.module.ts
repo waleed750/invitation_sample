@@ -30,6 +30,7 @@ import {PointsModule} from './points/points.module';
 import {PublicInvitationsModule} from './public-invitations/public-invitations.module';
 import {TemplatesModule} from './templates/templates.module';
 import {MediaModule} from './media/media.module';
+import {BalanceModule} from './balance/balance.module';
 
 export {AuthModule};
 export {AuthGuard, RolesGuard};
@@ -57,7 +58,8 @@ export {AuthGuard, RolesGuard};
     , import('./payment-events/payment-events.module').then((m) => ({module: m.PaymentEventsModule})),
     AdminStatsModule,
     AdminAuditModule,
-    MediaModule
+    MediaModule,
+    BalanceModule
   ],
   providers: [
     AppLogger,

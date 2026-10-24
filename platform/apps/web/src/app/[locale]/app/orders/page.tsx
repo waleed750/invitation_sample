@@ -1,5 +1,6 @@
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {Bidi} from '@/components/Bidi';
+import {AwaitingOrderActions} from '@/balance/AwaitingOrderActions';
 import {getCommerceClient} from '@/commerce';
 import {CopyButton} from '@/commerce/CopyButton';
 import {
@@ -44,8 +45,8 @@ export default async function OrdersPage({
 
   // Sort orders: pending orders first, then most recent by createdAt
   const sortedOrders = [...orders].sort((a, b) => {
-    if (a.status === 'pending' && b.status !== 'pending') return -1;
-    if (a.status !== 'pending' && b.status === 'pending') return 1;
+    const rank = (status: string) => (status === 'awaiting_balance' ? 0 : status === 'pending' ? 1 : 2);
+    if (rank(a.status) !== rank(b.status)) return rank(a.status) - rank(b.status);
     return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
   });
 
@@ -220,6 +221,10 @@ export default async function OrdersPage({
                     </div>
                   )}
                 </dl>
+
+                {order.status === 'awaiting_balance' && (
+                  <AwaitingOrderActions orderId={order.id} amountMinor={Math.round(order.amountEgp * 100)} />
+                )}
               </article>
             );
           })}

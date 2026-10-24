@@ -5,16 +5,47 @@ import {PaymentEventsRepository} from './payment-events.repository';
 const ID = '16000000-0000-4000-8000-000000000001';
 const event: ParsedEvent = {externalId: "txn'); drop table orders; --", amountMinor: 129937, currency: 'EGP', receivedAt: new Date().toISOString()};
 const candidate = {id: ID, reference: 'INV-L30001', amountMinor: '129900', extraMinor: 37, currency: 'EGP', createdAt: new Date(Date.now() - 3600_000).toISOString(), provider: 'manual', status: 'pending'};
-function setup(responses: unknown[]) {
+function setup(responses: unknown[], topups: {id: string}[] = [], orderClash: {id: string}[] = []) {
   const calls: {sql: string; params: unknown[]}[] = [];
   const tx = jest.fn((strings: TemplateStringsArray, ...params: unknown[]) => {
-    calls.push({sql: strings.join('?'), params});
+    const sql = strings.join('?');
+    // The top-up lookups added in T13 are answered here so the order-flow expectations below stay positional.
+    if (sql.includes('from public.credit_topups')) return Promise.resolve(topups);
+    if (sql.includes('payment_amount_allocations a on a.order_id = o.id') && sql.includes('o.amount_minor + coalesce')) return Promise.resolve(orderClash);
+    calls.push({sql, params});
     return Promise.resolve(responses.shift());
   });
   const asService = jest.fn(async (fn: (tx: Tx) => Promise<unknown>) => fn(tx as unknown as Tx));
   const repository = new PaymentEventsRepository({asService} as unknown as DbService);
   return {repository, calls, asService, tx};
 }
+
+describe('PaymentEventsRepository top-up matching (T13)', () => {
+  it('confirms the single pending top-up whose total matches exactly', async () => {
+    const {repository, calls} = setup([[], [{id: 'event-id'}], [{result: {ok: true, paid_order_ids: []}}]], [{id: 'topup-1'}]);
+    await expect(repository.ingestAsServiceRole('generic-hmac', event, '{}')).resolves.toEqual({ok: true});
+    const confirm = calls.find((call) => call.sql.includes('system_confirm_topup'));
+    expect(confirm?.params).toEqual(['event-id', 'topup-1', 'generic-hmac']);
+    expect(calls.some((call) => call.sql.includes('system_confirm_payment'))).toBe(false);
+  });
+  it('queues the event as ambiguous when a top-up and an order share the amount, confirming nothing', async () => {
+    const {repository, calls} = setup([[], [{id: 'event-id'}], []], [{id: 'topup-1'}], [{id: 'order-1'}]);
+    await repository.ingestAsServiceRole('generic-hmac', event, '{}');
+    expect(calls.some((call) => call.sql.includes('system_confirm'))).toBe(false);
+    expect(calls.some((call) => call.sql.includes("'ambiguous'") && call.sql.includes('topup_amount_clash'))).toBe(true);
+  });
+  it('queues the event when two top-ups share the amount', async () => {
+    const {repository, calls} = setup([[], [{id: 'event-id'}], []], [{id: 'a'}, {id: 'b'}]);
+    await repository.ingestAsServiceRole('generic-hmac', event, '{}');
+    expect(calls.some((call) => call.sql.includes('system_confirm'))).toBe(false);
+  });
+  it('leaves the event unmatched when the top-up confirmation is refused', async () => {
+    const {repository, calls} = setup([[], [{id: 'event-id'}], [{result: {ok: false, reason: 'outside_window'}}], []], [{id: 'topup-1'}]);
+    await repository.ingestAsServiceRole('generic-hmac', event, '{}');
+    const update = calls.find((call) => call.sql.includes("status = 'unmatched'") && call.sql.includes('match_reason'));
+    expect(update?.params).toEqual(['outside_window', 'event-id']);
+  });
+});
 
 describe('PaymentEventsRepository service-role transactions', () => {
   it('short circuits duplicate IDs before matching or confirming', async () => {

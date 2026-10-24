@@ -278,7 +278,15 @@
       "step1": "Review invitation details",
       "step2": "Publish the final version",
       "step3": "Share with guests on WhatsApp",
-      "copyCode": "Copy order code"
+      "copyCode": "Copy order code",
+      "awaiting_balance": {
+        "title": "Waiting for your balance",
+        "description": "Your order is saved. Top up your balance and it is paid automatically."
+      },
+      "cancelled": {
+        "title": "Order cancelled",
+        "description": "This order was cancelled. Nothing was charged."
+      }
     },
     "errors": {
       "invalidPhone": "Enter a valid Egyptian mobile number.",
@@ -297,7 +305,8 @@
       "orders": "Orders",
       "points": "Points",
       "account": "Account",
-      "media": "Media"
+      "media": "Media",
+      "balance": "Balance"
     },
     "home": {
       "eyebrow": "Your celebration, in one place",
@@ -484,7 +493,9 @@
       "published": "Published",
       "pending": "Pending",
       "paid": "Paid",
-      "failed": "Failed"
+      "failed": "Failed",
+      "awaiting_balance": "Waiting for balance",
+      "cancelled": "Cancelled"
     }
   },
   "guests": {
@@ -1144,6 +1155,29 @@
       "date": "Date & Time",
       "older": "Older entries →",
       "latest": "← Latest"
+    },
+    "topups": {
+      "title": "Balance top-ups",
+      "empty": "No pending top-ups.",
+      "reference": "Reference",
+      "amount": "Expected amount",
+      "customer": "Customer",
+      "confirm": "Confirm",
+      "reject": "Reject",
+      "paidAmount": "Amount received (EGP)",
+      "txnRef": "Transaction reference",
+      "note": "Note (required if the amount differs)",
+      "acceptMismatch": "Accept a different amount",
+      "reason": "Reason",
+      "errors": {
+        "unknown_error": "Something went wrong.",
+        "amount_mismatch": "The amount differs from what was expected. Tick “accept a different amount” and add a note.",
+        "note_required": "A note is required to accept a different amount.",
+        "invalid_amount": "Enter a valid amount and reference.",
+        "not_admin": "Admins only.",
+        "not_found": "Top-up not found.",
+        "not_pending": "This top-up is no longer pending."
+      }
     }
   },
   "media": {
@@ -1187,6 +1221,56 @@
       "processing_failed": "The file could not be processed. Try another file.",
       "file_required": "Choose a file first.",
       "network": "Network problem. Check your connection."
+    }
+  },
+  "balance": {
+    "title": "My balance",
+    "current": "Current balance",
+    "storeCredit": "Store credit — spend it on any invitation, edit pack or extension. It cannot be withdrawn.",
+    "received": "Payment received. Your balance is updated.",
+    "order": "Order",
+    "awaitingTitle": "Orders waiting for balance",
+    "awaitingLead": "Top up {shortfall} more and these orders are paid automatically, oldest first.",
+    "topupTitle": "Add credit",
+    "waitingTitle": "Waiting for your transfer",
+    "transferExactly": "Transfer exactly this amount and mention the reference. The piasters are how we recognise your payment.",
+    "amountToSend": "Amount to send",
+    "reference": "Reference",
+    "expires": "Valid until",
+    "afterTransfer": "We confirm the transfer shortly and your balance updates here by itself. Orders waiting for balance are paid automatically.",
+    "checking": "Checking for your payment…",
+    "copy": "Copy",
+    "copied": "Copied",
+    "minNote": "Minimum top-up {min}.",
+    "bonusNote": "Get a {percent}% bonus on top-ups.",
+    "amountLabel": "Amount (EGP)",
+    "createTopup": "Show transfer details",
+    "creating": "Creating…",
+    "historyTitle": "History",
+    "historyEmpty": "No activity yet.",
+    "kinds": {
+      "topup": "Top-up",
+      "bonus": "Bonus",
+      "purchase": "Purchase",
+      "refund": "Refund",
+      "admin": "Adjustment"
+    },
+    "topUpAndPay": "Top up and pay",
+    "cancelOrder": "Cancel order",
+    "cancelYes": "Yes, cancel",
+    "cancelNo": "Keep it",
+    "openBalance": "My balance",
+    "errors": {
+      "generic": "Something went wrong. Please try again.",
+      "invalidAmount": "Enter a valid amount.",
+      "belowMinimum": "The minimum top-up is {min}.",
+      "below_minimum": "The minimum top-up is {min}.",
+      "aboveMaximum": "That amount is above the maximum top-up.",
+      "above_maximum": "That amount is above the maximum top-up.",
+      "too_many_pending": "You already have pending top-ups. Finish one or wait for it to expire.",
+      "network": "Network problem. Check your connection.",
+      "not_payable": "This order can no longer be paid.",
+      "not_cancellable": "This order cannot be cancelled."
     }
   }
 }
