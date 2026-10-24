@@ -42,3 +42,5 @@
   body, .dashboard-root { background: #fff !important; }
   .receipt { max-inline-size: none; padding: 0; }
 }
+
+.customer-note { margin-block: 1rem; padding: .85rem 1rem; border: 1px dashed rgb(0 0 0 / 25%); border-radius: 12px; background: #fffaf0; display: grid; gap: .5rem; }

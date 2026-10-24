@@ -147,4 +147,16 @@ export class CheckoutRepository {
       await tx`update public.orders set provider_ref = ${providerRef}::text where id = ${orderId}::uuid`;
     });
   }
+
+  /** Which affiliate an order would be credited to (a typed code beats a link; links count for 30 days). */
+  async resolveAffiliateAsServiceRole(code: string | null, ref: string | null, refAt: string | null): Promise<RpcObject | null> {
+    return this.db.asService(async (tx) =>
+      rpcObject(await tx<RpcRow<unknown>[]>`select public.resolve_affiliate(${code}::text, ${ref}::text, ${refAt}::timestamptz) as result`));
+  }
+
+  async attachAffiliateAsServiceRole(orderId: string, code: string | null, ref: string | null, refAt: string | null): Promise<void> {
+    await this.db.asService(async (tx) => {
+      await tx`select public.attach_order_affiliate(${orderId}::uuid, ${code}::text, ${ref}::text, ${refAt}::timestamptz)`;
+    });
+  }
 }

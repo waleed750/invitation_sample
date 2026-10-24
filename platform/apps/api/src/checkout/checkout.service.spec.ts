@@ -27,7 +27,9 @@ describe('CheckoutService', () => {
       findTierDefaultPrice: jest.fn(),
       findCouponByCodeAsServiceRole: jest.fn(),
       createPendingCheckoutAsServiceRole: jest.fn(),
-      saveProviderRefAsServiceRole: jest.fn().mockResolvedValue(undefined)
+      saveProviderRefAsServiceRole: jest.fn().mockResolvedValue(undefined),
+      resolveAffiliateAsServiceRole: jest.fn().mockResolvedValue({found: false}),
+      attachAffiliateAsServiceRole: jest.fn().mockResolvedValue(undefined)
     };
 
     provider = {
@@ -253,6 +255,47 @@ describe('CheckoutService', () => {
     expect(CheckoutBody.schema.safeParse({...base, kind: 'extension'}).success).toBe(false);
     expect(CheckoutBody.schema.safeParse({...base, kind: 'edits', invitationId: id}).success).toBe(true);
     expect(CheckoutBody.schema.safeParse({...base, kind: 'edits', invitationId: 'nope'}).success).toBe(false);
+  });
+
+  describe('partner (affiliate) attribution', () => {
+    const ref = {code: 'mona10', at: '2026-10-01T10:00:00Z'};
+
+    it('gives the buyer the partner\'s discount and records the partner on the order', async () => {
+      mockHappyPrefix();
+      repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 99900});
+      repository.resolveAffiliateAsServiceRole.mockResolvedValueOnce({found: true, affiliate_id: 'a1', attribution: 'link', customer_discount_pct: 5});
+      repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'o1', amount_minor: 94905, currency: 'EGP'});
+
+      await service.start(user, body({ref}), 'idemp-1234');
+      expect(repository.resolveAffiliateAsServiceRole).toHaveBeenCalledWith(null, 'mona10', '2026-10-01T10:00:00Z');
+      expect(rpcArgs()).toMatchObject({amountMinor: 94905, discountTotalMinor: 4995});
+      expect(repository.attachAffiliateAsServiceRole).toHaveBeenCalledWith('o1', null, 'mona10', '2026-10-01T10:00:00Z');
+    });
+
+    it('passes a typed code first (the database lets it beat the link)', async () => {
+      mockHappyPrefix();
+      repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 99900});
+      repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'o1', amount_minor: 99900, currency: 'EGP'});
+      await service.start(user, body({affiliateCode: 'selfy', ref}), 'idemp-1234');
+      expect(repository.resolveAffiliateAsServiceRole).toHaveBeenCalledWith('selfy', 'mona10', '2026-10-01T10:00:00Z');
+    });
+
+    it('a failure to record the partner never blocks the purchase', async () => {
+      mockHappyPrefix();
+      repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 99900});
+      repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'o1', amount_minor: 99900, currency: 'EGP'});
+      repository.attachAffiliateAsServiceRole.mockRejectedValueOnce(new Error('db down'));
+      await expect(service.start(user, body({ref}), 'idemp-1234')).resolves.toMatchObject({orderId: 'o1'});
+    });
+
+    it('no partner inputs means no partner lookups', async () => {
+      mockHappyPrefix();
+      repository.findTemplatePrice.mockResolvedValueOnce({amount_minor: 99900});
+      repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'o1', amount_minor: 99900, currency: 'EGP'});
+      await service.start(user, body(), 'idemp-1234');
+      expect(repository.resolveAffiliateAsServiceRole).not.toHaveBeenCalled();
+      expect(repository.attachAffiliateAsServiceRole).not.toHaveBeenCalled();
+    });
   });
 
   it('should return existing order if idempotency key matches', async () => {

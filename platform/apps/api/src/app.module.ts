@@ -7,6 +7,11 @@ import {AdminCustomersModule} from './admin-customers/admin-customers.module';
 import {AdminPaymentsModule} from './admin-payments/admin-payments.module';
 import {AdminStatsModule} from './admin-stats/admin-stats.module';
 import {AdminAuditModule} from './admin-audit/admin-audit.module';
+import {AdminSettingsModule} from './admin-settings/admin-settings.module';
+import {AdminCouponsModule} from './admin-coupons/admin-coupons.module';
+import {AdminTemplatesModule} from './admin-templates/admin-templates.module';
+import {AdminAffiliatesModule} from './admin-affiliates/admin-affiliates.module';
+import {AdminRefundsModule} from './admin-refunds/admin-refunds.module';
 import {AuthModule, AuthGuard, RolesGuard} from './auth';
 import {AppLogger} from './common/app-logger';
 import {buildLoggerParams} from './common/logging';
@@ -59,7 +64,8 @@ export {AuthGuard, RolesGuard};
     AdminStatsModule,
     AdminAuditModule,
     MediaModule,
-    BalanceModule
+    BalanceModule,
+    AdminSettingsModule, AdminCouponsModule, AdminTemplatesModule, AdminAffiliatesModule, AdminRefundsModule
   ],
   providers: [
     AppLogger,

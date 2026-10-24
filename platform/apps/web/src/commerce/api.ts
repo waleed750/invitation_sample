@@ -1,6 +1,8 @@
 import type {z} from 'zod';
 import {createApiClient} from '@platform/api-client';
 import type {Level} from '@platform/shared';
+import {cookies} from 'next/headers';
+import {REF_COOKIE, parseRefCookie} from './ref';
 import {getServerSession, type AuthSession} from '../auth/session';
 import {ApiError, NotSignedInError} from './api-errors';
 import {
@@ -168,6 +170,17 @@ export class ApiCommerceClient implements CommerceClient {
     throw new Error('verifyOtp is not used in api mode; sign in via Better Auth.');
   }
 
+  /** The partner link the buyer came through (a 30-day cookie), when there is one. */
+  private async partnerRef(): Promise<{ref?: {code: string; at: string}}> {
+    try {
+      const jar = await cookies();
+      const ref = parseRefCookie(jar.get(REF_COOKIE)?.value);
+      return ref === undefined ? {} : {ref};
+    } catch {
+      return {};
+    }
+  }
+
   async startCheckout(input: StartCheckoutInput): Promise<Order> {
     // The checkout endpoint takes the web tier names ('save-the-date'); the DB spelling only appears in SQL.
     const body = {
@@ -179,6 +192,7 @@ export class ApiCommerceClient implements CommerceClient {
       ...(input.pointsToRedeem ? {pointsToRedeem: input.pointsToRedeem} : {}),
       couple: input.couple,
       ...(input.invitationId ? {invitationId: input.invitationId} : {}),
+      ...(await this.partnerRef()),
       // The API wants an offset datetime; noon in Cairo keeps the calendar date stable in every time zone.
       eventDate: /^\d{4}-\d{2}-\d{2}$/.test(input.eventDate) ? `${input.eventDate}T12:00:00+02:00` : input.eventDate,
     };

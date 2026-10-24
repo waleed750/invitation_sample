@@ -1,4 +1,6 @@
 import '@/styles/balance.css';
+import '@/styles/customer.css';
+import {SupportNote} from '@/customer/SupportNote';
 import {redirect} from 'next/navigation';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {BalanceView} from '@/balance/BalanceView';
@@ -31,6 +33,7 @@ export default async function BalancePage({
   return (
     <div className="balance-shell">
       <h1 className="balance-title">{t('title')}</h1>
+      <SupportNote locale={locale} />
       <BalanceView
         initial={balance}
         ledger={ledger.items}

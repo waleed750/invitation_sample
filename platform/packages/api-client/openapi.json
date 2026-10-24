@@ -99,6 +99,11 @@
       },
       "CheckoutBody": {
         "properties": {
+          "affiliateCode": {
+            "pattern": "^[a-z0-9_-]{3,32}$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
           "couple": {
             "additionalProperties": false,
             "properties": {
@@ -163,6 +168,27 @@
             "type": "integer",
             "x-nestjs_zod-parent-additional-properties": false
           },
+          "ref": {
+            "additionalProperties": false,
+            "properties": {
+              "at": {
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                "type": "string"
+              },
+              "code": {
+                "pattern": "^[a-z0-9_-]{3,32}$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "at"
+            ],
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false
+          },
           "templateSlug": {
             "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
             "type": "string",
@@ -185,6 +211,24 @@
           "method",
           "couple",
           "eventDate"
+        ],
+        "type": "object"
+      },
+      "ClickBody": {
+        "properties": {
+          "path": {
+            "maxLength": 120,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "ref": {
+            "pattern": "^[a-z0-9_-]{3,32}$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "ref"
         ],
         "type": "object"
       },
@@ -248,6 +292,270 @@
         ],
         "type": "object"
       },
+      "CouponActiveBody": {
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "active"
+        ],
+        "type": "object"
+      },
+      "CreateAffiliateBody": {
+        "properties": {
+          "commissionPct": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "customerDiscountPct": {
+            "maximum": 30,
+            "minimum": 0,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "payoutDetails": {
+            "additionalProperties": {
+              "maxLength": 300,
+              "type": "string"
+            },
+            "propertyNames": {
+              "maxLength": 60,
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "payoutMethod": {
+            "maxLength": 40,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "phone": {
+            "maxLength": 20,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "refCode": {
+            "maxLength": 32,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "refCode",
+          "name"
+        ],
+        "type": "object"
+      },
+      "CreateAssetBody": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "audio",
+              "font",
+              "other"
+            ],
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "license": {
+            "maxLength": 200,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "licenseUrl": {
+            "format": "uri",
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "r2Key": {
+            "maxLength": 300,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9._\\-/]+$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "sizeBytes": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "source": {
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "r2Key"
+        ],
+        "type": "object"
+      },
+      "CreateCouponBody": {
+        "properties": {
+          "amountOffMinor": {
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "code": {
+            "maxLength": 32,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "maxUses": {
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "percentOff": {
+            "exclusiveMinimum": 0,
+            "maximum": 100,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "type": "object"
+      },
+      "CreateTemplateBody": {
+        "properties": {
+          "category": {
+            "maxLength": 60,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "eventType": {
+            "maxLength": 60,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "featured": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "nameAr": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "nameEn": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sampleDataAr": {
+            "additionalProperties": {},
+            "propertyNames": {
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sampleDataEn": {
+            "additionalProperties": {},
+            "propertyNames": {
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "slug": {
+            "maxLength": 60,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sortOrder": {
+            "maximum": 100000,
+            "minimum": 0,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "taglineAr": {
+            "maxLength": 240,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "taglineEn": {
+            "maxLength": 240,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "tier": {
+            "enum": [
+              "save_the_date",
+              "classic",
+              "premium"
+            ],
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "slug",
+          "nameAr",
+          "nameEn",
+          "tier"
+        ],
+        "type": "object"
+      },
       "CreateTopupBody": {
         "properties": {
           "amountMinor": {
@@ -299,6 +607,61 @@
         "required": [
           "name",
           "text"
+        ],
+        "type": "object"
+      },
+      "ManualRefundBody": {
+        "properties": {
+          "note": {
+            "maxLength": 500,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "note"
+        ],
+        "type": "object"
+      },
+      "PayoutBody": {
+        "properties": {
+          "amountEgp": {
+            "exclusiveMinimum": 0,
+            "maximum": 1000000,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "method": {
+            "maxLength": 40,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "periodEnd": {
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "periodStart": {
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "reference": {
+            "maxLength": 120,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "amountEgp"
         ],
         "type": "object"
       },
@@ -385,6 +748,19 @@
         ],
         "type": "object"
       },
+      "SettingBody": {
+        "properties": {
+          "value": {
+            "type": "",
+            "x-nestjs_zod-empty-type": true,
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      },
       "SwitchTemplateBody": {
         "properties": {
           "templateSlug": {
@@ -397,6 +773,115 @@
         "required": [
           "templateSlug"
         ],
+        "type": "object"
+      },
+      "TemplateStatusBody": {
+        "properties": {
+          "status": {
+            "enum": [
+              "draft",
+              "live",
+              "retired"
+            ],
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "type": "object"
+      },
+      "UpdateAffiliateBody": {
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "commissionPct": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "customerDiscountPct": {
+            "maximum": 30,
+            "minimum": 0,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "payoutDetails": {
+            "additionalProperties": {
+              "maxLength": 300,
+              "type": "string"
+            },
+            "propertyNames": {
+              "maxLength": 60,
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "payoutMethod": {
+            "maxLength": 40,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "phone": {
+            "maxLength": 20,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "UpdateAssetBody": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "audio",
+              "font",
+              "other"
+            ],
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "license": {
+            "maxLength": 200,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "licenseUrl": {
+            "format": "uri",
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "source": {
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
         "type": "object"
       },
       "UpdateInvitationBody": {
@@ -5833,11 +6318,14 @@
             ],
             "type": "string",
             "x-nestjs_zod-parent-additional-properties": false
+          },
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
           }
         },
-        "required": [
-          "locale"
-        ],
         "type": "object"
       },
       "UpdateSlugBody": {
@@ -5851,6 +6339,96 @@
         },
         "required": [
           "slug"
+        ],
+        "type": "object"
+      },
+      "UpdateTemplateBody": {
+        "properties": {
+          "category": {
+            "maxLength": 60,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "eventType": {
+            "maxLength": 60,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "featured": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "nameAr": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "nameEn": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sampleDataAr": {
+            "additionalProperties": {},
+            "propertyNames": {
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sampleDataEn": {
+            "additionalProperties": {},
+            "propertyNames": {
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sortOrder": {
+            "maximum": 100000,
+            "minimum": 0,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "taglineAr": {
+            "maxLength": 240,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "taglineEn": {
+            "maxLength": 240,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "tier": {
+            "enum": [
+              "save_the_date",
+              "classic",
+              "premium"
+            ],
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "nameAr",
+          "nameEn",
+          "tier"
         ],
         "type": "object"
       }
@@ -5871,6 +6449,276 @@
   },
   "openapi": "3.0.0",
   "paths": {
+    "/v1/admin/affiliates": {
+      "get": {
+        "operationId": "AdminAffiliatesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      },
+      "post": {
+        "operationId": "AdminAffiliatesController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAffiliateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
+    "/v1/admin/affiliates/{id}": {
+      "put": {
+        "operationId": "AdminAffiliatesController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAffiliateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
+    "/v1/admin/affiliates/{id}/export": {
+      "get": {
+        "operationId": "AdminAffiliatesController_exportCsv",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
+    "/v1/admin/affiliates/{id}/orders": {
+      "get": {
+        "operationId": "AdminAffiliatesController_orders",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
+    "/v1/admin/affiliates/{id}/payouts": {
+      "get": {
+        "operationId": "AdminAffiliatesController_payouts",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      },
+      "post": {
+        "operationId": "AdminAffiliatesController_recordPayout",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayoutBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
+    "/v1/admin/affiliates/{id}/stats": {
+      "get": {
+        "operationId": "AdminAffiliatesController_stats",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
     "/v1/admin/audit-log": {
       "get": {
         "operationId": "AdminAuditController_listAuditLogs",
@@ -5917,6 +6765,100 @@
         },
         "tags": [
           "AdminAudit"
+        ]
+      }
+    },
+    "/v1/admin/coupons": {
+      "get": {
+        "operationId": "AdminCouponsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCoupons"
+        ]
+      },
+      "post": {
+        "operationId": "AdminCouponsController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCouponBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCoupons"
+        ]
+      }
+    },
+    "/v1/admin/coupons/{code}/active": {
+      "post": {
+        "operationId": "AdminCouponsController_setActive",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "code",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9_-]{3,32}$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CouponActiveBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCoupons"
+        ]
+      }
+    },
+    "/v1/admin/coupons/{code}/uses": {
+      "get": {
+        "operationId": "AdminCouponsController_uses",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "code",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9_-]{3,32}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCoupons"
         ]
       }
     },
@@ -6270,6 +7212,119 @@
         ]
       }
     },
+    "/v1/admin/refunds": {
+      "get": {
+        "operationId": "AdminRefundsController_search",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "maxLength": 80,
+              "minLength": 2,
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminRefunds"
+        ]
+      }
+    },
+    "/v1/admin/refunds/{orderId}/manual": {
+      "post": {
+        "operationId": "AdminRefundsController_markRefunded",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualRefundBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminRefunds"
+        ]
+      }
+    },
+    "/v1/admin/settings": {
+      "get": {
+        "operationId": "AdminSettingsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminSettings"
+        ]
+      }
+    },
+    "/v1/admin/settings/{key}": {
+      "put": {
+        "operationId": "AdminSettingsController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "required": true,
+            "schema": {
+              "enum": [
+                "payment_instructions",
+                "support_whatsapp",
+                "email_texts"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettingBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminSettings"
+        ]
+      }
+    },
     "/v1/admin/stats": {
       "get": {
         "operationId": "AdminStatsController_getStats",
@@ -6281,6 +7336,248 @@
         },
         "tags": [
           "AdminStats"
+        ]
+      }
+    },
+    "/v1/admin/templates": {
+      "get": {
+        "operationId": "AdminTemplatesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      },
+      "post": {
+        "operationId": "AdminTemplatesController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTemplateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      }
+    },
+    "/v1/admin/templates/{id}": {
+      "get": {
+        "operationId": "AdminTemplatesController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      },
+      "put": {
+        "operationId": "AdminTemplatesController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTemplateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      }
+    },
+    "/v1/admin/templates/{id}/assets": {
+      "post": {
+        "operationId": "AdminTemplatesController_addAsset",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssetBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      }
+    },
+    "/v1/admin/templates/{id}/assets/{assetId}": {
+      "delete": {
+        "operationId": "AdminTemplatesController_deleteAsset",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "assetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      },
+      "patch": {
+        "operationId": "AdminTemplatesController_updateAsset",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "assetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAssetBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      }
+    },
+    "/v1/admin/templates/{id}/status": {
+      "post": {
+        "operationId": "AdminTemplatesController_setStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplateStatusBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
         ]
       }
     },
@@ -6365,6 +7662,30 @@
         },
         "tags": [
           "AdminBalance"
+        ]
+      }
+    },
+    "/v1/affiliates/click": {
+      "post": {
+        "operationId": "AffiliateClicksController_click",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClickBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AffiliateClicks"
         ]
       }
     },
@@ -7268,6 +8589,20 @@
         },
         "tags": [
           "PublicInvitations"
+        ]
+      }
+    },
+    "/v1/settings/public": {
+      "get": {
+        "operationId": "PublicSettingsController_publicSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "PublicSettings"
         ]
       }
     },

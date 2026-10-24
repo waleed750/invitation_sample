@@ -2,6 +2,8 @@ import {hasLocale} from 'next-intl';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
 import '@/styles/balance.css';
+import '@/styles/customer.css';
+import {SupportNote} from '@/customer/SupportNote';
 import {Bidi} from '@/components/Bidi';
 import {isApiCommerceMode} from '@/auth/config';
 import {OrderPay} from '@/balance/OrderPay';
@@ -50,6 +52,7 @@ export default async function PayPage({
             <p className="eyebrow">{tPay('eyebrow')}</p>
             <h1>{tPay('title')}</h1>
           </div>
+          <SupportNote locale={locale as 'ar' | 'en'} />
           <OrderPay
             orderId={order.id}
             amountMinor={Math.round(order.amountEgp * 100)}

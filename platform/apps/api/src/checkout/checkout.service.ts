@@ -24,7 +24,11 @@ const checkoutSchema = z.object({
   couple: z.object({first: z.string().trim().min(1).max(100), second: z.string().trim().min(1).max(100)}).strict(),
   eventDate: z.iso.datetime({offset: true}),
   /** The invitation an extension or edits pack applies to (required for those kinds, refused for a new one). */
-  invitationId: z.uuid().optional()
+  invitationId: z.uuid().optional(),
+  /** A partner code the buyer typed (beats a link). */
+  affiliateCode: z.string().trim().toLowerCase().regex(/^[a-z0-9_-]{3,32}$/).optional(),
+  /** The partner link the buyer arrived through, and when they clicked it (counts for 30 days). */
+  ref: z.object({code: z.string().trim().toLowerCase().regex(/^[a-z0-9_-]{3,32}$/), at: z.iso.datetime({offset: true})}).strict().optional()
 }).strict().refine((body) => (body.kind === 'new') === (body.invitationId === undefined), {
   path: ['invitationId'],
   message: 'invitationId is required for extension and edits, and not allowed for a new invitation'
@@ -185,12 +189,13 @@ export class CheckoutService {
     // Discount helpers work in major units; every value crossing back is rounded to integer minor units.
     const subtotal = fromMinor(subtotalMinor);
     const couponEgp = fromMinor(await this.couponDiscountMinor(body.couponCode, subtotalMinor));
+    const affiliateEgp = body.kind === 'new' ? fromMinor(await this.affiliateDiscountMinor(body, subtotalMinor)) : 0;
     const requestedPoints = Math.min(body.pointsToRedeem ?? 0, Math.max(0, balance));
     const requestedPointsEgp = Math.floor(requestedPoints / 100) * 50;
     const allowedPointsEgp = Math.min(requestedPointsEgp, maxRedeemableEgp(subtotal, balance));
-    const firstCap = applyDiscountCap({orderTotal: subtotal, pointsEgp: allowedPointsEgp, couponEgp, affiliateEgp: 0});
+    const firstCap = applyDiscountCap({orderTotal: subtotal, pointsEgp: allowedPointsEgp, couponEgp, affiliateEgp});
     const pointsRedeemed = Math.floor(firstCap.pointsEgp / 50) * 100;
-    const discount = applyDiscountCap({orderTotal: subtotal, pointsEgp: pointsRedeemed / 2, couponEgp, affiliateEgp: 0});
+    const discount = applyDiscountCap({orderTotal: subtotal, pointsEgp: pointsRedeemed / 2, couponEgp, affiliateEgp});
     const discountTotalMinor = toMinor(discount.totalDiscountEgp);
     const amountMinor = subtotalMinor - discountTotalMinor;
     const orderId = randomUUID();
@@ -219,7 +224,33 @@ export class CheckoutService {
     if (result.ok === false) {
       throw new UnprocessableEntityException({code: 'invitation_not_found', message: 'That invitation cannot be upgraded'});
     }
+    if (body.kind === 'new' && !(result.existing === true)) await this.attachAffiliate(String(result.order_id), body);
     return storedOrder(result.order_id, result.amount_minor, result.currency);
+  }
+
+  private affiliateInputs(body: CheckoutBody): {code: string | null; ref: string | null; refAt: string | null} {
+    return {code: body.affiliateCode ?? null, ref: body.ref?.code ?? null, refAt: body.ref?.at ?? null};
+  }
+
+  /** The customer's discount from a partner code or link (the partner's own percentage); 0 when none applies. */
+  private async affiliateDiscountMinor(body: CheckoutBody, subtotalMinor: number): Promise<number> {
+    const {code, ref, refAt} = this.affiliateInputs(body);
+    if (code === null && ref === null) return 0;
+    const found = await this.repository.resolveAffiliateAsServiceRole(code, ref, refAt);
+    if (found?.found !== true) return 0;
+    const percent = numeric(found.customer_discount_pct) ?? 0;
+    return Math.max(0, Math.floor(subtotalMinor * percent / 100));
+  }
+
+  /** Records which partner gets the order. A failure here never blocks the purchase. */
+  private async attachAffiliate(orderId: string, body: CheckoutBody): Promise<void> {
+    const {code, ref, refAt} = this.affiliateInputs(body);
+    if (code === null && ref === null) return;
+    try {
+      await this.repository.attachAffiliateAsServiceRole(orderId, code, ref, refAt);
+    } catch {
+      this.logger.error('affiliate attribution failed (upstream error)');
+    }
   }
 
   /** Active price for the template+tier in EGP: template-specific row wins, else the tier default. */
