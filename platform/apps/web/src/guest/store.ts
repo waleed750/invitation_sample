@@ -1,5 +1,7 @@
 import type {Tier} from '@platform/shared';
 
+import type {InvitationDocument} from '@platform/shared';
+
 export interface PublishedSnapshot {
   shareSlug: string;
   templateSlug: string;
@@ -9,6 +11,8 @@ export interface PublishedSnapshot {
   publishedAt: string;
   onlineUntil: string;
   locale: 'ar' | 'en';
+  /** The published editor document (T10), when the customer edited the site; absent for legacy snapshots. */
+  document?: InvitationDocument;
 }
 
 export interface Rsvp {

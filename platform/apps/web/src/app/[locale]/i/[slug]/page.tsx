@@ -5,13 +5,16 @@ import {notFound} from 'next/navigation';
 import InvitationShell from '@/engine/InvitationShell';
 import {EndedInvitation} from '@/components/EndedInvitation';
 import {getEndedInvitation, getPublicStore} from '@/guest';
-import {applyPersonalization} from '@/guest/personalize';
+import {applyPersonalization, renderDocument} from '@/guest/personalize';
 import {PublicInvitationProvider} from '@/guest/PublicInvitationProvider';
 import {routing} from '@/i18n/routing';
 import {formatDate} from '@/lib/format';
 import {getTemplate} from '@/templates/registry';
 import '@/engine/styles/templates/mashrabiya.css';
 import '@/engine/styles/templates/diwan.css';
+import '@/engine/styles/templates/rawda.css';
+import '@/engine/styles/templates/bustan.css';
+import '@/engine/styles/templates/riwaq.css';
 import '@/styles/public.css';
 
 type Props = {params: Promise<{locale: string; slug: string}>};
@@ -55,6 +58,7 @@ export default async function PublicInvitationPage({params}: Props) {
   }
   const template = getTemplate(snapshot.templateSlug);
   if (!template) notFound();
-  const data = applyPersonalization(template.getData(), snapshot, locale);
+  // A site the customer edited renders from its published document; otherwise the template's own design is personalised.
+  const data = snapshot.document ? renderDocument(snapshot.document, snapshot.tier) : applyPersonalization(template.getData(), snapshot, locale);
   return <div className={template.fontClassName}><PublicInvitationProvider slug={slug}><InvitationShell data={data} locale={locale} templateSlug={snapshot.templateSlug} /></PublicInvitationProvider></div>;
 }

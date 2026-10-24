@@ -1,5 +1,6 @@
 import {createApiClient, type ApiClient} from '@platform/api-client';
 import {z} from 'zod';
+import {invitationDocument, type InvitationDocument} from '@platform/shared';
 import {getServerSession} from '../auth/session';
 import type {GuestMessage, InvitationPublicStore, PublishedSnapshot, Rsvp} from './store';
 import type {GuestActionCode} from './submissions';
@@ -107,6 +108,13 @@ function flattenDocument(data: unknown): unknown {
   return data;
 }
 
+/** A published editor document with real sections, validated; otherwise `null` (legacy data renders the template's own design). */
+function documentOf(data: unknown): InvitationDocument | null {
+  if (!isRecord(data) || data.schemaVersion !== 1) return null;
+  const parsed = invitationDocument.safeParse(data);
+  return parsed.success && parsed.data.sections.length > 0 ? parsed.data : null;
+}
+
 function extractTemplateSlug(data: unknown): string {
   const root = isRecord(data) ? data : {};
   return stringField(root, 'templateSlug')
@@ -126,7 +134,9 @@ function toSnapshot(shareSlug: string, live: LiveInvitation): PublishedSnapshot 
   const tier = normalizeTier(live.tier);
   const locale = live.locale === 'ar' || live.locale === 'en' ? live.locale : null;
   if (tier === null || locale === null) return null;
-  const data = flattenDocument(isRecord(live.snapshot) && 'data' in live.snapshot ? live.snapshot.data : live.snapshot);
+  const raw = isRecord(live.snapshot) && 'data' in live.snapshot ? live.snapshot.data : live.snapshot;
+  const data = flattenDocument(raw);
+  const document = documentOf(raw);
   return {
     shareSlug,
     templateSlug: live.templateSlug ?? extractTemplateSlug(data),
@@ -136,6 +146,7 @@ function toSnapshot(shareSlug: string, live: LiveInvitation): PublishedSnapshot 
     publishedAt: live.publishedAt,
     onlineUntil: live.onlineUntil ?? '9999-12-31T00:00:00.000Z',
     locale,
+    ...(document === null ? {} : {document}),
   };
 }
 
