@@ -564,6 +564,38 @@ export interface paths {
         patch: operations["MeController_updateMe"];
         trace?: never;
     };
+    "/v1/me/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountController_deleteAccount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AccountController_exportData"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/media": {
         parameters: {
             query?: never;
@@ -836,6 +868,8 @@ export interface components {
             couponCode?: string;
             /** Format: date-time */
             eventDate: string;
+            /** Format: uuid */
+            invitationId?: string;
             /** @enum {string} */
             kind: "new" | "extension" | "edits";
             /** @enum {string} */
@@ -859,6 +893,9 @@ export interface components {
         };
         CreateTopupBody: {
             amountMinor: number;
+        };
+        DeleteAccountBody: {
+            confirmEmail: string;
         };
         GuestMessageBody: {
             name: string;
@@ -2714,6 +2751,44 @@ export interface operations {
                 "application/json": components["schemas"]["UpdateMeBody"];
             };
         };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AccountController_deleteAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteAccountBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AccountController_exportData: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
         responses: {
             200: {
                 headers: {

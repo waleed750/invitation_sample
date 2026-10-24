@@ -22,8 +22,13 @@ const checkoutSchema = z.object({
   couponCode: z.string().trim().min(1).max(50).optional(),
   pointsToRedeem: z.number().int().nonnegative().optional(),
   couple: z.object({first: z.string().trim().min(1).max(100), second: z.string().trim().min(1).max(100)}).strict(),
-  eventDate: z.iso.datetime({offset: true})
-}).strict();
+  eventDate: z.iso.datetime({offset: true}),
+  /** The invitation an extension or edits pack applies to (required for those kinds, refused for a new one). */
+  invitationId: z.uuid().optional()
+}).strict().refine((body) => (body.kind === 'new') === (body.invitationId === undefined), {
+  path: ['invitationId'],
+  message: 'invitationId is required for extension and edits, and not allowed for a new invitation'
+});
 export class CheckoutBody extends createZodDto(checkoutSchema) {}
 
 export interface CheckoutResponse {
@@ -204,11 +209,15 @@ export class CheckoutService {
       discountTotalMinor,
       pointsRedeemed,
       invitationSlug,
-      invitationData: {event_date: body.eventDate, eventDate: body.eventDate, couple: body.couple}
+      invitationData: {event_date: body.eventDate, eventDate: body.eventDate, couple: body.couple},
+      targetInvitationId: body.invitationId ?? null
     });
     if (result === null) {
       this.logger.error('checkout creation RPC failed');
       throw new ServiceUnavailableException('Checkout service unavailable');
+    }
+    if (result.ok === false) {
+      throw new UnprocessableEntityException({code: 'invitation_not_found', message: 'That invitation cannot be upgraded'});
     }
     return storedOrder(result.order_id, result.amount_minor, result.currency);
   }

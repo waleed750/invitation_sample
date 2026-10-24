@@ -17,7 +17,7 @@ function base(): string {
 }
 
 /** Calls the API as the signed-in user (bearer token from the session). */
-export async function apiCall<T>(method: 'GET' | 'POST', path: string, body?: unknown): Promise<T> {
+export async function apiCall<T>(method: 'GET' | 'POST' | 'PATCH', path: string, body?: unknown): Promise<T> {
   const session = await getServerSession();
   if (!session) throw new NotSignedInError();
   let response: Response;

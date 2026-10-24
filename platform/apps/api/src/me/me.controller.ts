@@ -13,6 +13,6 @@ export class MeController {
 
   @Patch()
   updateMe(@CurrentUser() user: RequestUser, @Body() body: UpdateMeBody): Promise<MeResponse> {
-    return this.me.updateLocale(user, body.locale);
+    return this.me.updateProfile(user, {...(body.locale === undefined ? {} : {locale: body.locale}), ...(body.name === undefined ? {} : {name: body.name})});
   }
 }

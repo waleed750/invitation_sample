@@ -196,6 +196,15 @@ export class MediaService {
     }
   }
 
+  /** Deletes every stored file the user uploaded (account deletion). Rows are removed by `anonymize_account`. */
+  async purgeFilesFor(userId: string): Promise<void> {
+    const rows = await this.repository.list(userId);
+    for (const row of rows) {
+      const keys = new Set<string>([row.r2_key, ...row.variants.map((variant) => variant.key)]);
+      for (const key of keys) await this.storage.delete(key).catch(() => undefined);
+    }
+  }
+
   async remove(user: RequestUser, id: string): Promise<void> {
     try {
       const row = await this.repository.findOwned(user.id, id);

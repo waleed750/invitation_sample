@@ -3,7 +3,7 @@ import {AppLogger} from '../common/app-logger';
 import {MeRepository} from './me.repository';
 import {setTestEnv} from '../test-helpers';
 import {MeController} from './me.controller';
-import {MeService} from './me.service';
+import {MeService, UpdateMeBody} from './me.service';
 
 setTestEnv();
 
@@ -40,5 +40,16 @@ describe('MeController (mocked MeRepository)', () => {
   it('surfaces 503 with a generic message on upstream failure', async () => {
     const controller = await bootController(null, new Error('connection refused'));
     await expect(controller.getMe({id: 'user-123', jwt: 'test-jwt'})).rejects.toThrow('Profile service unavailable');
+  });
+});
+
+describe('UpdateMeBody', () => {
+  it('needs a language and/or a name, and nothing else', () => {
+    const schema = (UpdateMeBody as unknown as {schema: {safeParse: (value: unknown) => {success: boolean}}}).schema;
+    expect(schema.safeParse({}).success).toBe(false);
+    expect(schema.safeParse({locale: 'en'}).success).toBe(true);
+    expect(schema.safeParse({name: '  Sara '}).success).toBe(true);
+    expect(schema.safeParse({name: ''}).success).toBe(false);
+    expect(schema.safeParse({role: 'admin'}).success).toBe(false);
   });
 });

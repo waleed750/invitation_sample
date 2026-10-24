@@ -214,9 +214,9 @@ export default async function OrdersPage({
                     <div className="order-detail-item">
                       <dt>{tDashboard('orders.receipt')}</dt>
                       <dd>
-                        <span className="receipt-confirmed-tag">
+                        <Link className="receipt-confirmed-tag" href={`/app/orders/${order.id}/receipt`}>
                           {formatDate(order.paidAt, locale)}
-                        </span>
+                        </Link>
                       </dd>
                     </div>
                   )}

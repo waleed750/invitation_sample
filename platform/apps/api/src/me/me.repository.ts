@@ -27,12 +27,15 @@ export class MeRepository {
         ) p`));
   }
 
-  /** Updates the caller's preferred locale; `null` when no row was updated. */
-  async updatePreferredLocale(userId: string, locale: 'ar' | 'en'): Promise<ProfileRow | null> {
+  /** Updates the caller's own language and/or display name; `null` when no row was updated. */
+  async updateProfile(userId: string, changes: {locale?: 'ar' | 'en'; name?: string}): Promise<ProfileRow | null> {
+    const locale = changes.locale ?? null;
+    const name = changes.name ?? null;
     return this.db.asUser({id: userId}, async (tx) =>
       firstJson(await tx<JsonRow<ProfileRow>[]>`
         with u as (
-          update public.profiles set preferred_locale = ${locale}::text
+          update public.profiles
+          set preferred_locale = coalesce(${locale}::text, preferred_locale), name = coalesce(${name}::text, name)
           where id = ${userId}::uuid
           returning id, name, preferred_locale, role, level, purchases_count, points_balance
         )

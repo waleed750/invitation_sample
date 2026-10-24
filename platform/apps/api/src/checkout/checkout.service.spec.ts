@@ -7,7 +7,7 @@ import {PAYMENT_PROVIDER} from '../payments/payment-provider';
 import {CheckoutRepository} from './checkout.repository';
 import {UniqueAmountService} from '../payment-events/unique-amount.service';
 import {ConflictException} from '@nestjs/common';
-import {CheckoutService} from './checkout.service';
+import {CheckoutBody, CheckoutService} from './checkout.service';
 import {BalanceService} from '../balance/balance.service';
 
 describe('CheckoutService', () => {
@@ -232,10 +232,27 @@ describe('CheckoutService', () => {
     mockHappyPrefix();
     repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({order_id: 'o', amount_minor: 9900, currency: 'EGP'});
 
-    await service.start(user, body({kind: 'edits'}), 'idemp-1234');
-    expect(rpcArgs()).toMatchObject({amountMinor: 9900, currency: 'EGP'});
+    await service.start(user, body({kind: 'edits', invitationId: '3b0f5a0e-6f0e-4c0a-8d55-0c7c1d9d1a11'}), 'idemp-1234');
+    expect(rpcArgs()).toMatchObject({amountMinor: 9900, currency: 'EGP', targetInvitationId: '3b0f5a0e-6f0e-4c0a-8d55-0c7c1d9d1a11'});
     expect(repository.findTemplatePrice).not.toHaveBeenCalled();
     expect(repository.findTierDefaultPrice).not.toHaveBeenCalled();
+  });
+
+  it('refuses an upgrade the database could not tie to the buyer\'s invitation', async () => {
+    mockHappyPrefix();
+    repository.createPendingCheckoutAsServiceRole.mockResolvedValueOnce({ok: false, reason: 'target_not_found'});
+    await expect(service.start(user, body({kind: 'extension', invitationId: '3b0f5a0e-6f0e-4c0a-8d55-0c7c1d9d1a11'}), 'idemp-1234'))
+      .rejects.toMatchObject({response: {code: 'invitation_not_found'}});
+  });
+
+  it('only a new order may omit invitationId, and only an upgrade may send it', () => {
+    const base = {templateSlug: 't1', tier: 'classic', method: 'card', couple: {first: 'A', second: 'B'}, eventDate: '2026-06-20T00:00:00Z'};
+    const id = '3b0f5a0e-6f0e-4c0a-8d55-0c7c1d9d1a11';
+    expect(CheckoutBody.schema.safeParse({...base, kind: 'new'}).success).toBe(true);
+    expect(CheckoutBody.schema.safeParse({...base, kind: 'new', invitationId: id}).success).toBe(false);
+    expect(CheckoutBody.schema.safeParse({...base, kind: 'extension'}).success).toBe(false);
+    expect(CheckoutBody.schema.safeParse({...base, kind: 'edits', invitationId: id}).success).toBe(true);
+    expect(CheckoutBody.schema.safeParse({...base, kind: 'edits', invitationId: 'nope'}).success).toBe(false);
   });
 
   it('should return existing order if idempotency key matches', async () => {

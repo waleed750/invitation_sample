@@ -178,6 +178,7 @@ export class ApiCommerceClient implements CommerceClient {
       ...(input.couponCode ? {couponCode: input.couponCode} : {}),
       ...(input.pointsToRedeem ? {pointsToRedeem: input.pointsToRedeem} : {}),
       couple: input.couple,
+      ...(input.invitationId ? {invitationId: input.invitationId} : {}),
       // The API wants an offset datetime; noon in Cairo keeps the calendar date stable in every time zone.
       eventDate: /^\d{4}-\d{2}-\d{2}$/.test(input.eventDate) ? `${input.eventDate}T12:00:00+02:00` : input.eventDate,
     };

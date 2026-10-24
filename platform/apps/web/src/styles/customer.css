@@ -1,0 +1,44 @@
+/* Customer pages (T21): receipt, upgrades, share, account data. Logical properties only. */
+.receipt { max-inline-size: 42rem; margin-inline: auto; padding: 1.25rem 1rem 6rem; display: grid; gap: 1.25rem; background: #fff; color: #1d1a16; }
+.receipt-actions { display: flex; gap: .75rem; justify-content: space-between; flex-wrap: wrap; }
+.receipt-head h1 { margin: 0 0 .25rem; font-size: 1.7rem; }
+.receipt-code { margin: 0; font-weight: 700; letter-spacing: .04em; }
+.receipt-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr)); gap: .75rem 1.25rem; margin: 0; }
+.receipt-grid dt { font-size: .8rem; color: #6b5f50; }
+.receipt-grid dd { margin: .1rem 0 0; font-weight: 600; overflow-wrap: anywhere; }
+.receipt-totals { inline-size: 100%; border-collapse: collapse; border-block: 1px solid rgb(0 0 0 / 18%); }
+.receipt-totals th { text-align: start; font-weight: 500; padding: .6rem 0; }
+.receipt-totals td { text-align: end; padding: .6rem 0; font-variant-numeric: tabular-nums; }
+.receipt-total th, .receipt-total td { font-size: 1.2rem; font-weight: 700; border-block-start: 1px solid rgb(0 0 0 / 18%); }
+.receipt-note { margin: 0; font-size: .8rem; color: #6b5f50; }
+
+.upgrade-grid { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr)); }
+.upgrade-card { padding: 1rem; border: 1px solid rgb(0 0 0 / 12%); border-radius: 14px; background: var(--color-surface, #fff); display: grid; gap: .6rem; align-content: start; }
+.upgrade-card h2, .upgrade-card h3 { margin: 0; font-size: 1.1rem; }
+.upgrade-card p { margin: 0; }
+.upgrade-price { font-size: 1.5rem; font-weight: 700; }
+.upgrade-meters { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; margin: 0; padding: 0; list-style: none; font-size: .95rem; }
+.upgrade-picker { display: flex; flex-wrap: wrap; gap: .5rem; }
+.upgrade-picker a { padding: .4rem .8rem; border: 1px solid rgb(0 0 0 / 15%); border-radius: 999px; text-decoration: none; color: inherit; }
+.upgrade-picker a[aria-current='page'] { background: var(--color-primary, #0b3b2e); color: #fff; border-color: transparent; }
+.customer-error { margin: 0; padding: .6rem .9rem; border-radius: 10px; background: #fbe6e3; color: #8a1c10; }
+.customer-ok { margin: 0; padding: .6rem .9rem; border-radius: 10px; background: #e6f4ec; color: #0b5a34; }
+
+.share-page { max-inline-size: 40rem; margin-inline: auto; padding: 1.25rem 1rem 6rem; display: grid; gap: 1rem; }
+.share-qr { display: grid; justify-items: center; gap: .75rem; padding: 1rem; border: 1px solid rgb(0 0 0 / 12%); border-radius: 14px; background: #fff; }
+.share-qr img { inline-size: min(100%, 16rem); block-size: auto; image-rendering: pixelated; }
+.share-actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+
+.data-card { padding: 1rem; border: 1px solid rgb(0 0 0 / 12%); border-radius: 14px; background: var(--color-surface, #fff); display: grid; gap: .75rem; margin-block-start: 1rem; }
+.data-card h2 { margin: 0; font-size: 1.1rem; }
+.data-card p { margin: 0; }
+.data-card--danger { border-color: #d9a39b; }
+.data-card input { padding: .6rem .75rem; border: 1px solid rgb(0 0 0 / 25%); border-radius: 10px; font: inherit; inline-size: 100%; box-sizing: border-box; }
+.btn-danger { padding: .6rem 1rem; border-radius: 10px; border: 0; background: #b3261e; color: #fff; font: inherit; cursor: pointer; }
+.btn-danger:disabled { opacity: .5; cursor: not-allowed; }
+
+@media print {
+  .no-print, .dashboard-header, .dashboard-nav, .dashboard-bottom-nav, .demo-banner, nav { display: none !important; }
+  body, .dashboard-root { background: #fff !important; }
+  .receipt { max-inline-size: none; padding: 0; }
+}

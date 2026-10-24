@@ -72,6 +72,8 @@ export interface StartCheckoutInput {
   pointsToRedeem?: number;
   couple: {first: string; second: string};
   eventDate: string;
+  /** Extension / edits packs apply to this existing invitation. */
+  invitationId?: string;
 }
 
 export interface CommerceState {

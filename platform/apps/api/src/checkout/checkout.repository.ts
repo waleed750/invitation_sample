@@ -19,6 +19,8 @@ export interface CreatePendingCheckoutInput {
   pointsRedeemed: number;
   invitationSlug: string;
   invitationData: Record<string, unknown>;
+  /** Existing invitation an extension / edits order applies to; null for a new one. */
+  targetInvitationId: string | null;
 }
 
 export interface LiveTemplateDbRow {
@@ -134,7 +136,8 @@ export class CheckoutRepository {
           ${input.discountTotalMinor}::bigint,
           ${input.pointsRedeemed}::integer,
           ${input.invitationSlug}::text,
-          ${invitationData}::text::jsonb
+          ${invitationData}::text::jsonb,
+          ${input.targetInvitationId}::uuid
         ) as result`));
   }
 

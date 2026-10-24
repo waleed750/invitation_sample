@@ -133,6 +133,12 @@
             "type": "string",
             "x-nestjs_zod-parent-additional-properties": false
           },
+          "invitationId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
           "kind": {
             "enum": [
               "new",
@@ -253,6 +259,20 @@
         },
         "required": [
           "amountMinor"
+        ],
+        "type": "object"
+      },
+      "DeleteAccountBody": {
+        "properties": {
+          "confirmEmail": {
+            "maxLength": 254,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "confirmEmail"
         ],
         "type": "object"
       },
@@ -6880,6 +6900,44 @@
         },
         "tags": [
           "Me"
+        ]
+      }
+    },
+    "/v1/me/delete": {
+      "post": {
+        "operationId": "AccountController_deleteAccount",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteAccountBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Account"
+        ]
+      }
+    },
+    "/v1/me/export": {
+      "get": {
+        "operationId": "AccountController_exportData",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Account"
         ]
       }
     },

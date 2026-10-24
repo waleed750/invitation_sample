@@ -1691,5 +1691,101 @@
       "tapLabel": "Tap label",
       "scratchLabel": "Scratch label"
     }
+  },
+  "customer": {
+    "receipt": {
+      "eyebrow": "Payment receipt",
+      "title": "Order receipt",
+      "back": "Back to orders",
+      "print": "Save as PDF / print",
+      "date": "Paid on",
+      "billedTo": "Issued to",
+      "item": "Item",
+      "plan": "Plan",
+      "method": "Payment method",
+      "reference": "Reference",
+      "subtotal": "Subtotal",
+      "discount": "Discount",
+      "total": "Amount paid",
+      "note": "This receipt is issued electronically and needs no signature.",
+      "missingTitle": "No receipt for this order",
+      "missingBody": "A receipt appears only after the payment is confirmed.",
+      "tiers": {
+        "save-the-date": "Save the Date",
+        "classic": "Classic",
+        "premium": "Premium"
+      }
+    },
+    "upgrades": {
+      "eyebrow": "Upgrade your invitation",
+      "title": "Add edits or extend the online period",
+      "intro": "Choose what your invitation needs. Pay from your balance or with a new transfer.",
+      "pick": "Choose an invitation",
+      "current": "Invitation status",
+      "none": "You have no paid invitation yet. Pick a design to begin.",
+      "browse": "Browse designs",
+      "meters": {
+        "edits": "Edits left: {count}",
+        "days": "{count, plural, one {# day} other {# days}} left (until {date})",
+        "expired": "Online period ended on {date}",
+        "notPublished": "Not published yet"
+      },
+      "hintNoEdits": "You have used all your edits. Add an edits pack to publish again.",
+      "hintExpired": "Your invitation is no longer online. Extend it so guests can open it again.",
+      "extension": {
+        "title": "Extend the online period",
+        "body": "Your plan's full period is added to the current end date."
+      },
+      "edits": {
+        "title": "{count}-edit pack",
+        "body": "{count} more publishes are added to your allowance."
+      },
+      "buy": "Buy now",
+      "buying": "Preparing…",
+      "payNote": "Next you go to the pay page: the amount comes from your balance, or you are asked to top it up.",
+      "errors": {
+        "not_found": "We could not find this invitation.",
+        "failed": "We could not create the order. Please try again."
+      }
+    },
+    "share": {
+      "eyebrow": "Share your invitation",
+      "title": "Invitation link and QR code",
+      "live": "Your invitation is published and ready to share.",
+      "draftNote": "This invitation is not published yet; the link works after you publish.",
+      "link": "Link",
+      "copy": "Copy link",
+      "copied": "Copied",
+      "whatsapp": "Share on WhatsApp",
+      "whatsappAr": "WhatsApp in Arabic",
+      "whatsappEn": "WhatsApp in English",
+      "message": "We would love you to join the celebration of {first} & {second} 💍",
+      "qr": "QR code",
+      "qrAlt": "QR code that opens the invitation",
+      "qrDownload": "Download the code (PNG)",
+      "back": "Back to the invitation"
+    },
+    "account": {
+      "nameTitle": "Name",
+      "nameLabel": "Display name",
+      "save": "Save",
+      "saved": "Saved",
+      "exportTitle": "Export my data",
+      "exportBody": "A JSON file with your own data only: account, orders, invitations and balance. It does not include guest data.",
+      "exportButton": "Download my data",
+      "deleteTitle": "Delete account",
+      "deleteBody": "Your invitations, files and guest data are deleted and sign-in with this account is closed. Paid-order records are kept, as the law requires, without your personal details. This cannot be undone.",
+      "deleteLabel": "To confirm, type your email ({email})",
+      "deleteButton": "Delete my account permanently",
+      "errors": {
+        "failed": "We could not complete that. Please try again.",
+        "confirmation_mismatch": "The email you typed does not match this account.",
+        "admin_account": "An admin account cannot be deleted here."
+      }
+    },
+    "nav": {
+      "share": "Share & QR",
+      "upgrade": "Upgrade"
+    }
   }
 }

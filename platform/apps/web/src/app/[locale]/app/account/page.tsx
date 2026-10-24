@@ -9,6 +9,11 @@ import {
   IconSparkles,
   IconWhatsApp,
 } from '@/commerce/icons';
+import '@/styles/customer.css';
+import {getServerSession} from '@/auth/session';
+import {apiCall} from '@/balance/server';
+import {isApiCommerceMode} from '@/auth/config';
+import {AccountData} from '@/customer/AccountData';
 import {LanguageSwitcher} from '@/components/LanguageSwitcher';
 import {Link} from '@/i18n/navigation';
 
@@ -28,6 +33,10 @@ export default async function AccountPage({
     getTranslations('dashboard'),
   ]);
 
+  const apiMode = isApiCommerceMode();
+  const authSession = apiMode ? await getServerSession() : null;
+  const accountEmail = authSession?.email ?? '';
+  const profileName = apiMode ? ((await apiCall<{name: string | null}>('GET', '/v1/me').catch(() => ({name: null}))).name ?? '') : '';
   const latestInvitation = invitations[0];
   const coupleNames = latestInvitation
     ? `${latestInvitation.couple.first} & ${latestInvitation.couple.second}`
@@ -157,6 +166,7 @@ export default async function AccountPage({
           </div>
         </section>
       </div>
+      {apiMode && <AccountData initialName={profileName} email={accountEmail} />}
     </div>
   );
 }

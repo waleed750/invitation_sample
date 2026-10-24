@@ -20,7 +20,8 @@ describe('CheckoutRepository', () => {
       discountTotalMinor: 5000,
       pointsRedeemed: 100,
       invitationSlug: 'a-b-o1',
-      invitationData: {couple: {first: 'A', second: 'B'}}
+      invitationData: {couple: {first: 'A', second: 'B'}},
+      targetInvitationId: null
     });
 
     expect(result).toEqual({order_id: 'o1', amount_minor: 50000, currency: 'EGP'});
@@ -31,7 +32,7 @@ describe('CheckoutRepository', () => {
     expect(queries[0]?.params).toEqual([
       'o1', 'u1', 't1', 'save_the_date', 'new', 50000, 'EGP', 'mock',
       null, 'save10', 5000, 100, 'a-b-o1',
-      JSON.stringify({couple: {first: 'A', second: 'B'}})
+      JSON.stringify({couple: {first: 'A', second: 'B'}}), null
     ]);
   });
 
@@ -42,7 +43,7 @@ describe('CheckoutRepository', () => {
       orderId: 'o1', userId: 'u1', templateId: 't1', tier: 'save_the_date', kind: 'new',
       amountMinor: 50000, currency: 'EGP', provider: 'mock', idempotencyKey: null,
       couponCode: null, discountTotalMinor: 0, pointsRedeemed: 0,
-      invitationSlug: 'a-b-o1', invitationData: {}
+      invitationSlug: 'a-b-o1', invitationData: {}, targetInvitationId: null
     })).resolves.toBeNull();
   });
 
