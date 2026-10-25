@@ -1,4 +1,4 @@
-import {TIERS, parseInvitationData, type InvitationData} from '@platform/shared';
+import {TIERS, parseInvitationData, toInvitationData, type InvitationData, type InvitationDocument, type Tier} from '@platform/shared';
 import {formatDate, type FormatLocale} from '../lib/format';
 import type {PublishedSnapshot} from './store';
 
@@ -28,5 +28,20 @@ export function applyPersonalization(data: InvitationData, snapshot: PublishedSn
   };
   const parsed = parseInvitationData(personalized);
   if (!parsed.ok) throw new Error(`Invalid personalized invitation: ${JSON.stringify(parsed.errors)}`);
+  return parsed.data;
+}
+
+/**
+ * What the public page renders for a site the customer edited: the published document, flattened, minus hidden
+ * sections (done by `toInvitationData`) and minus anything the plan does not include.
+ */
+export function renderDocument(document: InvitationDocument, tier: Tier): InvitationData {
+  const data = toInvitationData(document);
+  const allowed = TIERS[tier];
+  const sections = data.sections
+    .filter((section) => allowed.rsvpLimit !== 0 || section.type !== 'rsvp')
+    .filter((section) => allowed.guestMessages || section.type !== 'messageForm');
+  const parsed = parseInvitationData({...data, sections});
+  if (!parsed.ok) throw new Error(`Invalid published invitation: ${JSON.stringify(parsed.errors)}`);
   return parsed.data;
 }

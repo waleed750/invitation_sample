@@ -42,7 +42,7 @@ describe('next.config security headers', () => {
     }
   );
 
-  it.each(['/ar/preview/riwaq', '/en/preview/x/y', '/ar/demo/video-open', '/ar/pick-preview/diwan', '/en/pick-preview/x'])('allows same-origin framing on %s', async (path) => {
+  it.each(['/ar/preview/riwaq', '/en/preview/x/y', '/ar/demo/video-open', '/ar/pick-preview/diwan', '/en/pick-preview/x', '/ar/editor-frame/diwan'])('allows same-origin framing on %s', async (path) => {
     const h = await headersFor(path);
     expect(h['X-Frame-Options']).toBe('SAMEORIGIN');
     expect(h['Content-Security-Policy-Report-Only']).toContain("frame-ancestors 'self'");
@@ -78,5 +78,13 @@ describe('robots', () => {
     const rule = (robots().rules as {userAgent: string; allow: string; disallow: string[]}[])[0]!;
     expect(rule.allow).toBe('/');
     expect(rule.disallow).toEqual(expect.arrayContaining(['/*/i/', '/*/app', '/*/admin', '/*/checkout', '/api/']));
+  });
+
+  it('private edit links are never cached, never leaked as a referrer, never indexed', async () => {
+    const headers = await headersFor('/ar/edit/AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA');
+    expect(headers['Referrer-Policy']).toBe('no-referrer');
+    expect(headers['Cache-Control']).toBe('no-store');
+    expect(headers['X-Robots-Tag']).toContain('noindex');
+    expect(headers['X-Frame-Options']).toBe('DENY');
   });
 });

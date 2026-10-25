@@ -3,18 +3,18 @@
   "created_at": "2026-07-18T16:26:25.286Z",
   "lifetime": {
     "total_tokens_estimated": 36524619,
-    "total_reads": 28281,
+    "total_reads": 28354,
     "total_writes": 39332,
-    "total_sessions": 20,
+    "total_sessions": 23,
     "anatomy_hits": 6570,
-    "anatomy_misses": 21329,
-    "repeated_reads_blocked": 9257,
+    "anatomy_misses": 21402,
+    "repeated_reads_blocked": 9285,
     "estimated_savings_vs_bare_cli": 15904540,
-    "real_input_tokens": 1026817,
-    "real_output_tokens": 120820795,
-    "real_cache_read_tokens": 94992485222,
-    "real_cache_creation_tokens": 412168610,
-    "real_api_calls": 340392
+    "real_input_tokens": 1032701,
+    "real_output_tokens": 123841158,
+    "real_cache_read_tokens": 95931354033,
+    "real_cache_creation_tokens": 419102556,
+    "real_api_calls": 343310
   },
   "sessions": [
     {
@@ -385390,6 +385390,660 @@
         "cache_read_input_tokens": 69763178,
         "cache_creation_input_tokens": 1972575,
         "api_calls": 276
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T01:20:11.408Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 144,
+        "output_tokens": 43264,
+        "cache_read_input_tokens": 10204819,
+        "cache_creation_input_tokens": 151471,
+        "api_calls": 71
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T09:18:13.690Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 150,
+        "output_tokens": 45246,
+        "cache_read_input_tokens": 10655602,
+        "cache_creation_input_tokens": 307331,
+        "api_calls": 74
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T09:18:25.354Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 156,
+        "output_tokens": 45497,
+        "cache_read_input_tokens": 11062106,
+        "cache_creation_input_tokens": 308646,
+        "api_calls": 76
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T09:19:00.350Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 158,
+        "output_tokens": 46515,
+        "cache_read_input_tokens": 11266183,
+        "cache_creation_input_tokens": 308688,
+        "api_calls": 77
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T09:19:11.744Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 1,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 164,
+        "output_tokens": 46789,
+        "cache_read_input_tokens": 11675502,
+        "cache_creation_input_tokens": 310020,
+        "api_calls": 79
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T12:39:59.963Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-customer-signs-in-picks-a-template-and-checks-out-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-admin-sees-the-pending-payment-and-confirms-it-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/tmp/claude-0/-home-user-invitation-sample/5f8ddba5-9752-556e-9c88-b274f87ed86a/tasks/bh5lxaskl.output",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-a-guest-opens-the-public-page-and-sends-an-RSVP-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/screenshots/T01/customer-dashboard-ar-390.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/screenshots/T01/admin-payments-en-1280.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/public-pages-an-invitation-36bd1-ws-the-ended-page-not-a-404-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/apps/web/src/guest/personalize.test.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-first.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-editor-works-at-1280px-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-desktop.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-phone.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-editor-works-at-390px-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/dbg-preview.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/upgrades.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/share-phone.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 17,
+        "writes_count": 0,
+        "repeated_reads_blocked": 7,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 1268,
+        "output_tokens": 692212,
+        "cache_read_input_tokens": 218603940,
+        "cache_creation_input_tokens": 1378239,
+        "api_calls": 631
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T12:40:12.511Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-customer-signs-in-picks-a-template-and-checks-out-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-admin-sees-the-pending-payment-and-confirms-it-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/tmp/claude-0/-home-user-invitation-sample/5f8ddba5-9752-556e-9c88-b274f87ed86a/tasks/bh5lxaskl.output",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-a-guest-opens-the-public-page-and-sends-an-RSVP-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/screenshots/T01/customer-dashboard-ar-390.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/screenshots/T01/admin-payments-en-1280.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/public-pages-an-invitation-36bd1-ws-the-ended-page-not-a-404-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/apps/web/src/guest/personalize.test.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-first.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-editor-works-at-1280px-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-desktop.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-phone.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-editor-works-at-390px-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/dbg-preview.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/upgrades.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/share-phone.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 17,
+        "writes_count": 0,
+        "repeated_reads_blocked": 7,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 1274,
+        "output_tokens": 692535,
+        "cache_read_input_tokens": 219721032,
+        "cache_creation_input_tokens": 1379159,
+        "api_calls": 633
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T12:42:26.177Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-customer-signs-in-picks-a-template-and-checks-out-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-admin-sees-the-pending-payment-and-confirms-it-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/tmp/claude-0/-home-user-invitation-sample/5f8ddba5-9752-556e-9c88-b274f87ed86a/tasks/bh5lxaskl.output",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-a-guest-opens-the-public-page-and-sends-an-RSVP-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/screenshots/T01/customer-dashboard-ar-390.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/screenshots/T01/admin-payments-en-1280.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/public-pages-an-invitation-36bd1-ws-the-ended-page-not-a-404-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/apps/web/src/guest/personalize.test.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-first.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-editor-works-at-1280px-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-desktop.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-phone.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-editor-works-at-390px-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/dbg-preview.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/upgrades.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/share-phone.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 17,
+        "writes_count": 0,
+        "repeated_reads_blocked": 7,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 1280,
+        "output_tokens": 702918,
+        "cache_read_input_tokens": 221402538,
+        "cache_creation_input_tokens": 1392779,
+        "api_calls": 636
+      }
+    },
+    {
+      "id": "session-2026-10-24-0102",
+      "agent": "claude",
+      "started": "2026-10-24T01:02:47.866Z",
+      "ended": "2026-10-24T12:46:24.979Z",
+      "reads": [
+        {
+          "file": "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-customer-signs-in-picks-a-template-and-checks-out-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-admin-sees-the-pending-payment-and-confirms-it-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/tmp/claude-0/-home-user-invitation-sample/5f8ddba5-9752-556e-9c88-b274f87ed86a/tasks/bh5lxaskl.output",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/journey-a-guest-opens-the-public-page-and-sends-an-RSVP-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/screenshots/T01/customer-dashboard-ar-390.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/screenshots/T01/admin-payments-en-1280.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/public-pages-an-invitation-36bd1-ws-the-ended-page-not-a-404-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/apps/web/src/guest/personalize.test.ts",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-first.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-editor-works-at-1280px-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-desktop.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-phone.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/editor-editor-works-at-390px-chromium/test-failed-1.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/dbg-preview.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/upgrades.png",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "/home/user/invitation_sample/platform/e2e/test-results/share-phone.png",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 0,
+        "output_tokens_estimated": 0,
+        "reads_count": 17,
+        "writes_count": 0,
+        "repeated_reads_blocked": 7,
+        "anatomy_lookups": 0
+      },
+      "real_usage": {
+        "input_tokens": 1290,
+        "output_tokens": 705387,
+        "cache_read_input_tokens": 224277089,
+        "cache_creation_input_tokens": 1397613,
+        "api_calls": 641
       }
     }
   ],

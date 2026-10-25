@@ -1,5 +1,5 @@
 import 'server-only';
-import {ApiInvitationPublicStore} from './api-store';
+import {ApiInvitationPublicStore, getEndedSummary, type EndedSummary} from './api-store';
 import {DemoFileStore} from './demo-store';
 import type {InvitationPublicStore} from './store';
 
@@ -24,3 +24,9 @@ export function getPublicStore(): InvitationPublicStore {
 }
 
 export type {GuestMessage, InvitationPublicStore, PublishedSnapshot, Rsvp} from './store';
+
+/** Ended-invitation details for the "ended" page. Only the real API knows about ended invitations. */
+export async function getEndedInvitation(shareSlug: string): Promise<EndedSummary | null> {
+  if ((process.env.GUEST_MODE ?? 'demo') !== 'api') return null;
+  return getEndedSummary(shareSlug);
+}

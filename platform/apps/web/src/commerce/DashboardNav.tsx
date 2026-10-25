@@ -2,7 +2,7 @@
 
 import {useTranslations} from 'next-intl';
 import {Link, usePathname} from '@/i18n/navigation';
-import {IconAccount, IconHome, IconOrders, IconUsers} from './icons';
+import {IconAccount, IconHome, IconImage, IconOrders, IconUsers, IconWallet} from './icons';
 
 interface DashboardNavProps {
   firstInvitationId?: string;
@@ -30,6 +30,18 @@ export function DashboardNav({firstInvitationId}: DashboardNavProps) {
       key: 'orders' as const,
       icon: <IconOrders size={22} />,
       isActive: pathname.startsWith('/app/orders'),
+    },
+    {
+      href: '/app/balance',
+      key: 'balance' as const,
+      icon: <IconWallet size={22} />,
+      isActive: pathname.startsWith('/app/balance'),
+    },
+    {
+      href: '/app/media',
+      key: 'media' as const,
+      icon: <IconImage size={22} />,
+      isActive: pathname.startsWith('/app/media'),
     },
     {
       href: '/app/account',

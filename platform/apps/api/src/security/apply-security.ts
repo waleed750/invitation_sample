@@ -40,7 +40,7 @@ export function applySecurity(app: NestExpressApplication, config: AppConfigServ
     origin: config.webOrigins,
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'x-request-id'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'If-Match', 'X-Edit-Token', 'x-request-id'],
     exposedHeaders: ['x-request-id', 'Retry-After'],
     maxAge: 600
   });

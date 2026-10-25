@@ -9,7 +9,20 @@ export interface PointsResponse {
   balance: number;
   purchaseCount: number;
   level: Level;
+  /** Points a new order may redeem now (the balance minus what other open orders already hold). */
+  spendable: number;
+  /** What the balance will lose in the next `days` days as points expire (0 when nothing). */
+  expiringSoon: {points: number; firstExpiry: string | null; days: number};
+  /** The customer's invite link code and what it earned. */
+  referral: {code: string | null; invited: number; rewarded: number; rewardPoints: number};
   ledger: {id: string; orderId: string | null; delta: number; reason: string; createdAt: string; expiresAt: string | null}[];
+}
+
+/** How far ahead the points page warns about expiring points. */
+const EXPIRY_WINDOW_DAYS = 30;
+
+function numberField(value: unknown): number {
+  return typeof value === 'number' && Number.isFinite(value) ? value : 0;
 }
 
 function ledgerRow(value: unknown): PointsResponse['ledger'][number] {
@@ -29,6 +42,11 @@ export class PointsService {
     try {
       const profile = await this.repository.findBalance(user.id);
       const ledger = await this.repository.listLedger(user.id);
+      const [expiring, referral, spendable] = await Promise.all([
+        this.repository.expiringSoon(user.id, EXPIRY_WINDOW_DAYS),
+        this.repository.referral(user.id),
+        this.repository.spendable(user.id)
+      ]);
       if (profile === null || typeof profile.points_balance !== 'number' || typeof profile.purchases_count !== 'number') {
         throw new ServiceUnavailableException('Points service unavailable');
       }
@@ -37,6 +55,18 @@ export class PointsService {
         balance: profile.points_balance,
         purchaseCount,
         level: levelForPurchases(purchaseCount),
+        spendable,
+        expiringSoon: {
+          points: typeof expiring?.points === 'number' ? expiring.points : 0,
+          firstExpiry: typeof expiring?.first_expiry === 'string' ? expiring.first_expiry : null,
+          days: EXPIRY_WINDOW_DAYS
+        },
+        referral: {
+          code: referral.code,
+          invited: numberField(referral.summary?.invited),
+          rewarded: numberField(referral.summary?.rewarded),
+          rewardPoints: numberField(referral.summary?.reward_points)
+        },
         ledger: ledger.map(ledgerRow)
       };
     } catch (error) {

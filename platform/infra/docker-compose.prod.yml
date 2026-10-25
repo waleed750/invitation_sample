@@ -78,6 +78,12 @@ services:
       # `1` = directly behind Caddy only; `cloudflare` = behind
       # Cloudflare + Caddy (also honours CF-Connecting-IP). See .env.prod.example.
       TRUST_PROXY: ${TRUST_PROXY:-1}
+      # Customer uploads live on the `media_data` volume; Caddy serves it at https://<API_DOMAIN>/media/*.
+      MEDIA_STORAGE: ${MEDIA_STORAGE:-local}
+      MEDIA_DIR: /data/media
+      MEDIA_PUBLIC_BASE_URL: ${MEDIA_PUBLIC_BASE_URL:-https://${API_DOMAIN:?set in .env.prod}/media}
+    volumes:
+      - media_data:/data/media
     # DATABASE_URL and every app key come from .env.prod (see .env.prod.example
     # for the full list + pointers to apps/api/.env.example and apps/web/.env.example).
     networks:
@@ -138,6 +144,8 @@ services:
       - ${CADDY_ORIGIN_CERTS_DIR:-./caddy/certs}:/etc/caddy/certs:ro
       - caddy_data:/data
       - caddy_config:/config
+      # Uploaded media (read-only): served at /media/* on the API domain.
+      - media_data:/srv/media-root:ro
     networks:
       - frontend
     # Uncomment ONLY if you enable the {$ADMIN_DOMAIN} block in the Caddyfile
@@ -151,6 +159,8 @@ networks:
     internal: true # no internet route; postgres lives here with api only
 
 volumes:
+  media_data:
+    name: ${COMPOSE_PROJECT_NAME:-invitation-platform-prod}_media
   pgdata:
     name: ${COMPOSE_PROJECT_NAME:-invitation-platform-prod}_pgdata
   caddy_data:

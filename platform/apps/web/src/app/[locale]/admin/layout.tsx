@@ -13,13 +13,18 @@ export const dynamic = 'force-dynamic';
 
 import {getTranslations} from 'next-intl/server';
 
-function AdminNav({t}: {t: (key: 'overview' | 'payments' | 'paymentEvents' | 'customers' | 'auditLog') => string}) {
+function AdminNav({t}: {t: (key: 'overview' | 'payments' | 'paymentEvents' | 'customers' | 'auditLog' | 'templates' | 'coupons' | 'affiliates' | 'refunds' | 'settings') => string}) {
   return (
     <nav className="dashboard-nav-list">
       <Link href="/admin" className="dashboard-nav-item">{t('overview')}</Link>
       <Link href="/admin/payments" className="dashboard-nav-item">{t('payments')}</Link>
       <Link href="/admin/payment-events" className="dashboard-nav-item">{t('paymentEvents')}</Link>
       <Link href="/admin/customers" className="dashboard-nav-item">{t('customers')}</Link>
+      <Link href="/admin/templates" className="dashboard-nav-item">{t('templates')}</Link>
+      <Link href="/admin/coupons" className="dashboard-nav-item">{t('coupons')}</Link>
+      <Link href="/admin/affiliates" className="dashboard-nav-item">{t('affiliates')}</Link>
+      <Link href="/admin/refunds" className="dashboard-nav-item">{t('refunds')}</Link>
+      <Link href="/admin/settings" className="dashboard-nav-item">{t('settings')}</Link>
       <Link href="/admin/audit" className="dashboard-nav-item">{t('auditLog')}</Link>
     </nav>
   );

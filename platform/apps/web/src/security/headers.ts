@@ -9,9 +9,9 @@ export interface HeaderRule {
 }
 
 /** Pages designed to be framed by our own site (landing-page phone/preview widgets). */
-export const EMBEDDABLE_SOURCE = '/:locale(ar|en)/(preview|demo|pick-preview)/:path*';
+export const EMBEDDABLE_SOURCE = '/:locale(ar|en)/(preview|demo|pick-preview|editor-frame)/:path*';
 /** Everything except the embeddable pages (negative lookahead keeps the two rule sets disjoint). */
-const NON_EMBEDDABLE_SOURCE = '/((?!(?:ar|en)/(?:preview|demo|pick-preview)(?:/|$)).*)';
+const NON_EMBEDDABLE_SOURCE = '/((?!(?:ar|en)/(?:preview|demo|pick-preview|editor-frame)(?:/|$)).*)';
 
 function origin(value: string | undefined): string | undefined {
   if (!value) return undefined;
@@ -40,7 +40,7 @@ export interface CspEnv {
  *   https URLs chosen by the customer, so `https:` is the
  *   narrowest scheme that works; no `*` and no plain http.
  * - connect-src: the API.
- * - frame-src: the venue map iframe embeds Google Maps.
+ * - frame-src: the venue map iframe embeds Google Maps; the editor previews its own /editor-frame page.
  */
 export function buildCsp(env: CspEnv, embeddable: boolean): string {
   const connect = ["'self'"];
@@ -56,7 +56,7 @@ export function buildCsp(env: CspEnv, embeddable: boolean): string {
     "img-src 'self' data: blob: https:",
     "media-src 'self' blob: https:",
     `connect-src ${connect.join(' ')}`,
-    'frame-src https://www.google.com https://maps.google.com',
+    "frame-src 'self' https://www.google.com https://maps.google.com",
     "object-src 'none'",
     "base-uri 'self'",
     "form-action 'self'",
@@ -71,8 +71,13 @@ export const NOINDEX_SOURCES = [
   '/:locale(ar|en)/admin/:path*',
   '/:locale(ar|en)/checkout/:path*',
   '/:locale(ar|en)/pick-preview/:path*',
-  '/:locale(ar|en)/sign-in'
+  '/:locale(ar|en)/editor-frame/:path*',
+  '/:locale(ar|en)/sign-in',
+  '/:locale(ar|en)/edit/:path*'
 ];
+
+/** Private edit links carry a secret in the URL: never send it on as a referrer, never cache the page. */
+export const PRIVATE_LINK_SOURCE = '/:locale(ar|en)/edit/:path*';
 
 export function securityHeaders(env: CspEnv = process.env): HeaderRule[] {
   return [
@@ -99,6 +104,13 @@ export function securityHeaders(env: CspEnv = process.env): HeaderRule[] {
         {key: 'Content-Security-Policy-Report-Only', value: buildCsp(env, true)}
       ]
     },
-    ...NOINDEX_SOURCES.map((source) => ({source, headers: [NOINDEX]}))
+    ...NOINDEX_SOURCES.map((source) => ({source, headers: [NOINDEX]})),
+    {
+      source: PRIVATE_LINK_SOURCE,
+      headers: [
+        {key: 'Referrer-Policy', value: 'no-referrer'},
+        {key: 'Cache-Control', value: 'no-store'}
+      ]
+    }
   ];
 }

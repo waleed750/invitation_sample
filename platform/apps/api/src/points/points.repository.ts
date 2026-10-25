@@ -1,5 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {allJson, firstJson, type JsonRow} from '../common/db-rows';
+import {allJson, firstJson, rpcObject, rpcValue, type JsonRow, type RpcObject, type RpcRow} from '../common/db-rows';
 import {DbService} from '../database';
 
 export interface PointsBalanceRow {
@@ -39,5 +39,27 @@ export class PointsRepository {
           from public.points_ledger where user_id = ${userId}::uuid
           order by created_at desc limit 50
         ) l order by l.created_at desc`));
+  }
+
+  /** The caller's referral code (made on first use), how many friends they invited and how many were rewarded. */
+  async referral(userId: string): Promise<{code: string | null; summary: RpcObject | null}> {
+    return this.db.asService(async (tx) => {
+      const code = rpcValue(await tx<RpcRow<unknown>[]>`select public.get_referral_code(${userId}::uuid) as result`);
+      const summary = rpcObject(await tx<RpcRow<unknown>[]>`select public.referral_summary(${userId}::uuid) as result`);
+      return {code: typeof code === 'string' ? code : null, summary};
+    });
+  }
+
+  /** Points that will expire within `days` (what the balance really loses), and the first date. */
+  async expiringSoon(userId: string, days: number): Promise<RpcObject | null> {
+    return this.db.asService(async (tx) =>
+      rpcObject(await tx<RpcRow<unknown>[]>`select public.points_expiring_soon(${userId}::uuid, ${days}::integer) as result`));
+  }
+
+  async spendable(userId: string): Promise<number> {
+    return this.db.asService(async (tx) => {
+      const value = rpcValue(await tx<RpcRow<unknown>[]>`select public.spendable_points(${userId}::uuid) as result`);
+      return typeof value === 'number' ? value : 0;
+    });
   }
 }

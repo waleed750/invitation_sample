@@ -44,8 +44,8 @@ export default async function ResultPage({
         {/* Status seal 96px arch-framed */}
         <div className={`status-seal is-${order.status}`} aria-hidden="true">
           {order.status === 'paid' && <IconStar size={48} className="seal-mark-gold" />}
-          {order.status === 'pending' && <IconClock size={40} className="seal-mark-warning" />}
-          {(order.status === 'failed' || order.status === 'expired' || order.status === 'rejected') && <IconCross size={40} className="seal-mark-danger" />}
+          {(order.status === 'pending' || order.status === 'awaiting_balance') && <IconClock size={40} className="seal-mark-warning" />}
+          {(order.status === 'failed' || order.status === 'expired' || order.status === 'rejected' || order.status === 'cancelled') && <IconCross size={40} className="seal-mark-danger" />}
         </div>
 
         <div className="result-heading">

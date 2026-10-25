@@ -29,6 +29,10 @@ export interface InvitationDetailDbRow {
   status: string;
   template_id: string | null;
   data: unknown;
+  /** 0 = legacy InvitationData, 1 = editor document. */
+  document_version: number;
+  /** Tier of the order behind this invitation (used before payment creates an entitlement). */
+  order_tier: string | null;
   /** Raw Postgres `updated_at` (microsecond ISO text); the `If-Match` version. */
   updated_at: string;
   published_at: string | null;
@@ -61,7 +65,8 @@ export class InvitationsRepository {
     return this.db.asUser({id: userId}, async (tx) =>
       firstJson(await tx<JsonRow<InvitationDetailDbRow>[]>`
         select to_jsonb(x) as r from (
-          select i.id, i.order_id, i.slug, i.status, i.template_id, i.data, i.updated_at, i.published_at,
+          select i.id, i.order_id, i.slug, i.status, i.template_id, i.data, i.document_version, i.updated_at, i.published_at,
+            (select o.tier from public.orders o where o.id = i.order_id) as order_tier,
             (select jsonb_build_object('slug', t.slug) from public.templates t where t.id = i.template_id) as template,
             (select to_jsonb(e) from (
               select ie.tier, ie.edits_allowed, ie.edits_used, ie.online_until
@@ -72,17 +77,17 @@ export class InvitationsRepository {
   }
 
   /**
-   * Optimistic-concurrency write: updates `data` only while `updated_at` still equals `ifMatch`.
+   * Optimistic-concurrency write (the cast goes through text so the driver cannot truncate microseconds to a JS Date): updates `data` only while `updated_at` still equals `ifMatch`.
    * `ifMatch` is the raw `updated_at` string previously returned by Postgres (microsecond precision).
    * Returns the new `updated_at` (microsecond ISO text), or `null` when stale or hidden.
    */
-  async updateDataIfMatch(userId: string, id: string, data: unknown, ifMatch: string): Promise<string | null> {
+  async updateDataIfMatch(userId: string, id: string, data: unknown, ifMatch: string, documentVersion: 0 | 1 = 0): Promise<string | null> {
     const json = JSON.stringify(data);
     return this.db.asUser({id: userId}, async (tx) => {
       const rows = await tx<JsonRow<{updated_at: string}>[]>`
         with u as (
-          update public.invitations set data = ${json}::text::jsonb
-          where id = ${id}::uuid and updated_at = ${ifMatch}::timestamptz
+          update public.invitations set data = ${json}::text::jsonb, document_version = ${documentVersion}::smallint
+          where id = ${id}::uuid and updated_at = ${ifMatch}::text::timestamptz
           returning updated_at
         )
         select to_jsonb(u) as r from u`;

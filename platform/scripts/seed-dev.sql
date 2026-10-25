@@ -110,6 +110,46 @@ end
 $seed$;
 
 -- ---------------------------------------------------------------------------
+-- Customer 1 also has an invitation whose online period is over (shows the "ended" page).
+-- ---------------------------------------------------------------------------
+do $seed$
+declare
+  v_order   constant uuid := '00000000-0000-4000-8000-0000000000a3';
+  v_inv_id  uuid;
+  v_data    jsonb;
+begin
+  if exists (select 1 from public.orders where id = v_order) then
+    return;
+  end if;
+  v_data := jsonb_build_object(
+    'template', jsonb_build_object('eventType', 'wedding', 'siteType', 'full-invitation',
+      'experienceType', 'scroll-only', 'introType', 'none', 'layoutFamily', 'classic'),
+    'theme', jsonb_build_object('background', '#fbf6ee', 'foreground', '#2a2118', 'muted', '#7a6a58', 'ivory', '#fffdf8'),
+    'couple', jsonb_build_object('firstName', jsonb_build_object('ar', 'هدى', 'en', 'Hoda'),
+                                  'secondName', jsonb_build_object('ar', 'طارق', 'en', 'Tarek')),
+    'event', jsonb_build_object('date', jsonb_build_object('ar', '2025-01-10', 'en', '2025-01-10')),
+    'media', '{}'::jsonb, 'copy', '{}'::jsonb,
+    'sections', jsonb_build_array(
+      jsonb_build_object('type', 'hero', 'id', 'hero', 'props', jsonb_build_object(
+        'firstName', jsonb_build_object('ar', 'هدى', 'en', 'Hoda'),
+        'secondName', jsonb_build_object('ar', 'طارق', 'en', 'Tarek'),
+        'displayDate', jsonb_build_object('ar', '١٠ يناير ٢٠٢٥', 'en', '10 January 2025')))));
+  perform public.create_pending_checkout(
+    v_order, '00000000-0000-4000-8000-000000000002',
+    (select id from public.templates where slug = 'diwan'),
+    'classic', 'new', 129900, 'EGP', 'manual', 'seed-ended-order', null, 0, 0,
+    'demo-hoda-tarek', v_data);
+  perform public.admin_confirm_manual_payment(
+    v_order, '00000000-0000-4000-8000-000000000001', 129900, 'SEED-PAID-2', null, false);
+  select id into v_inv_id from public.invitations where order_id = v_order;
+  perform set_config('request.jwt.claims', '{"sub":"00000000-0000-4000-8000-000000000002","role":"authenticated"}', true);
+  perform public.publish_invitation(v_inv_id, v_data);
+  perform set_config('request.jwt.claims', '', true);
+  update public.invitation_entitlements set online_until = now() - interval '30 days' where invitation_id = v_inv_id;
+end
+$seed$;
+
+-- ---------------------------------------------------------------------------
 -- Customer 2: one pending manual order (shows in the admin queue), plus one
 -- unmatched payment event for the admin to assign.
 -- ---------------------------------------------------------------------------

@@ -1,0 +1,57 @@
+{
+  "at": "2026-10-24T11:04:25.856Z",
+  "trigger": "auto",
+  "session": {
+    "session_id": "session-2026-10-24-0102",
+    "started": "2026-10-24T01:02:47.866Z",
+    "files_read": {
+      "/home/user/invitation_sample/platform/docs/CLOUD_TASKS.md": {
+        "count": 1,
+        "tokens": 0,
+        "first_read": "2026-10-24T01:02:55.942Z"
+      },
+      "/home/user/invitation_sample/platform/e2e/test-results/journey-customer-signs-in-picks-a-template-and-checks-out-chromium/test-failed-1.png": {
+        "count": 1,
+        "tokens": 0,
+        "first_read": "2026-10-24T09:34:24.895Z"
+      },
+      "/home/user/invitation_sample/platform/e2e/test-results/journey-admin-sees-the-pending-payment-and-confirms-it-chromium/test-failed-1.png": {
+        "count": 1,
+        "tokens": 0,
+        "first_read": "2026-10-24T09:40:38.851Z"
+      },
+      "/tmp/claude-0/-home-user-invitation-sample/5f8ddba5-9752-556e-9c88-b274f87ed86a/tasks/bh5lxaskl.output": {
+        "count": 1,
+        "tokens": 0,
+        "first_read": "2026-10-24T09:45:05.012Z"
+      },
+      "/home/user/invitation_sample/platform/e2e/test-results/journey-a-guest-opens-the-public-page-and-sends-an-RSVP-chromium/test-failed-1.png": {
+        "count": 1,
+        "tokens": 0,
+        "first_read": "2026-10-24T09:56:03.494Z"
+      },
+      "/home/user/invitation_sample/platform/e2e/screenshots/T01/customer-dashboard-ar-390.png": {
+        "count": 1,
+        "tokens": 0,
+        "first_read": "2026-10-24T10:01:59.835Z"
+      },
+      "/home/user/invitation_sample/platform/e2e/screenshots/T01/admin-payments-en-1280.png": {
+        "count": 1,
+        "tokens": 0,
+        "first_read": "2026-10-24T10:02:00.056Z"
+      },
+      "/home/user/invitation_sample/platform/e2e/test-results/public-pages-an-invitation-36bd1-ws-the-ended-page-not-a-404-chromium/test-failed-1.png": {
+        "count": 1,
+        "tokens": 0,
+        "first_read": "2026-10-24T10:52:18.954Z"
+      }
+    },
+    "files_written": [],
+    "edit_counts": {},
+    "anatomy_hits": 0,
+    "anatomy_misses": 8,
+    "repeated_reads_warned": 0,
+    "cerebrum_warnings": 0,
+    "stop_count": 7
+  }
+}

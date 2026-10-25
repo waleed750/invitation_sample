@@ -13,6 +13,7 @@ export default async function AdminCustomerDetailPage({
   const {locale, id} = await params;
   setRequestLocale(locale);
   const t = await getTranslations('admin.customers');
+  const tMore = await getTranslations('adminMore');
 
   const api = new AdminApi();
   const detail = await api.getCustomerDetail(id);
@@ -102,6 +103,7 @@ export default async function AdminCustomerDetailPage({
                   </div>
                   <div>
                     <AdjustEntitlementForm customerId={id} invitationId={inv.id} />
+                    <p style={{marginTop: '.5rem'}}><Link href={`/admin/invitations/${inv.id}`} data-testid="manage-links">{tMore('editLinks.manage')}</Link></p>
                   </div>
                 </div>
               </div>

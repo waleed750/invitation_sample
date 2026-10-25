@@ -26,6 +26,8 @@ COPY packages/shared/package.json ./packages/shared/package.json
 RUN npm ci --omit=dev --ignore-scripts && npm cache clean --force
 COPY --from=build /app/packages/shared/dist ./packages/shared/dist
 COPY --from=build /app/apps/api/dist ./apps/api/dist
+# Customer uploads (T12): a named volume mounted here keeps this owner.
+RUN mkdir -p /data/media && chown app:app /data/media
 USER app
 EXPOSE 3001
 CMD ["node", "apps/api/dist/main.js"]

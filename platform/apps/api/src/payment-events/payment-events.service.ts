@@ -31,6 +31,8 @@ export class PaymentEventsService {
   ) {}
 
   async receive(provider: 'generic-hmac' | 'easyconfirm', rawBody: Buffer, headers: IncomingHttpHeaders): Promise<{ok: true; duplicate?: true}> {
+    // Switched off at launch: the endpoint does not exist as far as the outside world can tell.
+    if (!this.config.paymentEventsEnabled) throw new NotFoundException();
     let event: ParsedEvent;
     try {
       const adapter = provider === 'easyconfirm'

@@ -1,8 +1,9 @@
+const MB = 1024 * 1024;
 export const TIERS = {
-  'save-the-date': {price: 499, editsAllowed: 5, onlineMonths: 3, graceDaysAfterEvent: 7, templateSwitches: 1, rsvpLimit: 0, videoIntro: false, musicUpload: false, guestMessages: false, prioritySupport: false},
-  classic: {price: 1299, editsAllowed: 15, onlineMonths: 6, graceDaysAfterEvent: 14, templateSwitches: 2, rsvpLimit: 300, videoIntro: false, musicUpload: false, guestMessages: false, prioritySupport: false},
-  premium: {price: 2499, editsAllowed: 40, onlineMonths: 12, graceDaysAfterEvent: 30, templateSwitches: null, rsvpLimit: null, videoIntro: true, musicUpload: true, guestMessages: true, prioritySupport: true}
-} as const satisfies Record<string, {price: number; editsAllowed: number; onlineMonths: number; graceDaysAfterEvent: number; templateSwitches: number | null; rsvpLimit: number | null; videoIntro: boolean; musicUpload: boolean; guestMessages: boolean; prioritySupport: boolean}>;
+  'save-the-date': {price: 499, editsAllowed: 5, onlineMonths: 3, graceDaysAfterEvent: 7, templateSwitches: 1, rsvpLimit: 0, videoIntro: false, musicUpload: false, guestMessages: false, prioritySupport: false, mediaMaxCount: 20, imageMaxBytes: 5 * MB, videoMaxBytes: 0, audioMaxBytes: 0},
+  classic: {price: 1299, editsAllowed: 15, onlineMonths: 6, graceDaysAfterEvent: 14, templateSwitches: 2, rsvpLimit: 300, videoIntro: false, musicUpload: false, guestMessages: false, prioritySupport: false, mediaMaxCount: 60, imageMaxBytes: 8 * MB, videoMaxBytes: 0, audioMaxBytes: 0},
+  premium: {price: 2499, editsAllowed: 40, onlineMonths: 12, graceDaysAfterEvent: 30, templateSwitches: null, rsvpLimit: null, videoIntro: true, musicUpload: true, guestMessages: true, prioritySupport: true, mediaMaxCount: 200, imageMaxBytes: 12 * MB, videoMaxBytes: 50 * MB, audioMaxBytes: 15 * MB}
+} as const satisfies Record<string, {price: number; editsAllowed: number; onlineMonths: number; graceDaysAfterEvent: number; templateSwitches: number | null; rsvpLimit: number | null; videoIntro: boolean; musicUpload: boolean; guestMessages: boolean; prioritySupport: boolean; mediaMaxCount: number; imageMaxBytes: number; videoMaxBytes: number; audioMaxBytes: number}>;
 export type Tier = keyof typeof TIERS;
 export type DbTier = 'save_the_date' | 'classic' | 'premium';
 export const TIER_ORDER = ['save-the-date', 'classic', 'premium'] as const satisfies readonly Tier[];

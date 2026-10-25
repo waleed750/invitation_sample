@@ -1,6 +1,9 @@
 import {hasLocale} from 'next-intl';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
+import '@/styles/auth.css';
 import {notFound} from 'next/navigation';
+import {isApiCommerceMode} from '@/auth/config';
+import {getServerSession} from '@/auth/session';
 import {isPubliclyListed, TIER_ORDER, type Tier} from '@platform/shared';
 import {DemoBanner} from '@/commerce/DemoBanner';
 import {CheckoutForm} from '@/commerce/CheckoutForm';
@@ -16,6 +19,7 @@ type Props = {
     kind?: string | string[];
     names?: string | string[];
     date?: string | string[];
+    step?: string | string[];
   }>;
 };
 
@@ -43,6 +47,10 @@ export default async function CheckoutPage({params, searchParams}: Props) {
   if (!template || !isPubliclyListed(template.entry)) notFound();
 
   const query = await searchParams;
+  const apiMode = isApiCommerceMode();
+  // In real-account mode a visitor who is not signed in signs in inline (step 3); nothing is lost.
+  const guest = apiMode && !(await getServerSession());
+
   const requestedTier = Array.isArray(query.tier) ? query.tier[0] : query.tier;
   const initialTier: Tier = TIER_ORDER.includes(requestedTier as Tier)
     ? (requestedTier as Tier)
@@ -57,6 +65,8 @@ export default async function CheckoutPage({params, searchParams}: Props) {
 
   const {first: initialFirst, second: initialSecond} = parseNames(rawNames);
   const initialDate = rawDate && /^\d{4}-\d{2}-\d{2}$/.test(rawDate) ? rawDate : '';
+  const rawStep = Array.isArray(query.step) ? query.step[0] : query.step;
+  const initialStep: 1 | 2 | 3 = rawStep === '3' && initialFirst && initialSecond && initialDate ? 3 : 1;
 
   const quotes = Object.fromEntries(
     TIER_ORDER.map((tier) => [
@@ -94,6 +104,9 @@ export default async function CheckoutPage({params, searchParams}: Props) {
           initialFirst={initialFirst}
           initialSecond={initialSecond}
           initialDate={initialDate}
+          signedIn={apiMode && !guest}
+          guest={guest}
+          initialStep={initialStep}
         />
       </main>
     </>

@@ -33,6 +33,7 @@ export default async function InvitationPage({
 
   const rsvps = await getPublicStore().listRsvps(invitation.shareSlug);
   const t = await getTranslations('dashboard');
+  const tCustomer = await getTranslations('customer');
   const now = new Date();
 
   const template = getTemplate(invitation.templateSlug);
@@ -84,8 +85,17 @@ export default async function InvitationPage({
         <Link className="tab-pill is-active" aria-current="page" href={`/app/invitations/${id}`}>
           {t('invitation.tabOverview')}
         </Link>
+        <Link className="tab-pill" href={`/app/invitations/${id}/edit`}>
+          {t('invitation.tabEdit')}
+        </Link>
         <Link className="tab-pill" href={`/app/invitations/${id}/guests`}>
           {t('invitation.tabGuests')}
+        </Link>
+        <Link className="tab-pill" href={`/app/share/${id}`}>
+          {tCustomer('nav.share')}
+        </Link>
+        <Link className="tab-pill" href={`/app/upgrades?invitation=${id}`}>
+          {tCustomer('nav.upgrade')}
         </Link>
       </nav>
 

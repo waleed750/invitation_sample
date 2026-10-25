@@ -1,3 +1,23 @@
+# STATUS — platform cloud tasks (branch `beta-version`, PR #1)
+
+> Last updated: 2026-10-24. Source of truth for the cloud-task run; the older sections below are the legacy Vite demo project.
+
+## ✅ Done on beta-version (all pushed; each with migrations/tests as noted)
+T00 dev stack · T01 e2e + screenshots · T10 editor document model (0021) · T12 media (0022) · T13 credit balance (0023) · T15 one-button order flow ·
+T20 public pages · T11 site editor UI · T21 customer pages (0025) · T22 admin tools (0026) · T23 private edit links + claim (0027).
+Gates at last run: api jest 560, web vitest 345, 13 SQL test files (clean DB), lint + typecheck clean, e2e specs: journey, balance, media, order-flow, public-pages, editor, customer, admin-more, private-links.
+
+## 🚀 Next quests (in order)
+T24 points at checkout + referral (0028) · T25 OG images + view stats (0029) · T26 custom design requests (0031) · T30 template factory ·
+T31–T40 new templates · T41 enforce CSP · T42 Next 16 · T43 k6 load test · T44 security audit (`docs/SECURITY_REVIEW.md`). T14, T50–T52 deferred by plan (owner).
+Owner-side items: payment instructions/WhatsApp (Admin → Settings), real SMTP, domain/TLS, analytics, legal text review.
+
+## 🔧 Commands
+- Start: `pg_ctlcluster 16 main start`; API `npm run build:api && bash scripts/e2e-serve.sh api` (port 3001); web `/tmp/start-web.sh` or `bash scripts/e2e-serve.sh web` (3000).
+- e2e: `cd platform/e2e && npx playwright test tests/<file> --project=chromium`. SQL: see cerebrum (clean DB).
+
+---
+
 # STATUS — abdelrahman-nourhan-invitation
 
 > Single source of truth for resuming work. Read this FIRST when starting a session.

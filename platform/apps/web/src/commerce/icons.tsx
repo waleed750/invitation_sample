@@ -216,3 +216,13 @@ export function IconSparkles({size = 20, className = '', ...props}: IconProps) {
   );
 }
 
+
+export function IconImage({size = 20, className = '', ...props}: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" focusable="false" className={className} {...props}>
+      <rect x="3" y="4" width="18" height="16" rx="2" />
+      <circle cx="9" cy="10" r="1.8" />
+      <path d="M21 16l-5-5-8 8" />
+    </svg>
+  );
+}

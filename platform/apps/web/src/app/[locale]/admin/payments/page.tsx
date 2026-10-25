@@ -2,6 +2,8 @@ import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {AdminApi} from '@/admin/api';
 import {formatMoney} from '@/lib/format';
 import {PaymentForms} from '@/admin/payments/PaymentForms';
+import {TopupQueue} from '@/balance/TopupQueue';
+import {getPendingTopups} from '@/balance/server';
 
 export default async function AdminPaymentsPage({
   params,
@@ -13,10 +15,16 @@ export default async function AdminPaymentsPage({
   const t = await getTranslations('admin.payments');
 
   const api = new AdminApi();
-  const payments = await api.getPendingPayments();
+  const [payments, topups] = await Promise.all([api.getPendingPayments(), getPendingTopups()]);
+  const tTopups = await getTranslations('admin.topups');
 
   return (
     <div style={{padding: '1.5rem', maxWidth: '800px', margin: '0 auto'}}>
+      <section aria-labelledby="topups-title" style={{marginBottom: '2.5rem'}}>
+        <h2 id="topups-title" style={{fontSize: '1.25rem', fontWeight: 600, marginBottom: '1rem', color: 'var(--color-primary)'}}>{tTopups('title')}</h2>
+        <TopupQueue topups={topups} locale={locale as 'ar' | 'en'} />
+      </section>
+
       <h1 style={{fontSize: '1.5rem', fontWeight: 600, marginBottom: '1.5rem', color: 'var(--color-primary)'}}>{t('title')}</h1>
       
       {payments.length === 0 ? (
@@ -24,7 +32,7 @@ export default async function AdminPaymentsPage({
       ) : (
         <div style={{display: 'flex', flexDirection: 'column', gap: '1.5rem'}}>
           {payments.map((payment) => (
-            <div key={payment.id} style={{
+            <div key={payment.id} data-testid="pending-payment" data-reference={payment.reference ?? ''} style={{
               backgroundColor: 'var(--color-surface)',
               border: '1px solid var(--color-border)',
               borderRadius: '8px',
@@ -46,7 +54,6 @@ export default async function AdminPaymentsPage({
                   <div style={{fontSize: '0.875rem'}}>{payment.customer.phone || payment.customer.email || '-'}</div>
                 </div>
                 <div>
-                  <div style={{fontSize: '0.875rem', color: 'var(--color-muted)'}}>{t('age')}</div>
                   <div style={{fontWeight: 600}}>{t('age', {hours: payment.ageHours.toFixed(1)})}</div>
                 </div>
               </div>

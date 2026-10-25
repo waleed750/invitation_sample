@@ -2,7 +2,7 @@ import type {Level, Tier} from '@platform/shared';
 
 export type OrderKind = 'new' | 'extension' | 'edits';
 export type PaymentMethod = 'card' | 'wallet' | 'fawry';
-export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'rejected';
+export type OrderStatus = 'pending' | 'paid' | 'failed' | 'expired' | 'rejected' | 'awaiting_balance' | 'cancelled';
 
 /** Manual (InstaPay / wallet / bank transfer) payment instructions, present only for API manual orders. */
 export interface ManualPayment {
@@ -72,6 +72,8 @@ export interface StartCheckoutInput {
   pointsToRedeem?: number;
   couple: {first: string; second: string};
   eventDate: string;
+  /** Extension / edits packs apply to this existing invitation. */
+  invitationId?: string;
 }
 
 export interface CommerceState {

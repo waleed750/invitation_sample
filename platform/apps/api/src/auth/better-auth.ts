@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/require-await, @typescript-eslint/no-unsafe-member-access, @typescript-eslint/no-unsafe-assignment */
+/* eslint-disable @typescript-eslint/no-explicit-any, @typescript-eslint/no-unsafe-argument, @typescript-eslint/require-await, @typescript-eslint/no-unsafe-member-access */
 import { betterAuth } from 'better-auth';
 import { emailOTP, phoneNumber, bearer } from 'better-auth/plugins';
 import { Pool } from 'pg';
@@ -6,6 +6,7 @@ import { AppConfigService } from '../config/app-config.service';
 import crypto from 'node:crypto';
 import { toNodeHandler } from 'better-auth/node';
 import type { LoginCodeDelivery } from './login-code';
+import { ensureAuthUser } from './auth-user';
 
 let authInstance: any = null;
 // Set once at boot (setupApp); read lazily so it does not matter who builds the instance first.
@@ -53,22 +54,17 @@ export function getBetterAuth(config: AppConfigService): any {
     databaseHooks: {
       user: {
         create: {
+          // A user without an auth.users/profiles row cannot do anything, so a failure must surface.
           after: async (user: any) => {
-            try {
-               await pool.query(
-                 `INSERT INTO auth.users (id, aud, role, email, phone, raw_user_meta_data, raw_app_meta_data)
-                  VALUES ($1, 'authenticated', 'authenticated', $2, $3, $4, $5)`,
-                 [
-                   user.id,
-                   user.email ?? null,
-                   user.phoneNumber ?? null,
-                   JSON.stringify({ name: user.name }), 
-                   JSON.stringify({ provider: 'email' })
-                 ]
-               );
-            } catch (err) {
-               console.error("Failed to insert into auth.users", err);
-            }
+            await ensureAuthUser(pool, user.id);
+          }
+        }
+      },
+      session: {
+        create: {
+          // Self-heal: guarantees the profile exists on every sign-in (idempotent).
+          before: async (session: any) => {
+            await ensureAuthUser(pool, session.userId);
           }
         }
       }

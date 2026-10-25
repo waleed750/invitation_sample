@@ -20,7 +20,8 @@ describe('CheckoutRepository', () => {
       discountTotalMinor: 5000,
       pointsRedeemed: 100,
       invitationSlug: 'a-b-o1',
-      invitationData: {couple: {first: 'A', second: 'B'}}
+      invitationData: {couple: {first: 'A', second: 'B'}},
+      targetInvitationId: null
     });
 
     expect(result).toEqual({order_id: 'o1', amount_minor: 50000, currency: 'EGP'});
@@ -31,7 +32,7 @@ describe('CheckoutRepository', () => {
     expect(queries[0]?.params).toEqual([
       'o1', 'u1', 't1', 'save_the_date', 'new', 50000, 'EGP', 'mock',
       null, 'save10', 5000, 100, 'a-b-o1',
-      JSON.stringify({couple: {first: 'A', second: 'B'}})
+      JSON.stringify({couple: {first: 'A', second: 'B'}}), null
     ]);
   });
 
@@ -42,15 +43,20 @@ describe('CheckoutRepository', () => {
       orderId: 'o1', userId: 'u1', templateId: 't1', tier: 'save_the_date', kind: 'new',
       amountMinor: 50000, currency: 'EGP', provider: 'mock', idempotencyKey: null,
       couponCode: null, discountTotalMinor: 0, pointsRedeemed: 0,
-      invitationSlug: 'a-b-o1', invitationData: {}
+      invitationSlug: 'a-b-o1', invitationData: {}, targetInvitationId: null
     })).resolves.toBeNull();
   });
 
-  it('reads the points balance as the caller (authenticated role)', async () => {
-    const {db, queries} = createFakeDb([[{r: {points_balance: 80}}]]);
+  it('reads the SPENDABLE points (balance minus open orders) through the service role', async () => {
+    const {db, queries} = createFakeDb([[{result: 80}]]);
     const repo = new CheckoutRepository(db);
     await expect(repo.findPointsBalance('u1')).resolves.toEqual({points_balance: 80});
-    expect(queries[0]?.role).toBe('authenticated');
-    expect(queries[0]?.userId).toBe('u1');
+    expect(queries[0]?.role).toBe('service_role');
+    expect(queries[0]?.text).toContain('public.spendable_points');
+  });
+
+  it('has no balance for an unknown profile', async () => {
+    const {db} = createFakeDb([[{result: null}]]);
+    await expect(new CheckoutRepository(db).findPointsBalance('nobody')).resolves.toBeNull();
   });
 });

@@ -1,5 +1,6 @@
 import {createApiClient, type ApiClient} from '@platform/api-client';
 import {z} from 'zod';
+import {invitationDocument, type InvitationDocument} from '@platform/shared';
 import {getServerSession} from '../auth/session';
 import type {GuestMessage, InvitationPublicStore, PublishedSnapshot, Rsvp} from './store';
 import type {GuestActionCode} from './submissions';
@@ -56,6 +57,8 @@ function pickText(value: unknown, locale: 'ar' | 'en'): string {
 const liveInvitationSchema = z.object({
   state: z.literal('live'),
   slug: z.string(),
+  /** The API returns the template slug at the top level (the snapshot data usually carries none). */
+  templateSlug: z.string().optional(),
   tier: z.unknown(),
   locale: z.unknown(),
   snapshot: z.unknown(),
@@ -64,7 +67,7 @@ const liveInvitationSchema = z.object({
 });
 
 const publicInvitationSchema = z.discriminatedUnion('state', [
-  z.object({state: z.literal('ended')}),
+  z.object({state: z.literal('ended'), couple: z.object({first: z.string(), second: z.string()}).partial().optional(), eventDate: z.string().optional()}),
   liveInvitationSchema,
 ]);
 
@@ -99,6 +102,19 @@ function extractEventDate(data: unknown, locale: 'ar' | 'en'): string {
   return '';
 }
 
+/** An editor document (T10) keeps the couple/event under `meta`; the readers below expect the flat legacy shape. */
+function flattenDocument(data: unknown): unknown {
+  if (isRecord(data) && data.schemaVersion === 1 && isRecord(data.meta)) return {...data.meta, sections: data.sections};
+  return data;
+}
+
+/** A published editor document with real sections, validated; otherwise `null` (legacy data renders the template's own design). */
+function documentOf(data: unknown): InvitationDocument | null {
+  if (!isRecord(data) || data.schemaVersion !== 1) return null;
+  const parsed = invitationDocument.safeParse(data);
+  return parsed.success && parsed.data.sections.length > 0 ? parsed.data : null;
+}
+
 function extractTemplateSlug(data: unknown): string {
   const root = isRecord(data) ? data : {};
   return stringField(root, 'templateSlug')
@@ -111,24 +127,26 @@ function extractTemplateSlug(data: unknown): string {
  * response is well-formed but carries no usable tier/locale — the page then
  * treats the invitation as unknown, same as a missing demo entry.
  *
- * API gap: `GET /v1/public/invitations/:slug` does not return the template
- * slug, so `templateSlug` is best-effort (empty when the snapshot `data`
- * carries none) and the page 404s until the API includes it.
+ * `templateSlug` comes from the API's top-level field; older responses fall
+ * back to a slug inside the snapshot `data`.
  */
 function toSnapshot(shareSlug: string, live: LiveInvitation): PublishedSnapshot | null {
   const tier = normalizeTier(live.tier);
   const locale = live.locale === 'ar' || live.locale === 'en' ? live.locale : null;
   if (tier === null || locale === null) return null;
-  const data = isRecord(live.snapshot) && 'data' in live.snapshot ? live.snapshot.data : live.snapshot;
+  const raw = isRecord(live.snapshot) && 'data' in live.snapshot ? live.snapshot.data : live.snapshot;
+  const data = flattenDocument(raw);
+  const document = documentOf(raw);
   return {
     shareSlug,
-    templateSlug: extractTemplateSlug(data),
+    templateSlug: live.templateSlug ?? extractTemplateSlug(data),
     tier,
     couple: extractCouple(data, locale),
     eventDate: extractEventDate(data, locale),
     publishedAt: live.publishedAt,
     onlineUntil: live.onlineUntil ?? '9999-12-31T00:00:00.000Z',
     locale,
+    ...(document === null ? {} : {document}),
   };
 }
 
@@ -360,6 +378,30 @@ export class ApiInvitationPublicStore implements InvitationPublicStore {
  * Public visibility state for a slug: `live`, `ended`, or `missing`.
  * The page uses it to render the ended page instead of a 404.
  */
+export interface EndedSummary {
+  first: string;
+  second: string;
+  eventDate: string;
+}
+
+/** The couple and date of an invitation whose online period is over (for the "ended" page); `null` when live or unknown. */
+export async function getEndedSummary(shareSlug: string, deps: ApiStoreDeps = {}): Promise<EndedSummary | null> {
+  const client = createGuestApiClient(deps);
+  let data: unknown;
+  let response: Response;
+  try {
+    const result = await client.GET('/v1/public/invitations/{slug}', {params: {path: {slug: shareSlug}}});
+    data = result.data as unknown;
+    response = result.response;
+  } catch {
+    return null;
+  }
+  if (!response.ok) return null;
+  const parsed = publicInvitationSchema.safeParse(data);
+  if (!parsed.success || parsed.data.state !== 'ended') return null;
+  return {first: parsed.data.couple?.first ?? '', second: parsed.data.couple?.second ?? '', eventDate: parsed.data.eventDate ?? ''};
+}
+
 export async function getPublicState(shareSlug: string, deps: ApiStoreDeps = {}): Promise<PublicInvitationState> {
   const client = createGuestApiClient(deps);
   let data: unknown;

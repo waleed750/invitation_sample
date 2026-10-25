@@ -21,8 +21,9 @@ export async function SiteFooter() {
           </nav>
           <nav aria-label={t('footer.c2')}>
             <h3>{t('footer.c2')}</h3>
-            <a href="#legal">{t('footer.terms')}</a>
-            <a href="#legal">{t('footer.privacy')}</a>
+            <Link href="/terms">{t('footer.terms')}</Link>
+            <Link href="/privacy">{t('footer.privacy')}</Link>
+            <Link href="/refund">{t('footer.refund')}</Link>
             <Link href="/#faq">{t('footer.faq')}</Link>
           </nav>
           <nav aria-label={t('footer.c3')}>
@@ -32,7 +33,6 @@ export async function SiteFooter() {
           </nav>
         </div>
         <div className="hm-footer__bottom"><p>{t('footer.rights', {brand: t('brand')})}</p><p>{t('footer.made')}</p></div>
-        <p className="hm-footer__legal" id="legal">{t('footer.legal')}</p>
       </div>
     </footer>
   );

@@ -8,3 +8,4 @@ export * from './slug';
 export * from './money';
 export * from './phone';
 export * from './csv';
+export * from './document';

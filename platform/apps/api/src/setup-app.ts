@@ -1,5 +1,5 @@
 import {RequestMethod, type INestApplication} from '@nestjs/common';
-import type {Request, Response} from 'express';
+import type {Express, Request, Response} from 'express';
 import type {NestExpressApplication} from '@nestjs/platform-express';
 import {DocumentBuilder, SwaggerModule, type OpenAPIObject} from '@nestjs/swagger';
 import {ZodValidationPipe} from 'nestjs-zod';
@@ -14,10 +14,12 @@ export const GLOBAL_PREFIX_EXCLUDES = [
   {path: 'docs/(.*)', method: RequestMethod.ALL}
 ];
 
-import {json, urlencoded} from 'express';
+import {json, static as serveStatic, urlencoded} from 'express';
+import {resolve as resolvePath} from 'node:path';
 import {getBetterAuthHandler, setLoginCodeDelivery} from './auth/better-auth';
 import {EMAIL_SENDER, type EmailSender} from './auth/email-sender';
 import {createLoginCodeDelivery} from './auth/login-code';
+import {LoginCodeCapture, mountLoginCodeCapture} from './auth/e2e-capture';
 
 /**
  * Settings shared by production (`main.ts`) and e2e tests: global `/v1`
@@ -29,10 +31,26 @@ export function setupApp(app: INestApplication): void {
   const config = app.get(AppConfigService);
   applySecurity(app as NestExpressApplication, config);
 
-  setLoginCodeDelivery(createLoginCodeDelivery(config, app.get<EmailSender>(EMAIL_SENDER, {strict: false})));
+  const deliverLoginCode = createLoginCodeDelivery(config, app.get<EmailSender>(EMAIL_SENDER, {strict: false}));
+  if (config.e2eCaptureEmails) {
+    // Test-only: the env schema refuses this flag in production.
+    const capture = new LoginCodeCapture();
+    setLoginCodeDelivery(capture.wrap(deliverLoginCode));
+    mountLoginCodeCapture(app.getHttpAdapter().getInstance() as Express, capture);
+  } else {
+    setLoginCodeDelivery(deliverLoginCode);
+  }
   // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
   const authHandler = getBetterAuthHandler(config);
   
+  if (config.mediaServeFromApi && config.mediaStorage === 'local') {
+    // Dev/e2e only: production serves the same directory through Caddy at /media/*.
+    app.use('/media', (_request: Request, response: Response, next: import('express').NextFunction) => {
+      response.setHeader('Cross-Origin-Resource-Policy', 'cross-origin');
+      next();
+    }, serveStatic(resolvePath(config.mediaDir), {index: false, dotfiles: 'deny', maxAge: '1y', immutable: true}));
+  }
+
   const limit = `${String(config.bodyLimitKb)}kb`;
   const jsonParser = json({
     limit,

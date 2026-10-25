@@ -1,7 +1,13 @@
 import {hasLocale} from 'next-intl';
 import {getTranslations, setRequestLocale} from 'next-intl/server';
 import {notFound} from 'next/navigation';
+import '@/styles/balance.css';
+import '@/styles/customer.css';
+import {SupportNote} from '@/customer/SupportNote';
 import {Bidi} from '@/components/Bidi';
+import {isApiCommerceMode} from '@/auth/config';
+import {OrderPay} from '@/balance/OrderPay';
+import {getBalance, getTopups} from '@/balance/server';
 import {CheckoutHeader} from '@/commerce/CheckoutHeader';
 import {CopyButton} from '@/commerce/CopyButton';
 import {DemoBanner} from '@/commerce/DemoBanner';
@@ -32,6 +38,35 @@ export default async function PayPage({
   }
   if (!order) notFound();
   if (order.payment && order.status !== 'pending') redirect({href: `/checkout/result/${order.id}`, locale});
+
+  // Launch mode: every purchase is paid from the credit balance (or waits for a top-up to cover it).
+  if (isApiCommerceMode() && !order.payment) {
+    if (order.status !== 'awaiting_balance' && order.status !== 'pending') redirect({href: `/checkout/result/${order.id}`, locale});
+    const [balance, topups] = await Promise.all([getBalance(), getTopups()]);
+    const tPay = await getTranslations('orderPay');
+    return (
+      <>
+        <CheckoutHeader currentStep={3} maxReachedStep={3} />
+        <main className="gateway-page">
+          <div className="gateway-heading">
+            <p className="eyebrow">{tPay('eyebrow')}</p>
+            <h1>{tPay('title')}</h1>
+          </div>
+          <SupportNote locale={locale as 'ar' | 'en'} />
+          <OrderPay
+            orderId={order.id}
+            amountMinor={Math.round(order.amountEgp * 100)}
+            balanceMinor={balance.balanceMinor}
+            shortfallMinor={balance.shortfallMinor}
+            minTopupMinor={balance.minTopupMinor}
+            instructions={balance.paymentInstructions}
+            existingTopup={topups.find((topup) => topup.status === 'pending') ?? null}
+            whatsappNumber={process.env.NEXT_PUBLIC_WHATSAPP_NUMBER ?? '201000000000'}
+          />
+        </main>
+      </>
+    );
+  }
 
   const t = await getTranslations('checkout.pay');
   const shortCode = `#D-${order.id.slice(0, 8).toUpperCase()}`;

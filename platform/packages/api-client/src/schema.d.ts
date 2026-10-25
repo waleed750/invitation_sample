@@ -4,6 +4,102 @@
  */
 
 export interface paths {
+    "/v1/admin/affiliates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminAffiliatesController_list"];
+        put?: never;
+        post: operations["AdminAffiliatesController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/affiliates/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["AdminAffiliatesController_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/affiliates/{id}/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminAffiliatesController_exportCsv"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/affiliates/{id}/orders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminAffiliatesController_orders"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/affiliates/{id}/payouts": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminAffiliatesController_payouts"];
+        put?: never;
+        post: operations["AdminAffiliatesController_recordPayout"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/affiliates/{id}/stats": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminAffiliatesController_stats"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/audit-log": {
         parameters: {
             query?: never;
@@ -14,6 +110,70 @@ export interface paths {
         get: operations["AdminAuditController_listAuditLogs"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/coupons": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminCouponsController_list"];
+        put?: never;
+        post: operations["AdminCouponsController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/coupons/{code}/active": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminCouponsController_setActive"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/coupons/{code}/uses": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminCouponsController_uses"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/credit/adjust": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminBalanceController_adjust"];
         delete?: never;
         options?: never;
         head?: never;
@@ -68,6 +228,38 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/edit-links/{linkId}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminEditLinksController_revoke"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/invitations/{id}/edit-links": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminEditLinksController_list"];
+        put?: never;
+        post: operations["AdminEditLinksController_issue"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/invitations/{id}/entitlement-adjustments": {
         parameters: {
             query?: never;
@@ -78,6 +270,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["AdminCustomersController_adjustEntitlement"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/orders/{id}/refund-to-balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminBalanceController_refund"];
         delete?: never;
         options?: never;
         head?: never;
@@ -164,6 +372,70 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/admin/refunds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminRefundsController_search"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/refunds/{orderId}/manual": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminRefundsController_markRefunded"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/settings": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminSettingsController_list"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/settings/{key}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put: operations["AdminSettingsController_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/admin/stats": {
         parameters: {
             query?: never;
@@ -174,6 +446,198 @@ export interface paths {
         get: operations["AdminStatsController_getStats"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/templates": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminTemplatesController_list"];
+        put?: never;
+        post: operations["AdminTemplatesController_create"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/templates/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminTemplatesController_get"];
+        put: operations["AdminTemplatesController_update"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/templates/{id}/assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminTemplatesController_addAsset"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/templates/{id}/assets/{assetId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["AdminTemplatesController_deleteAsset"];
+        options?: never;
+        head?: never;
+        patch: operations["AdminTemplatesController_updateAsset"];
+        trace?: never;
+    };
+    "/v1/admin/templates/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminTemplatesController_setStatus"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/topups/pending": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AdminBalanceController_pending"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/topups/{id}/confirm": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminBalanceController_confirm"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/admin/topups/{id}/reject": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AdminBalanceController_reject"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/affiliates/click": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AffiliateClicksController_click"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BalanceController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/balance/ledger": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BalanceController_ledger"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/balance/topups": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["BalanceController_topups"];
+        put?: never;
+        post: operations["BalanceController_createTopup"];
         delete?: never;
         options?: never;
         head?: never;
@@ -222,6 +686,22 @@ export interface paths {
         get?: never;
         put?: never;
         post: operations["DevPaymentsController_succeed"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/edit-links/resolve": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EditLinksController_resolve"];
         delete?: never;
         options?: never;
         head?: never;
@@ -290,6 +770,22 @@ export interface paths {
         options?: never;
         head?: never;
         patch: operations["InvitationsController_update"];
+        trace?: never;
+    };
+    "/v1/invitations/{id}/claim": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["EditLinksController_claim"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
     "/v1/invitations/{id}/entitlement": {
@@ -436,6 +932,70 @@ export interface paths {
         patch: operations["MeController_updateMe"];
         trace?: never;
     };
+    "/v1/me/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["AccountController_deleteAccount"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/me/export": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["AccountController_exportData"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/media": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["MediaController_list"];
+        put?: never;
+        post: operations["MediaController_upload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/media/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete: operations["MediaController_remove"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/orders": {
         parameters: {
             query?: never;
@@ -460,6 +1020,54 @@ export interface paths {
             cookie?: never;
         };
         get: operations["OrdersController_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/orders/{id}/cancel": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["OrderBalanceController_cancel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/orders/{id}/pay-with-balance": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post: operations["OrderBalanceController_pay"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/orders/{id}/status": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["OrderBalanceController_status"];
         put?: never;
         post?: never;
         delete?: never;
@@ -564,6 +1172,22 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/v1/settings/public": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get: operations["PublicSettingsController_publicSettings"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/v1/slugs/{slug}/availability": {
         parameters: {
             query?: never;
@@ -600,6 +1224,12 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        AdjustCreditBody: {
+            deltaMinor: number;
+            note: string;
+            /** Format: uuid */
+            userId: string;
+        };
         AdjustEntitlementBody: {
             addEdits?: number;
             extendDays?: number;
@@ -615,6 +1245,7 @@ export interface components {
             orderId: string;
         };
         CheckoutBody: {
+            affiliateCode?: string;
             couple: {
                 first: string;
                 second: string;
@@ -622,14 +1253,28 @@ export interface components {
             couponCode?: string;
             /** Format: date-time */
             eventDate: string;
+            /** Format: uuid */
+            invitationId?: string;
             /** @enum {string} */
             kind: "new" | "extension" | "edits";
             /** @enum {string} */
             method: "card" | "wallet" | "fawry";
             pointsToRedeem?: number;
+            ref?: {
+                /** Format: date-time */
+                at: string;
+                code: string;
+            };
             templateSlug: string;
             /** @enum {string} */
             tier: "save-the-date" | "classic" | "premium";
+        };
+        ClaimBody: {
+            token: string;
+        };
+        ClickBody: {
+            path?: string;
+            ref: string;
         };
         ConfirmPaymentBody: {
             acceptMismatch?: boolean;
@@ -637,13 +1282,100 @@ export interface components {
             paidAmountMinor: number;
             txnRef: string;
         };
+        ConfirmTopupBody: {
+            acceptMismatch?: boolean;
+            note?: string;
+            paidAmountMinor: number;
+            txnRef: string;
+        };
+        CouponActiveBody: {
+            active: boolean;
+        };
+        CreateAffiliateBody: {
+            commissionPct?: number;
+            customerDiscountPct?: number;
+            name: string;
+            payoutDetails?: {
+                [key: string]: string;
+            };
+            payoutMethod?: string;
+            phone?: string;
+            refCode: string;
+        };
+        CreateAssetBody: {
+            /** @enum {string} */
+            kind?: "image" | "video" | "audio" | "font" | "other";
+            license?: string;
+            /** Format: uri */
+            licenseUrl?: string;
+            r2Key: string;
+            sizeBytes?: number;
+            source?: string;
+        };
+        CreateCouponBody: {
+            amountOffMinor?: number;
+            code: string;
+            /** Format: date-time */
+            expiresAt?: string;
+            maxUses?: number;
+            percentOff?: number;
+        };
+        CreateTemplateBody: {
+            category?: string;
+            eventType?: string;
+            featured?: boolean;
+            nameAr: string;
+            nameEn: string;
+            sampleDataAr?: {
+                [key: string]: unknown;
+            };
+            sampleDataEn?: {
+                [key: string]: unknown;
+            };
+            slug: string;
+            sortOrder?: number;
+            taglineAr?: string;
+            taglineEn?: string;
+            /** @enum {string} */
+            tier: "save_the_date" | "classic" | "premium";
+        };
+        CreateTopupBody: {
+            amountMinor: number;
+        };
+        DeleteAccountBody: {
+            confirmEmail: string;
+        };
         GuestMessageBody: {
             name: string;
             text: string;
             website?: string;
         };
+        IssueBody: {
+            label?: string;
+        };
+        ManualRefundBody: {
+            note: string;
+        };
+        PayoutBody: {
+            amountEgp: number;
+            method?: string;
+            /** Format: date */
+            periodEnd?: string;
+            /** Format: date */
+            periodStart?: string;
+            reference?: string;
+        };
+        RefundToBalanceBody: {
+            note: string;
+        };
         RejectPaymentBody: {
             reason: string;
+        };
+        RejectTopupBody: {
+            reason: string;
+        };
+        ResolveBody: {
+            token: string;
         };
         RsvpBody: {
             attending: boolean;
@@ -653,11 +1385,37 @@ export interface components {
             phone?: string;
             website?: string;
         };
+        SettingBody: {
+            value: Record<string, never>;
+        };
         SwitchTemplateBody: {
             templateSlug: string;
         };
+        TemplateStatusBody: {
+            /** @enum {string} */
+            status: "draft" | "live" | "retired";
+        };
+        UpdateAffiliateBody: {
+            active?: boolean;
+            commissionPct?: number;
+            customerDiscountPct?: number;
+            name: string;
+            payoutDetails?: {
+                [key: string]: string;
+            };
+            payoutMethod?: string;
+            phone?: string;
+        };
+        UpdateAssetBody: {
+            /** @enum {string} */
+            kind?: "image" | "video" | "audio" | "font" | "other";
+            license?: string;
+            /** Format: uri */
+            licenseUrl?: string;
+            source?: string;
+        };
         UpdateInvitationBody: {
-            data: {
+            data?: {
                 copy: {
                     detailsSubtitle?: string | {
                         ar?: string;
@@ -1570,13 +2328,174 @@ export interface components {
                     muted: string;
                 };
             };
+            document?: {
+                locales: {
+                    enabled: ("ar" | "en")[];
+                    /** @enum {string} */
+                    primary: "ar" | "en";
+                };
+                meta: {
+                    copy: {
+                        detailsSubtitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        detailsTitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        messageSubtitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        messageTitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        scheduleSubtitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        scheduleTitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        tapLabel?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        welcome?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        welcomeTitle?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    couple: {
+                        firstName: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        headline?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        secondName: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    event: {
+                        date: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        displayDate?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        endTime?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        label?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        location?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        mapUrl?: string;
+                        startTime?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                        venue?: string | {
+                            ar?: string;
+                            en?: string;
+                        };
+                    };
+                    media: {
+                        coupleDancingUrl?: string;
+                        footerOrnamentUrl?: string;
+                        heroVideoUrl?: string;
+                        introPosterUrl?: string;
+                        introVideoUrl?: string;
+                        musicUrl?: string;
+                        ornamentUrl?: string;
+                        ornateBadgeUrl?: string;
+                        photoUrl?: string;
+                        stringLightsUrl?: string;
+                    };
+                    schedule?: unknown[];
+                    template: {
+                        /** @enum {string} */
+                        eventType: "engagement" | "save-the-date" | "wedding" | "birthday";
+                        /** @enum {string} */
+                        experienceType: "cinematic-story" | "interactive-reveal" | "slideshow" | "scroll-only";
+                        /** @enum {string} */
+                        introType: "video-open" | "scratch-reveal" | "tap-to-open" | "envelope" | "none";
+                        /** @enum {string} */
+                        layoutFamily: "ornate" | "minimal-interactive" | "modern" | "classic" | "safari-editorial" | "boho" | "luxury-floral" | "floral-romantic" | "finca-rustic" | "sweetlove-romantic" | "dolce-vita-lake" | "daynight-dual" | "bridgerton-regency" | "bloom-garden" | "mashrabiya";
+                        /** @enum {string} */
+                        siteType: "full-invitation" | "save-the-date" | "rsvp-only";
+                    };
+                };
+                /** @constant */
+                schemaVersion: 1;
+                sections: {
+                    hidden: boolean;
+                    id: string;
+                    locked: boolean;
+                    props: {
+                        [key: string]: unknown;
+                    };
+                    /** @enum {string} */
+                    type: "hero" | "countdown" | "welcome" | "schedule" | "details" | "map" | "messageForm" | "imageDivider" | "footer" | "scratchReveal" | "story" | "dressCode" | "gifts" | "rsvp" | "faq" | "weddingWeekend" | "travelInfo" | "bohoFooter" | "credit" | "hotelList" | "gallery" | "locationTransport";
+                    variant: string | null;
+                }[];
+                theme: {
+                    colors: {
+                        background: string;
+                        foreground: string;
+                        ivory: string;
+                        muted: string;
+                    };
+                    fonts: {
+                        [key: string]: string;
+                    };
+                    presetId: string | null;
+                };
+            };
         };
         UpdateMeBody: {
             /** @enum {string} */
-            locale: "ar" | "en";
+            locale?: "ar" | "en";
+            name?: string;
         };
         UpdateSlugBody: {
             slug: string;
+        };
+        UpdateTemplateBody: {
+            category?: string;
+            eventType?: string;
+            featured?: boolean;
+            nameAr: string;
+            nameEn: string;
+            sampleDataAr?: {
+                [key: string]: unknown;
+            };
+            sampleDataEn?: {
+                [key: string]: unknown;
+            };
+            sortOrder?: number;
+            taglineAr?: string;
+            taglineEn?: string;
+            /** @enum {string} */
+            tier: "save_the_date" | "classic" | "premium";
         };
     };
     responses: never;
@@ -1587,6 +2506,175 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
+    AdminAffiliatesController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminAffiliatesController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAffiliateBody"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminAffiliatesController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAffiliateBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminAffiliatesController_exportCsv: {
+        parameters: {
+            query?: {
+                from?: string;
+                to?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminAffiliatesController_orders: {
+        parameters: {
+            query?: {
+                from?: string;
+                to?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminAffiliatesController_payouts: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminAffiliatesController_recordPayout: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["PayoutBody"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminAffiliatesController_stats: {
+        parameters: {
+            query?: {
+                from?: string;
+                to?: string;
+            };
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminAuditController_listAuditLogs: {
         parameters: {
             query?: {
@@ -1599,6 +2687,107 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminCouponsController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminCouponsController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateCouponBody"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminCouponsController_setActive: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CouponActiveBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminCouponsController_uses: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                code: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminBalanceController_adjust: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["AdjustCreditBody"];
+            };
+        };
         responses: {
             200: {
                 headers: {
@@ -1670,6 +2859,67 @@ export interface operations {
             };
         };
     };
+    AdminEditLinksController_revoke: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                linkId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminEditLinksController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminEditLinksController_issue: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["IssueBody"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminCustomersController_adjustEntitlement: {
         parameters: {
             query?: never;
@@ -1682,6 +2932,29 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["AdjustEntitlementBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminBalanceController_refund: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RefundToBalanceBody"];
             };
         };
         responses: {
@@ -1799,6 +3072,88 @@ export interface operations {
             };
         };
     };
+    AdminRefundsController_search: {
+        parameters: {
+            query?: {
+                q?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminRefundsController_markRefunded: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                orderId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ManualRefundBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminSettingsController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminSettingsController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                key: "payment_instructions" | "support_whatsapp" | "email_texts";
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["SettingBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     AdminStatsController_getStats: {
         parameters: {
             query?: never;
@@ -1809,6 +3164,335 @@ export interface operations {
         requestBody?: never;
         responses: {
             200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTemplatesController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTemplatesController_create: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTemplateBody"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTemplatesController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTemplatesController_update: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateTemplateBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTemplatesController_addAsset: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateAssetBody"];
+            };
+        };
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTemplatesController_deleteAsset: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                assetId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTemplatesController_updateAsset: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+                assetId: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["UpdateAssetBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminTemplatesController_setStatus: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["TemplateStatusBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminBalanceController_pending: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminBalanceController_confirm: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ConfirmTopupBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AdminBalanceController_reject: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["RejectTopupBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AffiliateClicksController_click: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClickBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BalanceController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BalanceController_ledger: {
+        parameters: {
+            query?: {
+                limit?: number;
+                before?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BalanceController_topups: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    BalanceController_createTopup: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["CreateTopupBody"];
+            };
+        };
+        responses: {
+            201: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1870,6 +3554,27 @@ export interface operations {
         requestBody?: never;
         responses: {
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EditLinksController_resolve: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ResolveBody"];
+            };
+        };
+        responses: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
@@ -1961,6 +3666,29 @@ export interface operations {
         requestBody: {
             content: {
                 "application/json": components["schemas"]["UpdateInvitationBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    EditLinksController_claim: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["ClaimBody"];
             };
         };
         responses: {
@@ -2170,6 +3898,97 @@ export interface operations {
             };
         };
     };
+    AccountController_deleteAccount: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody: {
+            content: {
+                "application/json": components["schemas"]["DeleteAccountBody"];
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    AccountController_exportData: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MediaController_list: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MediaController_upload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    MediaController_remove: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     OrdersController_list: {
         parameters: {
             query?: never;
@@ -2188,6 +4007,63 @@ export interface operations {
         };
     };
     OrdersController_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrderBalanceController_cancel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrderBalanceController_pay: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                id: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    OrderBalanceController_status: {
         parameters: {
             query?: never;
             header?: never;
@@ -2319,6 +4195,23 @@ export interface operations {
         };
         responses: {
             201: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    PublicSettingsController_publicSettings: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };

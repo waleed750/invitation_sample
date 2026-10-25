@@ -132,7 +132,7 @@ export default async function DashboardHome({
             if (invitation.status === 'draft') {
               primaryAction = {
                 label: t('home.actionReview'),
-                href: `/app/invitations/${invitation.id}`,
+                href: `/app/invitations/${invitation.id}/edit`,
               };
             } else if (daysLeft !== null && daysLeft <= 14) {
               primaryAction = {
@@ -213,6 +213,9 @@ export default async function DashboardHome({
                           <IconExternalLink size={15} />
                           <span>{t('home.preview')}</span>
                         </a>
+                        <Link className="text-action-link" href={`/app/invitations/${invitation.id}/edit`}>
+                          <span>{t('home.edit')}</span>
+                        </Link>
                         <CopyButton
                           value={url}
                           label={t('home.copyLink')}

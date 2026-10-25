@@ -1,0 +1,29 @@
+/* Admin tools (T22). Logical properties only. */
+.am-page { max-inline-size: 64rem; margin-inline: auto; padding: 1.25rem 1rem 6rem; display: grid; gap: 1.25rem; }
+.am-page h1 { margin: 0; font-size: 1.5rem; color: var(--color-primary); }
+.am-page h2 { margin: 0; font-size: 1.1rem; }
+.am-card { padding: 1rem; border: 1px solid var(--color-border, rgb(0 0 0 / 12%)); border-radius: 10px; background: var(--color-surface, #fff); display: grid; gap: .75rem; min-inline-size: 0; }
+.am-form { display: grid; gap: .6rem; }
+.am-form label { display: grid; gap: .25rem; font-size: .9rem; }
+.am-form input, .am-form select, .am-form textarea { padding: .5rem .65rem; border: 1px solid rgb(0 0 0 / 25%); border-radius: 8px; font: inherit; inline-size: 100%; box-sizing: border-box; background: #fff; }
+.am-form textarea { min-block-size: 5rem; font-family: ui-monospace, monospace; }
+.am-form__row { display: flex; gap: .75rem; align-items: center; flex-wrap: wrap; }
+.am-grid { display: grid; gap: .6rem .9rem; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); }
+.am-ok { color: #0b5a34; font-weight: 600; }
+.am-error { color: #8a1c10; font-weight: 600; }
+.am-danger { border-color: #b3261e; color: #b3261e; }
+.am-inline { display: inline-flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
+.am-table { inline-size: 100%; border-collapse: collapse; font-size: .9rem; }
+.am-table th, .am-table td { padding: .5rem .6rem; text-align: start; border-block-end: 1px solid rgb(0 0 0 / 10%); vertical-align: top; }
+.am-table-wrap { overflow-x: auto; }
+.am-badge { display: inline-block; padding: .1rem .55rem; border-radius: 999px; font-size: .75rem; background: #eee; }
+.am-badge--live { background: #e6f4ec; color: #0b5a34; }
+.am-badge--retired { background: #f1e6e6; color: #7a2018; }
+.am-badge--warn { background: #fff0cf; color: #6b4a00; }
+.am-stats { display: grid; gap: .75rem; grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr)); }
+.am-stat { padding: .75rem; border-radius: 10px; background: rgb(0 0 0 / 4%); }
+.am-stat strong { display: block; font-size: 1.3rem; }
+.am-previews { display: flex; gap: .5rem; flex-wrap: wrap; }
+.am-preview-frame { border: 1px solid rgb(0 0 0 / 15%); border-radius: 10px; inline-size: 100%; block-size: 34rem; background: #fff; }
+.am-qr { inline-size: 9rem; block-size: 9rem; image-rendering: pixelated; }
+.am-mono { font-family: ui-monospace, monospace; overflow-wrap: anywhere; }

@@ -94,10 +94,12 @@ function stringOrNestedText(value: unknown): string {
 }
 
 /** Pulls display fields out of a publish snapshot of unknown shape (never throws). */
-function extractEndedInfo(snapshot: unknown): {couple: {first: string; second: string}; eventDate: string} {
+export function extractEndedInfo(snapshot: unknown): {couple: {first: string; second: string}; eventDate: string} {
   const fallback = {couple: {first: '', second: ''}, eventDate: ''};
   if (!isRecord(snapshot)) return fallback;
-  const data = isRecord(snapshot.data) ? snapshot.data : snapshot;
+  const inner = isRecord(snapshot.data) ? snapshot.data : snapshot;
+  // An editor document (T10) keeps the couple and the event under `meta`.
+  const data = inner.schemaVersion === 1 && isRecord(inner.meta) ? inner.meta : inner;
   const coupleRaw = isRecord(data.couple) ? data.couple : null;
   const eventRaw = isRecord(data.event) ? data.event : null;
   const first = coupleRaw === null

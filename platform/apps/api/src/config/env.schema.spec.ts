@@ -98,6 +98,21 @@ describe('validateEnv', () => {
     expect(validateEnv({...validEnv(), EMAIL_SENDER: 'log'}).EMAIL_SENDER).toBe('log');
   });
 
+  it('refuses test email capture in production but allows it elsewhere', () => {
+    const prod = {...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'manual'};
+    expect(() => validateEnv({...prod, E2E_CAPTURE_EMAILS: '1'})).toThrow(/E2E_CAPTURE_EMAILS must be off in production/);
+    expect(validateEnv({...prod, E2E_CAPTURE_EMAILS: '0'}).E2E_CAPTURE_EMAILS).toBe(false);
+    expect(validateEnv(prod).E2E_CAPTURE_EMAILS).toBe(false);
+    expect(validateEnv({...validEnv(), E2E_CAPTURE_EMAILS: '1'}).E2E_CAPTURE_EMAILS).toBe(true);
+  });
+
+  it('accepts an https payment link on a manual payment method and rejects other schemes', () => {
+    const method = (url: string) => JSON.stringify({methods: [{id: 'instapay', label: {ar: 'a', en: 'a'}, details: {ar: 'b', en: 'b'}, url}]});
+    expect(validateEnv({...validEnv(), MANUAL_PAYMENT_INSTRUCTIONS_JSON: method('https://ipn.eg/S/me/instapay')}).MANUAL_PAYMENT_INSTRUCTIONS_JSON).toBeDefined();
+    expect(() => validateEnv({...validEnv(), MANUAL_PAYMENT_INSTRUCTIONS_JSON: method('http://ipn.eg/x')})).toThrow(/https/);
+    expect(() => validateEnv({...validEnv(), MANUAL_PAYMENT_INSTRUCTIONS_JSON: method('javascript:alert(1)')})).toThrow();
+  });
+
   it('allows the manual payment provider in production and refuses fawry', () => {
     expect(validateEnv({...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'manual'}).PAYMENTS_PROVIDER).toBe('manual');
     expect(() => validateEnv({...validEnv(), NODE_ENV: 'production', PAYMENTS_PROVIDER: 'fawry'})).toThrow(/fawry not implemented yet/);

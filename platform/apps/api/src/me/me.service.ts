@@ -6,7 +6,10 @@ import {MeRepository} from './me.repository';
 import {createZodDto} from 'nestjs-zod';
 import {z} from 'zod';
 
-const updateMeSchema = z.object({locale: z.enum(['ar', 'en'])}).strict();
+const updateMeSchema = z.object({
+  locale: z.enum(['ar', 'en']).optional(),
+  name: z.string().trim().min(1).max(80).optional()
+}).strict().refine((body) => body.locale !== undefined || body.name !== undefined, {message: 'Send locale and/or name'});
 export class UpdateMeBody extends createZodDto(updateMeSchema) {}
 
 /** The caller's own profile row. Never contains another person's contact details. */
@@ -58,14 +61,14 @@ export class MeService {
     }
   }
 
-  async updateLocale(user: RequestUser, locale: 'ar' | 'en'): Promise<MeResponse> {
+  async updateProfile(user: RequestUser, changes: {locale?: 'ar' | 'en'; name?: string}): Promise<MeResponse> {
     try {
-      const row = await this.repository.updatePreferredLocale(user.id, locale);
+      const row = await this.repository.updateProfile(user.id, changes);
       if (row === null) throw new NotFoundException('Profile not found');
       return toMeResponse(row);
     } catch (error) {
       if (error instanceof NotFoundException || error instanceof ServiceUnavailableException) throw error;
-      this.logger.error('profile locale update failed (upstream error)');
+      this.logger.error('profile update failed (upstream error)');
       throw new ServiceUnavailableException('Profile service unavailable');
     }
   }

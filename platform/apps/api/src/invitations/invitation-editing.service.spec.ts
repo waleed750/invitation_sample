@@ -6,6 +6,19 @@ import {CLOCK} from '../common/clock';
 import {InvitationEditingService} from './invitation-editing.service';
 import {RevalidationService} from '../revalidation/revalidation.service';
 import {InvitationsRepository} from './invitations.repository';
+import {addSection, migrate, type InvitationDocument} from '@platform/shared';
+
+const txt = (value: string) => ({ar: value, en: value});
+const LEGACY = {
+  template: {eventType: 'wedding', siteType: 'full-invitation', experienceType: 'scroll-only', introType: 'none', layoutFamily: 'classic'},
+  theme: {background: '#fbf6ee', foreground: '#2a2118', muted: '#7a6a58', ivory: '#fffdf8'},
+  couple: {firstName: txt('A'), secondName: txt('B')},
+  event: {date: txt('2027-03-20')},
+  media: {},
+  copy: {},
+  sections: [{type: 'hero', id: 'hero', props: {firstName: txt('A'), secondName: txt('B'), displayDate: txt('soon')}}]
+} as any;
+const DOC: InvitationDocument = migrate(LEGACY);
 
 const user = {id: 'owner-1', jwt: 'owner-1'} as any;
 const ID = '11111111-1111-4111-8111-111111111111';
@@ -76,7 +89,13 @@ describe('InvitationEditingService', () => {
   });
 
   describe('updateData', () => {
-    const body = {data: {x: 1}} as any;
+    const body = {data: LEGACY} as any;
+    const docBody = (document: InvitationDocument) => ({document}) as any;
+    const faq = {type: 'faq', props: {title: txt('x'), items: []}} as const;
+
+    beforeEach(() => {
+      repo.findById.mockResolvedValue(ok(row({data: LEGACY})));
+    });
 
     it('428s without If-Match', async () => {
       const err = await service.updateData(user, ID, body, undefined).catch((e) => e);
@@ -90,24 +109,73 @@ describe('InvitationEditingService', () => {
       await expect(service.updateData(user, ID, body, 'abc')).rejects.toThrow(BadRequestException);
     });
 
-    it('updates and returns the new updatedAt; strips ETag quotes', async () => {
+    it('updates legacy data (version 0) and returns the new updatedAt; strips ETag quotes', async () => {
       repo.updateDataIfMatch.mockResolvedValue(U2);
       await expect(service.updateData(user, ID, body, `"${U1}"`)).resolves.toEqual({updatedAt: U2});
-      expect(repo.updateDataIfMatch).toHaveBeenCalledWith('owner-1', ID, body.data, U1);
+      expect(repo.updateDataIfMatch).toHaveBeenCalledWith('owner-1', ID, body.data, U1, 0);
+    });
+
+    it('stores a document as version 1', async () => {
+      repo.updateDataIfMatch.mockResolvedValue(U2);
+      await service.updateData(user, ID, docBody(DOC), U1);
+      expect(repo.updateDataIfMatch).toHaveBeenCalledWith('owner-1', ID, DOC, U1, 1);
     });
 
     it('409 edit_conflict on a stale If-Match', async () => {
       repo.updateDataIfMatch.mockResolvedValue(null);
-      repo.findById.mockResolvedValue(ok(row({updated_at: U2})));
       const err = await service.updateData(user, ID, body, U1).catch((e) => e);
       expect(err).toBeInstanceOf(ConflictException);
       expect(err.getResponse()).toMatchObject({code: 'edit_conflict'});
     });
 
     it("404 for someone else's invitation", async () => {
-      repo.updateDataIfMatch.mockResolvedValue(null);
       repo.findById.mockResolvedValue(ok(null));
       await expect(service.updateData(user, ID, body, U1)).rejects.toThrow(NotFoundException);
+      expect(repo.updateDataIfMatch).not.toHaveBeenCalled();
+    });
+
+    it('409 section_not_allowed for a section type outside the plan (also for legacy data)', async () => {
+      repo.findById.mockResolvedValue(ok(row({data: LEGACY, entitlement: {tier: 'save_the_date', edits_allowed: 5, edits_used: 0, online_until: '2027-01-01T00:00:00Z'}})));
+      const withRsvp = addSection(DOC, {type: 'rsvp', props: {title: txt('t'), subtitle: txt('s')}});
+      const err = await service.updateData(user, ID, docBody(withRsvp), U1).catch((e) => e);
+      expect(err).toBeInstanceOf(ConflictException);
+      expect(err.getResponse()).toMatchObject({code: 'section_not_allowed'});
+      const legacyWithRsvp = {...LEGACY, sections: [...LEGACY.sections, {type: 'rsvp', props: {title: txt('t'), subtitle: txt('s')}}]};
+      const legacyErr = await service.updateData(user, ID, {data: legacyWithRsvp} as any, U1).catch((e) => e);
+      expect(legacyErr.getResponse()).toMatchObject({code: 'section_not_allowed'});
+      expect(repo.updateDataIfMatch).not.toHaveBeenCalled();
+    });
+
+    it('uses the order tier before payment creates an entitlement', async () => {
+      repo.findById.mockResolvedValue(ok(row({data: LEGACY, entitlement: null, order_tier: 'classic'})));
+      repo.updateDataIfMatch.mockResolvedValue(U2);
+      const withRsvp = addSection(DOC, {type: 'rsvp', props: {title: txt('t'), subtitle: txt('s')}});
+      await expect(service.updateData(user, ID, docBody(withRsvp), U1)).resolves.toEqual({updatedAt: U2});
+    });
+
+    it('409 too_many_sections beyond the plan cap', async () => {
+      let big = DOC;
+      for (let i = 0; i < 10; i += 1) big = addSection(big, faq as any);
+      repo.findById.mockResolvedValue(ok(row({data: LEGACY, entitlement: {tier: 'save_the_date', edits_allowed: 5, edits_used: 0, online_until: '2027-01-01T00:00:00Z'}})));
+      const err = await service.updateData(user, ID, docBody(big), U1).catch((e) => e);
+      expect(err.getResponse()).toMatchObject({code: 'too_many_sections'});
+    });
+
+    it('409 section_locked when a template-locked section changes', async () => {
+      const locked: InvitationDocument = {...DOC, sections: DOC.sections.map((item) => ({...item, locked: true}))};
+      repo.findById.mockResolvedValue(ok(row({data: locked, document_version: 1})));
+      const edited: InvitationDocument = {...locked, sections: locked.sections.map((item) => ({...item, props: {...item.props, displayDate: txt('changed')}}))};
+      const err = await service.updateData(user, ID, docBody(edited), U1).catch((e) => e);
+      expect(err).toBeInstanceOf(ConflictException);
+      expect(err.getResponse()).toMatchObject({code: 'section_locked'});
+      repo.updateDataIfMatch.mockResolvedValue(U2);
+      await expect(service.updateData(user, ID, docBody(locked), U1)).resolves.toEqual({updatedAt: U2});
+    });
+
+    it('409 document_required when legacy data is sent to a document invitation', async () => {
+      repo.findById.mockResolvedValue(ok(row({data: DOC, document_version: 1})));
+      const err = await service.updateData(user, ID, body, U1).catch((e) => e);
+      expect(err.getResponse()).toMatchObject({code: 'document_required'});
     });
   });
 

@@ -1,6 +1,34 @@
 {
   "components": {
     "schemas": {
+      "AdjustCreditBody": {
+        "properties": {
+          "deltaMinor": {
+            "maximum": 9007199254740991,
+            "minimum": -9007199254740991,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "note": {
+            "maxLength": 300,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "userId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "userId",
+          "deltaMinor",
+          "note"
+        ],
+        "type": "object"
+      },
       "AdjustEntitlementBody": {
         "properties": {
           "addEdits": {
@@ -71,6 +99,11 @@
       },
       "CheckoutBody": {
         "properties": {
+          "affiliateCode": {
+            "pattern": "^[a-z0-9_-]{3,32}$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
           "couple": {
             "additionalProperties": false,
             "properties": {
@@ -105,6 +138,12 @@
             "type": "string",
             "x-nestjs_zod-parent-additional-properties": false
           },
+          "invitationId": {
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
           "kind": {
             "enum": [
               "new",
@@ -129,6 +168,27 @@
             "type": "integer",
             "x-nestjs_zod-parent-additional-properties": false
           },
+          "ref": {
+            "additionalProperties": false,
+            "properties": {
+              "at": {
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+                "type": "string"
+              },
+              "code": {
+                "pattern": "^[a-z0-9_-]{3,32}$",
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "at"
+            ],
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false
+          },
           "templateSlug": {
             "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
             "type": "string",
@@ -151,6 +211,37 @@
           "method",
           "couple",
           "eventDate"
+        ],
+        "type": "object"
+      },
+      "ClaimBody": {
+        "properties": {
+          "token": {
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "type": "object"
+      },
+      "ClickBody": {
+        "properties": {
+          "path": {
+            "maxLength": 120,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "ref": {
+            "pattern": "^[a-z0-9_-]{3,32}$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "ref"
         ],
         "type": "object"
       },
@@ -184,6 +275,328 @@
         ],
         "type": "object"
       },
+      "ConfirmTopupBody": {
+        "properties": {
+          "acceptMismatch": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "note": {
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "paidAmountMinor": {
+            "maximum": 9007199254740991,
+            "minimum": 1,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "txnRef": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "paidAmountMinor",
+          "txnRef"
+        ],
+        "type": "object"
+      },
+      "CouponActiveBody": {
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "active"
+        ],
+        "type": "object"
+      },
+      "CreateAffiliateBody": {
+        "properties": {
+          "commissionPct": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "customerDiscountPct": {
+            "maximum": 30,
+            "minimum": 0,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "payoutDetails": {
+            "additionalProperties": {
+              "maxLength": 300,
+              "type": "string"
+            },
+            "propertyNames": {
+              "maxLength": 60,
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "payoutMethod": {
+            "maxLength": 40,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "phone": {
+            "maxLength": 20,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "refCode": {
+            "maxLength": 32,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "refCode",
+          "name"
+        ],
+        "type": "object"
+      },
+      "CreateAssetBody": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "audio",
+              "font",
+              "other"
+            ],
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "license": {
+            "maxLength": 200,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "licenseUrl": {
+            "format": "uri",
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "r2Key": {
+            "maxLength": 300,
+            "minLength": 1,
+            "pattern": "^[A-Za-z0-9._\\-/]+$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "sizeBytes": {
+            "maximum": 9007199254740991,
+            "minimum": 0,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "source": {
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "r2Key"
+        ],
+        "type": "object"
+      },
+      "CreateCouponBody": {
+        "properties": {
+          "amountOffMinor": {
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "code": {
+            "maxLength": 32,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "expiresAt": {
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "maxUses": {
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "percentOff": {
+            "exclusiveMinimum": 0,
+            "maximum": 100,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "code"
+        ],
+        "type": "object"
+      },
+      "CreateTemplateBody": {
+        "properties": {
+          "category": {
+            "maxLength": 60,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "eventType": {
+            "maxLength": 60,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "featured": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "nameAr": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "nameEn": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sampleDataAr": {
+            "additionalProperties": {},
+            "propertyNames": {
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sampleDataEn": {
+            "additionalProperties": {},
+            "propertyNames": {
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "slug": {
+            "maxLength": 60,
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sortOrder": {
+            "maximum": 100000,
+            "minimum": 0,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "taglineAr": {
+            "maxLength": 240,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "taglineEn": {
+            "maxLength": 240,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "tier": {
+            "enum": [
+              "save_the_date",
+              "classic",
+              "premium"
+            ],
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "slug",
+          "nameAr",
+          "nameEn",
+          "tier"
+        ],
+        "type": "object"
+      },
+      "CreateTopupBody": {
+        "properties": {
+          "amountMinor": {
+            "maximum": 100000000,
+            "minimum": 1,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "amountMinor"
+        ],
+        "type": "object"
+      },
+      "DeleteAccountBody": {
+        "properties": {
+          "confirmEmail": {
+            "maxLength": 254,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "confirmEmail"
+        ],
+        "type": "object"
+      },
       "GuestMessageBody": {
         "properties": {
           "name": {
@@ -210,6 +623,85 @@
         ],
         "type": "object"
       },
+      "IssueBody": {
+        "properties": {
+          "label": {
+            "maxLength": 80,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "type": "object"
+      },
+      "ManualRefundBody": {
+        "properties": {
+          "note": {
+            "maxLength": 500,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "note"
+        ],
+        "type": "object"
+      },
+      "PayoutBody": {
+        "properties": {
+          "amountEgp": {
+            "exclusiveMinimum": 0,
+            "maximum": 1000000,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "method": {
+            "maxLength": 40,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "periodEnd": {
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "periodStart": {
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "reference": {
+            "maxLength": 120,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "amountEgp"
+        ],
+        "type": "object"
+      },
+      "RefundToBalanceBody": {
+        "properties": {
+          "note": {
+            "maxLength": 300,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "note"
+        ],
+        "type": "object"
+      },
       "RejectPaymentBody": {
         "properties": {
           "reason": {
@@ -221,6 +713,33 @@
         },
         "required": [
           "reason"
+        ],
+        "type": "object"
+      },
+      "RejectTopupBody": {
+        "properties": {
+          "reason": {
+            "maxLength": 500,
+            "minLength": 3,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "reason"
+        ],
+        "type": "object"
+      },
+      "ResolveBody": {
+        "properties": {
+          "token": {
+            "pattern": "^[A-Za-z0-9_-]{43}$",
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "token"
         ],
         "type": "object"
       },
@@ -265,6 +784,19 @@
         ],
         "type": "object"
       },
+      "SettingBody": {
+        "properties": {
+          "value": {
+            "type": "",
+            "x-nestjs_zod-empty-type": true,
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "value"
+        ],
+        "type": "object"
+      },
       "SwitchTemplateBody": {
         "properties": {
           "templateSlug": {
@@ -277,6 +809,115 @@
         "required": [
           "templateSlug"
         ],
+        "type": "object"
+      },
+      "TemplateStatusBody": {
+        "properties": {
+          "status": {
+            "enum": [
+              "draft",
+              "live",
+              "retired"
+            ],
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
+        "required": [
+          "status"
+        ],
+        "type": "object"
+      },
+      "UpdateAffiliateBody": {
+        "properties": {
+          "active": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "commissionPct": {
+            "maximum": 100,
+            "minimum": 0,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "customerDiscountPct": {
+            "maximum": 30,
+            "minimum": 0,
+            "type": "number",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "name": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "payoutDetails": {
+            "additionalProperties": {
+              "maxLength": 300,
+              "type": "string"
+            },
+            "propertyNames": {
+              "maxLength": 60,
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "payoutMethod": {
+            "maxLength": 40,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "phone": {
+            "maxLength": 20,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "type": "object"
+      },
+      "UpdateAssetBody": {
+        "properties": {
+          "kind": {
+            "enum": [
+              "image",
+              "video",
+              "audio",
+              "font",
+              "other"
+            ],
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "license": {
+            "maxLength": 200,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "licenseUrl": {
+            "format": "uri",
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          "source": {
+            "maxLength": 500,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        },
         "type": "object"
       },
       "UpdateInvitationBody": {
@@ -4924,13 +5565,784 @@
             ],
             "type": "object",
             "x-nestjs_zod-parent-additional-properties": false,
-            "x-nestjs_zod-self-required": true,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "document": {
+            "additionalProperties": false,
+            "properties": {
+              "locales": {
+                "additionalProperties": false,
+                "properties": {
+                  "enabled": {
+                    "items": {
+                      "enum": [
+                        "ar",
+                        "en"
+                      ],
+                      "type": "string"
+                    },
+                    "maxItems": 2,
+                    "minItems": 1,
+                    "type": "array"
+                  },
+                  "primary": {
+                    "enum": [
+                      "ar",
+                      "en"
+                    ],
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "primary",
+                  "enabled"
+                ],
+                "type": "object"
+              },
+              "meta": {
+                "additionalProperties": false,
+                "properties": {
+                  "copy": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "detailsSubtitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "detailsTitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "messageSubtitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "messageTitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "scheduleSubtitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "scheduleTitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "tapLabel": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "welcome": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "welcomeTitle": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "couple": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "firstName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "headline": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "secondName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "firstName",
+                      "secondName"
+                    ],
+                    "type": "object"
+                  },
+                  "event": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "date": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "displayDate": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "endTime": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "label": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "location": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "mapUrl": {
+                        "type": "string"
+                      },
+                      "startTime": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      },
+                      "venue": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "additionalProperties": false,
+                            "properties": {
+                              "ar": {
+                                "type": "string"
+                              },
+                              "en": {
+                                "type": "string"
+                              }
+                            },
+                            "type": "object"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "date"
+                    ],
+                    "type": "object"
+                  },
+                  "media": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "coupleDancingUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "footerOrnamentUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "heroVideoUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "introPosterUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "introVideoUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "musicUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "ornamentUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "ornateBadgeUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "photoUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      },
+                      "stringLightsUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "pattern": "^\\/(?!\\/)[^\\\\\\s\\u0000-\\u001f]*$",
+                            "type": "string"
+                          }
+                        ]
+                      }
+                    },
+                    "type": "object"
+                  },
+                  "schedule": {
+                    "items": {},
+                    "type": "array"
+                  },
+                  "template": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "eventType": {
+                        "enum": [
+                          "engagement",
+                          "save-the-date",
+                          "wedding",
+                          "birthday"
+                        ],
+                        "type": "string"
+                      },
+                      "experienceType": {
+                        "enum": [
+                          "cinematic-story",
+                          "interactive-reveal",
+                          "slideshow",
+                          "scroll-only"
+                        ],
+                        "type": "string"
+                      },
+                      "introType": {
+                        "enum": [
+                          "video-open",
+                          "scratch-reveal",
+                          "tap-to-open",
+                          "envelope",
+                          "none"
+                        ],
+                        "type": "string"
+                      },
+                      "layoutFamily": {
+                        "enum": [
+                          "ornate",
+                          "minimal-interactive",
+                          "modern",
+                          "classic",
+                          "safari-editorial",
+                          "boho",
+                          "luxury-floral",
+                          "floral-romantic",
+                          "finca-rustic",
+                          "sweetlove-romantic",
+                          "dolce-vita-lake",
+                          "daynight-dual",
+                          "bridgerton-regency",
+                          "bloom-garden",
+                          "mashrabiya"
+                        ],
+                        "type": "string"
+                      },
+                      "siteType": {
+                        "enum": [
+                          "full-invitation",
+                          "save-the-date",
+                          "rsvp-only"
+                        ],
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "eventType",
+                      "siteType",
+                      "experienceType",
+                      "introType",
+                      "layoutFamily"
+                    ],
+                    "type": "object"
+                  }
+                },
+                "required": [
+                  "template",
+                  "couple",
+                  "event",
+                  "media",
+                  "copy"
+                ],
+                "type": "object"
+              },
+              "schemaVersion": {
+                "const": 1,
+                "type": "number"
+              },
+              "sections": {
+                "items": {
+                  "additionalProperties": false,
+                  "properties": {
+                    "hidden": {
+                      "type": "boolean"
+                    },
+                    "id": {
+                      "pattern": "^[A-Za-z0-9][A-Za-z0-9_-]{0,63}$",
+                      "type": "string"
+                    },
+                    "locked": {
+                      "type": "boolean"
+                    },
+                    "props": {
+                      "additionalProperties": {},
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "type": "object"
+                    },
+                    "type": {
+                      "enum": [
+                        "hero",
+                        "countdown",
+                        "welcome",
+                        "schedule",
+                        "details",
+                        "map",
+                        "messageForm",
+                        "imageDivider",
+                        "footer",
+                        "scratchReveal",
+                        "story",
+                        "dressCode",
+                        "gifts",
+                        "rsvp",
+                        "faq",
+                        "weddingWeekend",
+                        "travelInfo",
+                        "bohoFooter",
+                        "credit",
+                        "hotelList",
+                        "gallery",
+                        "locationTransport"
+                      ],
+                      "type": "string"
+                    },
+                    "variant": {
+                      "anyOf": [
+                        {
+                          "maxLength": 40,
+                          "minLength": 1,
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "type",
+                    "variant",
+                    "hidden",
+                    "locked",
+                    "props"
+                  ],
+                  "type": "object"
+                },
+                "maxItems": 60,
+                "type": "array"
+              },
+              "theme": {
+                "additionalProperties": false,
+                "properties": {
+                  "colors": {
+                    "additionalProperties": false,
+                    "properties": {
+                      "background": {
+                        "type": "string"
+                      },
+                      "foreground": {
+                        "type": "string"
+                      },
+                      "ivory": {
+                        "type": "string"
+                      },
+                      "muted": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "background",
+                      "foreground",
+                      "muted",
+                      "ivory"
+                    ],
+                    "type": "object"
+                  },
+                  "fonts": {
+                    "additionalProperties": {
+                      "maxLength": 80,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "propertyNames": {
+                      "maxLength": 40,
+                      "minLength": 1,
+                      "type": "string"
+                    },
+                    "type": "object"
+                  },
+                  "presetId": {
+                    "anyOf": [
+                      {
+                        "maxLength": 40,
+                        "minLength": 1,
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "presetId",
+                  "colors",
+                  "fonts"
+                ],
+                "type": "object"
+              }
+            },
+            "required": [
+              "schemaVersion",
+              "theme",
+              "locales",
+              "meta",
+              "sections"
+            ],
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
             "x-nestjs_zod-uses-3-point-1-syntax": true
           }
         },
-        "required": [
-          "data"
-        ],
         "type": "object"
       },
       "UpdateMeBody": {
@@ -4942,11 +6354,14 @@
             ],
             "type": "string",
             "x-nestjs_zod-parent-additional-properties": false
+          },
+          "name": {
+            "maxLength": 80,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false
           }
         },
-        "required": [
-          "locale"
-        ],
         "type": "object"
       },
       "UpdateSlugBody": {
@@ -4960,6 +6375,96 @@
         },
         "required": [
           "slug"
+        ],
+        "type": "object"
+      },
+      "UpdateTemplateBody": {
+        "properties": {
+          "category": {
+            "maxLength": 60,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "eventType": {
+            "maxLength": 60,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "featured": {
+            "type": "boolean",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "nameAr": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "nameEn": {
+            "maxLength": 120,
+            "minLength": 1,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sampleDataAr": {
+            "additionalProperties": {},
+            "propertyNames": {
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sampleDataEn": {
+            "additionalProperties": {},
+            "propertyNames": {
+              "type": "string"
+            },
+            "type": "object",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-self-required": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "sortOrder": {
+            "maximum": 100000,
+            "minimum": 0,
+            "type": "integer",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "taglineAr": {
+            "maxLength": 240,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "taglineEn": {
+            "maxLength": 240,
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          },
+          "tier": {
+            "enum": [
+              "save_the_date",
+              "classic",
+              "premium"
+            ],
+            "type": "string",
+            "x-nestjs_zod-parent-additional-properties": false,
+            "x-nestjs_zod-uses-3-point-1-syntax": true
+          }
+        },
+        "required": [
+          "nameAr",
+          "nameEn",
+          "tier"
         ],
         "type": "object"
       }
@@ -4980,6 +6485,276 @@
   },
   "openapi": "3.0.0",
   "paths": {
+    "/v1/admin/affiliates": {
+      "get": {
+        "operationId": "AdminAffiliatesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      },
+      "post": {
+        "operationId": "AdminAffiliatesController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAffiliateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
+    "/v1/admin/affiliates/{id}": {
+      "put": {
+        "operationId": "AdminAffiliatesController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAffiliateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
+    "/v1/admin/affiliates/{id}/export": {
+      "get": {
+        "operationId": "AdminAffiliatesController_exportCsv",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
+    "/v1/admin/affiliates/{id}/orders": {
+      "get": {
+        "operationId": "AdminAffiliatesController_orders",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
+    "/v1/admin/affiliates/{id}/payouts": {
+      "get": {
+        "operationId": "AdminAffiliatesController_payouts",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      },
+      "post": {
+        "operationId": "AdminAffiliatesController_recordPayout",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PayoutBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
+    "/v1/admin/affiliates/{id}/stats": {
+      "get": {
+        "operationId": "AdminAffiliatesController_stats",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "from",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          {
+            "in": "query",
+            "name": "to",
+            "required": false,
+            "schema": {
+              "format": "date",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminAffiliates"
+        ]
+      }
+    },
     "/v1/admin/audit-log": {
       "get": {
         "operationId": "AdminAuditController_listAuditLogs",
@@ -5026,6 +6801,124 @@
         },
         "tags": [
           "AdminAudit"
+        ]
+      }
+    },
+    "/v1/admin/coupons": {
+      "get": {
+        "operationId": "AdminCouponsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCoupons"
+        ]
+      },
+      "post": {
+        "operationId": "AdminCouponsController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateCouponBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCoupons"
+        ]
+      }
+    },
+    "/v1/admin/coupons/{code}/active": {
+      "post": {
+        "operationId": "AdminCouponsController_setActive",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "code",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9_-]{3,32}$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CouponActiveBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCoupons"
+        ]
+      }
+    },
+    "/v1/admin/coupons/{code}/uses": {
+      "get": {
+        "operationId": "AdminCouponsController_uses",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "code",
+            "required": true,
+            "schema": {
+              "pattern": "^[a-z0-9_-]{3,32}$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminCoupons"
+        ]
+      }
+    },
+    "/v1/admin/credit/adjust": {
+      "post": {
+        "operationId": "AdminBalanceController_adjust",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AdjustCreditBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminBalance"
         ]
       }
     },
@@ -5124,6 +7017,89 @@
         ]
       }
     },
+    "/v1/admin/edit-links/{linkId}/revoke": {
+      "post": {
+        "operationId": "AdminEditLinksController_revoke",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "linkId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminEditLinks"
+        ]
+      }
+    },
+    "/v1/admin/invitations/{id}/edit-links": {
+      "get": {
+        "operationId": "AdminEditLinksController_list",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminEditLinks"
+        ]
+      },
+      "post": {
+        "operationId": "AdminEditLinksController_issue",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IssueBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminEditLinks"
+        ]
+      }
+    },
     "/v1/admin/invitations/{id}/entitlement-adjustments": {
       "post": {
         "operationId": "AdminCustomersController_adjustEntitlement",
@@ -5156,6 +7132,41 @@
         },
         "tags": [
           "AdminCustomers"
+        ]
+      }
+    },
+    "/v1/admin/orders/{id}/refund-to-balance": {
+      "post": {
+        "operationId": "AdminBalanceController_refund",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RefundToBalanceBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminBalance"
         ]
       }
     },
@@ -5320,6 +7331,119 @@
         ]
       }
     },
+    "/v1/admin/refunds": {
+      "get": {
+        "operationId": "AdminRefundsController_search",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "q",
+            "required": false,
+            "schema": {
+              "maxLength": 80,
+              "minLength": 2,
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminRefunds"
+        ]
+      }
+    },
+    "/v1/admin/refunds/{orderId}/manual": {
+      "post": {
+        "operationId": "AdminRefundsController_markRefunded",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "orderId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManualRefundBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminRefunds"
+        ]
+      }
+    },
+    "/v1/admin/settings": {
+      "get": {
+        "operationId": "AdminSettingsController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminSettings"
+        ]
+      }
+    },
+    "/v1/admin/settings/{key}": {
+      "put": {
+        "operationId": "AdminSettingsController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "key",
+            "required": true,
+            "schema": {
+              "enum": [
+                "payment_instructions",
+                "support_whatsapp",
+                "email_texts"
+              ],
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SettingBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminSettings"
+        ]
+      }
+    },
     "/v1/admin/stats": {
       "get": {
         "operationId": "AdminStatsController_getStats",
@@ -5331,6 +7455,444 @@
         },
         "tags": [
           "AdminStats"
+        ]
+      }
+    },
+    "/v1/admin/templates": {
+      "get": {
+        "operationId": "AdminTemplatesController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      },
+      "post": {
+        "operationId": "AdminTemplatesController_create",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTemplateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      }
+    },
+    "/v1/admin/templates/{id}": {
+      "get": {
+        "operationId": "AdminTemplatesController_get",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      },
+      "put": {
+        "operationId": "AdminTemplatesController_update",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTemplateBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      }
+    },
+    "/v1/admin/templates/{id}/assets": {
+      "post": {
+        "operationId": "AdminTemplatesController_addAsset",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAssetBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      }
+    },
+    "/v1/admin/templates/{id}/assets/{assetId}": {
+      "delete": {
+        "operationId": "AdminTemplatesController_deleteAsset",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "assetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      },
+      "patch": {
+        "operationId": "AdminTemplatesController_updateAsset",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          },
+          {
+            "in": "path",
+            "name": "assetId",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAssetBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      }
+    },
+    "/v1/admin/templates/{id}/status": {
+      "post": {
+        "operationId": "AdminTemplatesController_setStatus",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TemplateStatusBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminTemplates"
+        ]
+      }
+    },
+    "/v1/admin/topups/pending": {
+      "get": {
+        "operationId": "AdminBalanceController_pending",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminBalance"
+        ]
+      }
+    },
+    "/v1/admin/topups/{id}/confirm": {
+      "post": {
+        "operationId": "AdminBalanceController_confirm",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfirmTopupBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminBalance"
+        ]
+      }
+    },
+    "/v1/admin/topups/{id}/reject": {
+      "post": {
+        "operationId": "AdminBalanceController_reject",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RejectTopupBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AdminBalance"
+        ]
+      }
+    },
+    "/v1/affiliates/click": {
+      "post": {
+        "operationId": "AffiliateClicksController_click",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClickBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "AffiliateClicks"
+        ]
+      }
+    },
+    "/v1/balance": {
+      "get": {
+        "operationId": "BalanceController_get",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Balance"
+        ]
+      }
+    },
+    "/v1/balance/ledger": {
+      "get": {
+        "operationId": "BalanceController_ledger",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "limit",
+            "required": false,
+            "schema": {
+              "default": 30,
+              "maximum": 100,
+              "minimum": 1,
+              "type": "integer"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          },
+          {
+            "in": "query",
+            "name": "before",
+            "required": false,
+            "schema": {
+              "format": "date-time",
+              "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d:[0-5]\\d(?:\\.\\d+)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$",
+              "type": "string"
+            },
+            "x-nestjs_zod-parent-additional-properties": false
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Balance"
+        ]
+      }
+    },
+    "/v1/balance/topups": {
+      "get": {
+        "operationId": "BalanceController_topups",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Balance"
+        ]
+      },
+      "post": {
+        "operationId": "BalanceController_createTopup",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTopupBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Balance"
         ]
       }
     },
@@ -5414,6 +7976,30 @@
         },
         "tags": [
           "DevPayments"
+        ]
+      }
+    },
+    "/v1/edit-links/resolve": {
+      "post": {
+        "operationId": "EditLinksController_resolve",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ResolveBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "EditLinks"
         ]
       }
     },
@@ -5522,6 +8108,41 @@
         },
         "tags": [
           "Invitations"
+        ]
+      }
+    },
+    "/v1/invitations/{id}/claim": {
+      "post": {
+        "operationId": "EditLinksController_claim",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClaimBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "EditLinks"
         ]
       }
     },
@@ -5781,6 +8402,95 @@
         ]
       }
     },
+    "/v1/me/delete": {
+      "post": {
+        "operationId": "AccountController_deleteAccount",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteAccountBody"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Account"
+        ]
+      }
+    },
+    "/v1/me/export": {
+      "get": {
+        "operationId": "AccountController_exportData",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Account"
+        ]
+      }
+    },
+    "/v1/media": {
+      "get": {
+        "operationId": "MediaController_list",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Media"
+        ]
+      },
+      "post": {
+        "operationId": "MediaController_upload",
+        "parameters": [],
+        "responses": {
+          "201": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Media"
+        ]
+      }
+    },
+    "/v1/media/{id}": {
+      "delete": {
+        "operationId": "MediaController_remove",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "Media"
+        ]
+      }
+    },
     "/v1/orders": {
       "get": {
         "operationId": "OrdersController_list",
@@ -5817,6 +8527,81 @@
         },
         "tags": [
           "Orders"
+        ]
+      }
+    },
+    "/v1/orders/{id}/cancel": {
+      "post": {
+        "operationId": "OrderBalanceController_cancel",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "OrderBalance"
+        ]
+      }
+    },
+    "/v1/orders/{id}/pay-with-balance": {
+      "post": {
+        "operationId": "OrderBalanceController_pay",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "OrderBalance"
+        ]
+      }
+    },
+    "/v1/orders/{id}/status": {
+      "get": {
+        "operationId": "OrderBalanceController_status",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "id",
+            "required": true,
+            "schema": {
+              "format": "uuid",
+              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$",
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "OrderBalance"
         ]
       }
     },
@@ -5982,6 +8767,20 @@
         },
         "tags": [
           "PublicInvitations"
+        ]
+      }
+    },
+    "/v1/settings/public": {
+      "get": {
+        "operationId": "PublicSettingsController_publicSettings",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "PublicSettings"
         ]
       }
     },

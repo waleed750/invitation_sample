@@ -11,7 +11,9 @@ export const manualPaymentInstructionsSchema = z.object({
   methods: z.array(z.object({
     id: z.enum(['instapay', 'wallet', 'bank']),
     label: localized,
-    details: localized
+    details: localized,
+    // Optional https link that opens the payment app (for example the InstaPay payment link).
+    url: z.url().refine((value) => value.startsWith('https://'), 'url must be https').optional()
   }).strict()).min(1)
 }).strict();
 export type ManualPaymentInstructions = z.output<typeof manualPaymentInstructionsSchema>;
@@ -68,6 +70,31 @@ const envSchema = z.object({
     .enum(['log', 'smtp', ''])
     .optional()
     .transform((value) => (value === undefined || value === '' ? undefined : value)),
+  // true = every purchase goes through the credit balance (launch mode): checkout pays from the balance, or parks the
+  // order as "awaiting balance" until a confirmed top-up covers it. false = the legacy manual-transfer order flow.
+  PURCHASES_VIA_BALANCE: z.enum(['true', 'false', '']).default('false').transform((value) => value === 'true'),
+  // Payment-event webhook + auto-confirm (manual orders and top-ups). OFF at launch: the route answers 404.
+  PAYMENT_EVENTS_ENABLED: z.enum(['true', 'false', '']).default('false').transform((value) => value === 'true'),
+  // --- Media uploads (T12) ---
+  // local = a directory on the server (Caddy serves it at /media/*); s3 = any S3-compatible bucket.
+  MEDIA_STORAGE: z.enum(['local', 's3']).default('local'),
+  MEDIA_DIR: z.string().min(1).default('./.media-data'),
+  // Public base URL of the stored files; blank = `${BETTER_AUTH_URL}/media`.
+  MEDIA_PUBLIC_BASE_URL: z.string().optional().transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
+  // Dev/e2e convenience: let the API itself serve MEDIA_DIR at /media (production uses Caddy instead).
+  MEDIA_SERVE_FROM_API: z.enum(['true', 'false']).default('false').transform((value) => value === 'true'),
+  MEDIA_S3_ENDPOINT: z.string().optional().transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
+  MEDIA_S3_REGION: z.string().optional().transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
+  MEDIA_S3_BUCKET: z.string().optional().transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
+  MEDIA_S3_ACCESS_KEY: z.string().optional().transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
+  MEDIA_S3_SECRET_KEY: z.string().optional().transform((value) => (value === undefined || value.trim() === '' ? undefined : value.trim())),
+  MEDIA_S3_FORCE_PATH_STYLE: z.enum(['true', 'false']).default('true').transform((value) => value === 'true'),
+  // Test-only: keep the latest sign-in code per address and serve it at /v1/__e2e/last-code (E2E_CAPTURE_EMAILS=1).
+  // Refused in production (see the refinement below).
+  E2E_CAPTURE_EMAILS: z
+    .enum(['1', '0', ''])
+    .optional()
+    .transform((value) => value === '1'),
   NOTIFICATIONS_EMAIL_ENABLED: z.enum(['true', 'false']).default('true').transform((value) => value === 'true'),
   GOOGLE_CLIENT_ID: z
     .string()
@@ -156,6 +183,14 @@ LIFECYCLE_CRON_ENABLED: z.enum(['true', 'false']).default('true').transform((val
       code: 'custom', path: ['REVALIDATE_SECRET'],
       message: 'REVALIDATE_SECRET (at least 32 characters) is required when WEB_REVALIDATE_URL is set'
     });
+  }
+  if (env.MEDIA_STORAGE === 's3') {
+    for (const key of ['MEDIA_S3_BUCKET', 'MEDIA_S3_REGION', 'MEDIA_S3_ACCESS_KEY', 'MEDIA_S3_SECRET_KEY'] as const) {
+      if (env[key] === undefined) context.addIssue({code: 'custom', path: [key], message: `${key} is required when MEDIA_STORAGE=s3`});
+    }
+  }
+  if (env.NODE_ENV === 'production' && env.E2E_CAPTURE_EMAILS) {
+    context.addIssue({code: 'custom', path: ['E2E_CAPTURE_EMAILS'], message: 'E2E_CAPTURE_EMAILS must be off in production'});
   }
   if (env.NODE_ENV === 'production' && env.EMAIL_SENDER === 'log') {
     context.addIssue({code: 'custom', path: ['EMAIL_SENDER'], message: 'the log email sender is disabled in production'});

@@ -7,6 +7,12 @@ import {AdminCustomersModule} from './admin-customers/admin-customers.module';
 import {AdminPaymentsModule} from './admin-payments/admin-payments.module';
 import {AdminStatsModule} from './admin-stats/admin-stats.module';
 import {AdminAuditModule} from './admin-audit/admin-audit.module';
+import {AdminSettingsModule} from './admin-settings/admin-settings.module';
+import {AdminCouponsModule} from './admin-coupons/admin-coupons.module';
+import {AdminTemplatesModule} from './admin-templates/admin-templates.module';
+import {AdminAffiliatesModule} from './admin-affiliates/admin-affiliates.module';
+import {AdminRefundsModule} from './admin-refunds/admin-refunds.module';
+import {EditLinksModule} from './edit-links/edit-links.module';
 import {AuthModule, AuthGuard, RolesGuard} from './auth';
 import {AppLogger} from './common/app-logger';
 import {buildLoggerParams} from './common/logging';
@@ -29,6 +35,8 @@ import {PaymentsModule} from './payments/payments.module';
 import {PointsModule} from './points/points.module';
 import {PublicInvitationsModule} from './public-invitations/public-invitations.module';
 import {TemplatesModule} from './templates/templates.module';
+import {MediaModule} from './media/media.module';
+import {BalanceModule} from './balance/balance.module';
 
 export {AuthModule};
 export {AuthGuard, RolesGuard};
@@ -55,7 +63,11 @@ export {AuthGuard, RolesGuard};
     // lanes: append module imports below
     , import('./payment-events/payment-events.module').then((m) => ({module: m.PaymentEventsModule})),
     AdminStatsModule,
-    AdminAuditModule
+    AdminAuditModule,
+    MediaModule,
+    BalanceModule,
+    AdminSettingsModule, AdminCouponsModule, AdminTemplatesModule, AdminAffiliatesModule, AdminRefundsModule,
+    EditLinksModule
   ],
   providers: [
     AppLogger,
