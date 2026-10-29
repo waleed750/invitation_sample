@@ -27,15 +27,33 @@ export function Onboarding() {
     }
   }
 
+  useEffect(() => {
+    if (step === null) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') finish();
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => window.removeEventListener('keydown', onKeyDown);
+  }, [step]);
+
   if (step === null) return null;
   return (
-    <div className="ed-onboarding" role="dialog" aria-modal="true" aria-labelledby="ed-onb-title" data-testid="onboarding">
+    <div
+      className="ed-onboarding"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="ed-onb-title"
+      data-testid="onboarding"
+      onClick={(e) => {
+        if (e.target === e.currentTarget) finish();
+      }}
+    >
       <div className="ed-onboarding__card">
         <p className="ed-note">{t('count', {current: step + 1, total: 3})}</p>
         <h2 id="ed-onb-title">{t(`tip${String(step + 1)}.title`)}</h2>
         <p>{t(`tip${String(step + 1)}.body`)}</p>
         <div className="ed-onboarding__actions">
-          <button type="button" className="ed-link" onClick={finish}>{t('skip')}</button>
+          <button type="button" className="ed-link" data-testid="onboarding-skip" onClick={finish}>{t('skip')}</button>
           <button type="button" className="ed-btn ed-btn--primary" data-testid="onboarding-next" onClick={() => (step >= 2 ? finish() : setStep(step + 1))}>{step >= 2 ? t('done') : t('next')}</button>
         </div>
       </div>

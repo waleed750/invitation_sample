@@ -9,12 +9,26 @@ async function openEditor(page: Page): Promise<void> {
   const editLink = page.locator('a[href*="/app/invitations/"][href$="/edit"]').first();
   await expect(editLink, 'a dashboard invitation edit link').toBeVisible();
   await editLink.click();
-  const skip = page.getByRole('button', {name: 'تخطي'});
-  await expect(async () => {
-    if (await skip.isVisible()) await skip.click({timeout: 1_000});
-    await expect(skip).toHaveCount(0, {timeout: 1_000});
-  }).toPass({timeout: 30_000});
+  await page.waitForURL(/\/app\/invitations\/[^/]+\/edit/);
   await expect(page.getByTestId('save-status')).toBeVisible();
+
+  // Dismiss first-run onboarding tips if shown.
+  const onboarding = page.getByTestId('onboarding');
+  const skip = page.getByRole('button', {name: 'تخطي'}).or(page.getByTestId('onboarding-skip'));
+  const isAlreadyOnboarded = await page.evaluate(() => {
+    try {
+      return window.localStorage.getItem('editor.onboarded') === '1';
+    } catch {
+      return false;
+    }
+  });
+  if (!isAlreadyOnboarded) {
+    await expect(skip).toBeVisible({timeout: 10_000});
+    await skip.click();
+  } else if (await skip.isVisible()) {
+    await skip.click();
+  }
+  await expect(onboarding).toBeHidden({timeout: 10_000});
 }
 
 async function noHorizontalScroll(page: Page): Promise<void> {
@@ -96,7 +110,8 @@ test('typing an Arabic name autosaves and shows in the preview', async ({page}) 
   await first.fill(name);
   await expect(page.getByTestId('save-status')).toHaveAttribute('data-status', 'saved', {timeout: 20_000});
   await page.reload();
-  const skip = page.getByRole('button', {name: 'تخطي'});
+  const skip = page.getByRole('button', {name: 'تخطي'}).or(page.getByTestId('onboarding-skip'));
   if (await skip.isVisible().catch(() => false)) await skip.click();
+  await expect(page.getByTestId('onboarding')).toBeHidden({timeout: 10_000});
   await expect(page.locator('input').first()).toHaveValue(name);
 });
