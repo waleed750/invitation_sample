@@ -131,18 +131,17 @@ begin
 end $$;
 
 -- ---- customers cannot touch their balance, see only their own rows, and have no write access
+set local role authenticated;
+select set_config('request.jwt.claims', '{"sub":"f1000000-0000-4000-8000-000000000002","role":"authenticated"}', true);
 do $$
 declare
   A constant uuid := 'f1000000-0000-4000-8000-000000000002';
   v_count integer;
 begin
-  perform set_config('request.jwt.claims', '{"sub":"f1000000-0000-4000-8000-000000000002","role":"authenticated"}', true);
-  set local role authenticated;
-
   begin
     update public.profiles set credit_balance_minor = 99999999 where id = A;
     assert false, 'a customer must not set their own balance';
-  exception when raise_exception then null;
+  exception when raise_exception or insufficient_privilege then null;
   end;
   select count(*) into v_count from public.credit_ledger;
   assert v_count > 0 and not exists (select 1 from public.credit_ledger where user_id <> A), 'only own ledger rows';
@@ -163,16 +162,19 @@ begin
     assert false, 'customer cannot call purchase_with_credit directly';
   exception when insufficient_privilege then null;
   end;
-  reset role;
-  perform set_config('request.jwt.claims', '', true);
-  set local role anon;
+end $$;
+reset role;
+select set_config('request.jwt.claims', '', true);
+set local role anon;
+do $$
+begin
   begin
     perform 1 from public.credit_ledger;
     assert false, 'anon must not read the ledger';
   exception when insufficient_privilege then null;
   end;
-  reset role;
 end $$;
+reset role;
 
 -- ---- payment-event matcher for top-ups (switched off in the API, correct in SQL)
 do $$
