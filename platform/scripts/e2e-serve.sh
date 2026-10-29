@@ -22,6 +22,7 @@ case "${1:-}" in
   web)
     cd "$root/apps/web"
     set -a; . ./.env.development.example; set +a
+    export PREVIEW_DRAFTS=1
     if [ -d .next ] && [ -f .next/BUILD_ID ]; then exec npx next start -p 3000; fi
     exec npx next dev -p 3000
     ;;

@@ -7,14 +7,7 @@ import {getTemplate} from '@/templates/registry';
 import InvitationShell from '@/engine/InvitationShell';
 import {personalizeData} from '@/pick/personalize';
 import {parsePickParams, type SearchParams} from '@/pick/params';
-import '@/engine/styles/templates/mashrabiya.css';
-import '@/engine/styles/templates/africa.css';
-import '@/engine/styles/templates/citystars.css';
-import '@/engine/styles/templates/excellence.css';
-import '@/engine/styles/templates/elegante.css';
-import '@/engine/styles/templates/rawda.css';
-import '@/engine/styles/templates/bustan.css';
-import '@/engine/styles/templates/riwaq.css';
+import '@/templates/template-styles';
 
 type Props = {
   params: Promise<{locale: string; slug: string}>;

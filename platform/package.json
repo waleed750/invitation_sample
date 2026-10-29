@@ -15,6 +15,7 @@
     "lint": "npm run lint --workspace @platform/web && npm run lint --workspace @platform/api",
     "typecheck": "npm run typecheck --workspaces --if-present && tsc -p e2e",
     "check:i18n": "npm run check:i18n --workspace @platform/web",
+    "template:new": "npm run template:new --workspace @platform/web --",
     "gen:api-client": "npm run build --workspace @platform/shared && npm run openapi --workspace @platform/api && npm run generate --workspace @platform/api-client",
     "dev:setup": "bash scripts/dev-setup.sh",
     "dev:full": "bash scripts/dev-full.sh",

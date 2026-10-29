@@ -8,8 +8,7 @@ import {DemoBar} from '@/components/home/DemoBar';
 import {formatMoney, type FormatLocale} from '@/lib/format';
 import {getTemplate, listLiveTemplates} from '@/templates/registry';
 import InvitationShell from '@/engine/InvitationShell';
-import '@/engine/styles/templates/mashrabiya.css';
-import '@/engine/styles/templates/diwan.css';
+import '@/templates/template-styles';
 
 type Props = {params: Promise<{locale: string; slug: string}>};
 

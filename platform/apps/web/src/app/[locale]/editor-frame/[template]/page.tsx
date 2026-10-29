@@ -5,11 +5,7 @@ import {notFound} from 'next/navigation';
 import {PreviewFrameHost} from '@/editor/PreviewFrameHost';
 import {routing} from '@/i18n/routing';
 import {getTemplateAny} from '@/templates/registry';
-import '@/engine/styles/templates/mashrabiya.css';
-import '@/engine/styles/templates/diwan.css';
-import '@/engine/styles/templates/rawda.css';
-import '@/engine/styles/templates/bustan.css';
-import '@/engine/styles/templates/riwaq.css';
+import '@/templates/template-styles';
 import '@/styles/public.css';
 
 type Props = {params: Promise<{locale: string; template: string}>};

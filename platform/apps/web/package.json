@@ -10,6 +10,7 @@
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "check:i18n": "node scripts/check-i18n.mjs",
+    "template:new": "node scripts/template-new.mjs",
     "sync:drafts": "node scripts/sync-draft-assets.mjs",
     "predev": "npm run sync:drafts",
     "prebuild": "npm run sync:drafts"
