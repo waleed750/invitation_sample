@@ -5,6 +5,7 @@ import {TIER_ORDER} from '@platform/shared';
 import {redirect} from '@/i18n/navigation';
 import {routing} from '@/i18n/routing';
 import {getCommerceClient} from './index';
+import {ApiError} from './api-errors';
 import {normalizeEgyptPhone} from './phone';
 
 const localeSchema = z.enum(routing.locales);
@@ -38,7 +39,13 @@ export async function verifyOtpAction(input: unknown) {
 
 export async function startCheckoutAction(input: unknown) {
   const parsed = checkoutSchema.parse(input);
-  const order = await getCommerceClient().startCheckout(parsed);
+  let order;
+  try {
+    order = await getCommerceClient().startCheckout(parsed);
+  } catch (error) {
+    if (error instanceof ApiError && error.code === 'insufficient_points') return {error: 'insufficient_points' as const};
+    throw error;
+  }
   redirect({href: `/checkout/pay/${order.id}`, locale: parsed.locale});
 }
 

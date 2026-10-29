@@ -1,7 +1,13 @@
 /** Name of the cookie a partner link sets (`/ar/r/<code>`): `<code>.<unix seconds of the click>`. */
 export const REF_COOKIE = 'ref';
+export const FRIEND_COOKIE = 'friend';
 const THIRTY_DAYS_MS = 30 * 24 * 60 * 60 * 1000;
 const CODE = /^[a-z0-9_-]{3,32}$/;
+export const FRIEND_CODE = /^f-[a-hj-np-z2-9]{8}$/;
+
+export function parseFriendCookie(value: string | undefined): string | undefined {
+  return value && FRIEND_CODE.test(value) ? value : undefined;
+}
 
 /** The partner a buyer arrived through, or undefined when the cookie is missing, malformed, from the future or older than 30 days. */
 export function parseRefCookie(value: string | undefined, now: Date = new Date()): {code: string; at: string} | undefined {

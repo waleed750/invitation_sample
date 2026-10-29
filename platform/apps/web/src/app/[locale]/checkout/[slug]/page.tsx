@@ -4,6 +4,7 @@ import '@/styles/auth.css';
 import {notFound} from 'next/navigation';
 import {isApiCommerceMode} from '@/auth/config';
 import {getServerSession} from '@/auth/session';
+import {getCommerceClient} from '@/commerce';
 import {isPubliclyListed, TIER_ORDER, type Tier} from '@platform/shared';
 import {DemoBanner} from '@/commerce/DemoBanner';
 import {CheckoutForm} from '@/commerce/CheckoutForm';
@@ -50,6 +51,7 @@ export default async function CheckoutPage({params, searchParams}: Props) {
   const apiMode = isApiCommerceMode();
   // In real-account mode a visitor who is not signed in signs in inline (step 3); nothing is lost.
   const guest = apiMode && !(await getServerSession());
+  const points = apiMode && !guest ? await getCommerceClient().getPoints() : undefined;
 
   const requestedTier = Array.isArray(query.tier) ? query.tier[0] : query.tier;
   const initialTier: Tier = TIER_ORDER.includes(requestedTier as Tier)
@@ -106,6 +108,7 @@ export default async function CheckoutPage({params, searchParams}: Props) {
           initialDate={initialDate}
           signedIn={apiMode && !guest}
           guest={guest}
+          spendablePoints={points?.spendable ?? points?.balance ?? 0}
           initialStep={initialStep}
         />
       </main>

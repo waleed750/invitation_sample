@@ -1,6 +1,6 @@
 import {z} from 'zod';
 import {fromDbTier, levelForPurchases, TIER_ORDER, type Tier} from '@platform/shared';
-import type {Invitation, ManualPayment, Order, OrderKind, OrderStatus, PointsLedgerEntry, PublishInvitationResult} from './types';
+import type {Invitation, ManualPayment, Order, OrderKind, OrderStatus, PointsLedgerEntry, PointsSummary, PublishInvitationResult} from './types';
 
 /** Zod schemas for the API responses the web app consumes. Extra fields are tolerated (zod objects strip them). */
 
@@ -85,6 +85,9 @@ export const pointsSchema = z.object({
   balance: z.number(),
   purchaseCount: z.number(),
   level: z.string().optional(),
+  spendable: z.number().int().nonnegative().optional(),
+  expiringSoon: z.object({points: z.number().int().nonnegative(), firstExpiry: z.string().nullable(), days: z.number().int()}).optional(),
+  referral: z.object({code: z.string().nullable(), invited: z.number().int().nonnegative(), rewarded: z.number().int().nonnegative(), rewardPoints: z.number().int().nonnegative()}).optional(),
   ledger: z.array(z.object({
     id: z.string(), orderId: z.string().nullable().optional(), delta: z.number(), reason: z.string(),
     createdAt: z.string(), expiresAt: z.string().nullable().optional(),
@@ -241,10 +244,14 @@ export function mapPublishResult(raw: z.infer<typeof publishResultSchema>, summa
   return raw.ok ? {ok: true, invitation: mapInvitationDetail(raw.invitation, summary)} : {ok: false, reason: raw.reason};
 }
 
-export function mapPoints(raw: z.infer<typeof pointsSchema>) {
+export function mapPoints(raw: z.infer<typeof pointsSchema>): PointsSummary {
   const ledger: PointsLedgerEntry[] = raw.ledger.map((row) => ({
     id: row.id, delta: row.delta, reason: row.reason, createdAt: row.createdAt,
     ...(row.expiresAt ? {expiresAt: row.expiresAt} : {}),
   }));
-  return {balance: raw.balance, purchaseCount: raw.purchaseCount, level: levelForPurchases(raw.purchaseCount), ledger};
+  return {balance: raw.balance, purchaseCount: raw.purchaseCount, level: levelForPurchases(raw.purchaseCount), ledger,
+    ...(raw.spendable !== undefined ? {spendable: raw.spendable} : {}),
+    ...(raw.expiringSoon ? {expiringSoon: raw.expiringSoon} : {}),
+    ...(raw.referral ? {referral: raw.referral} : {}),
+  };
 }

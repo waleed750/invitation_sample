@@ -1,5 +1,5 @@
 import {describe, expect, it} from 'vitest';
-import {parseRefCookie} from './ref';
+import {parseFriendCookie, parseRefCookie} from './ref';
 
 const now = new Date('2026-10-24T12:00:00Z');
 const secs = (date: string) => Math.floor(new Date(date).getTime() / 1000);
@@ -16,5 +16,14 @@ describe('parseRefCookie', () => {
     expect(parseRefCookie('not a cookie', now)).toBeUndefined();
     expect(parseRefCookie('MONA10.1', now)).toBeUndefined();
     expect(parseRefCookie(undefined, now)).toBeUndefined();
+  });
+});
+
+describe('parseFriendCookie', () => {
+  it('accepts only the friend code format', () => {
+    expect(parseFriendCookie('f-abcd2345')).toBe('f-abcd2345');
+    for (const value of [undefined, 'f-ABCD2345', 'f-abc01234', 'f-abcdo234', 'f-abcd2345.extra', 'mona10']) {
+      expect(parseFriendCookie(value)).toBeUndefined();
+    }
   });
 });

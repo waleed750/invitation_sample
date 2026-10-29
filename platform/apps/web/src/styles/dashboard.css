@@ -1495,6 +1495,18 @@
   gap: 1.75rem;
 }
 
+.points-notice, .points-referral-card {
+  min-inline-size: 0;
+  padding: 1.25rem;
+  border: 1px solid var(--color-secondary);
+  border-radius: var(--radius-md);
+  background: var(--color-surface, #fff);
+}
+
+.points-invite-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+.points-invite-link { display: block; min-inline-size: 0; max-inline-size: 100%; overflow-wrap: anywhere; }
+.points-invite-actions a { overflow-wrap: anywhere; }
+
 .points-scene-card {
   min-block-size: 200px;
   background-color: var(--color-primary);

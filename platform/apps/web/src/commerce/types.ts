@@ -58,6 +58,16 @@ export interface PointsLedgerEntry {
   expiresAt?: string;
 }
 
+export interface PointsSummary {
+  balance: number;
+  purchaseCount: number;
+  level: Level;
+  ledger: PointsLedgerEntry[];
+  spendable?: number;
+  expiringSoon?: {points: number; firstExpiry: string | null; days: number};
+  referral?: {code: string | null; invited: number; rewarded: number; rewardPoints: number};
+}
+
 export interface Session {
   phone: string;
   locale: string;
@@ -99,7 +109,7 @@ export interface CommerceClient {
   getInvitation(id: string): Promise<Invitation | null>;
   publishInvitation(id: string): Promise<PublishInvitationResult>;
   listOrders(): Promise<Order[]>;
-  getPoints(): Promise<{balance: number; purchaseCount: number; level: Level; ledger: PointsLedgerEntry[]}>;
+  getPoints(): Promise<PointsSummary>;
 }
 
 export type PublishInvitationResult =

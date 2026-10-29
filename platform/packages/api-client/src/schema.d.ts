@@ -1253,6 +1253,7 @@ export interface components {
             couponCode?: string;
             /** Format: date-time */
             eventDate: string;
+            friendCode?: string;
             /** Format: uuid */
             invitationId?: string;
             /** @enum {string} */

@@ -294,10 +294,19 @@
       "invalidCode": "Enter the 6-digit demo code.",
       "verifyFirst": "Verify your phone before continuing.",
       "detailsRequired": "Enter both names and the event date.",
-      "generic": "Something went wrong. Check your details and try again."
+      "generic": "Something went wrong. Check your details and try again.",
+      "insufficient_points": "Some points are held by another order. Your selection has been reset; review your balance and try again."
     },
     "guest": {
       "lead": "Sign in with your email to pay. We send you a code — no password."
+    },
+    "points": {
+      "redeem": "Use your points",
+      "available": "{points} points available",
+      "none": "Do not use points",
+      "option": "{points} points — save {amount}",
+      "saved": "Saved with points",
+      "cap": "All discounts together are capped at 30% of the order."
     }
   },
   "dashboard": {
@@ -443,8 +452,21 @@
       "expires": "Expires {date}",
       "reasons": {
         "purchase": "Purchase reward",
-        "redeem": "Redeemed on an order"
-      }
+        "redeem": "Redeemed on an order",
+        "referral": "Friend referral reward",
+        "bonus": "Bonus points",
+        "refund": "Refund adjustment",
+        "admin": "Account adjustment",
+        "expire": "Expired points"
+      },
+      "held": "{points} points are spendable; {held} are held by orders waiting for payment.",
+      "expiringSoon": "{points} points expire on {date}.",
+      "inviteTitle": "Invite a friend",
+      "inviteDescription": "You earn {points} points when your friend's first order is paid.",
+      "copyInvite": "Copy invite link",
+      "copiedInvite": "Copied!",
+      "shareWhatsApp": "Share on WhatsApp",
+      "inviteCounts": "Friends invited: {invited} · Rewarded: {rewarded}"
     },
     "account": {
       "eyebrow": "Your details",

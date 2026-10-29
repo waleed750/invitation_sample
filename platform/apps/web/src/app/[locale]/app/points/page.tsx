@@ -8,6 +8,10 @@ import {
   IconStar,
 } from '@/commerce/icons';
 import {formatDate, formatMoney} from '@/lib/format';
+import {CopyButton} from '@/commerce/CopyButton';
+import {inviteLink, whatsappInviteUrl} from '@/commerce/friend-share';
+
+export const dynamic = 'force-dynamic';
 
 function getNextLevel(count: number): {level: Level; target: number} | null {
   const current = levelForPurchases(count);
@@ -44,6 +48,8 @@ export default async function PointsPage({
 
   // EGP discount equivalent: 100 points = 50 EGP (0.5 EGP per point)
   const discountEgp = points.balance * 0.5;
+  const inviteUrl = points.referral?.code ? inviteLink(process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000', locale, points.referral.code) : undefined;
+  const reasons = new Set(['purchase', 'redeem', 'referral', 'bonus', 'refund', 'admin', 'expire']);
 
   return (
     <div className="points-page-content">
@@ -98,6 +104,29 @@ export default async function PointsPage({
           </div>
         </div>
       </section>
+
+      {points.spendable !== undefined && points.spendable < points.balance && (
+        <p className="points-notice">{t('points.held', {points: points.spendable, held: points.balance - points.spendable})}</p>
+      )}
+
+      {points.expiringSoon && points.expiringSoon.points > 0 && points.expiringSoon.firstExpiry && (
+        <aside className="points-notice" role="status">
+          {t('points.expiringSoon', {points: points.expiringSoon.points, date: formatDate(points.expiringSoon.firstExpiry, locale)})}
+        </aside>
+      )}
+
+      {inviteUrl && points.referral && (
+        <section className="points-referral-card" aria-labelledby="points-invite-title">
+          <h2 id="points-invite-title" className="section-title">{t('points.inviteTitle')}</h2>
+          <p>{t('points.inviteDescription', {points: points.referral.rewardPoints || 100})}</p>
+          <div className="points-invite-actions">
+            <span className="points-invite-link" dir="ltr">{inviteUrl}</span>
+            <CopyButton value={inviteUrl} label={t('points.copyInvite')} copiedLabel={t('points.copiedInvite')} />
+            <a href={whatsappInviteUrl(locale, inviteUrl)} target="_blank" rel="noopener noreferrer">{t('points.shareWhatsApp')}</a>
+          </div>
+          <p>{t('points.inviteCounts', {invited: points.referral.invited, rewarded: points.referral.rewarded})}</p>
+        </section>
+      )}
 
       {/* HOW IT WORKS (3 short rules as icon rows) */}
       <section className="points-rules-section" aria-labelledby="points-rules-title">
@@ -160,7 +189,7 @@ export default async function PointsPage({
                 <article className="ledger-row-card" key={entry.id}>
                   <div className="ledger-row-info">
                     <strong className="ledger-row-reason">
-                      {t(`points.reasons.${entry.reason === 'redeem' ? 'redeem' : 'purchase'}`)}
+                      {t(`points.reasons.${reasons.has(entry.reason) ? entry.reason : 'admin'}`)}
                     </strong>
                     <div className="ledger-row-meta">
                       <time dateTime={entry.createdAt}>

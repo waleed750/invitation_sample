@@ -11,7 +11,7 @@ describe('quote', () => {
 
   it('uses the catalog tier price and demo coupon', () => {
     expect(quote({templateSlug: 'mashrabiya', tier: 'classic', kind: 'new', couponCode: 'welcome10', balance: 0}))
-      .toEqual({subtotal: 1299, discount: 129.9, total: 1169.1});
+      .toEqual({subtotal: 1299, discount: 129.9, total: 1169.1, pointsSavedEgp: 0, pointsRedeemed: 0});
   });
 
   it('uses fixed add-on prices', () => {
@@ -23,11 +23,10 @@ describe('quote', () => {
     expect(quote({
       templateSlug: 'mashrabiya', tier: 'classic', kind: 'new', couponCode: 'WELCOME10',
       pointsToRedeem: 10_000, balance: 10_000,
-    })).toEqual({subtotal: 1299, discount: 389.7, total: 909.3});
+    })).toEqual({subtotal: 1299, discount: 379.9, total: 919.1, pointsSavedEgp: 250, pointsRedeemed: 500});
   });
 
   it('rejects unknown templates', () => {
     expect(() => quote({templateSlug: 'missing', tier: 'classic', kind: 'new', balance: 0})).toThrow(RangeError);
   });
 });
-

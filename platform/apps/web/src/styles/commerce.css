@@ -1413,3 +1413,6 @@ input:not([type="radio"]):not([type="checkbox"]):focus {
 .manual-pay-methods p { margin-block: .25rem 0; white-space: pre-line; }
 .manual-pay-deadline { color: var(--muted); }
 .manual-pay .whatsapp-button { justify-self: start; }
+.checkout-points-control { display: grid; gap: 0.5rem; min-inline-size: 0; margin-block: 1rem; }
+.checkout-points-control select { inline-size: 100%; max-inline-size: 100%; padding: 0.75rem; border: 1px solid currentColor; border-radius: 0.5rem; background: transparent; color: inherit; }
+.checkout-points-control p, .checkout-points-control small { margin: 0; }

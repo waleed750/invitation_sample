@@ -20,6 +20,8 @@ export interface Quote {
   subtotal: number;
   discount: number;
   total: number;
+  pointsSavedEgp: number;
+  pointsRedeemed: number;
 }
 
 export function quote(input: QuoteInput): Quote {
@@ -36,11 +38,15 @@ export function quote(input: QuoteInput): Quote {
   const requestedPoints = Math.max(0, Math.floor(input.pointsToRedeem ?? 0));
   const requestedPointsEgp = Math.floor(Math.min(requestedPoints, input.balance) / 100) * 50;
   const pointsEgp = Math.min(requestedPointsEgp, maxRedeemableEgp(subtotal, input.balance));
-  const capped = applyDiscountCap({orderTotal: subtotal, pointsEgp, couponEgp, affiliateEgp: 0});
+  const firstCap = applyDiscountCap({orderTotal: subtotal, pointsEgp, couponEgp, affiliateEgp: 0});
+  const pointsRedeemed = Math.floor(firstCap.pointsEgp / 50) * 100;
+  const capped = applyDiscountCap({orderTotal: subtotal, pointsEgp: pointsRedeemed / 2, couponEgp, affiliateEgp: 0});
 
   return {
     subtotal,
     discount: capped.totalDiscountEgp,
     total: subtotal - capped.totalDiscountEgp,
+    pointsSavedEgp: capped.pointsEgp,
+    pointsRedeemed,
   };
 }

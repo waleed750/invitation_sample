@@ -1,8 +1,7 @@
 import type {z} from 'zod';
 import {createApiClient} from '@platform/api-client';
-import type {Level} from '@platform/shared';
 import {cookies} from 'next/headers';
-import {REF_COOKIE, parseRefCookie} from './ref';
+import {FRIEND_COOKIE, REF_COOKIE, parseFriendCookie, parseRefCookie} from './ref';
 import {getServerSession, type AuthSession} from '../auth/session';
 import {ApiError, NotSignedInError} from './api-errors';
 import {
@@ -30,7 +29,7 @@ import type {
   Invitation,
   ManualPayment,
   Order,
-  PointsLedgerEntry,
+  PointsSummary,
   PublishInvitationResult,
   Session,
   StartCheckoutInput,
@@ -182,6 +181,10 @@ export class ApiCommerceClient implements CommerceClient {
   }
 
   async startCheckout(input: StartCheckoutInput): Promise<Order> {
+    let friendCode: string | undefined;
+    if (input.kind === 'new') {
+      try { friendCode = parseFriendCookie((await cookies()).get(FRIEND_COOKIE)?.value); } catch { /* no request cookies */ }
+    }
     // The checkout endpoint takes the web tier names ('save-the-date'); the DB spelling only appears in SQL.
     const body = {
       templateSlug: input.templateSlug,
@@ -193,6 +196,7 @@ export class ApiCommerceClient implements CommerceClient {
       couple: input.couple,
       ...(input.invitationId ? {invitationId: input.invitationId} : {}),
       ...(await this.partnerRef()),
+      ...(friendCode ? {friendCode} : {}),
       // The API wants an offset datetime; noon in Cairo keeps the calendar date stable in every time zone.
       eventDate: /^\d{4}-\d{2}-\d{2}$/.test(input.eventDate) ? `${input.eventDate}T12:00:00+02:00` : input.eventDate,
     };
@@ -201,6 +205,9 @@ export class ApiCommerceClient implements CommerceClient {
       headers: {'Idempotency-Key': this.newKey()},
     }));
     const order = mapCheckoutOrder(data, input);
+    if (friendCode) {
+      try { (await cookies()).delete(FRIEND_COOKIE); } catch { /* cookie writes are unavailable outside actions */ }
+    }
     if (order.payment) await this.stash.save(order.id, order.payment);
     return order;
   }
@@ -252,7 +259,7 @@ export class ApiCommerceClient implements CommerceClient {
     return mapPublishResult(result, summary);
   }
 
-  async getPoints(): Promise<{balance: number; purchaseCount: number; level: Level; ledger: PointsLedgerEntry[]}> {
+  async getPoints(): Promise<PointsSummary> {
     return mapPoints(parse(pointsSchema, await this.call('GET', '/v1/points')));
   }
 }

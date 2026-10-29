@@ -2,7 +2,7 @@
 
 import {useEffect, useId, useMemo, useState, useTransition} from 'react';
 import {useTranslations} from 'next-intl';
-import {TIER_ORDER, TIERS, type Tier} from '@platform/shared';
+import {maxRedeemableEgp, TIER_ORDER, TIERS, type Tier} from '@platform/shared';
 import {Bidi} from '@/components/Bidi';
 import {formatMoney} from '@/lib/format';
 import {CheckoutHeader} from './CheckoutHeader';
@@ -20,6 +20,7 @@ import {
 } from './icons';
 import {SignInForm} from '@/auth/SignInForm';
 import {sendOtpAction, startCheckoutAction, verifyOtpAction} from './actions';
+import {quote} from './pricing';
 import type {OrderKind, PaymentMethod} from './types';
 
 type QuoteView = {subtotal: number; discount: number; total: number};
@@ -40,6 +41,7 @@ interface Props {
   guest?: boolean;
   /** Open directly on the pay step (used when coming back from the inline sign-in). */
   initialStep?: 1 | 2 | 3;
+  spendablePoints?: number;
 }
 
 function messageFor(error: unknown): string {
@@ -76,6 +78,7 @@ export function CheckoutForm({
   signedIn = false,
   guest = false,
   initialStep = 1,
+  spendablePoints = 0,
 }: Props) {
   const t = useTranslations('checkout');
   const demo = useTranslations('demoMode');
@@ -103,6 +106,7 @@ export function CheckoutForm({
   const [couponOpen, setCouponOpen] = useState(false);
   const [couponInput, setCouponInput] = useState('');
   const [appliedCoupon, setAppliedCoupon] = useState('');
+  const [pointsToRedeem, setPointsToRedeem] = useState(0);
   const [couponError, setCouponError] = useState(false);
 
   // Sequential steps: 1: Details, 2: Plan, 3: Verify & Pay
@@ -129,12 +133,22 @@ export function CheckoutForm({
   }, [eventDate]);
 
   // Active pricing quote
-  const activeQuote = useMemo(() => {
+  const baseQuote = useMemo(() => {
     if (appliedCoupon.trim().toUpperCase() === 'WELCOME10') {
       return quotes[tier].welcome;
     }
     return quotes[tier].standard;
   }, [appliedCoupon, quotes, tier]);
+  const activeQuote = useMemo(() => pointsToRedeem > 0
+    ? quote({templateSlug, tier, kind, couponCode: appliedCoupon, pointsToRedeem, balance: spendablePoints})
+    : {...baseQuote, pointsSavedEgp: 0, pointsRedeemed: 0},
+  [appliedCoupon, baseQuote, kind, pointsToRedeem, spendablePoints, templateSlug, tier]);
+  const redeemOptions = useMemo(() => Array.from(
+    {length: maxRedeemableEgp(baseQuote.subtotal, spendablePoints) / 50},
+    (_, index) => (index + 1) * 100,
+  ).map((points) => ({points, estimate: quote({templateSlug, tier, kind, couponCode: appliedCoupon, pointsToRedeem: points, balance: spendablePoints})}))
+    .filter(({points, estimate}) => estimate.pointsRedeemed === points),
+  [appliedCoupon, baseQuote.subtotal, kind, spendablePoints, templateSlug, tier]);
 
   // Leave guard when dirty
   useEffect(() => {
@@ -162,7 +176,13 @@ export function CheckoutForm({
     startTransition(() => {
       void task()
         .then(() => onSuccess?.())
-        .catch((reason) => setError(messageFor(reason)));
+        .catch((reason) => {
+          const message = messageFor(reason);
+          if (message.includes('insufficient_points') || message.includes('already used on another open order')) {
+            setPointsToRedeem(0);
+            setError('insufficient_points');
+          } else setError(message);
+        });
     });
   }
 
@@ -193,6 +213,7 @@ export function CheckoutForm({
     const normalized = couponInput.trim().toUpperCase();
     if (normalized === 'WELCOME10') {
       setAppliedCoupon('WELCOME10');
+      setPointsToRedeem(0);
       setCouponError(false);
     } else {
       setCouponError(true);
@@ -201,6 +222,7 @@ export function CheckoutForm({
 
   function handleRemoveCoupon() {
     setAppliedCoupon('');
+    setPointsToRedeem(0);
     setCouponInput('');
     setCouponError(false);
   }
@@ -239,18 +261,23 @@ export function CheckoutForm({
       setActiveStep(3);
       return setError('phone_not_verified');
     }
-    run(() =>
-      startCheckoutAction({
+    run(async () => {
+      const result = await startCheckoutAction({
         locale,
         templateSlug,
         tier,
         kind,
         method,
         couponCode: appliedCoupon || undefined,
+        pointsToRedeem: activeQuote.pointsRedeemed || undefined,
         couple: {first: first.trim(), second: second.trim()},
         eventDate,
-      }),
-    );
+      });
+      if (result?.error === 'insufficient_points') {
+        setPointsToRedeem(0);
+        setError('insufficient_points');
+      }
+    });
   }
 
   // Step-aware mobile action
@@ -281,7 +308,7 @@ export function CheckoutForm({
     step: '3',
   }).toString()}`;
 
-  const errorKey = error.includes('invalid_phone')
+  const errorKey = error === 'insufficient_points' ? 'insufficient_points' : error.includes('invalid_phone')
     ? 'invalidPhone'
     : error.includes('invalid_code')
       ? 'invalidCode'
@@ -482,6 +509,20 @@ export function CheckoutForm({
                   </fieldset>
 
                   <p className="plan-addons-hint">{t('plan.addons')}</p>
+
+                  {signedIn && spendablePoints >= 100 && (
+                    <div className="checkout-points-control">
+                      <label htmlFor="checkout-points">{t('points.redeem')}</label>
+                      <p>{t('points.available', {points: spendablePoints})}</p>
+                      <select id="checkout-points" value={pointsToRedeem} onChange={(e) => setPointsToRedeem(Number(e.target.value))}>
+                        <option value={0}>{t('points.none')}</option>
+                        {redeemOptions.map(({points, estimate}) => (
+                          <option key={points} value={points}>{t('points.option', {points, amount: formatMoney(estimate.pointsSavedEgp, locale)})}</option>
+                        ))}
+                      </select>
+                      <small>{t('points.cap')}</small>
+                    </div>
+                  )}
 
                   {/* Coupon Disclosure: never pre-filled */}
                   <div className="coupon-disclosure">
@@ -742,6 +783,9 @@ export function CheckoutForm({
                   <dd>− <Bidi>{formatMoney(activeQuote.discount, locale)}</Bidi></dd>
                 </div>
               )}
+              {activeQuote.pointsSavedEgp > 0 && (
+                <div className="summary-row is-discount"><dt>{t('points.saved')}</dt><dd><Bidi>{formatMoney(activeQuote.pointsSavedEgp, locale)}</Bidi></dd></div>
+              )}
               <div className="summary-row is-total">
                 <dt>{t('summary.total')}</dt>
                 <dd><Bidi>{formatMoney(activeQuote.total, locale)}</Bidi></dd>
@@ -853,6 +897,9 @@ export function CheckoutForm({
                   <dt>{t('summary.discount')}</dt>
                   <dd>− <Bidi>{formatMoney(activeQuote.discount, locale)}</Bidi></dd>
                 </div>
+              )}
+              {activeQuote.pointsSavedEgp > 0 && (
+                <div className="summary-row is-discount"><dt>{t('points.saved')}</dt><dd><Bidi>{formatMoney(activeQuote.pointsSavedEgp, locale)}</Bidi></dd></div>
               )}
               <div className="summary-row is-total">
                 <dt>{t('summary.total')}</dt>
