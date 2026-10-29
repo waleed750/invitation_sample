@@ -6,10 +6,9 @@ const VIEWPORTS = [{name: 'phone', width: 390, height: 844}, {name: 'tablet', wi
 /** Opens the editor of the seeded customer's first draft, with the first-run tips dismissed. */
 async function openEditor(page: Page): Promise<void> {
   await signIn(page, SEED.customer, '/ar/app');
-  const hrefs = await page.locator('a[href*="/app/invitations/"]').evaluateAll((els) => els.map((e) => (e as HTMLAnchorElement).pathname));
-  const target = hrefs.find((h) => /invitations\/[0-9a-f-]{36}$/.test(h));
-  expect(target, 'a dashboard invitation link').toBeTruthy();
-  await page.goto(`${target}/edit`);
+  const editLink = page.locator('a[href*="/app/invitations/"][href$="/edit"]').first();
+  await expect(editLink, 'a dashboard invitation edit link').toBeVisible();
+  await editLink.click();
   const skip = page.getByRole('button', {name: 'تخطي'});
   await expect(async () => {
     if (await skip.isVisible()) await skip.click({timeout: 1_000});
